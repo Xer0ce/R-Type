@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/rtype_ecs.dir/src/ecs/main.cpp.o CMakeFiles/rtype_ecs.dir/src/ecs/test.cpp.o -o rtype_ecs 
