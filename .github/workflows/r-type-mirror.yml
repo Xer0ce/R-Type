@@ -1,0 +1,23 @@
+name: R-TYPE main Mirroring
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  SOURCE_REPO: "git@github.com:M0ugou-club/R-Type.git"
+  DEST_REPO: "git@github.com:EpitechPromo2027/B-CPP-500-TLS-5-2-rtype-alberic.flour-de-saegher.git"
+
+jobs:
+  git-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: git-sync
+        uses: wei/git-sync@v3
+        with:
+          source_repo: ${{ env.SOURCE_REPO }}
+          source_branch: "main"
+          destination_repo: ${{ env.DEST_REPO }}
+          destination_branch: "main"
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}

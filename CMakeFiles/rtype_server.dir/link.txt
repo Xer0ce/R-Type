@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/rtype_server.dir/src/server/main.cpp.o CMakeFiles/rtype_server.dir/src/server/test.cpp.o -o rtype_server 
