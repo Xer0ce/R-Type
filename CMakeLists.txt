@@ -9,9 +9,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(BUILD_CLIENT "Build the client executable" ON)
 option(BUILD_SERVER "Build the server executable" ON)
 
-if(BUILD_CLIENT)
-    find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
-endif()
+# if(BUILD_CLIENT)
+#     find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
+# endif()
 
 if(BUILD_CLIENT)
     file(GLOB SOURCES_CLIENT "src/graphical/*.cpp")
