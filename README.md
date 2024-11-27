@@ -1,6 +1,12 @@
 # R-Type
 2 nd Project of Tek 3
 
+## How to clone the repo
+- ### step 1
+    git clone the repository `git clone --recurse-submodules https://github.com/M0ugou-club/R-Type`
+- ### step 2
+    update the submodules using the command `git submodule update --init --recursive`
+
 
 ## how to build the project ?
 - ### step 1
