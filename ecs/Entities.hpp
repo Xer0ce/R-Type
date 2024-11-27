@@ -20,6 +20,8 @@ class Entities {
       return _entitie;
     }
 
+    std::size_t get_value() const { return _entitie; }
+
   private:
     std::size_t _entitie;
 };

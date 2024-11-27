@@ -88,7 +88,7 @@ class SparseArray {
       };
       reference_type insert_at(size_type pos, Component &&value) {
         if (pos >= _data.size()) {
-			_data.resize(pos + 1);
+			    _data.resize(pos + 1);
         }
         _data[pos] = std::move(value);
         return _data[pos];
@@ -97,7 +97,7 @@ class SparseArray {
       template <class ... Params>
       reference_type emplace_at(size_type pos, Params &&... params){
         if (pos >= _data.size()) {
-			_data.resize(pos + 1);
+			    _data.resize(pos + 1);
         }
         insert_at(pos, std::forward<Params>(params)...);
         return _data[pos];
@@ -107,7 +107,7 @@ class SparseArray {
         if (pos >= _data.size()) {
           throw std::out_of_range("SparseArray::erase");
         }
-		_data[pos] = std::nullopt;
+		    _data[pos] = std::nullopt;
       };
 
       size_type get_index(value_type const &value) const {
