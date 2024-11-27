@@ -12,6 +12,7 @@
 #include <vector>
 #include <optional>
 #include <stdexcept>
+#include <any>
 
 template <typename Component>
 class SparseArray {
@@ -52,7 +53,11 @@ class SparseArray {
         if (index >= _data.size()) {
           throw std::out_of_range("SparseArray::operator[]");
         }
-        return _data[index];
+        if (_data[index].has_value()) {
+		  return _data[index];
+        } else {
+          return std::nullopt;
+        }
       };
 
       iterator begin() {
@@ -107,7 +112,7 @@ class SparseArray {
         if (pos >= _data.size()) {
           throw std::out_of_range("SparseArray::erase");
         }
-		    _data[pos] = std::nullopt;
+		_data[pos] = std::nullopt;
       };
 
       size_type get_index(value_type const &value) const {
@@ -123,7 +128,6 @@ class SparseArray {
     private:
       container_type _data;
 };
-
 
 
 #endif //SPARSEARRAY_HPP
