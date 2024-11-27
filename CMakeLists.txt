@@ -9,15 +9,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(BUILD_CLIENT "Build the client executable" ON)
 option(BUILD_SERVER "Build the server executable" ON)
 
-# if(BUILD_CLIENT)
-#     find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
-# endif()
+add_subdirectory(external/SDL3)
+
+add_subdirectory(external/Asio)
 
 if(BUILD_CLIENT)
     file(GLOB SOURCES_CLIENT "src/graphical/*.cpp")
     add_executable(r-type_client ${SOURCES_CLIENT})
     target_include_directories(r-type_client PRIVATE include/graphical)
-    # target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system)
+
+    target_link_libraries(r-type_client PRIVATE SDL3::SDL3)
+
     target_compile_definitions(r-type_client PRIVATE $<$<CONFIG:Debug>:DEBUG>)
 endif()
 
@@ -25,6 +27,9 @@ if(BUILD_SERVER)
     file(GLOB SOURCES_SERVER "src/server/*.cpp")
     add_executable(r-type_server ${SOURCES_SERVER})
     target_include_directories(r-type_server PRIVATE include/server)
+
+    target_link_libraries(r-type_server PRIVATE Asio::Asio)
+
     target_compile_definitions(r-type_server PRIVATE $<$<CONFIG:Debug>:DEBUG>)
 endif()
 
