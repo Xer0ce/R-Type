@@ -121,6 +121,9 @@ class Registry {
           return _available_entities;
       }
 
+      std::unordered_map<std::type_index, std::any> &get_a_component() {
+          return _components_arrays;
+      }
 
     private:
       std::unordered_map<std::type_index, std::any> _components_arrays;
