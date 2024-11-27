@@ -12,10 +12,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Build with CMake
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_CLIENT=ON -DBUILD_SERVER=ON ..
+          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_CLIENT=ON -DBUILD_SERVER=ON -DASIO_STANDALONE=ON ..
           make
