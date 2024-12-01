@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** bsRtype
+** Rtype
 ** File description:
 ** Registry
 */
@@ -59,21 +59,21 @@ class Registry {
       template<typename Component>
       typename SparseArray<Component>::reference_type add_component(entity_t const &to, Component &&c) {
         SparseArray<Component> &a_component = get_components<Component>();
-        return a_component.insert_at(to.get_value(), std::forward<Component>(c));
+        return a_component.insert_at(to, std::forward<Component>(c));
       }
 
 
       template <typename Component , typename ...Params>
       typename SparseArray<Component>:: reference_type emplace_component(entity_t const &to, Params &&...p) {
         SparseArray<Component> &a_component = get_components<Component>();
-        return a_component.emplace_at(to.get_value(), std::forward<Params>(p)...);;
+        return a_component.emplace_at(to, std::forward<Params>(p)...);;
       };
 
       template<typename Component>
       void remove_component(entity_t const &from) {
           auto &components = get_components<Component>();
-          components.erase(from.get_value());
-          if (components[from.get_value()].has_value()) {
+          components.erase(from);
+          if (components[from].has_value()) {
               std::cout << "Data at position has a value: " << std::endl;
           } else {
               std::cout << "Data at position is nullopt (empty)." << std::endl;
@@ -106,24 +106,20 @@ class Registry {
       void kill_entity(entity_t const &value) {
           auto it = std::find_if(_entities.begin(), _entities.end(),
                                  [&value](const Entities& entity) {
-                                     return entity.get_value() == value.get_value();
+                                     return entity == value;
                                  });
 
           if (it != _entities.end()) {
-              _available_entities.push_back(value.get_value());
+              _available_entities.push_back(value);
               for (auto &elem : _removal_functions) {
                   elem.second(value);
               }
           }
       }
 
-      std::vector<std::size_t> get_available_entities() const {
-          return _available_entities;
-      }
+      inline std::vector<std::size_t> get_available_entities() const { return _available_entities; }
 
-      std::unordered_map<std::type_index, std::any> &get_a_component() {
-          return _components_arrays;
-      }
+      inline std::unordered_map<std::type_index, std::any> &get_a_component() { return _components_arrays; }
 
     private:
       std::unordered_map<std::type_index, std::any> _components_arrays;

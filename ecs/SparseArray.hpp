@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** bsRtype
+** Rtype
 ** File description:
 ** SparseArray
 */
@@ -39,7 +39,7 @@ class SparseArray {
       };
       SparseArray &operator=(SparseArray &&other) noexcept {
         _data = std::move(other._data);
-		return *this;
+		    return *this;
       };
 
       reference_type operator[](std::size_t index){
@@ -54,35 +54,19 @@ class SparseArray {
           throw std::out_of_range("SparseArray::operator[]");
         }
         if (_data[index].has_value()) {
-		  return _data[index];
+		      return _data[index];
         } else {
           return std::nullopt;
         }
       };
 
-      iterator begin() {
-        return _data.begin();
-      };
-      const_iterator begin() const {
-        return _data.begin();
-      };
-      const_iterator cbegin() const {
-        return _data.cbegin();
-      };
-
-      iterator end() {
-        return _data.end();
-      };
-      const_iterator end() const {
-        return _data.end();
-      };
-      const_iterator cend() const {
-        return _data.cend();
-      };
-
-      size_type size() const {
-        return _data.size();
-      };
+      inline iterator begin() { return _data.begin(); };
+      inline const_iterator begin() const { return _data.begin(); };
+      inline const_iterator cbegin() const { return _data.cbegin(); };
+      inline iterator end() { return _data.end(); };
+      inline const_iterator end() const { return _data.end(); };
+      inline const_iterator cend() const { return _data.cend(); };
+      inline size_type size() const { return _data.size(); };
 
       reference_type insert_at(size_type pos, Component const &value) {
         if (pos >= _data.size()) {
@@ -112,7 +96,7 @@ class SparseArray {
         if (pos >= _data.size()) {
           throw std::out_of_range("SparseArray::erase");
         }
-		_data[pos] = std::nullopt;
+		    _data[pos] = std::nullopt;
       };
 
       size_type get_index(value_type const &value) const {

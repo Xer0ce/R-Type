@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** bsRtype
+** Rtype
 ** File description:
 ** Entities
 */
@@ -16,11 +16,7 @@ class Entities {
     explicit Entities(std::size_t value) : _entitie(value) {};
     ~Entities() = default;
 
-    operator std::size_t() const {
-      return _entitie;
-    }
-
-    std::size_t get_value() const { return _entitie; }
+    inline operator std::size_t() const { return _entitie; }
 
   private:
     std::size_t _entitie;
