@@ -129,5 +129,9 @@ int main() {
         window.display();
     }
 
+    auto test = registry.get_components<Position>();
+    //std::cout << test[entity.get_value()]->x << std::endl;
+    std::cout << test[entity]->x << std::endl;
+
     return 0;
 }
