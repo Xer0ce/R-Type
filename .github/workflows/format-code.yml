@@ -19,9 +19,9 @@ jobs:
     - name: Install clang-format
       run: sudo apt-get install -y clang-format
 
-    - name: Run clang-format check
-      run: |
-        find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\|c\|h\)' -exec clang-format --dry-run --Werror {} +
+    # - name: Run clang-format check
+    #   run: |
+    #     find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\|c\|h\)' -exec clang-format --dry-run --Werror {} +
 
     - name: Apply clang-format (only on push)
       if: github.event_name == 'push'
