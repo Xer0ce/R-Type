@@ -36,6 +36,7 @@ rtype_graphic
 rtype_server
 
 build
+build.sh
 
 .vscode
 .idea
