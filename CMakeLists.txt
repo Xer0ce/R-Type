@@ -10,8 +10,6 @@ option(BUILD_CLIENT "Build the client executable" ON)
 option(BUILD_SERVER "Build the server executable" ON)
 
 add_subdirectory(external/SDL3)
-set(ASIO_STANDALONE ON CACHE INTERNAL "Use standalone Asio")
-add_subdirectory(external/Asio)
 
 if(BUILD_CLIENT)
     file(GLOB SOURCES_CLIENT "src/graphical/*.cpp")
@@ -28,7 +26,6 @@ if(BUILD_SERVER)
     add_executable(r-type_server ${SOURCES_SERVER})
     target_include_directories(r-type_server PRIVATE include/server)
 
-    target_include_directories(r-type_server PRIVATE external/Asio/asio/include)
     target_link_libraries(r-type_server PRIVATE)
 
     target_compile_definitions(r-type_server PRIVATE $<$<CONFIG:Debug>:DEBUG>)
