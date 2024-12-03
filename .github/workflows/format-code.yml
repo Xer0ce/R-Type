@@ -19,11 +19,19 @@ jobs:
     - name: Install clang-format
       run: sudo apt-get install -y clang-format
 
-    # - name: Run clang-format check
-    #   run: |
-    #     find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\|c\|h\)' -exec clang-format --dry-run --Werror {} +
-
     - name: Apply clang-format (only on push)
       if: github.event_name == 'push'
       run: |
         find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\|c\|h\)' -exec clang-format -i {} +
+
+    - name: Configure git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+
+    - name: Commit and push changes
+      run: |
+        git add .
+        git commit -m "Apply clang-format changes"
+        git push
+      if: github.event_name == 'push'
