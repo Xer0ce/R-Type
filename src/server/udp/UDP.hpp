@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <iostream>
 #include "AProtocol.hpp"
 
 class UDP : public AProtocol {
