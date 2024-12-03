@@ -3,10 +3,14 @@ name: Clang Format Check
 on:
   pull_request:
     branches:
-      - dev
+      - net
+      - ecs
+      - graphic
   push:
     branches:
-      - dev
+      - net
+      - ecs
+      - graphic
 
 jobs:
   clang-format:
@@ -32,6 +36,6 @@ jobs:
     - name: Commit and push changes
       run: |
         git add .
-        git commit -m "Apply clang-format changes"
+        git commit -m "FORMAT : Apply clang-format changes"
         git push
       if: github.event_name == 'push'
