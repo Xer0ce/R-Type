@@ -1,45 +1,8 @@
 #include "Registry.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
-#include <SDL3/SDL.h>
-#include <iostream>
+#include "Game.hpp"
 #include <vector>
-
-class Health {
-public:
-  int hp;
-  Health(int hp = 100) : hp(hp) {}
-};
-
-class Position {
-public:
-  float x, y;
-  Position(int x = 0, int y = 0) : x(x), y(y) {}
-};
-
-class Velocity {
-public:
-  float x, y;
-  Velocity(int x = 0, int y = 0) : x(x), y(y) {}
-};
-
-class Drawable {
-public:
-  SDL_Rect rect;
-  SDL_Color color;
-
-  Drawable(SDL_Color col, SDL_Rect size) : rect(size), color(col) {}
-};
-
-class Controllable {
-public:
-  bool moveUp = false;
-  bool moveDown = false;
-  bool moveLeft = false;
-  bool moveRight = false;
-
-  void reset() { moveUp = moveDown = moveLeft = moveRight = false; }
-};
 
 void position_system(Registry &registry, float deltaTime) {
   auto &positions = registry.get_components<Position>();
@@ -161,13 +124,7 @@ int main() {
   registry.register_component<Controllable>();
   registry.register_component<Health>();
 
-  auto entity = registry.spawn_entity();
-  registry.add_component<Position>(entity, Position(100, 150));
-  registry.add_component<Velocity>(entity, Velocity());
-  registry.add_component<Health>(entity, Health());
-  registry.add_component<Drawable>(
-      entity, Drawable({0, 255, 0, 255}, {100, 150, 50, 50}));
-  registry.add_component<Controllable>(entity, Controllable());
+  createPlayer(registry, 100, 150, {0, 255, 0, 255}, {100, 150, 50, 50});
 
   bool running = true;
   SDL_Event event;
