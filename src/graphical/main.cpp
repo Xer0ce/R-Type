@@ -109,29 +109,29 @@ std::vector<uint8_t> serialize_connect(const std::string &player_name) {
 
 int main() {
 
-//   try {
-//     TcpClient tcp("127.0.0.1", 12345);
-//     UdpClient udp("127.0.0.1", 12346);
+  //   try {
+  //     TcpClient tcp("127.0.0.1", 12345);
+  //     UdpClient udp("127.0.0.1", 12346);
 
-//     std::string player_name = "Player";
-//     auto connect_packet = serialize_connect(player_name);
+  //     std::string player_name = "Player";
+  //     auto connect_packet = serialize_connect(player_name);
 
-//     tcp.send_data(connect_packet);
+  //     tcp.send_data(connect_packet);
 
-//     while (true) {
-//       std::vector<uint8_t> move_packet = {0x04, 0x01, 0x02};
-//       udp.send_data(move_packet);
+  //     while (true) {
+  //       std::vector<uint8_t> move_packet = {0x04, 0x01, 0x02};
+  //       udp.send_data(move_packet);
 
-//       std::vector<uint8_t> response;
-//       tcp.receive_data(response);
+  //       std::vector<uint8_t> response;
+  //       tcp.receive_data(response);
 
-//       // Process server response (not implemented)
-//     }
+  //       // Process server response (not implemented)
+  //     }
 
-//   } catch (const std::exception &e) {
-//     std::cerr << "Error: " << e.what() << std::endl;
-//     return 1;
-//   }
+  //   } catch (const std::exception &e) {
+  //     std::cerr << "Error: " << e.what() << std::endl;
+  //     return 1;
+  //   }
   std::cout << "SDL Version: " << SDL_GetVersion() << std::endl;
   if (SDL_Init(SDL_INIT_VIDEO) == 0) {
     std::cerr << "SDL Initialization failed: " << SDL_GetError() << std::endl;
