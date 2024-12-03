@@ -10,9 +10,9 @@
 #include "IProtocol.hpp"
 
 class AProtocol : public IProtocol {
-    public:
-        AProtocol(std::size_t port = 4242, std::string ip = "0.0.0.0");
-        ~AProtocol();
+public:
+  AProtocol(std::size_t port = 4242, std::string ip = "0.0.0.0");
+  ~AProtocol();
 
         void setPort(std::size_t port);
         void setIp(std::string ip);

@@ -16,6 +16,9 @@ jobs:
   clang-format:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -33,9 +36,15 @@ jobs:
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
+    - name: Check for changes
+      id: changes
+      run: |
+        git diff --exit-code || echo "has_changes=true" >> $GITHUB_ENV
+        echo "has_changes=false" >> $GITHUB_ENV || true
+
     - name: Commit and push changes
+      if: github.event_name == 'push' && env.has_changes == 'true'
       run: |
         git add .
         git commit -m "FORMAT : Apply clang-format changes"
         git push
-      if: github.event_name == 'push'
