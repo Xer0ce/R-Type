@@ -7,6 +7,12 @@
 
 #pragma once
 
+#include <thread>
+#include <vector>
+#include <cstring>
+#include <stdexcept>
+#include <arpa/inet.h>
+#include <unistd.h>
 #include "IProtocol.hpp"
 
 class AProtocol : public IProtocol {

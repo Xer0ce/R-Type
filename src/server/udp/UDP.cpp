@@ -15,10 +15,16 @@ UDP::UDP(std::size_t port, std::string ip) {
 UDP::~UDP() {}
 
 bool UDP::initializeSocket() {
-  _socket = socket(AF_INET, SOCK_DGRAM, 0);
-  if (_socket == -1) {
-    std::cerr << "Error: socket creation failed" << std::endl;
-    return false;
-  }
-  return true;
+}
+
+bool UDP::bindSocket() {
+}
+
+bool UDP::sendData(const std::string &data, const std::string &destIp, std::size_t destPort) {
+}
+
+std::string UDP::receiveData() {
+}
+
+void UDP::closeSocket() {
 }
