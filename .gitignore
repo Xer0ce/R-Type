@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+rtype_ecs
+rtype_graphic
+rtype_server
+
+build
+build.sh
+
+.vscode
+.idea
