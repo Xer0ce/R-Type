@@ -11,8 +11,8 @@
 
 class IProtocol {
 public:
-  IProtocol();
-  ~IProtocol();
+  IProtocol() = default;
+  ~IProtocol() = default;
 
   virtual bool initializeSocket() = 0;
   virtual bool bindSocket() = 0;
