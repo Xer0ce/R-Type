@@ -1,45 +1,15 @@
 #include "Registry.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
+#include "Control.hpp"
+#include "Draw.hpp"
+#include "Health.hpp"
+#include "Position.hpp"
+#include "Velocity.hpp"
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <vector>
 
-class Health {
-public:
-  int hp;
-  Health(int hp = 100) : hp(hp) {}
-};
-
-class Position {
-public:
-  float x, y;
-  Position(int x = 0, int y = 0) : x(x), y(y) {}
-};
-
-class Velocity {
-public:
-  float x, y;
-  Velocity(int x = 0, int y = 0) : x(x), y(y) {}
-};
-
-class Drawable {
-public:
-  SDL_Rect rect;
-  SDL_Color color;
-
-  Drawable(SDL_Color col, SDL_Rect size) : rect(size), color(col) {}
-};
-
-class Controllable {
-public:
-  bool moveUp = false;
-  bool moveDown = false;
-  bool moveLeft = false;
-  bool moveRight = false;
-
-  void reset() { moveUp = moveDown = moveLeft = moveRight = false; }
-};
 
 void position_system(Registry &registry, float deltaTime) {
   auto &positions = registry.get_components<Position>();
@@ -56,7 +26,7 @@ void position_system(Registry &registry, float deltaTime) {
 void control_system(Registry &registry) {
   const bool *keyState = SDL_GetKeyboardState(NULL);
 
-  auto &controllables = registry.get_components<Controllable>();
+  auto &controllables = registry.get_components<Control>();
   auto &velocities = registry.get_components<Velocity>();
 
   for (std::size_t i = 0; i < controllables.size(); ++i) {
@@ -80,7 +50,7 @@ void control_system(Registry &registry) {
 
 void draw_system(Registry &registry, SDL_Renderer *renderer) {
   auto &positions = registry.get_components<Position>();
-  auto &drawables = registry.get_components<Drawable>();
+  auto &drawables = registry.get_components<Draw>();
 
   for (std::size_t i = 0; i < positions.size(); ++i) {
     if (positions[i] && drawables[i]) {
@@ -109,29 +79,29 @@ std::vector<uint8_t> serialize_connect(const std::string &player_name) {
 
 int main() {
 
-//   try {
-//     TcpClient tcp("127.0.0.1", 12345);
-//     UdpClient udp("127.0.0.1", 12346);
+  //   try {
+  //     TcpClient tcp("127.0.0.1", 12345);
+  //     UdpClient udp("127.0.0.1", 12346);
 
-//     std::string player_name = "Player";
-//     auto connect_packet = serialize_connect(player_name);
+  //     std::string player_name = "Player";
+  //     auto connect_packet = serialize_connect(player_name);
 
-//     tcp.send_data(connect_packet);
+  //     tcp.send_data(connect_packet);
 
-//     while (true) {
-//       std::vector<uint8_t> move_packet = {0x04, 0x01, 0x02};
-//       udp.send_data(move_packet);
+  //     while (true) {
+  //       std::vector<uint8_t> move_packet = {0x04, 0x01, 0x02};
+  //       udp.send_data(move_packet);
 
-//       std::vector<uint8_t> response;
-//       tcp.receive_data(response);
+  //       std::vector<uint8_t> response;
+  //       tcp.receive_data(response);
 
-//       // Process server response (not implemented)
-//     }
+  //       // Process server response (not implemented)
+  //     }
 
-//   } catch (const std::exception &e) {
-//     std::cerr << "Error: " << e.what() << std::endl;
-//     return 1;
-//   }
+  //   } catch (const std::exception &e) {
+  //     std::cerr << "Error: " << e.what() << std::endl;
+  //     return 1;
+  //   }
   std::cout << "SDL Version: " << SDL_GetVersion() << std::endl;
   if (SDL_Init(SDL_INIT_VIDEO) == 0) {
     std::cerr << "SDL Initialization failed: " << SDL_GetError() << std::endl;
@@ -157,17 +127,17 @@ int main() {
 
   registry.register_component<Position>();
   registry.register_component<Velocity>();
-  registry.register_component<Drawable>();
-  registry.register_component<Controllable>();
+  registry.register_component<Draw>();
+  registry.register_component<Control>();
   registry.register_component<Health>();
 
   auto entity = registry.spawn_entity();
   registry.add_component<Position>(entity, Position(100, 150));
   registry.add_component<Velocity>(entity, Velocity());
   registry.add_component<Health>(entity, Health());
-  registry.add_component<Drawable>(
-      entity, Drawable({0, 255, 0, 255}, {100, 150, 50, 50}));
-  registry.add_component<Controllable>(entity, Controllable());
+  registry.add_component<Draw>(
+      entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+  registry.add_component<Control>(entity, Control());
 
   bool running = true;
   SDL_Event event;
