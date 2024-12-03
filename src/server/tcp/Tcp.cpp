@@ -26,7 +26,6 @@ bool Tcp::initializeSocket()
         return false;
     }
 
-    sockaddr_in _addr{};
     _addr.sin_family = AF_INET;
     _addr.sin_port = htons(_port);
 
@@ -45,11 +44,35 @@ bool Tcp::bindSocket()
     }
 
     if (bind(_socket, (sockaddr *)&_addr, sizeof(_addr)) < 0) {
+        perror("Bind failed");
         throw std::runtime_error("Failed to bind TCP socket.");
         return false;
     }
-
+    std::cout << "[DEBUG] Successfully bound to " << _ip << ":" << _port << std::endl;
     return true;
+}
+
+bool Tcp::listenSocket(int backlog) 
+{
+    if (listen(_socket, backlog) < 0) {
+        throw std::runtime_error("Failed to listen on TCP socket.");
+        return false;
+    }
+    std::cout << "[INFO] Server is listening on port " << _port << std::endl;
+    return true;
+}
+
+int Tcp::acceptConnection() 
+{
+    sockaddr_in clientAddr{};
+    socklen_t clientAddrLen = sizeof(clientAddr);
+    int clientSocket = accept(_socket, (sockaddr *)&clientAddr, &clientAddrLen);
+    if (clientSocket < 0) {
+        perror("Failed to accept connection");
+        return -1;
+    }
+    printf("New connection from %s:%d\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+    return clientSocket;
 }
 
 bool Tcp::sendData(const std::string &data, const std::string &destIp, std::size_t destPort) 
@@ -73,17 +96,20 @@ bool Tcp::sendData(const std::string &data, const std::string &destIp, std::size
 
 std::string Tcp::receiveData() 
 {
+    printf("Receiving data...\n");
     char buffer[1024];
     std::memset(buffer, 0, sizeof(buffer));
-    sockaddr_in senderAddr{};
-    socklen_t senderAddrLen = sizeof(senderAddr);
-
-    ssize_t bytesReceived = recvfrom(_socket, buffer, sizeof(buffer) - 1, 0, (sockaddr *)&senderAddr, &senderAddrLen);
+    ssize_t bytesReceived = recv(_socket, buffer, sizeof(buffer) - 1, 0);
     if (bytesReceived < 0) {
+        perror("recv failed");
         throw std::runtime_error("Failed to receive data.");
     }
-
     return std::string(buffer, bytesReceived);
+}
+
+int Tcp::getSocket() 
+{
+    return _socket;
 }
 
 void Tcp::closeSocket() 

@@ -19,7 +19,10 @@ class Tcp : public AProtocol {
         bool sendData(const std::string &data, const std::string &destIp, std::size_t destPort) override;
         std::string receiveData() override;
         void closeSocket() override;
+        bool listenSocket(int backlog = 5) override;
+        int acceptConnection() override;
 
+        int getSocket() override;
 
     private:
         std::size_t _port;
