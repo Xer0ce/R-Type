@@ -10,9 +10,9 @@
 #include "../AProtocol.hpp"
 
 class Tcp : public AProtocol {
-    public:
-        Tcp(std::size_t port = 4243, std::string ip = "0.0.0.0");
-        ~Tcp();
+public:
+  Tcp(std::size_t port = 4243, std::string ip = "0.0.0.0");
+  ~Tcp();
 
         bool initializeSocket() override;
         bool bindSocket() override;
@@ -30,4 +30,9 @@ class Tcp : public AProtocol {
         sockaddr_in _addr;
         int _socket;
 
+private:
+  std::size_t _port;
+  std::string _ip;
+  sockaddr_in _addr;
+  int _socket;
 };

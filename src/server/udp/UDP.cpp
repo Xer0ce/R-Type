@@ -14,17 +14,13 @@ UDP::UDP(std::size_t port, std::string ip) {
 
 UDP::~UDP() {}
 
-bool UDP::initializeSocket() {
-}
+bool UDP::initializeSocket() {}
 
-bool UDP::bindSocket() {
-}
+bool UDP::bindSocket() {}
 
-bool UDP::sendData(const std::string &data, const std::string &destIp, std::size_t destPort) {
-}
+bool UDP::sendData(const std::string &data, const std::string &destIp,
+                   std::size_t destPort) {}
 
-std::string UDP::receiveData() {
-}
+std::string UDP::receiveData() {}
 
-void UDP::closeSocket() {
-}
+void UDP::closeSocket() {}
