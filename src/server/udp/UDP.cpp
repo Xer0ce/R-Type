@@ -50,7 +50,8 @@ bool UDP::bindSocket() {
   return true;
 }
 
-bool UDP::sendData(const std::string &data, const std::string &destIp, std::size_t destPort) {
+bool UDP::sendData(const std::string &data, const std::string &destIp,
+                   std::size_t destPort) {
   sockaddr_in destAddr{};
   destAddr.sin_family = AF_INET;
   destAddr.sin_port = htons(destPort);
@@ -119,7 +120,7 @@ bool UDP::listenSocket(int backlog) {
     socklen_t clientAddrLen = sizeof(clientAddr);
     uint8_t buffer[1024];
     std::memset(buffer, 0, sizeof(buffer));
-    
+
     ssize_t bytesReceived = recvfrom(_socket, buffer, sizeof(buffer) - 1, 0,
                                      (sockaddr *)&clientAddr, &clientAddrLen);
     if (bytesReceived > 0) {
@@ -135,7 +136,8 @@ bool UDP::listenSocket(int backlog) {
         std::cerr << "Failed to deserialize data: " << e.what() << std::endl;
       }
 
-      std::string response = "Acknowledged: " + std::string(data.begin(), data.end());
+      std::string response =
+          "Acknowledged: " + std::string(data.begin(), data.end());
       sendto(_socket, response.c_str(), response.size(), 0,
              (sockaddr *)&clientAddr, clientAddrLen);
     }
@@ -151,4 +153,3 @@ void UDP::closeSocket() {
     std::cout << "[DEBUG] UDP socket closed." << std::endl;
   }
 }
-  
