@@ -20,4 +20,7 @@ public:
                         std::size_t destPort) = 0;
   virtual std::string receiveData() = 0;
   virtual void closeSocket() = 0;
+  virtual int getSocket() = 0;
+  virtual bool listenSocket(int backlog = 5) = 0;
+  virtual int acceptConnection() = 0;
 };
