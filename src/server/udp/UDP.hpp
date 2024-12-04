@@ -20,4 +20,13 @@ public:
                 std::size_t destPort) override;
   std::string receiveData() override;
   void closeSocket() override;
+  int getSocket() override;
+  bool listenSocket(int backlog = 5) override;
+  int acceptConnection() override;
+
+    private:
+        std::size_t _port;
+        std::string _ip;
+        sockaddr_in _addr;
+        int _socket;
 };
