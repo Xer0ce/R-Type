@@ -15,9 +15,17 @@ UdpClient::UdpClient(const std::string &ip, int port) {
   server_addr.sin_family = AF_INET;
   server_addr.sin_port = htons(port);
   inet_pton(AF_INET, ip.c_str(), &server_addr.sin_addr);
+  std::cout << "Connected to server" << std::endl;
 }
 
 void UdpClient::send_data(std::vector<uint8_t> &data) {
+  if (sendto(_sockfd, data.data(), data.size(), 0,
+             (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+    throw std::runtime_error("Failed to send data");
+  }
+}
+
+void UdpClient::send_data(std::vector<uint8_t> &&data) {
   if (sendto(_sockfd, data.data(), data.size(), 0,
              (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
     throw std::runtime_error("Failed to send data");

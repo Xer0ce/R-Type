@@ -1,10 +1,11 @@
+#include "Game.hpp"
+#include "Menu.hpp"
 #include "Registry.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
-#include "Game.hpp"
 #include <vector>
 
-void position_system(Registry &registry, float deltaTime) {
+void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
   auto &positions = registry.get_components<Position>();
   auto &velocities = registry.get_components<Velocity>();
 
@@ -13,6 +14,9 @@ void position_system(Registry &registry, float deltaTime) {
       positions[i]->x += velocities[i]->x * deltaTime;
       positions[i]->y += velocities[i]->y * deltaTime;
     }
+    std::string move_packet = "X: " + std::to_string(positions[i]->x) +
+                              " Y: " + std::to_string(positions[i]->y) + "\n";
+    udp.send_data(std::vector<uint8_t>(move_packet.begin(), move_packet.end()));
   }
 }
 
@@ -71,37 +75,18 @@ std::vector<uint8_t> serialize_connect(const std::string &player_name) {
 }
 
 int main() {
-
-//   try {
-//     TcpClient tcp("127.0.0.1", 12345);
-//     UdpClient udp("127.0.0.1", 12346);
-
-//     std::string player_name = "Player";
-//     auto connect_packet = serialize_connect(player_name);
-
-//     tcp.send_data(connect_packet);
-
-//     while (true) {
-//       std::vector<uint8_t> move_packet = {0x04, 0x01, 0x02};
-//       udp.send_data(move_packet);
-
-//       std::vector<uint8_t> response;
-//       tcp.receive_data(response);
-
-//       // Process server response (not implemented)
-//     }
-
-//   } catch (const std::exception &e) {
-//     std::cerr << "Error: " << e.what() << std::endl;
-//     return 1;
-//   }
-  std::cout << "SDL Version: " << SDL_GetVersion() << std::endl;
-  if (SDL_Init(SDL_INIT_VIDEO) == 0) {
+  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL Initialization failed: " << SDL_GetError() << std::endl;
     return 1;
   }
 
-  SDL_Window *window = SDL_CreateWindow("ECS Draw System", 800, 600, 0);
+  if (TTF_Init() < 0) {
+    std::cerr << "TTF Initialization failed: " << SDL_GetError() << std::endl;
+    SDL_Quit();
+    return 1;
+  }
+
+  SDL_Window *window = SDL_CreateWindow("ECS System", 800, 600, 0);
   if (!window) {
     std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
     SDL_Quit();
@@ -116,75 +101,98 @@ int main() {
     return 1;
   }
 
-  Registry registry;
-
-  registry.register_component<Position>();
-  registry.register_component<Velocity>();
-  registry.register_component<Drawable>();
-  registry.register_component<Controllable>();
-  registry.register_component<Health>();
-
-  createPlayer(registry, 100, 150, {0, 255, 0, 255}, {100, 150, 50, 50});
-
-  bool running = true;
-  SDL_Event event;
-  Uint64 now = SDL_GetPerformanceCounter();
-  Uint64 last = 0;
-  float deltaTime = 0;
-
-  while (running) {
-    last = now;
-    now = SDL_GetPerformanceCounter();
-    deltaTime = (float)((now - last) / (float)SDL_GetPerformanceFrequency());
-
-    while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_EVENT_QUIT) {
-        running = false;
-      }
-    }
-
-    control_system(registry);
-    position_system(registry, deltaTime);
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    draw_system(registry, renderer);
-
-    SDL_RenderPresent(renderer);
+  TTF_Font *font = TTF_OpenFont("../src/graphical/font/COMICATE.TTF", 24);
+  if (!font) {
+    std::cerr << "Font loading failed: " << SDL_GetError() << std::endl;
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 1;
   }
 
+  std::string ipAddress;
+  std::string ipPort;
+  if (!menu(renderer, font, window, ipAddress, ipPort)) {
+    TTF_CloseFont(font);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
+  }
+
+  std::cout << "Connecting to IP: " << ipAddress << std::endl;
+  std::cout << "Connecting to Port: " << ipPort << std::endl;
+
+  int port = std::stoi(ipPort);
+
+  if (port < 0 || port > 65535) {
+    std::cerr << "Invalid port number" << std::endl;
+    TTF_CloseFont(font);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 1;
+  }
+
+  try {
+    TcpClient tcp(ipAddress, port);
+    UdpClient udp(ipAddress, 12346);
+
+    std::string player_name = "LEZIZIDEMELENCHON";
+    auto connect_packet = serialize_connect(player_name);
+    tcp.send_data(connect_packet);
+
+    Registry registry;
+
+    registry.register_component<Position>();
+    registry.register_component<Velocity>();
+    registry.register_component<Drawable>();
+    registry.register_component<Controllable>();
+    registry.register_component<Health>();
+
+    createPlayer(registry, 100, 150, {0, 255, 0, 255}, {100, 150, 50, 50});
+
+    bool running = true;
+    SDL_Event event;
+    Uint64 now = SDL_GetPerformanceCounter();
+    Uint64 last = 0;
+    float deltaTime = 0;
+
+    while (running) {
+      last = now;
+      now = SDL_GetPerformanceCounter();
+      deltaTime = (float)((now - last) / (float)SDL_GetPerformanceFrequency());
+
+      while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_EVENT_QUIT) {
+          running = false;
+        }
+      }
+
+      control_system(registry);
+      position_system(registry, deltaTime, udp);
+
+      SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+      SDL_RenderClear(renderer);
+
+      draw_system(registry, renderer);
+
+      SDL_RenderPresent(renderer);
+
+      std::vector<uint8_t> move_packet = {0x04, 0x01, 0x02};
+      udp.send_data(move_packet);
+
+      //   std::vector<uint8_t> response;
+      //   tcp.receive_data(response);
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+  }
+
+  TTF_CloseFont(font);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
   SDL_Quit();
 
   return 0;
 }
-
-// int main() {
-//   try {
-//     TcpClient tcp("127.0.0.1", 12345);
-//     UdpClient udp("127.0.0.1", 12346);
-
-//     std::string player_name = "Player";
-//     auto connect_packet = serialize_connect(player_name);
-
-//     tcp.send_data(connect_packet);
-
-//     while (true) {
-//       std::vector<uint8_t> move_packet = {0x04, 0x01, 0x02};
-//       udp.send_data(move_packet);
-
-//       std::vector<uint8_t> response;
-//       tcp.receive_data(response);
-
-//       // Process server response (not implemented)
-//     }
-
-//   } catch (const std::exception &e) {
-//     std::cerr << "Error: " << e.what() << std::endl;
-//     return 1;
-//   }
-
-//   return 0;
-// }
