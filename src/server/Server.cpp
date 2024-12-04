@@ -5,7 +5,7 @@
 Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort, std::string udpIp)
 {
     _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
-    //_udp = std::make_unique<Udp>(udpPort, udpIp);
+    _udp = std::make_unique<UDP>(udpPort, udpIp);
 }
 
 Server::~Server()
@@ -19,15 +19,15 @@ void Server::start()
         throw std::runtime_error("Failed to initialize TCP.");
     }
 
-    // if (!_udp->initializeSocket() || !_udp->bindSocket()) {
-    //     throw std::runtime_error("Failed to initialize UDP.");
-    // }
+    if (!_udp->initializeSocket() || !_udp->bindSocket()) {
+        throw std::runtime_error("Failed to initialize UDP.");
+    }
 
     std::thread tcpThread(&Server::listenTcp, this);
-    // std::thread udpThread(&Server::listenUdp, this);
+    std::thread udpThread(&Server::listenUdp, this);
 
     tcpThread.join();
-    // udpThread.join();
+    udpThread.join();
 }
 
 void Server::listenTcp()
@@ -59,20 +59,20 @@ void Server::listenTcp()
     }
 }
 
-// void Server::listenUdp()
-// {
-//     while (true) {
-//         sockaddr_in clientAddr{};
-//         socklen_t clientAddrLen = sizeof(clientAddr);
-//         char buffer[1024];
-//         memset(buffer, 0, sizeof(buffer));
-//         ssize_t bytesReceived = recvfrom(_udp->getSocket(), buffer, sizeof(buffer) - 1, 0, (sockaddr *)&clientAddr, &clientAddrLen);
-//         if (bytesReceived > 0) {
-//             std::cout << "UDP Message from " << inet_ntoa(clientAddr.sin_addr) << ":" << ntohs(clientAddr.sin_port)
-//                       << " - " << buffer << "\n";
-//             // Optionnel : Répondre au client via UDP
-//             std::string response = "Acknowledged: " + std::string(buffer);
-//             sendto(_udp->getSocket(), response.c_str(), response.size(), 0, (sockaddr *)&clientAddr, clientAddrLen);
-//         }
-//     }
-// }
+void Server::listenUdp()
+{
+    while (true) {
+        sockaddr_in clientAddr{};
+        socklen_t clientAddrLen = sizeof(clientAddr);
+        char buffer[1024];
+        memset(buffer, 0, sizeof(buffer));
+        ssize_t bytesReceived = recvfrom(_udp->getSocket(), buffer, sizeof(buffer) - 1, 0, (sockaddr *)&clientAddr, &clientAddrLen);
+        if (bytesReceived > 0) {
+            std::cout << "UDP Message from " << inet_ntoa(clientAddr.sin_addr) << ":" << ntohs(clientAddr.sin_port)
+                      << " - " << buffer << "\n";
+            // Optionnel : Répondre au client via UDP
+            std::string response = "Acknowledged: " + std::string(buffer);
+            sendto(_udp->getSocket(), response.c_str(), response.size(), 0, (sockaddr *)&clientAddr, clientAddrLen);
+        }
+    }
+}

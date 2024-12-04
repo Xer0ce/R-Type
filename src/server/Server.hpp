@@ -9,6 +9,7 @@
 
 #include <memory>
 #include "./tcp/Tcp.hpp"
+#include "./udp/UDP.hpp"
 
 class Server {
     public:
@@ -17,9 +18,9 @@ class Server {
 
         void start();
         void listenTcp();
-        // void listenUdp();
+        void listenUdp();
 
     private:
         std::unique_ptr<IProtocol> _tcp;
-        // std::unique_ptr<IProtocol> _udp;
+        std::unique_ptr<IProtocol> _udp;
 };
