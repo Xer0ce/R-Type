@@ -114,7 +114,6 @@ bool Tcp::sendData(const std::string &data, const std::string &destIp,
 }
 
 std::vector<uint8_t> Tcp::receiveData() {
-std::vector<uint8_t> Tcp::receiveData() {
   printf("Receiving data...\n");
   std::vector<uint8_t> buffer(1024);
   ssize_t bytesReceived = recv(_socket, buffer.data(), buffer.size(), 0);
@@ -122,7 +121,8 @@ std::vector<uint8_t> Tcp::receiveData() {
     perror("recv failed");
     throw std::runtime_error("Failed to receive data.");
   }
-  return std::string(buffer, bytesReceived);
+  buffer.resize(bytesReceived);
+  return buffer;
 }
 
 void Tcp::closeSocket() {
