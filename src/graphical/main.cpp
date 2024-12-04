@@ -1,11 +1,11 @@
-#include "Registry.hpp"
+#include "../ecs/Registry.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
-#include "Control.hpp"
-#include "Draw.hpp"
-#include "Health.hpp"
-#include "Position.hpp"
-#include "Velocity.hpp"
+#include "Components/Control.hpp"
+#include "Components/Draw.hpp"
+#include "Components/Health.hpp"
+#include "Components/Position.hpp"
+#include "Components/Velocity.hpp"
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <vector>
