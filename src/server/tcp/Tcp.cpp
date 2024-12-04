@@ -62,15 +62,17 @@ bool Tcp::listenSocket(int backlog) {
       std::thread clientThread([clientSocket]() {
         std::vector<uint8_t> buffer(1024);
         while (true) {
-          ssize_t bytesReceived = recv(clientSocket, buffer.data(), buffer.size(), 0);
+          ssize_t bytesReceived =
+              recv(clientSocket, buffer.data(), buffer.size(), 0);
           if (bytesReceived <= 0) {
             std::cout << "Client disconnected.\n";
             close(clientSocket);
             break;
           }
           buffer.resize(bytesReceived);
-          //decrypt message
-          std::cout << "Received: " << std::string(buffer.begin(), buffer.end()) << std::endl;
+          // decrypt message
+          std::cout << "Received: " << std::string(buffer.begin(), buffer.end())
+                    << std::endl;
         }
       });
       clientThread.detach();

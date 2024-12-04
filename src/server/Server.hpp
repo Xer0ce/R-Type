@@ -7,9 +7,9 @@
 
 #pragma once
 
+#include "../ecs/Registry.hpp"
 #include "./tcp/Tcp.hpp"
 #include "./udp/UDP.hpp"
-#include "../ecs/Registry.hpp"
 
 class Server {
 public:
