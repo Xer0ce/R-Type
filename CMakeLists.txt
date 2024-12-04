@@ -10,6 +10,7 @@ option(BUILD_CLIENT "Build the client executable" ON)
 option(BUILD_SERVER "Build the server executable" ON)
 
 add_subdirectory(external/SDL3)
+add_subdirectory(external/SDL3_ttf)
 
 if(BUILD_CLIENT)
     file(GLOB SOURCES_CLIENT "src/graphical/*.cpp")
@@ -17,6 +18,7 @@ if(BUILD_CLIENT)
     target_include_directories(r-type_client PRIVATE include/graphical)
 
     target_link_libraries(r-type_client PRIVATE SDL3::SDL3)
+    target_link_libraries(r-type_client PRIVATE SDL3_ttf::SDL3_ttf)
 
     target_compile_definitions(r-type_client PRIVATE $<$<CONFIG:Debug>:DEBUG>)
 endif()
