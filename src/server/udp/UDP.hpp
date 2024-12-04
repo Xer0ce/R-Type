@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../AProtocol.hpp"
+#include <arpa/inet.h>
 
 class UDP : public AProtocol {
 public:
@@ -18,8 +19,10 @@ public:
   bool bindSocket() override;
   bool sendData(const std::string &data, const std::string &destIp,
                 std::size_t destPort) override;
-  std::string receiveData() override;
+  std::vector<uint8_t> receiveData() override;
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
   int acceptConnection() override;
+  std::string deserialize_connect(const std::vector<uint8_t> &data); // Assurez-vous que cette ligne est présente
+
 };
