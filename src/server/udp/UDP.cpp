@@ -50,8 +50,7 @@ bool UDP::bindSocket() {
   return true;
 }
 
-bool UDP::sendData(const std::string &data, const std::string &destIp,
-                   std::size_t destPort) {
+bool UDP::sendData(const std::string &data, const std::string &destIp, std::size_t destPort) {
   sockaddr_in destAddr{};
   destAddr.sin_family = AF_INET;
   destAddr.sin_port = htons(destPort);
@@ -69,15 +68,13 @@ bool UDP::sendData(const std::string &data, const std::string &destIp,
     return false;
   }
 
-  std::cout << "[INFO] Sent data to " << destIp << ":" << destPort << " -> "
-            << data << std::endl;
   return true;
 }
 
-std::string UDP::receiveData() {
+std::vector<uint8_t> UDP::receiveData() {
   sockaddr_in senderAddr{};
   socklen_t senderAddrLen = sizeof(senderAddr);
-  char buffer[1024];
+  uint8_t buffer[1024];
   std::memset(buffer, 0, sizeof(buffer));
 
   ssize_t bytesReceived = recvfrom(_socket, buffer, sizeof(buffer) - 1, 0,
@@ -88,10 +85,32 @@ std::string UDP::receiveData() {
   }
 
   std::string senderIp = inet_ntoa(senderAddr.sin_addr);
+  std::vector<uint8_t> data(buffer, buffer + bytesReceived);
   std::cout << "[INFO] Received data from " << senderIp << ":"
-            << ntohs(senderAddr.sin_port) << " -> " << buffer << std::endl;
+            << ntohs(senderAddr.sin_port) << std::endl;
 
-  return std::string(buffer, bytesReceived);
+  try {
+    std::string player_name = deserialize_connect(data);
+    std::cout << "Deserialized player name: " << player_name << std::endl;
+  } catch (const std::runtime_error &e) {
+    std::cerr << "Failed to deserialize data: " << e.what() << std::endl;
+  }
+
+  return data;
+}
+
+std::string UDP::deserialize_connect(const std::vector<uint8_t> &data) {
+  if (data.size() < 3 || data[0] != 0x01) {
+    throw std::runtime_error("Invalid connect packet.");
+  }
+
+  uint16_t payload_size = ntohs((data[1] << 8) | data[2]);
+  if (data.size() < 3 + payload_size) {
+    throw std::runtime_error("Incomplete connect packet.");
+  }
+
+  std::string player_name(data.begin() + 3, data.begin() + 3 + payload_size);
+  return player_name;
 }
 
 bool UDP::listenSocket(int backlog) {
