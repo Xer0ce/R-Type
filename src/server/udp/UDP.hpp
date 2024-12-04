@@ -24,9 +24,9 @@ public:
   bool listenSocket(int backlog = 5) override;
   int acceptConnection() override;
 
-    private:
-        std::size_t _port;
-        std::string _ip;
-        sockaddr_in _addr;
-        int _socket;
+private:
+  std::size_t _port;
+  std::string _ip;
+  sockaddr_in _addr;
+  int _socket;
 };
