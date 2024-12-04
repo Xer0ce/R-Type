@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2024
+** R-Type
+** File description:
+** Server
+*/
+
 #include "Server.hpp"
 #include <iostream>
 #include <thread>
@@ -48,7 +55,6 @@ void Server::listenTcp() {
             break;
           }
           std::cout << "TCP Message: " << buffer << "\n";
-          // Répondre au client si nécessaire
         }
       });
       clientThread.detach();
@@ -68,7 +74,6 @@ void Server::listenUdp() {
     if (bytesReceived > 0) {
       std::cout << "UDP Message from " << inet_ntoa(clientAddr.sin_addr) << ":"
                 << ntohs(clientAddr.sin_port) << " - " << buffer << "\n";
-      // Optionnel : Répondre au client via UDP
       std::string response = "Acknowledged: " + std::string(buffer);
       sendto(_udp->getSocket(), response.c_str(), response.size(), 0,
              (sockaddr *)&clientAddr, clientAddrLen);
