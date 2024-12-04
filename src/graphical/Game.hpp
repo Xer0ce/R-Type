@@ -8,8 +8,8 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <SDL3/SDL.h>
 #include "Registry.hpp"
+#include <SDL3/SDL.h>
 
 class Health {
 public:
@@ -47,13 +47,14 @@ public:
   void reset() { moveUp = moveDown = moveLeft = moveRight = false; }
 };
 
-void createPlayer(Registry &registry, float positionX, float positionY, SDL_Color color, SDL_Rect size) {
-    auto entity = registry.spawn_entity();
-    registry.add_component<Position>(entity, Position(positionX, positionY));
-    registry.add_component<Velocity>(entity, Velocity());
-    registry.add_component<Health>(entity, Health());
-    registry.add_component<Drawable>(entity, Drawable(color, size));
-    registry.add_component<Controllable>(entity, Controllable());
+void createPlayer(Registry &registry, float positionX, float positionY,
+                  SDL_Color color, SDL_Rect size) {
+  auto entity = registry.spawn_entity();
+  registry.add_component<Position>(entity, Position(positionX, positionY));
+  registry.add_component<Velocity>(entity, Velocity());
+  registry.add_component<Health>(entity, Health());
+  registry.add_component<Drawable>(entity, Drawable(color, size));
+  registry.add_component<Controllable>(entity, Controllable());
 }
 
 #endif // GAME_HPP
