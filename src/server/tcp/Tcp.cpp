@@ -60,17 +60,17 @@ bool Tcp::listenSocket(int backlog) {
     int clientSocket = acceptConnection();
     if (clientSocket >= 0) {
       std::thread clientThread([clientSocket]() {
-        char buffer[1024];
-        memset(buffer, 0, sizeof(buffer));
+        std::vector<uint8_t> buffer(1024);
         while (true) {
-          ssize_t bytesReceived =
-              recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+          ssize_t bytesReceived = recv(clientSocket, buffer.data(), buffer.size(), 0);
           if (bytesReceived <= 0) {
             std::cout << "Client disconnected.\n";
             close(clientSocket);
             break;
           }
-          std::cout << "TCP Message: " << buffer << "\n";
+          buffer.resize(bytesReceived);
+          //decrypt message
+          std::cout << "Received: " << std::string(buffer.begin(), buffer.end()) << std::endl;
         }
       });
       clientThread.detach();
@@ -111,16 +111,16 @@ bool Tcp::sendData(const std::string &data, const std::string &destIp,
   return true;
 }
 
-std::string Tcp::receiveData() {
+std::vector<uint8_t> Tcp::receiveData() {
   printf("Receiving data...\n");
-  char buffer[1024];
-  std::memset(buffer, 0, sizeof(buffer));
-  ssize_t bytesReceived = recv(_socket, buffer, sizeof(buffer) - 1, 0);
+  std::vector<uint8_t> buffer(1024);
+  ssize_t bytesReceived = recv(_socket, buffer.data(), buffer.size(), 0);
   if (bytesReceived < 0) {
     perror("recv failed");
     throw std::runtime_error("Failed to receive data.");
   }
-  return std::string(buffer, bytesReceived);
+  buffer.resize(bytesReceived);
+  return buffer;
 }
 
 void Tcp::closeSocket() {

@@ -9,6 +9,7 @@
 
 #include "./tcp/Tcp.hpp"
 #include "./udp/UDP.hpp"
+#include "../ecs/Registry.hpp"
 
 class Server {
 public:
@@ -21,4 +22,6 @@ public:
 private:
   std::unique_ptr<IProtocol> _tcp;
   std::unique_ptr<IProtocol> _udp;
+
+  std::unique_ptr<Registry> _ecs;
 };
