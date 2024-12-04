@@ -3,14 +3,21 @@ name: Clang Format Check
 on:
   pull_request:
     branches:
-      - dev
+      - net
+      - ecs
+      - graphic
   push:
     branches:
-      - dev
+      - net
+      - ecs
+      - graphic
 
 jobs:
   clang-format:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout code
@@ -19,8 +26,7 @@ jobs:
     - name: Install clang-format
       run: sudo apt-get install -y clang-format
 
-    - name: Apply clang-format (only on push)
-      if: github.event_name == 'push'
+    - name: Apply clang-format
       run: |
         find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\|c\|h\)' -exec clang-format -i {} +
 
@@ -29,9 +35,23 @@ jobs:
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
+    - name: Check for changes
+      id: changes
+      run: |
+        if git diff --quiet; then
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+        else
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Debugging
+      run: |
+        git status
+        git diff
+
     - name: Commit and push changes
+      if: github.event_name == 'push' && steps.changes.outputs.has_changes == 'true'
       run: |
         git add .
-        git commit -m "Apply clang-format changes"
+        git commit -m "FORMAT : Apply clang-format changes"
         git push
-      if: github.event_name == 'push'

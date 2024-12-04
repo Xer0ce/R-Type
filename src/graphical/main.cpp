@@ -1,6 +1,10 @@
-#include "Game.hpp"
+#include "../ecs/Registry.hpp"
+#include "Components/Control.hpp"
+#include "Components/Draw.hpp"
+#include "Components/Health.hpp"
+#include "Components/Position.hpp"
+#include "Components/Velocity.hpp"
 #include "Menu.hpp"
-#include "Registry.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
 #include <vector>
@@ -23,7 +27,7 @@ void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
 void control_system(Registry &registry) {
   const bool *keyState = SDL_GetKeyboardState(NULL);
 
-  auto &controllables = registry.get_components<Controllable>();
+  auto &controllables = registry.get_components<Control>();
   auto &velocities = registry.get_components<Velocity>();
 
   for (std::size_t i = 0; i < controllables.size(); ++i) {
@@ -47,7 +51,7 @@ void control_system(Registry &registry) {
 
 void draw_system(Registry &registry, SDL_Renderer *renderer) {
   auto &positions = registry.get_components<Position>();
-  auto &drawables = registry.get_components<Drawable>();
+  auto &drawables = registry.get_components<Draw>();
 
   for (std::size_t i = 0; i < positions.size(); ++i) {
     if (positions[i] && drawables[i]) {
@@ -146,11 +150,17 @@ int main() {
 
     registry.register_component<Position>();
     registry.register_component<Velocity>();
-    registry.register_component<Drawable>();
-    registry.register_component<Controllable>();
+    registry.register_component<Draw>();
+    registry.register_component<Control>();
     registry.register_component<Health>();
 
-    createPlayer(registry, 100, 150, {0, 255, 0, 255}, {100, 150, 50, 50});
+    auto entity = registry.spawn_entity();
+    registry.add_component<Position>(entity, Position(100, 150));
+    registry.add_component<Velocity>(entity, Velocity());
+    registry.add_component<Health>(entity, Health());
+    registry.add_component<Draw>(entity,
+                                 Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+    registry.add_component<Control>(entity, Control());
 
     bool running = true;
     SDL_Event event;
