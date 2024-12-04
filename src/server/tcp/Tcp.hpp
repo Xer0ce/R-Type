@@ -2,17 +2,17 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** UDP
+** tcp
 */
 
 #pragma once
 
 #include "../AProtocol.hpp"
 
-class UDP : public AProtocol {
+class Tcp : public AProtocol {
 public:
-  UDP(std::size_t port = 4242, std::string ip = "0.0.0.0");
-  ~UDP();
+  Tcp(std::size_t port = 4243, std::string ip = "0.0.0.0");
+  ~Tcp();
 
   bool initializeSocket() override;
   bool bindSocket() override;
