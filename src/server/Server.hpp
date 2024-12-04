@@ -17,8 +17,6 @@ public:
   ~Server();
 
   void start();
-  void listenTcp();
-  void listenUdp();
 
 private:
   std::unique_ptr<IProtocol> _tcp;

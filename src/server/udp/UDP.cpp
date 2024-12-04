@@ -94,9 +94,24 @@ std::string UDP::receiveData() {
   return std::string(buffer, bytesReceived);
 }
 
-int UDP::getSocket() { return _socket; }
-
-bool UDP::listenSocket(int backlog) { return true; }
+bool UDP::listenSocket(int backlog) {
+    while (true) {
+    sockaddr_in clientAddr{};
+    socklen_t clientAddrLen = sizeof(clientAddr);
+    char buffer[1024];
+    memset(buffer, 0, sizeof(buffer));
+    ssize_t bytesReceived =
+        recvfrom(getSocket(), buffer, sizeof(buffer) - 1, 0,
+                 (sockaddr *)&clientAddr, &clientAddrLen);
+    if (bytesReceived > 0) {
+      std::cout << "UDP Message from " << inet_ntoa(clientAddr.sin_addr) << ":"
+                << ntohs(clientAddr.sin_port) << " - " << buffer << "\n";
+      std::string response = "Acknowledged: " + std::string(buffer);
+      sendto(getSocket(), response.c_str(), response.size(), 0,
+             (sockaddr *)&clientAddr, clientAddrLen);
+    }
+  }
+}
 
 int UDP::acceptConnection() { return 0; }
 

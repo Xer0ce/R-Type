@@ -21,14 +21,20 @@ public:
   ~AProtocol();
 
   void setPort(std::size_t port);
+  std::size_t &getPort();
+
   void setIp(std::string ip);
+  std::string &getIp();
+
+  void setAddr(sockaddr_in addr);
+  sockaddr_in &getAddr();
+
   void setSocket(int socket);
-  std::size_t getPort() const;
-  std::string getIp() const;
-  int getSocket() const;
+  int getSocket();
 
 protected:
   std::size_t _port;
   std::string _ip;
+  sockaddr_in _addr;
   int _socket;
 };

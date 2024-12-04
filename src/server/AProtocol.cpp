@@ -11,14 +11,42 @@ AProtocol::AProtocol(std::size_t port, std::string ip) : _port(port), _ip(ip) {}
 
 AProtocol::~AProtocol() {}
 
-void AProtocol::setPort(std::size_t port) { _port = port; }
+void AProtocol::setPort(std::size_t port)
+{
+    _port = port;
+}
 
-void AProtocol::setIp(std::string ip) { _ip = ip; }
+std::size_t &AProtocol::getPort()
+{
+    return _port;
+}
 
-void AProtocol::setSocket(int socket) { _socket = socket; }
+void AProtocol::setIp(std::string ip)
+{
+    _ip = ip;
+}
 
-std::size_t AProtocol::getPort() const { return (_port); }
+std::string &AProtocol::getIp()
+{
+    return _ip;
+}
 
-std::string AProtocol::getIp() const { return (_ip); }
+void AProtocol::setAddr(sockaddr_in addr)
+{
+    _addr = addr;
+}
 
-int AProtocol::getSocket() const { return (_socket); }
+sockaddr_in &AProtocol::getAddr()
+{
+    return _addr;
+}
+
+void AProtocol::setSocket(int socket)
+{
+    _socket = socket;
+}
+
+int AProtocol::getSocket()
+{
+    return _socket;
+}

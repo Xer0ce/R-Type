@@ -22,12 +22,4 @@ public:
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
   int acceptConnection() override;
-
-  int getSocket() override;
-
-private:
-  std::size_t _port;
-  std::string _ip;
-  sockaddr_in _addr;
-  int _socket;
 };
