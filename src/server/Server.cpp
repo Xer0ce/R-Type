@@ -8,16 +8,14 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort, std:
     _udp = std::make_unique<UDP>(udpPort, udpIp);
 }
 
-Server::~Server()
-{
-    // Les destructeurs des objets uniques gèrent les sockets
+Server::~Server() {
+  // Les destructeurs des objets uniques gèrent les sockets
 }
 
-void Server::start()
-{
-    if (!_tcp->initializeSocket() || !_tcp->bindSocket()) {
-        throw std::runtime_error("Failed to initialize TCP.");
-    }
+void Server::start() {
+  if (!_tcp->initializeSocket() || !_tcp->bindSocket()) {
+    throw std::runtime_error("Failed to initialize TCP.");
+  }
 
     if (!_udp->initializeSocket() || !_udp->bindSocket()) {
         throw std::runtime_error("Failed to initialize UDP.");
@@ -30,33 +28,32 @@ void Server::start()
     udpThread.join();
 }
 
-void Server::listenTcp()
-{
-    if (!_tcp->listenSocket()) {
-        throw std::runtime_error("Failed to listen on TCP socket.");
-    }
+void Server::listenTcp() {
+  if (!_tcp->listenSocket()) {
+    throw std::runtime_error("Failed to listen on TCP socket.");
+  }
 
-
-    while (true) {
-        int clientSocket = _tcp->acceptConnection();
-        if (clientSocket >= 0) {
-            std::thread clientThread([clientSocket]() {
-                char buffer[1024];
-                memset(buffer, 0, sizeof(buffer));
-                while (true) {
-                    ssize_t bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
-                    if (bytesReceived <= 0) {
-                        std::cout << "Client disconnected.\n";
-                        close(clientSocket);
-                        break;
-                    }
-                    std::cout << "TCP Message: " << buffer << "\n";
-                    // Répondre au client si nécessaire
-                }
-            });
-            clientThread.detach();
+  while (true) {
+    int clientSocket = _tcp->acceptConnection();
+    if (clientSocket >= 0) {
+      std::thread clientThread([clientSocket]() {
+        char buffer[1024];
+        memset(buffer, 0, sizeof(buffer));
+        while (true) {
+          ssize_t bytesReceived =
+              recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+          if (bytesReceived <= 0) {
+            std::cout << "Client disconnected.\n";
+            close(clientSocket);
+            break;
+          }
+          std::cout << "TCP Message: " << buffer << "\n";
+          // Répondre au client si nécessaire
         }
+      });
+      clientThread.detach();
     }
+  }
 }
 
 void Server::listenUdp()
