@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../ecs/Registry.hpp"
 #include "./tcp/Tcp.hpp"
 #include "./udp/UDP.hpp"
 
@@ -21,4 +22,6 @@ public:
 private:
   std::unique_ptr<IProtocol> _tcp;
   std::unique_ptr<IProtocol> _udp;
+
+  std::unique_ptr<Registry> _ecs;
 };

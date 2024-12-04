@@ -7,7 +7,9 @@
 
 #pragma once
 
+#include <cstdint>
 #include <iostream>
+#include <vector>
 
 class IProtocol {
 public:

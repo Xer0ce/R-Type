@@ -13,6 +13,7 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
                std::string udpIp) {
   _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
   _udp = std::make_unique<UDP>(udpPort, udpIp);
+  _ecs = std::make_unique<Registry>();
 }
 
 Server::~Server() {}
