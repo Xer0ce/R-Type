@@ -23,6 +23,7 @@ private:
 public:
   UdpClient(const std::string &ip, int port);
   void send_data(std::vector<uint8_t> &data);
+  void send_data(std::vector<uint8_t> &&data);
   void receive_data(std::vector<uint8_t> &buffer);
   ~UdpClient() { close(_sockfd); }
 };
