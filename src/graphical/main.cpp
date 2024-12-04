@@ -1,15 +1,14 @@
 #include "../ecs/Registry.hpp"
-#include "TcpClient.hpp"
-#include "UdpClient.hpp"
 #include "Components/Control.hpp"
 #include "Components/Draw.hpp"
 #include "Components/Health.hpp"
 #include "Components/Position.hpp"
 #include "Components/Velocity.hpp"
+#include "TcpClient.hpp"
+#include "UdpClient.hpp"
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <vector>
-
 
 void position_system(Registry &registry, float deltaTime) {
   auto &positions = registry.get_components<Position>();
@@ -135,8 +134,8 @@ int main() {
   registry.add_component<Position>(entity, Position(100, 150));
   registry.add_component<Velocity>(entity, Velocity());
   registry.add_component<Health>(entity, Health());
-  registry.add_component<Draw>(
-      entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+  registry.add_component<Draw>(entity,
+                               Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
   registry.add_component<Control>(entity, Control());
 
   bool running = true;

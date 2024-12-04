@@ -9,8 +9,8 @@
 #define HEALTH_HPP
 
 struct Health {
-    int hp;
-    Health(int hp = 100) : hp(hp) {}
+  int hp;
+  Health(int hp = 100) : hp(hp) {}
 };
 
-#endif //HEALTH_HPP
+#endif // HEALTH_HPP
