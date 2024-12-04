@@ -56,7 +56,26 @@ bool Tcp::listenSocket(int backlog) {
     return false;
   }
   std::cout << "[INFO] Server is listening on port " << _port << std::endl;
-  return true;
+  while (true) {
+    int clientSocket = acceptConnection();
+    if (clientSocket >= 0) {
+      std::thread clientThread([clientSocket]() {
+        char buffer[1024];
+        memset(buffer, 0, sizeof(buffer));
+        while (true) {
+          ssize_t bytesReceived =
+              recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+          if (bytesReceived <= 0) {
+            std::cout << "Client disconnected.\n";
+            close(clientSocket);
+            break;
+          }
+          std::cout << "TCP Message: " << buffer << "\n";
+        }
+      });
+      clientThread.detach();
+    }
+  }
 }
 
 int Tcp::acceptConnection() {
@@ -103,8 +122,6 @@ std::string Tcp::receiveData() {
   }
   return std::string(buffer, bytesReceived);
 }
-
-int Tcp::getSocket() { return _socket; }
 
 void Tcp::closeSocket() {
   if (_socket >= 0) {
