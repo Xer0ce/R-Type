@@ -95,14 +95,13 @@ std::string UDP::receiveData() {
 }
 
 bool UDP::listenSocket(int backlog) {
-    while (true) {
+  while (true) {
     sockaddr_in clientAddr{};
     socklen_t clientAddrLen = sizeof(clientAddr);
     char buffer[1024];
     memset(buffer, 0, sizeof(buffer));
-    ssize_t bytesReceived =
-        recvfrom(getSocket(), buffer, sizeof(buffer) - 1, 0,
-                 (sockaddr *)&clientAddr, &clientAddrLen);
+    ssize_t bytesReceived = recvfrom(getSocket(), buffer, sizeof(buffer) - 1, 0,
+                                     (sockaddr *)&clientAddr, &clientAddrLen);
     if (bytesReceived > 0) {
       std::cout << "UDP Message from " << inet_ntoa(clientAddr.sin_addr) << ":"
                 << ntohs(clientAddr.sin_port) << " - " << buffer << "\n";

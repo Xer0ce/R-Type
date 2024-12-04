@@ -15,8 +15,7 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
   _udp = std::make_unique<UDP>(udpPort, udpIp);
 }
 
-Server::~Server() {
-}
+Server::~Server() {}
 
 void Server::start() {
   if (!_tcp->initializeSocket() || !_tcp->bindSocket()) {
