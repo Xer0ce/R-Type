@@ -117,15 +117,26 @@ bool UDP::listenSocket(int backlog) {
   while (true) {
     sockaddr_in clientAddr{};
     socklen_t clientAddrLen = sizeof(clientAddr);
-    char buffer[1024];
-    memset(buffer, 0, sizeof(buffer));
-    ssize_t bytesReceived = recvfrom(getSocket(), buffer, sizeof(buffer) - 1, 0,
+    uint8_t buffer[1024];
+    std::memset(buffer, 0, sizeof(buffer));
+    
+    ssize_t bytesReceived = recvfrom(_socket, buffer, sizeof(buffer) - 1, 0,
                                      (sockaddr *)&clientAddr, &clientAddrLen);
     if (bytesReceived > 0) {
-      std::cout << "UDP Message from " << inet_ntoa(clientAddr.sin_addr) << ":"
-                << ntohs(clientAddr.sin_port) << " - " << buffer << "\n";
-      std::string response = "Acknowledged: " + std::string(buffer);
-      sendto(getSocket(), response.c_str(), response.size(), 0,
+      std::string senderIp = inet_ntoa(clientAddr.sin_addr);
+      std::vector<uint8_t> data(buffer, buffer + bytesReceived);
+      std::cout << "[INFO] Received data from " << senderIp << ":"
+                << ntohs(clientAddr.sin_port) << std::endl;
+
+      try {
+        std::string player_name = deserialize_connect(data);
+        std::cout << "Deserialized player name: " << player_name << std::endl;
+      } catch (const std::runtime_error &e) {
+        std::cerr << "Failed to deserialize data: " << e.what() << std::endl;
+      }
+
+      std::string response = "Acknowledged: " + std::string(data.begin(), data.end());
+      sendto(_socket, response.c_str(), response.size(), 0,
              (sockaddr *)&clientAddr, clientAddrLen);
     }
   }
@@ -140,3 +151,4 @@ void UDP::closeSocket() {
     std::cout << "[DEBUG] UDP socket closed." << std::endl;
   }
 }
+  
