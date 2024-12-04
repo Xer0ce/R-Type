@@ -23,7 +23,9 @@ endif()
 
 if(BUILD_SERVER)
     file(GLOB SOURCES_SERVER "src/server/*.cpp")
-    add_executable(r-type_server ${SOURCES_SERVER})
+    file(GLOB SOURCES_SERVER_TCP "src/server/tcp/*.cpp")
+    file(GLOB SOURCES_SERVER_UDP "src/server/udp/*.cpp")
+    add_executable(r-type_server ${SOURCES_SERVER} ${SOURCES_SERVER_TCP} ${SOURCES_SERVER_UDP})
     target_include_directories(r-type_server PRIVATE include/server)
 
     target_link_libraries(r-type_server PRIVATE)
