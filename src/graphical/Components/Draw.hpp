@@ -11,10 +11,10 @@
 #define DRAW_HPP
 
 struct Draw {
-    SDL_Rect rect;
-    SDL_Color color;
+  SDL_Rect rect;
+  SDL_Color color;
 
-    Draw(SDL_Color col, SDL_Rect size) : rect(size), color(col) {}
+  Draw(SDL_Color col, SDL_Rect size) : rect(size), color(col) {}
 };
 
-#endif //DRAW_HPP
+#endif // DRAW_HPP
