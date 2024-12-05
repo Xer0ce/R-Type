@@ -86,12 +86,15 @@ std::vector<uint8_t> UDP::receiveData() {
 
   std::string senderIp = inet_ntoa(senderAddr.sin_addr);
   std::vector<uint8_t> data(buffer, buffer + bytesReceived);
-  std::cout << "[INFO] Received data from " << senderIp << ":"
+  std::cout << "[UDP] Received data from " << senderIp << ":"
             << ntohs(senderAddr.sin_port) << std::endl;
+  std::cout << "[UDP] Data size: " << std::endl;
+  std::cout << "[UDP] Data: " << std::string(data.begin(), data.end())
+            << std::endl;
 
   try {
-    std::string player_name = deserialize_connect(data);
-    std::cout << "Deserialized player name: " << player_name << std::endl;
+    std::string deserialized_data = deserialize_connect(data);
+    std::cout << "Deserialized data: " << deserialized_data << std::endl;
   } catch (const std::runtime_error &e) {
     std::cerr << "Failed to deserialize data: " << e.what() << std::endl;
   }
@@ -109,8 +112,8 @@ std::string UDP::deserialize_connect(const std::vector<uint8_t> &data) {
     throw std::runtime_error("Incomplete connect packet.");
   }
 
-  std::string player_name(data.begin() + 3, data.begin() + 3 + payload_size);
-  return player_name;
+  std::string deserialized_data(data.begin() + 3, data.begin() + 3 + payload_size);
+  return deserialized_data;
 }
 
 bool UDP::listenSocket(int backlog) {
@@ -127,13 +130,8 @@ bool UDP::listenSocket(int backlog) {
       std::vector<uint8_t> data(buffer, buffer + bytesReceived);
       std::cout << "[INFO] Received data from " << senderIp << ":"
                 << ntohs(clientAddr.sin_port) << std::endl;
-
-      try {
-        std::string player_name = deserialize_connect(data);
-        std::cout << "Deserialized player name: " << player_name << std::endl;
-      } catch (const std::runtime_error &e) {
-        std::cerr << "Failed to deserialize data: " << e.what() << std::endl;
-      }
+      std::cout << "[UDP] Data: " << std::string(data.begin(), data.end())
+                << std::endl;
 
       std::string response = "Acknowledged: " + std::string(data.begin(), data.end());
       sendto(_socket, response.c_str(), response.size(), 0,
