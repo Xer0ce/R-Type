@@ -140,7 +140,7 @@ int main() {
 
   try {
     TcpClient tcp(ipAddress, port);
-    UdpClient udp(ipAddress, 12346);
+    UdpClient udp(ipAddress, 4242);
 
     std::string player_name = "LEZIZIDEMELENCHON";
     auto connect_packet = serialize_connect(player_name);
