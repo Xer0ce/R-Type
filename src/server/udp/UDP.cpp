@@ -52,7 +52,8 @@ bool UDP::bindSocket() {
   return true;
 }
 
-bool UDP::sendData(const std::string &data, const std::string &destIp, std::size_t destPort) {
+bool UDP::sendData(const std::string &data, const std::string &destIp,
+                   std::size_t destPort) {
   sockaddr_in destAddr{};
   destAddr.sin_family = AF_INET;
   destAddr.sin_port = htons(destPort);
@@ -114,7 +115,8 @@ std::string UDP::deserialize_connect(const std::vector<uint8_t> &data) {
     throw std::runtime_error("Incomplete connect packet.");
   }
 
-  std::string deserialized_data(data.begin() + 3, data.begin() + 3 + payload_size);
+  std::string deserialized_data(data.begin() + 3,
+                                data.begin() + 3 + payload_size);
   return deserialized_data;
 }
 
@@ -167,4 +169,3 @@ void UDP::closeSocket() {
     std::cout << "[DEBUG] UDP socket closed." << std::endl;
   }
 }
-  
