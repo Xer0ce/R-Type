@@ -113,7 +113,8 @@ std::string UDP::deserialize_connect(const std::vector<uint8_t> &data) {
     throw std::runtime_error("Incomplete connect packet.");
   }
 
-  std::string deserialized_data(data.begin() + 3, data.begin() + 3 + payload_size);
+  std::string deserialized_data(data.begin() + 3,
+                                data.begin() + 3 + payload_size);
   return deserialized_data;
 }
 
