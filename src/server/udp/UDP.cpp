@@ -11,6 +11,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <unistd.h>
+#include <iomanip>
+#include <sstream>
 
 UDP::UDP(std::size_t port, std::string ip) {
   _port = port;
@@ -128,10 +130,15 @@ bool UDP::listenSocket(int backlog) {
     if (bytesReceived > 0) {
       std::string senderIp = inet_ntoa(clientAddr.sin_addr);
       std::vector<uint8_t> data(buffer, buffer + bytesReceived);
-      std::cout << "[INFO] Received data from " << senderIp << ":"
+      std::cout << "[UDP INFO] Received data from " << senderIp << ":"
                 << ntohs(clientAddr.sin_port) << std::endl;
-      std::cout << "[UDP] Data: " << std::string(data.begin(), data.end())
-                << std::endl;
+
+      std::ostringstream oss;
+      for (uint8_t byte : data) {
+        oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte) << " ";
+      }
+      std::string hexData = oss.str();
+      std::cout << "[UDP] Data: " << hexData << std::endl;
 
       std::string response = "Acknowledged: " + std::string(data.begin(), data.end());
       sendto(_socket, response.c_str(), response.size(), 0,

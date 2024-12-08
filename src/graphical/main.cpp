@@ -8,6 +8,7 @@
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
 #include <vector>
+#include <cstring>
 
 void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
   auto &positions = registry.get_components<Position>();
@@ -18,13 +19,10 @@ void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
       positions[i]->x += velocities[i]->x * deltaTime;
       positions[i]->y += velocities[i]->y * deltaTime;
     }
-    std::string move_packet = "X: " + std::to_string(positions[i]->x) +
-                              " Y: " + std::to_string(positions[i]->y) + "\n";
-    udp.send_data(std::vector<uint8_t>(move_packet.begin(), move_packet.end()));
   }
 }
 
-void control_system(Registry &registry) {
+void control_system(Registry &registry, UdpClient &udp) {
   const bool *keyState = SDL_GetKeyboardState(NULL);
 
   auto &controllables = registry.get_components<Control>();
@@ -32,6 +30,9 @@ void control_system(Registry &registry) {
 
   for (std::size_t i = 0; i < controllables.size(); ++i) {
     if (controllables[i] && velocities[i]) {
+      int initialX = velocities[i]->x;
+      int initialY = velocities[i]->y;
+
       velocities[i]->x = 0;
       velocities[i]->y = 0;
 
@@ -43,6 +44,24 @@ void control_system(Registry &registry) {
         velocities[i]->x = -100;
       if (keyState[SDL_SCANCODE_RIGHT])
         velocities[i]->x = 100;
+
+      if (velocities[i]->x != initialX || velocities[i]->y != initialY) {
+        std::vector<uint8_t> packet;
+        packet.push_back(0x03);
+        packet.push_back(0x01);
+
+        float posX = static_cast<float>(velocities[i]->x);
+        uint8_t posXBytes[4];
+        std::memcpy(posXBytes, &posX, sizeof(posX));
+        packet.insert(packet.end(), posXBytes, posXBytes + 4);
+
+        float posY = static_cast<float>(velocities[i]->y);
+        uint8_t posYBytes[4];
+        std::memcpy(posYBytes, &posY, sizeof(posY));
+        packet.insert(packet.end(), posYBytes, posYBytes + 4);
+
+        udp.send_data(packet);
+      }
 
       controllables[i]->reset();
     }
@@ -179,7 +198,7 @@ int main() {
         }
       }
 
-      control_system(registry);
+      control_system(registry, udp);
       position_system(registry, deltaTime, udp);
 
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -188,10 +207,6 @@ int main() {
       draw_system(registry, renderer);
 
       SDL_RenderPresent(renderer);
-
-      std::vector<uint8_t> move_packet = {0x04, 0x01, 0x02};
-      udp.send_data(move_packet);
-
       //   std::vector<uint8_t> response;
       //   tcp.receive_data(response);
     }
