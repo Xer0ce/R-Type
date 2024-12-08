@@ -8,11 +8,11 @@
 #include "UDP.hpp"
 #include <arpa/inet.h>
 #include <cstring>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <unistd.h>
-#include <iomanip>
-#include <sstream>
 
 UDP::UDP(std::size_t port, std::string ip) {
   _port = port;
@@ -133,7 +133,8 @@ bool UDP::listenSocket(int backlog) {
       ssize_t bytesReceived = recvfrom(_socket, buffer, sizeof(buffer) - 1, 0,
                                        (sockaddr *)&clientAddr, &clientAddrLen);
       if (bytesReceived > 0) {
-        completeMessage.insert(completeMessage.end(), buffer, buffer + bytesReceived);
+        completeMessage.insert(completeMessage.end(), buffer,
+                               buffer + bytesReceived);
         if (bytesReceived < static_cast<ssize_t>(sizeof(buffer))) {
           break;
         }
@@ -149,16 +150,18 @@ bool UDP::listenSocket(int backlog) {
 
       if (completeMessage[0] == 0x03) {
         std::cout << "Move" << std::endl;
-        std::cout << std::string(completeMessage.begin(), completeMessage.end()) << std::endl;
+        std::cout << std::string(completeMessage.begin(), completeMessage.end())
+                  << std::endl;
       }
 
-      std::string response = "Acknowledged: " + std::string(completeMessage.begin(), completeMessage.end());
+      std::string response =
+          "Acknowledged: " +
+          std::string(completeMessage.begin(), completeMessage.end());
       sendto(_socket, response.c_str(), response.size(), 0,
              (sockaddr *)&clientAddr, clientAddrLen);
     }
   }
 }
-
 
 int UDP::acceptConnection() { return 0; }
 

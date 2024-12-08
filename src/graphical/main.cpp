@@ -7,8 +7,8 @@
 #include "Menu.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
-#include <vector>
 #include <cstring>
+#include <vector>
 
 void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
   auto &positions = registry.get_components<Position>();
@@ -38,7 +38,7 @@ void control_system(Registry &registry, UdpClient &udp) {
 
   auto &controllables = registry.get_components<Control>();
   auto &velocities = registry.get_components<Velocity>();
-  auto &positions = registry.get_components<Position>(); 
+  auto &positions = registry.get_components<Position>();
 
   for (std::size_t i = 0; i < controllables.size(); ++i) {
     if (controllables[i] && velocities[i]) {
@@ -58,7 +58,8 @@ void control_system(Registry &registry, UdpClient &udp) {
         velocities[i]->x = 100;
 
       if (velocities[i]->x != initialX || velocities[i]->y != initialY) {
-        std::string str = std::to_string(positions[i]->x) + " " + std::to_string(positions[i]->y);
+        std::string str = std::to_string(positions[i]->x) + " " +
+                          std::to_string(positions[i]->y);
         udp.send_data(serialize_connect_postition(str));
       }
 
