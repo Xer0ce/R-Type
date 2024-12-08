@@ -22,11 +22,23 @@ void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
   }
 }
 
+std::vector<uint8_t> serialize_connect_postition(const std::string &position) {
+  std::vector<uint8_t> packet;
+  packet.push_back(0x03);
+  uint16_t playload_size = htons(position.size());
+  packet.push_back((playload_size >> 8) & 0xFF);
+  packet.push_back(playload_size & 0xFF);
+  for (char c : position)
+    packet.push_back(static_cast<uint8_t>(c));
+  return packet;
+}
+
 void control_system(Registry &registry, UdpClient &udp) {
   const bool *keyState = SDL_GetKeyboardState(NULL);
 
   auto &controllables = registry.get_components<Control>();
   auto &velocities = registry.get_components<Velocity>();
+  auto &positions = registry.get_components<Position>(); 
 
   for (std::size_t i = 0; i < controllables.size(); ++i) {
     if (controllables[i] && velocities[i]) {
@@ -46,21 +58,8 @@ void control_system(Registry &registry, UdpClient &udp) {
         velocities[i]->x = 100;
 
       if (velocities[i]->x != initialX || velocities[i]->y != initialY) {
-        std::vector<uint8_t> packet;
-        packet.push_back(0x03);
-        packet.push_back(0x01);
-
-        float posX = static_cast<float>(velocities[i]->x);
-        uint8_t posXBytes[4];
-        std::memcpy(posXBytes, &posX, sizeof(posX));
-        packet.insert(packet.end(), posXBytes, posXBytes + 4);
-
-        float posY = static_cast<float>(velocities[i]->y);
-        uint8_t posYBytes[4];
-        std::memcpy(posYBytes, &posY, sizeof(posY));
-        packet.insert(packet.end(), posYBytes, posYBytes + 4);
-
-        udp.send_data(packet);
+        std::string str = std::to_string(positions[i]->x) + " " + std::to_string(positions[i]->y);
+        udp.send_data(serialize_connect_postition(str));
       }
 
       controllables[i]->reset();

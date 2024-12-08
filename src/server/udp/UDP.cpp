@@ -122,30 +122,41 @@ bool UDP::listenSocket(int backlog) {
   while (true) {
     sockaddr_in clientAddr{};
     socklen_t clientAddrLen = sizeof(clientAddr);
-    uint8_t buffer[1024];
-    std::memset(buffer, 0, sizeof(buffer));
-    
-    ssize_t bytesReceived = recvfrom(_socket, buffer, sizeof(buffer) - 1, 0,
-                                     (sockaddr *)&clientAddr, &clientAddrLen);
-    if (bytesReceived > 0) {
+    std::vector<uint8_t> completeMessage;
+
+    while (true) {
+      uint8_t buffer[1024];
+      std::memset(buffer, 0, sizeof(buffer));
+
+      ssize_t bytesReceived = recvfrom(_socket, buffer, sizeof(buffer) - 1, 0,
+                                       (sockaddr *)&clientAddr, &clientAddrLen);
+      if (bytesReceived > 0) {
+        completeMessage.insert(completeMessage.end(), buffer, buffer + bytesReceived);
+        if (bytesReceived < static_cast<ssize_t>(sizeof(buffer))) {
+          break;
+        }
+      } else {
+        break;
+      }
+    }
+
+    if (!completeMessage.empty()) {
       std::string senderIp = inet_ntoa(clientAddr.sin_addr);
-      std::vector<uint8_t> data(buffer, buffer + bytesReceived);
       std::cout << "[UDP INFO] Received data from " << senderIp << ":"
                 << ntohs(clientAddr.sin_port) << std::endl;
 
-      std::ostringstream oss;
-      for (uint8_t byte : data) {
-        oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte) << " ";
+      if (completeMessage[0] == 0x03) {
+        std::cout << "Move" << std::endl;
+        std::cout << std::string(completeMessage.begin(), completeMessage.end()) << std::endl;
       }
-      std::string hexData = oss.str();
-      std::cout << "[UDP] Data: " << hexData << std::endl;
 
-      std::string response = "Acknowledged: " + std::string(data.begin(), data.end());
+      std::string response = "Acknowledged: " + std::string(completeMessage.begin(), completeMessage.end());
       sendto(_socket, response.c_str(), response.size(), 0,
              (sockaddr *)&clientAddr, clientAddrLen);
     }
   }
 }
+
 
 int UDP::acceptConnection() { return 0; }
 
