@@ -14,6 +14,7 @@
 #include <thread>
 #include <unistd.h>
 #include <vector>
+#include <mutex>
 
 class AProtocol : public IProtocol {
 public:
@@ -32,9 +33,14 @@ public:
   void setSocket(int socket);
   int getSocket();
 
+  std::string getType() override;
+
 protected:
   std::size_t _port;
   std::string _ip;
   sockaddr_in _addr;
   int _socket;
+  std::mutex _messageMutex;
+  std::string _message;
+  std::string _type;
 };

@@ -19,8 +19,10 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
 Server::~Server() {}
 
 void Server::listen(std::unique_ptr<IProtocol> &protocol) {
-  while(true) {
+  while (true) {
     protocol->listenSocket();
+    std::cout << "[" << protocol->getType() << "] " << protocol->getMessage()
+              << std::endl;
   }
 }
 

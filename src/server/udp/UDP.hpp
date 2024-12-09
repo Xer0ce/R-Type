@@ -21,6 +21,6 @@ public:
                 std::size_t destPort) override;
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
-  int acceptConnection() override;
   std::string deserialize_connect(const std::vector<uint8_t> &data);
+  std::string &getMessage() override;
 };

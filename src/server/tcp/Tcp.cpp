@@ -10,6 +10,7 @@
 Tcp::Tcp(std::size_t port, std::string ip) {
   _port = port;
   _ip = ip;
+  _type = "TCP";
 }
 
 Tcp::~Tcp() {}
@@ -61,7 +62,7 @@ bool Tcp::bindSocket() {
 bool Tcp::listenSocket(int backlog) {
   int clientSocket = acceptConnection();
   if (clientSocket >= 0) {
-    std::thread clientThread([clientSocket]() {
+    std::thread clientThread([this, clientSocket]() {
       std::vector<uint8_t> buffer(1024);
       while (true) {
         ssize_t bytesReceived =
@@ -72,13 +73,24 @@ bool Tcp::listenSocket(int backlog) {
           break;
         }
         buffer.resize(bytesReceived);
-        std::cout << "Received: " << std::string(buffer.begin(), buffer.end())
-                  << std::endl;
+        {
+          std::lock_guard<std::mutex> lock(_messageMutex);
+          _message = "Received: " + std::string(buffer.begin(), buffer.end());
+          _messageUpdated = true;
+        }
+        _messageCondVar.notify_one();
       }
     });
     clientThread.detach();
   }
   return true;
+}
+
+std::string &Tcp::getMessage() {
+  std::unique_lock<std::mutex> lock(_messageMutex);
+  _messageCondVar.wait(lock, [this] { return _messageUpdated; });
+  _messageUpdated = false;
+  return _message;
 }
 
 int Tcp::acceptConnection() {

@@ -17,6 +17,7 @@
 UDP::UDP(std::size_t port, std::string ip) {
   _port = port;
   _ip = ip;
+  _type = "UDP";
 }
 
 UDP::~UDP() { closeSocket(); }
@@ -102,17 +103,12 @@ bool UDP::listenSocket(int backlog) {
 
   if (!completeMessage.empty()) {
     std::string senderIp = inet_ntoa(clientAddr.sin_addr);
-    std::cout << "[UDP INFO] Received data from " << senderIp << ":"
-              << ntohs(clientAddr.sin_port) << std::endl;
 
-    if (completeMessage[0] == 0x03) {
-      std::cout << "Move" << std::endl;
-      std::cout << std::string(completeMessage.begin(), completeMessage.end())
-                << std::endl;
-    }
+    if (completeMessage[0] == 0x03)
+      _message = "Move : " +
+                 std::string(completeMessage.begin(), completeMessage.end());
 
     std::string response =
-        "Acknowledged: " +
         std::string(completeMessage.begin(), completeMessage.end());
     sendto(_socket, response.c_str(), response.size(), 0,
            (sockaddr *)&clientAddr, clientAddrLen);
@@ -120,12 +116,15 @@ bool UDP::listenSocket(int backlog) {
   return true;
 }
 
-int UDP::acceptConnection() { return 0; }
-
 void UDP::closeSocket() {
   if (_socket >= 0) {
     close(_socket);
     _socket = -1;
     std::cout << "[DEBUG] UDP socket closed." << std::endl;
   }
+}
+
+std::string &UDP::getMessage() {
+  std::lock_guard<std::mutex> lock(_messageMutex);
+  return _message;
 }
