@@ -8,8 +8,8 @@
 #pragma once
 
 #include "../AProtocol.hpp"
-#include <mutex>
 #include <condition_variable>
+#include <mutex>
 
 class Tcp : public AProtocol {
 public:

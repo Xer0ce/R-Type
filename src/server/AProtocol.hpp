@@ -10,11 +10,11 @@
 #include "IProtocol.hpp"
 #include <arpa/inet.h>
 #include <cstring>
+#include <mutex>
 #include <stdexcept>
 #include <thread>
 #include <unistd.h>
 #include <vector>
-#include <mutex>
 
 class AProtocol : public IProtocol {
 public:
