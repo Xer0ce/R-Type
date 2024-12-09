@@ -1,47 +1,16 @@
-#include "Registry.hpp"
+#include "../ecs/Registry.hpp"
+#include "Components/Control.hpp"
+#include "Components/Draw.hpp"
+#include "Components/Health.hpp"
+#include "Components/Position.hpp"
+#include "Components/Velocity.hpp"
+#include "Menu.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
-#include <SDL3/SDL.h>
-#include <iostream>
+#include <cstring>
 #include <vector>
 
-class Health {
-public:
-  int hp;
-  Health(int hp = 100) : hp(hp) {}
-};
-
-class Position {
-public:
-  float x, y;
-  Position(int x = 0, int y = 0) : x(x), y(y) {}
-};
-
-class Velocity {
-public:
-  float x, y;
-  Velocity(int x = 0, int y = 0) : x(x), y(y) {}
-};
-
-class Drawable {
-public:
-  SDL_Rect rect;
-  SDL_Color color;
-
-  Drawable(SDL_Color col, SDL_Rect size) : rect(size), color(col) {}
-};
-
-class Controllable {
-public:
-  bool moveUp = false;
-  bool moveDown = false;
-  bool moveLeft = false;
-  bool moveRight = false;
-
-  void reset() { moveUp = moveDown = moveLeft = moveRight = false; }
-};
-
-void position_system(Registry &registry, float deltaTime) {
+void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
   auto &positions = registry.get_components<Position>();
   auto &velocities = registry.get_components<Velocity>();
 
@@ -53,14 +22,29 @@ void position_system(Registry &registry, float deltaTime) {
   }
 }
 
-void control_system(Registry &registry) {
+std::vector<uint8_t> serialize_connect_postition(const std::string &position) {
+  std::vector<uint8_t> packet;
+  packet.push_back(0x03);
+  uint16_t playload_size = htons(position.size());
+  packet.push_back((playload_size >> 8) & 0xFF);
+  packet.push_back(playload_size & 0xFF);
+  for (char c : position)
+    packet.push_back(static_cast<uint8_t>(c));
+  return packet;
+}
+
+void control_system(Registry &registry, UdpClient &udp) {
   const bool *keyState = SDL_GetKeyboardState(NULL);
 
-  auto &controllables = registry.get_components<Controllable>();
+  auto &controllables = registry.get_components<Control>();
   auto &velocities = registry.get_components<Velocity>();
+  auto &positions = registry.get_components<Position>();
 
   for (std::size_t i = 0; i < controllables.size(); ++i) {
     if (controllables[i] && velocities[i]) {
+      int initialX = velocities[i]->x;
+      int initialY = velocities[i]->y;
+
       velocities[i]->x = 0;
       velocities[i]->y = 0;
 
@@ -73,6 +57,12 @@ void control_system(Registry &registry) {
       if (keyState[SDL_SCANCODE_RIGHT])
         velocities[i]->x = 100;
 
+      if (velocities[i]->x != initialX || velocities[i]->y != initialY) {
+        std::string str = std::to_string(positions[i]->x) + " " +
+                          std::to_string(positions[i]->y);
+        udp.send_data(serialize_connect_postition(str));
+      }
+
       controllables[i]->reset();
     }
   }
@@ -80,7 +70,7 @@ void control_system(Registry &registry) {
 
 void draw_system(Registry &registry, SDL_Renderer *renderer) {
   auto &positions = registry.get_components<Position>();
-  auto &drawables = registry.get_components<Drawable>();
+  auto &drawables = registry.get_components<Draw>();
 
   for (std::size_t i = 0; i < positions.size(); ++i) {
     if (positions[i] && drawables[i]) {
@@ -108,37 +98,18 @@ std::vector<uint8_t> serialize_connect(const std::string &player_name) {
 }
 
 int main() {
-
-//   try {
-//     TcpClient tcp("127.0.0.1", 12345);
-//     UdpClient udp("127.0.0.1", 12346);
-
-//     std::string player_name = "Player";
-//     auto connect_packet = serialize_connect(player_name);
-
-//     tcp.send_data(connect_packet);
-
-//     while (true) {
-//       std::vector<uint8_t> move_packet = {0x04, 0x01, 0x02};
-//       udp.send_data(move_packet);
-
-//       std::vector<uint8_t> response;
-//       tcp.receive_data(response);
-
-//       // Process server response (not implemented)
-//     }
-
-//   } catch (const std::exception &e) {
-//     std::cerr << "Error: " << e.what() << std::endl;
-//     return 1;
-//   }
-  std::cout << "SDL Version: " << SDL_GetVersion() << std::endl;
-  if (SDL_Init(SDL_INIT_VIDEO) == 0) {
+  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL Initialization failed: " << SDL_GetError() << std::endl;
     return 1;
   }
 
-  SDL_Window *window = SDL_CreateWindow("ECS Draw System", 800, 600, 0);
+  if (TTF_Init() < 0) {
+    std::cerr << "TTF Initialization failed: " << SDL_GetError() << std::endl;
+    SDL_Quit();
+    return 1;
+  }
+
+  SDL_Window *window = SDL_CreateWindow("ECS System", 800, 600, 0);
   if (!window) {
     std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
     SDL_Quit();
@@ -153,81 +124,100 @@ int main() {
     return 1;
   }
 
-  Registry registry;
-
-  registry.register_component<Position>();
-  registry.register_component<Velocity>();
-  registry.register_component<Drawable>();
-  registry.register_component<Controllable>();
-  registry.register_component<Health>();
-
-  auto entity = registry.spawn_entity();
-  registry.add_component<Position>(entity, Position(100, 150));
-  registry.add_component<Velocity>(entity, Velocity());
-  registry.add_component<Health>(entity, Health());
-  registry.add_component<Drawable>(
-      entity, Drawable({0, 255, 0, 255}, {100, 150, 50, 50}));
-  registry.add_component<Controllable>(entity, Controllable());
-
-  bool running = true;
-  SDL_Event event;
-  Uint64 now = SDL_GetPerformanceCounter();
-  Uint64 last = 0;
-  float deltaTime = 0;
-
-  while (running) {
-    last = now;
-    now = SDL_GetPerformanceCounter();
-    deltaTime = (float)((now - last) / (float)SDL_GetPerformanceFrequency());
-
-    while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_EVENT_QUIT) {
-        running = false;
-      }
-    }
-
-    control_system(registry);
-    position_system(registry, deltaTime);
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    draw_system(registry, renderer);
-
-    SDL_RenderPresent(renderer);
+  TTF_Font *font = TTF_OpenFont("../src/graphical/font/COMICATE.TTF", 24);
+  if (!font) {
+    std::cerr << "Font loading failed: " << SDL_GetError() << std::endl;
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 1;
   }
 
+  std::string ipAddress;
+  std::string ipPort;
+  if (!menu(renderer, font, window, ipAddress, ipPort)) {
+    TTF_CloseFont(font);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
+  }
+
+  std::cout << "Connecting to IP: " << ipAddress << std::endl;
+  std::cout << "Connecting to Port: " << ipPort << std::endl;
+
+  int port = std::stoi(ipPort);
+
+  if (port < 0 || port > 65535) {
+    std::cerr << "Invalid port number" << std::endl;
+    TTF_CloseFont(font);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 1;
+  }
+
+  try {
+    TcpClient tcp(ipAddress, port);
+    UdpClient udp(ipAddress, 4242);
+
+    std::string player_name = "LEZIZIDEMELENCHON";
+    auto connect_packet = serialize_connect(player_name);
+    tcp.send_data(connect_packet);
+
+    Registry registry;
+
+    registry.register_component<Position>();
+    registry.register_component<Velocity>();
+    registry.register_component<Draw>();
+    registry.register_component<Control>();
+    registry.register_component<Health>();
+
+    auto entity = registry.spawn_entity();
+    registry.add_component<Position>(entity, Position(100, 150));
+    registry.add_component<Velocity>(entity, Velocity());
+    registry.add_component<Health>(entity, Health());
+    registry.add_component<Draw>(entity,
+                                 Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+    registry.add_component<Control>(entity, Control());
+
+    bool running = true;
+    SDL_Event event;
+    Uint64 now = SDL_GetPerformanceCounter();
+    Uint64 last = 0;
+    float deltaTime = 0;
+
+    while (running) {
+      last = now;
+      now = SDL_GetPerformanceCounter();
+      deltaTime = (float)((now - last) / (float)SDL_GetPerformanceFrequency());
+
+      while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_EVENT_QUIT) {
+          running = false;
+        }
+      }
+
+      control_system(registry, udp);
+      position_system(registry, deltaTime, udp);
+
+      SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+      SDL_RenderClear(renderer);
+
+      draw_system(registry, renderer);
+
+      SDL_RenderPresent(renderer);
+      //   std::vector<uint8_t> response;
+      //   tcp.receive_data(response);
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+  }
+
+  TTF_CloseFont(font);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
   SDL_Quit();
 
   return 0;
 }
-
-// int main() {
-//   try {
-//     TcpClient tcp("127.0.0.1", 12345);
-//     UdpClient udp("127.0.0.1", 12346);
-
-//     std::string player_name = "Player";
-//     auto connect_packet = serialize_connect(player_name);
-
-//     tcp.send_data(connect_packet);
-
-//     while (true) {
-//       std::vector<uint8_t> move_packet = {0x04, 0x01, 0x02};
-//       udp.send_data(move_packet);
-
-//       std::vector<uint8_t> response;
-//       tcp.receive_data(response);
-
-//       // Process server response (not implemented)
-//     }
-
-//   } catch (const std::exception &e) {
-//     std::cerr << "Error: " << e.what() << std::endl;
-//     return 1;
-//   }
-
-//   return 0;
-// }
