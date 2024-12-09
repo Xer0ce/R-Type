@@ -23,7 +23,5 @@ public:
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
   int acceptConnection() override;
-  std::string
-  deserialize_connect(const std::vector<uint8_t>
-                          &data);
+  std::string deserialize_connect(const std::vector<uint8_t> &data);
 };
