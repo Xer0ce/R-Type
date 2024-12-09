@@ -25,5 +25,5 @@ public:
   int acceptConnection() override;
   std::string
   deserialize_connect(const std::vector<uint8_t>
-                          &data); // Assurez-vous que cette ligne est présente
+                          &data);
 };
