@@ -33,7 +33,7 @@ bool menu(SDL_Renderer *renderer, TTF_Font *font, SDL_Window *window,
   SDL_Color black = {0, 0, 0, 255};
   SDL_Color blue = {0, 0, 255, 255};
   std::string inputText = "127.0.0.1";
-  std::string inputPort = "12346";
+  std::string inputPort = "4243";
 
   SDL_StartTextInput(window);
   while (inMenu) {

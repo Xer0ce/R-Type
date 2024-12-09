@@ -15,7 +15,7 @@
 #include <vector>
 
 int main() {
-  Server server(4243, "127.0.0.1", 4242, "127.0.0.1");
+  Server server(4243, "0.0.0.0", 4242, "0.0.0.0");
   server.start();
   return 0;
 }
