@@ -10,27 +10,45 @@
 #include <cstring>
 #include <vector>
 
-void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
-  auto &positions = registry.get_components<Position>();
-  auto &velocities = registry.get_components<Velocity>();
-
-  for (std::size_t i = 0; i < positions.size(); ++i) {
-    if (positions[i] && velocities[i]) {
-      positions[i]->x += velocities[i]->x * deltaTime;
-      positions[i]->y += velocities[i]->y * deltaTime;
-    }
-  }
-}
-
-std::vector<uint8_t> serialize_connect_postition(const std::string &position) {
+std::vector<uint8_t> serialize_connect_postition(const std::string &position,
+                                                 int packet_type,
+                                                 int playerId = -1) {
   std::vector<uint8_t> packet;
-  packet.push_back(0x03);
+  packet.push_back(packet_type);
+  if (playerId != -1) {
+    packet.push_back(playerId);
+  }
   uint16_t playload_size = htons(position.size());
   packet.push_back((playload_size >> 8) & 0xFF);
   packet.push_back(playload_size & 0xFF);
   for (char c : position)
     packet.push_back(static_cast<uint8_t>(c));
   return packet;
+}
+
+void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
+  auto &positions = registry.get_components<Position>();
+  auto &velocities = registry.get_components<Velocity>();
+
+  for (std::size_t i = 0; i < positions.size(); ++i) {
+    if (positions[i] && velocities[i]) {
+      positions[i]->old_x = positions[i]->x;
+      positions[i]->old_y = positions[i]->y;
+      positions[i]->x += velocities[i]->x * deltaTime;
+      positions[i]->y += velocities[i]->y * deltaTime;
+
+      if (positions[i]->x == positions[i]->old_x &&
+          positions[i]->y == positions[i]->old_y) {
+        continue;
+      } else {
+        auto packet =
+            serialize_connect_postition(std::to_string(positions[i]->x) + " " +
+                                            std::to_string(positions[i]->y),
+                                        3, i);
+        udp.send_data(packet);
+      }
+    }
+  }
 }
 
 void control_system(Registry &registry, UdpClient &udp) {
@@ -56,13 +74,6 @@ void control_system(Registry &registry, UdpClient &udp) {
         velocities[i]->x = -100;
       if (keyState[SDL_SCANCODE_RIGHT])
         velocities[i]->x = 100;
-
-      if (velocities[i]->x != initialX || velocities[i]->y != initialY) {
-        std::string str = std::to_string(positions[i]->x) + " " +
-                          std::to_string(positions[i]->y);
-        udp.send_data(serialize_connect_postition(str));
-      }
-
       controllables[i]->reset();
     }
   }
@@ -109,7 +120,7 @@ int main() {
     return 1;
   }
 
-  SDL_Window *window = SDL_CreateWindow("ECS System", 800, 600, 0);
+  SDL_Window *window = SDL_CreateWindow("R-Michou", 1920, 1080, 0);
   if (!window) {
     std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
     SDL_Quit();
@@ -124,7 +135,7 @@ int main() {
     return 1;
   }
 
-  TTF_Font *font = TTF_OpenFont("../src/graphical/font/COMICATE.TTF", 24);
+  TTF_Font *font = TTF_OpenFont("../src/graphical/font/VT323.ttf", 48);
   if (!font) {
     std::cerr << "Font loading failed: " << SDL_GetError() << std::endl;
     SDL_DestroyRenderer(renderer);
@@ -161,7 +172,7 @@ int main() {
     TcpClient tcp(ipAddress, port);
     UdpClient udp(ipAddress, 4242);
 
-    std::string player_name = "LEZIZIDEMELENCHON";
+    std::string player_name = "PRESIDENTMACRON";
     auto connect_packet = serialize_connect(player_name);
     tcp.send_data(connect_packet);
 
@@ -201,14 +212,25 @@ int main() {
       control_system(registry, udp);
       position_system(registry, deltaTime, udp);
 
+      auto received_data = udp.receive_data();
+      if (!received_data.empty()) {
+        try {
+          std::string received_message(received_data.begin(),
+                                       received_data.end());
+          std::cout << "[UDP INFO] Received: " << received_message << std::endl;
+
+        } catch (const std::exception &e) {
+          std::cerr << "[UDP ERROR] Failed to process packet: " << e.what()
+                    << std::endl;
+        }
+      }
+
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
       SDL_RenderClear(renderer);
 
       draw_system(registry, renderer);
 
       SDL_RenderPresent(renderer);
-      //   std::vector<uint8_t> response;
-      //   tcp.receive_data(response);
     }
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;

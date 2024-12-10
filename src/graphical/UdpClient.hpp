@@ -7,11 +7,12 @@
 
 #ifndef UDPCLIENT_HPP_
 #define UDPCLIENT_HPP_
+
 #include <arpa/inet.h>
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 #include <sys/socket.h>
-#include <thread>
 #include <unistd.h>
 #include <vector>
 
@@ -22,10 +23,11 @@ private:
 
 public:
   UdpClient(const std::string &ip, int port);
-  void send_data(std::vector<uint8_t> &data);
+  void send_data(const std::vector<uint8_t> &data);
   void send_data(std::vector<uint8_t> &&data);
-  void receive_data(std::vector<uint8_t> &buffer);
-  ~UdpClient() { close(_sockfd); }
+  bool listen_socket();
+  std::vector<uint8_t> receive_data();
+  ~UdpClient();
 };
 
 #endif /* !UDPCLIENT_HPP_ */
