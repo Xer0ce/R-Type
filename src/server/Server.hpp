@@ -17,6 +17,8 @@ public:
          std::string udpIp);
   ~Server();
 
+  void listen(std::unique_ptr<IProtocol> &protocol);
+
   void start();
 
 private:

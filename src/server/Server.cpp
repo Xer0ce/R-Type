@@ -18,6 +18,14 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
 
 Server::~Server() {}
 
+void Server::listen(std::unique_ptr<IProtocol> &protocol) {
+  while (true) {
+    protocol->listenSocket();
+    std::cout << "[" << protocol->getType() << "] " << protocol->getMessage()
+              << std::endl;
+  }
+}
+
 void Server::start() {
   if (!_tcp->initializeSocket() || !_tcp->bindSocket()) {
     throw std::runtime_error("Failed to initialize TCP.");
@@ -27,8 +35,8 @@ void Server::start() {
     throw std::runtime_error("Failed to initialize UDP.");
   }
 
-  std::thread tcpThread([this]() { _tcp->listenSocket(); });
-  std::thread udpThread([this]() { _udp->listenSocket(); });
+  std::thread tcpThread([this]() { listen(_tcp); });
+  std::thread udpThread([this]() { listen(_udp); });
 
   tcpThread.join();
   udpThread.join();
