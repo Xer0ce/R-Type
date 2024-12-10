@@ -10,6 +10,7 @@
 Tcp::Tcp(std::size_t port, std::string ip) {
   _port = port;
   _ip = ip;
+  _type = "TCP";
 }
 
 Tcp::~Tcp() {}
@@ -17,8 +18,13 @@ Tcp::~Tcp() {}
 bool Tcp::initializeSocket() {
   _socket = socket(AF_INET, SOCK_STREAM, 0);
 
-  if (_port <= 0 || _ip.empty() || _socket < 0) {
-    throw std::runtime_error("Failed to create TCP socket.");
+  if (_socket < 0) {
+    perror("Failed to create TCP socket");
+    return false;
+  }
+
+  if (_port <= 0 || _ip.empty()) {
+    std::cerr << "Invalid port or IP address." << std::endl;
     return false;
   }
 
@@ -26,7 +32,7 @@ bool Tcp::initializeSocket() {
   _addr.sin_port = htons(_port);
 
   if (inet_pton(AF_INET, _ip.c_str(), &_addr.sin_addr) <= 0) {
-    throw std::runtime_error("Invalid IP address.");
+    perror("Invalid IP address");
     return false;
   }
 
@@ -35,49 +41,56 @@ bool Tcp::initializeSocket() {
 
 bool Tcp::bindSocket() {
   if (_port <= 0 || _ip.empty() || _socket < 0) {
-    throw std::runtime_error(
-        "Failed to create TCP socket. Invalid port, IP or socket.");
+    std::cerr << "Invalid port, IP or socket." << std::endl;
     return false;
   }
 
   if (bind(_socket, (sockaddr *)&_addr, sizeof(_addr)) < 0) {
     perror("Bind failed");
-    throw std::runtime_error("Failed to bind TCP socket.");
     return false;
   }
+
   std::cout << "[DEBUG] Successfully bound to " << _ip << ":" << _port
             << std::endl;
+  if (listen(_socket, 4) < 0) {
+    perror("Listen failed");
+    return false;
+  }
   return true;
 }
 
 bool Tcp::listenSocket(int backlog) {
-  if (listen(_socket, backlog) < 0) {
-    throw std::runtime_error("Failed to listen on TCP socket.");
-    return false;
-  }
-  std::cout << "[INFO] Server is listening on port " << _port << std::endl;
-  while (true) {
-    int clientSocket = acceptConnection();
-    if (clientSocket >= 0) {
-      std::thread clientThread([clientSocket]() {
-        std::vector<uint8_t> buffer(1024);
-        while (true) {
-          ssize_t bytesReceived =
-              recv(clientSocket, buffer.data(), buffer.size(), 0);
-          if (bytesReceived <= 0) {
-            std::cout << "Client disconnected.\n";
-            close(clientSocket);
-            break;
-          }
-          buffer.resize(bytesReceived);
-          // decrypt message
-          std::cout << "Received: " << std::string(buffer.begin(), buffer.end())
-                    << std::endl;
+  _clientSocket = acceptConnection();
+  if (_clientSocket >= 0) {
+    std::thread clientThread([this]() {
+      std::vector<uint8_t> buffer(1024);
+      while (true) {
+        ssize_t bytesReceived =
+            recv(_clientSocket, buffer.data(), buffer.size(), 0);
+        if (bytesReceived <= 0) {
+          std::cout << "Client disconnected.\n";
+          close(_clientSocket);
+          break;
         }
-      });
-      clientThread.detach();
-    }
+        buffer.resize(bytesReceived);
+        {
+          std::lock_guard<std::mutex> lock(_messageMutex);
+          _buffer = buffer;
+          _messageUpdated = true;
+        }
+        _messageCondVar.notify_one();
+      }
+    });
+    clientThread.detach();
   }
+  return true;
+}
+
+std::vector<uint8_t> &Tcp::getBuffer() {
+  std::unique_lock<std::mutex> lock(_messageMutex);
+  _messageCondVar.wait(lock, [this] { return _messageUpdated; });
+  _messageUpdated = false;
+  return _buffer;
 }
 
 int Tcp::acceptConnection() {
@@ -93,36 +106,12 @@ int Tcp::acceptConnection() {
   return clientSocket;
 }
 
-bool Tcp::sendData(const std::string &data, const std::string &destIp,
-                   std::size_t destPort) {
-  sockaddr_in destAddr{};
-  destAddr.sin_family = AF_INET;
-  destAddr.sin_port = htons(destPort);
-
-  if (inet_pton(AF_INET, destIp.c_str(), &destAddr.sin_addr) <= 0) {
-    throw std::runtime_error("Invalid destination IP address.");
+bool Tcp::sendData(const std::string &data) {
+  if (send(_clientSocket, data.c_str(), data.size(), 0) < 0) {
+    perror("Failed to send data");
     return false;
   }
-
-  if (sendto(_socket, data.c_str(), data.size(), 0, (sockaddr *)&destAddr,
-             sizeof(destAddr)) < 0) {
-    throw std::runtime_error("Failed to send data.");
-    return false;
-  }
-
   return true;
-}
-
-std::vector<uint8_t> Tcp::receiveData() {
-  printf("Receiving data...\n");
-  std::vector<uint8_t> buffer(1024);
-  ssize_t bytesReceived = recv(_socket, buffer.data(), buffer.size(), 0);
-  if (bytesReceived < 0) {
-    perror("recv failed");
-    throw std::runtime_error("Failed to receive data.");
-  }
-  buffer.resize(bytesReceived);
-  return buffer;
 }
 
 void Tcp::closeSocket() {
