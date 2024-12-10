@@ -17,15 +17,15 @@ public:
   ~Tcp();
   bool initializeSocket() override;
   bool bindSocket() override;
-  bool sendData(const std::string &data, const std::string &destIp,
-                std::size_t destPort) override;
+  bool sendData(const std::string &data) override;
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
   int acceptConnection();
-  std::string &getMessage() override;
+  std::vector<uint8_t> &getBuffer() override;
 
 private:
   std::mutex _messageMutex;
   std::condition_variable _messageCondVar;
   bool _messageUpdated = false;
+  int _clientSocket;
 };

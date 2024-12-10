@@ -60,22 +60,22 @@ bool Tcp::bindSocket() {
 }
 
 bool Tcp::listenSocket(int backlog) {
-  int clientSocket = acceptConnection();
-  if (clientSocket >= 0) {
-    std::thread clientThread([this, clientSocket]() {
+  _clientSocket = acceptConnection();
+  if (_clientSocket >= 0) {
+    std::thread clientThread([this]() {
       std::vector<uint8_t> buffer(1024);
       while (true) {
         ssize_t bytesReceived =
-            recv(clientSocket, buffer.data(), buffer.size(), 0);
+            recv(_clientSocket, buffer.data(), buffer.size(), 0);
         if (bytesReceived <= 0) {
           std::cout << "Client disconnected.\n";
-          close(clientSocket);
+          close(_clientSocket);
           break;
         }
         buffer.resize(bytesReceived);
         {
           std::lock_guard<std::mutex> lock(_messageMutex);
-          _message = "Received: " + std::string(buffer.begin(), buffer.end());
+          _buffer = buffer;
           _messageUpdated = true;
         }
         _messageCondVar.notify_one();
@@ -86,11 +86,11 @@ bool Tcp::listenSocket(int backlog) {
   return true;
 }
 
-std::string &Tcp::getMessage() {
+std::vector<uint8_t> &Tcp::getBuffer() {
   std::unique_lock<std::mutex> lock(_messageMutex);
   _messageCondVar.wait(lock, [this] { return _messageUpdated; });
   _messageUpdated = false;
-  return _message;
+  return _buffer;
 }
 
 int Tcp::acceptConnection() {
@@ -106,23 +106,11 @@ int Tcp::acceptConnection() {
   return clientSocket;
 }
 
-bool Tcp::sendData(const std::string &data, const std::string &destIp,
-                   std::size_t destPort) {
-  sockaddr_in destAddr{};
-  destAddr.sin_family = AF_INET;
-  destAddr.sin_port = htons(destPort);
-
-  if (inet_pton(AF_INET, destIp.c_str(), &destAddr.sin_addr) <= 0) {
-    throw std::runtime_error("Invalid destination IP address.");
+bool Tcp::sendData(const std::string &data) {
+  if (send(_clientSocket, data.c_str(), data.size(), 0) < 0) {
+    perror("Failed to send data");
     return false;
   }
-
-  if (sendto(_socket, data.c_str(), data.size(), 0, (sockaddr *)&destAddr,
-             sizeof(destAddr)) < 0) {
-    throw std::runtime_error("Failed to send data.");
-    return false;
-  }
-
   return true;
 }
 

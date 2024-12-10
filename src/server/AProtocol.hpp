@@ -40,7 +40,8 @@ protected:
   std::string _ip;
   sockaddr_in _addr;
   int _socket;
+
   std::mutex _messageMutex;
-  std::string _message;
   std::string _type;
+  std::vector<uint8_t> _buffer;
 };
