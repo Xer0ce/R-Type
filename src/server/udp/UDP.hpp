@@ -17,10 +17,13 @@ public:
 
   bool initializeSocket() override;
   bool bindSocket() override;
-  bool sendData(const std::string &data, const std::string &destIp,
-                std::size_t destPort) override;
+  bool sendData(const std::string &data) override;
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
   std::string deserialize_connect(const std::vector<uint8_t> &data);
-  std::string &getMessage() override;
+  std::vector<uint8_t> &getBuffer() override;
+
+private:
+  sockaddr_in _clientAddr{};
+  socklen_t _clientAddrLen;
 };
