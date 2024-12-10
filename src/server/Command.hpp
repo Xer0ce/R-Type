@@ -13,7 +13,9 @@ enum CommandType { CONNECT, MOVE, SHOOT };
 
 struct Command {
   CommandType type;
-  void *data;
+  struct Connect *connect;
+  struct Move *move;
+  struct Shoot *shoot;
 };
 
 struct Connect {
