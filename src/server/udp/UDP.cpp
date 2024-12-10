@@ -53,25 +53,12 @@ bool UDP::bindSocket() {
   return true;
 }
 
-bool UDP::sendData(const std::string &data, const std::string &destIp,
-                   std::size_t destPort) {
-  sockaddr_in destAddr{};
-  destAddr.sin_family = AF_INET;
-  destAddr.sin_port = htons(destPort);
-
-  if (inet_pton(AF_INET, destIp.c_str(), &destAddr.sin_addr) <= 0) {
-    throw std::runtime_error("Invalid destination IP address.");
+bool UDP::sendData(const std::string &data) {
+  if (sendto(_socket, data.c_str(), data.size(), 0, (sockaddr *)&_clientAddr,
+             _clientAddrLen) < 0) {
+    throw std::runtime_error("Failed to send data.");
     return false;
   }
-
-  ssize_t sentBytes = sendto(_socket, data.c_str(), data.size(), 0,
-                             (sockaddr *)&destAddr, sizeof(destAddr));
-  if (sentBytes < 0) {
-    perror("Sendto failed");
-    throw std::runtime_error("Failed to send data over UDP.");
-    return false;
-  }
-
   return true;
 }
 
@@ -80,8 +67,7 @@ std::string UDP::deserialize_connect(const std::vector<uint8_t> &data) {
 }
 
 bool UDP::listenSocket(int backlog) {
-  sockaddr_in clientAddr{};
-  socklen_t clientAddrLen = sizeof(clientAddr);
+  _clientAddrLen = sizeof(_clientAddr);
   std::vector<uint8_t> completeMessage;
 
   while (true) {
@@ -89,7 +75,7 @@ bool UDP::listenSocket(int backlog) {
     std::memset(buffer, 0, sizeof(buffer));
 
     ssize_t bytesReceived = recvfrom(_socket, buffer, sizeof(buffer) - 1, 0,
-                                     (sockaddr *)&clientAddr, &clientAddrLen);
+                                     (sockaddr *)&_clientAddr, &_clientAddrLen);
     if (bytesReceived > 0) {
       completeMessage.insert(completeMessage.end(), buffer,
                              buffer + bytesReceived);
@@ -102,16 +88,14 @@ bool UDP::listenSocket(int backlog) {
   }
 
   if (!completeMessage.empty()) {
-    std::string senderIp = inet_ntoa(clientAddr.sin_addr);
+    std::string senderIp = inet_ntoa(_clientAddr.sin_addr);
 
     if (completeMessage[0] == 0x03)
-      _message = "Move : " +
-                 std::string(completeMessage.begin(), completeMessage.end());
-
+      _buffer = completeMessage;
     std::string response =
         std::string(completeMessage.begin(), completeMessage.end());
     sendto(_socket, response.c_str(), response.size(), 0,
-           (sockaddr *)&clientAddr, clientAddrLen);
+           (sockaddr *)&_clientAddr, _clientAddrLen);
   }
   return true;
 }
@@ -124,7 +108,7 @@ void UDP::closeSocket() {
   }
 }
 
-std::string &UDP::getMessage() {
+std::vector<uint8_t> &UDP::getBuffer() {
   std::lock_guard<std::mutex> lock(_messageMutex);
-  return _message;
+  return _buffer;
 }

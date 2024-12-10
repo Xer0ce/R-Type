@@ -40,3 +40,5 @@ build.sh
 
 .vscode
 .idea
+
+output.bin
