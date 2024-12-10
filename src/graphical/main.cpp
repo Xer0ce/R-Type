@@ -10,27 +10,45 @@
 #include <cstring>
 #include <vector>
 
-void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
-  auto &positions = registry.get_components<Position>();
-  auto &velocities = registry.get_components<Velocity>();
-
-  for (std::size_t i = 0; i < positions.size(); ++i) {
-    if (positions[i] && velocities[i]) {
-      positions[i]->x += velocities[i]->x * deltaTime;
-      positions[i]->y += velocities[i]->y * deltaTime;
-    }
-  }
-}
-
-std::vector<uint8_t> serialize_connect_postition(const std::string &position) {
+std::vector<uint8_t> serialize_connect_postition(const std::string &position,
+                                                 int packet_type,
+                                                 int playerId = -1) {
   std::vector<uint8_t> packet;
-  packet.push_back(0x03);
+  packet.push_back(packet_type);
+  if (playerId != -1) {
+    packet.push_back(playerId);
+  }
   uint16_t playload_size = htons(position.size());
   packet.push_back((playload_size >> 8) & 0xFF);
   packet.push_back(playload_size & 0xFF);
   for (char c : position)
     packet.push_back(static_cast<uint8_t>(c));
   return packet;
+}
+
+void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
+  auto &positions = registry.get_components<Position>();
+  auto &velocities = registry.get_components<Velocity>();
+
+  for (std::size_t i = 0; i < positions.size(); ++i) {
+    if (positions[i] && velocities[i]) {
+      positions[i]->old_x = positions[i]->x;
+      positions[i]->old_y = positions[i]->y;
+      positions[i]->x += velocities[i]->x * deltaTime;
+      positions[i]->y += velocities[i]->y * deltaTime;
+
+      if (positions[i]->x == positions[i]->old_x &&
+          positions[i]->y == positions[i]->old_y) {
+        continue;
+      } else {
+        auto packet =
+            serialize_connect_postition(std::to_string(positions[i]->x) + " " +
+                                            std::to_string(positions[i]->y),
+                                        3, i);
+        udp.send_data(packet);
+      }
+    }
+  }
 }
 
 void control_system(Registry &registry, UdpClient &udp) {
@@ -56,13 +74,6 @@ void control_system(Registry &registry, UdpClient &udp) {
         velocities[i]->x = -100;
       if (keyState[SDL_SCANCODE_RIGHT])
         velocities[i]->x = 100;
-
-      if (velocities[i]->x != initialX || velocities[i]->y != initialY) {
-        std::string str = std::to_string(positions[i]->x) + " " +
-                          std::to_string(positions[i]->y);
-        udp.send_data(serialize_connect_postition(str));
-      }
-
       controllables[i]->reset();
     }
   }
