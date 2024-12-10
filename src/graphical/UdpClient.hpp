@@ -13,8 +13,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <sys/socket.h>
-#include <vector>
 #include <unistd.h>
+#include <vector>
 
 class UdpClient {
 private:
