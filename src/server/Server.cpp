@@ -21,19 +21,19 @@ Server::~Server() {}
 
 void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
-      protocol->listenSocket();
-      std::vector<uint8_t> buffer = protocol->getBuffer();
-      std::cout << "[" << protocol->getType() << "] "
-                << std::string(buffer.begin(), buffer.end()) << std::endl;
-      if (buffer[0] == 0x01) {
-        std::string response = "OK";
-        Command *cmd = new Command();
-        cmd->type = CommandType::CONNECT;
-        cmd->connect = new Connect();
-        cmd->connect->Nickname = std::string(buffer.begin() + 1, buffer.end());
-        protocol->sendData(response);
-      }
+    protocol->listenSocket();
+    std::vector<uint8_t> buffer = protocol->getBuffer();
+    std::cout << "[" << protocol->getType() << "] "
+              << std::string(buffer.begin(), buffer.end()) << std::endl;
+    if (buffer[0] == 0x01) {
+      std::string response = "OK";
+      Command *cmd = new Command();
+      cmd->type = CommandType::CONNECT;
+      cmd->connect = new Connect();
+      cmd->connect->Nickname = std::string(buffer.begin() + 1, buffer.end());
+      protocol->sendData(response);
     }
+  }
 }
 
 void Server::start() {
