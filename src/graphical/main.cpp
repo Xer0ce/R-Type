@@ -120,7 +120,7 @@ int main() {
     return 1;
   }
 
-  SDL_Window *window = SDL_CreateWindow("ECS System", 800, 600, 0);
+  SDL_Window *window = SDL_CreateWindow("R-Michou", 1920, 1080, 0);
   if (!window) {
     std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
     SDL_Quit();
@@ -135,7 +135,7 @@ int main() {
     return 1;
   }
 
-  TTF_Font *font = TTF_OpenFont("../src/graphical/font/COMICATE.TTF", 24);
+  TTF_Font *font = TTF_OpenFont("../src/graphical/font/VT323.ttf", 48);
   if (!font) {
     std::cerr << "Font loading failed: " << SDL_GetError() << std::endl;
     SDL_DestroyRenderer(renderer);
@@ -172,7 +172,7 @@ int main() {
     TcpClient tcp(ipAddress, port);
     UdpClient udp(ipAddress, 4242);
 
-    std::string player_name = "LEZIZIDEMELENCHON";
+    std::string player_name = "PRESIDENTMACRON";
     auto connect_packet = serialize_connect(player_name);
     tcp.send_data(connect_packet);
 
@@ -212,14 +212,25 @@ int main() {
       control_system(registry, udp);
       position_system(registry, deltaTime, udp);
 
+      auto received_data = udp.receive_data();
+      if (!received_data.empty()) {
+        try {
+          std::string received_message(received_data.begin(),
+                                       received_data.end());
+          std::cout << "[UDP INFO] Received: " << received_message << std::endl;
+
+        } catch (const std::exception &e) {
+          std::cerr << "[UDP ERROR] Failed to process packet: " << e.what()
+                    << std::endl;
+        }
+      }
+
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
       SDL_RenderClear(renderer);
 
       draw_system(registry, renderer);
 
       SDL_RenderPresent(renderer);
-      //   std::vector<uint8_t> response;
-      //   tcp.receive_data(response);
     }
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
