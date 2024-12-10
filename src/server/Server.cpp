@@ -22,8 +22,8 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
     protocol->listenSocket();
     std::vector<uint8_t> buffer = protocol->getBuffer();
-    std::cout << "[" << protocol->getType() << "] " << std::string(buffer.begin(), buffer.end())
-              << std::endl;
+    std::cout << "[" << protocol->getType() << "] "
+              << std::string(buffer.begin(), buffer.end()) << std::endl;
     if (buffer[0] == 0x01) {
       std::string response = "OK";
       protocol->sendData(response);
