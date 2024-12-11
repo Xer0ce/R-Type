@@ -86,17 +86,7 @@ bool UDP::listenSocket(int backlog) {
       break;
     }
   }
-
-  if (!completeMessage.empty()) {
-    std::string senderIp = inet_ntoa(_clientAddr.sin_addr);
-
-    if (completeMessage[0] == 0x03)
-      _buffer = completeMessage;
-    std::string response =
-        std::string(completeMessage.begin(), completeMessage.end());
-    sendto(_socket, response.c_str(), response.size(), 0,
-           (sockaddr *)&_clientAddr, _clientAddrLen);
-  }
+  _buffer = completeMessage;
   return true;
 }
 
