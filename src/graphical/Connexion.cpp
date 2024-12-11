@@ -28,5 +28,3 @@ Connexion::~Connexion() {
   _tcp.reset();
   _udp.reset();
 }
-
-

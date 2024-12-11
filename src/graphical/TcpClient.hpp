@@ -9,12 +9,12 @@
 #define TCPCLIENT_HPP_
 #include <arpa/inet.h>
 #include <cstring>
+#include <fcntl.h>
 #include <iostream>
 #include <sys/socket.h>
 #include <thread>
 #include <unistd.h>
 #include <vector>
-#include <fcntl.h>
 
 class TcpClient {
 private:
