@@ -10,9 +10,8 @@
 #include <cstring>
 #include <vector>
 
-std::vector<uint8_t> serialize_connect_postition(const std::string &position,
-                                                 int packet_type,
-                                                 int playerId = -1) {
+std::vector<uint8_t> serialize_packt(const std::string &position,
+                                     int packet_type, int playerId = -1) {
   std::vector<uint8_t> packet;
   packet.push_back(packet_type);
   if (playerId != -1) {
@@ -41,10 +40,9 @@ void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
           positions[i]->y == positions[i]->old_y) {
         continue;
       } else {
-        auto packet =
-            serialize_connect_postition(std::to_string(positions[i]->x) + " " +
-                                            std::to_string(positions[i]->y),
-                                        3, i);
+        auto packet = serialize_packt(std::to_string(positions[i]->x) + " " +
+                                          std::to_string(positions[i]->y),
+                                      3, i);
         udp.send_data(packet);
       }
     }
@@ -109,6 +107,9 @@ std::vector<uint8_t> serialize_connect(const std::string &player_name) {
 }
 
 int main() {
+  std::string ipAddress;
+  std::string ipPort;
+
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL Initialization failed: " << SDL_GetError() << std::endl;
     return 1;
@@ -144,8 +145,6 @@ int main() {
     return 1;
   }
 
-  std::string ipAddress;
-  std::string ipPort;
   if (!menu(renderer, font, window, ipAddress, ipPort)) {
     TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
@@ -224,7 +223,6 @@ int main() {
                     << std::endl;
         }
       }
-
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
       SDL_RenderClear(renderer);
 
