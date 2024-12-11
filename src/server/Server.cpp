@@ -6,8 +6,8 @@
 */
 
 #include "Server.hpp"
-#include "Command.hpp"
 #include "../graphical/Components/Position.hpp"
+#include "Command.hpp"
 #include <iostream>
 #include <thread>
 
@@ -82,7 +82,7 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
 
 void Server::world_update() {
   auto &positions = _game.get_components<Position>();
-  //logique qui pour chaque element send la data
+  // logique qui pour chaque element send la data
 };
 
 void Server::game_loop() {

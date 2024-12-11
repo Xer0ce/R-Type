@@ -8,9 +8,9 @@
 #pragma once
 
 #include "../ecs/Registry.hpp"
+#include "../graphical/Game.hpp"
 #include "./tcp/Tcp.hpp"
 #include "./udp/UDP.hpp"
-#include "../graphical/Game.hpp"
 #include <map>
 
 class Server {
