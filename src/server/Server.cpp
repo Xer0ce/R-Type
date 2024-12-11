@@ -7,6 +7,7 @@
 
 #include "Server.hpp"
 #include "Command.hpp"
+#include "../graphical/Components/Position.hpp"
 #include <iostream>
 #include <thread>
 
@@ -14,7 +15,6 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
                std::string udpIp) {
   _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
   _udp = std::make_unique<UDP>(udpPort, udpIp);
-  _ecs = std::make_unique<Registry>();
   initCommandMap();
 }
 Server::~Server() {}
@@ -80,6 +80,19 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   }
 }
 
+void Server::world_update() {
+  auto &positions = _game.get_components<Position>();
+  //logique qui pour chaque element send la data
+};
+
+void Server::game_loop() {
+  while (true) {
+    // recupe les actions a faire de la queue puis les ececuter
+    // puis appeler le world update
+    return;
+  }
+};
+
 void Server::start() {
   if (!_tcp->initializeSocket() || !_tcp->bindSocket()) {
     throw std::runtime_error("Failed to initialize TCP.");
@@ -89,9 +102,13 @@ void Server::start() {
     throw std::runtime_error("Failed to initialize UDP.");
   }
 
+  _game.load();
+
   std::thread tcpThread([this]() { listen(_tcp); });
   std::thread udpThread([this]() { listen(_udp); });
+  std::thread gameThread([this]() { game_loop(); });
 
   tcpThread.join();
   udpThread.join();
+  gameThread.join();
 }
