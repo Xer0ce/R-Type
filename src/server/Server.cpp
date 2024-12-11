@@ -80,8 +80,8 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   }
 }
 
-void Server::world_update() {
-  // logique qui pour chaque element send la data
+void Server::world_update(){
+    // logique qui pour chaque element send la data
 };
 
 void Server::game_loop() {
@@ -100,7 +100,6 @@ void Server::start() {
   if (!_udp->initializeSocket() || !_udp->bindSocket()) {
     throw std::runtime_error("Failed to initialize UDP.");
   }
-
 
   std::thread tcpThread([this]() { listen(_tcp); });
   std::thread udpThread([this]() { listen(_udp); });
