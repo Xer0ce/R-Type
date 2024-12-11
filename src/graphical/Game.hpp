@@ -9,7 +9,6 @@
 #define GAME_HPP
 
 #include "../ecs/Registry.hpp"
-#include <SDL3/SDL_render.h>
 #include <vector>
 
 class Game {

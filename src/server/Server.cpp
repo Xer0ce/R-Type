@@ -81,7 +81,6 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
 }
 
 void Server::world_update() {
-  auto &positions = _game.get_components<Position>();
   // logique qui pour chaque element send la data
 };
 
@@ -102,7 +101,6 @@ void Server::start() {
     throw std::runtime_error("Failed to initialize UDP.");
   }
 
-  _game.load();
 
   std::thread tcpThread([this]() { listen(_tcp); });
   std::thread udpThread([this]() { listen(_udp); });

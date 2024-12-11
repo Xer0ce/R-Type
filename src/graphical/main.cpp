@@ -4,7 +4,6 @@
 #include "Components/Health.hpp"
 #include "Components/Position.hpp"
 #include "Components/Velocity.hpp"
-#include "Game.hpp"
 #include "Menu.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
@@ -145,15 +144,15 @@ int main() {
     return 1;
   }
 
-  std::string ipAddress = "127.0.0.1";
-  std::string ipPort = "4243";
-  // if (!menu(renderer, font, window, ipAddress, ipPort)) {
-  //   TTF_CloseFont(font);
-  //   SDL_DestroyRenderer(renderer);
-  //   SDL_DestroyWindow(window);
-  //   SDL_Quit();
-  //   return 0;
-  // }
+  std::string ipAddress;
+  std::string ipPort;
+  if (!menu(renderer, font, window, ipAddress, ipPort)) {
+    TTF_CloseFont(font);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
+  }
 
   std::cout << "Connecting to IP: " << ipAddress << std::endl;
   std::cout << "Connecting to Port: " << ipPort << std::endl;
@@ -177,19 +176,29 @@ int main() {
     auto connect_packet = serialize_connect(player_name);
     tcp.send_data(connect_packet);
 
-    Game game;
+    Registry registry;
 
-    game.load();
+    registry.register_component<Position>();
+    registry.register_component<Velocity>();
+    registry.register_component<Draw>();
+    registry.register_component<Control>();
+    registry.register_component<Health>();
+
+    auto entity = registry.spawn_entity();
+    registry.add_component<Position>(entity, Position(100, 150));
+    registry.add_component<Velocity>(entity, Velocity());
+    registry.add_component<Health>(entity, Health());
+    registry.add_component<Draw>(entity,
+                                 Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+    registry.add_component<Control>(entity, Control());
 
     bool running = true;
     SDL_Event event;
     Uint64 now = SDL_GetPerformanceCounter();
     Uint64 last = 0;
     float deltaTime = 0;
-    int test = 0;
 
     while (running) {
-      test++;
       last = now;
       now = SDL_GetPerformanceCounter();
       deltaTime = (float)((now - last) / (float)SDL_GetPerformanceFrequency());
@@ -200,12 +209,8 @@ int main() {
         }
       }
 
-      game.loop(deltaTime);
-
-      std::cout << test << std::endl;
-      if (test == 10000) {
-        game.create_player();
-      }
+      control_system(registry, udp);
+      position_system(registry, deltaTime, udp);
 
       auto received_data = udp.receive_data();
       if (!received_data.empty()) {
@@ -223,7 +228,7 @@ int main() {
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
       SDL_RenderClear(renderer);
 
-      draw_system(game.get_ecs(), renderer);
+      draw_system(registry, renderer);
 
       SDL_RenderPresent(renderer);
     }
