@@ -4,8 +4,8 @@
 #include "Components/Health.hpp"
 #include "Components/Position.hpp"
 #include "Components/Velocity.hpp"
-#include "Menu.hpp"
 #include "Game.hpp"
+#include "Menu.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
 #include <cstring>
@@ -146,14 +146,14 @@ int main() {
   }
 
   std::string ipAddress = "127.0.0.1";
-  std::string ipPort =  "4243";
-  //if (!menu(renderer, font, window, ipAddress, ipPort)) {
-  //  TTF_CloseFont(font);
-  //  SDL_DestroyRenderer(renderer);
-  //  SDL_DestroyWindow(window);
-  //  SDL_Quit();
-  //  return 0;
-  //}
+  std::string ipPort = "4243";
+  // if (!menu(renderer, font, window, ipAddress, ipPort)) {
+  //   TTF_CloseFont(font);
+  //   SDL_DestroyRenderer(renderer);
+  //   SDL_DestroyWindow(window);
+  //   SDL_Quit();
+  //   return 0;
+  // }
 
   std::cout << "Connecting to IP: " << ipAddress << std::endl;
   std::cout << "Connecting to Port: " << ipPort << std::endl;
