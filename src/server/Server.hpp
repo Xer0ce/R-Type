@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../ecs/Registry.hpp"
+#include "../graphical/Game.hpp"
 #include "./tcp/Tcp.hpp"
 #include "./udp/UDP.hpp"
 #include <map>
@@ -33,11 +34,13 @@ public:
   void shootCommand(std::vector<uint8_t> buffer,
                     std::unique_ptr<IProtocol> &protocol);
 
+  void game_loop();
+  void world_update();
+
 private:
   std::unique_ptr<IProtocol> _tcp;
   std::unique_ptr<IProtocol> _udp;
-
-  std::unique_ptr<Registry> _ecs;
+  Game _game;
   std::map<uint8_t, std::function<void(std::vector<uint8_t>,
                                        std::unique_ptr<IProtocol> &)>>
       _commands;
