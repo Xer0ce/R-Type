@@ -5,12 +5,12 @@
 ** handleCommand
 */
 
-#include "Command.hpp"
 #include "Server.hpp"
+#include "Command.hpp"
 
 void Server::connectCommand(std::vector<uint8_t> buffer,
                             std::unique_ptr<IProtocol> &protocol) {
-  std::string response = "OK";
+  std::string response = "disconnect OK";
   Command *cmd = new Command();
   cmd->type = CommandType::CONNECT;
   cmd->connect = new Connect();
@@ -26,7 +26,15 @@ void Server::disconnectCommand(std::vector<uint8_t> buffer,
 
 void Server::moveCommand(std::vector<uint8_t> buffer,
                          std::unique_ptr<IProtocol> &protocol) {
-  std::string response = "Move OK";
+  std::string response = "move OK";
+  std::string message = std::string(buffer.begin(), buffer.end());
+  std::cout << "Message: " << message << std::endl;
+  Command *cmd = new Command();
+  cmd->type = CommandType::MOVE;
+  cmd->move = new Move();
+//   cmd->move->playerId = 
+//   cmd->move->positionX = 
+//   cmd->move->positionY = 
   protocol->sendData(response);
 }
 
