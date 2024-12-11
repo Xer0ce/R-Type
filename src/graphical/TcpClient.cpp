@@ -20,17 +20,31 @@ TcpClient::TcpClient(const std::string &ip, int port) {
       0) {
     throw std::runtime_error("Failed to connect to server");
   }
+
+  int flags = fcntl(_sockfd, F_GETFL, 0);
+  if (flags == -1 || fcntl(_sockfd, F_SETFL, flags | O_NONBLOCK) == -1) {
+    throw std::runtime_error("Failed to set non-blocking mode");
+  }
+}
+
+std::vector<uint8_t> TcpClient::receive_data() {
+  std::vector<uint8_t> buffer(1024);
+  ssize_t bytes = recv(_sockfd, buffer.data(), buffer.size(), 0);
+  if (bytes < 0) {
+    if (errno == EWOULDBLOCK || errno == EAGAIN) {
+      return {};
+    } else {
+      throw std::runtime_error("Failed to receive data");
+    }
+  }
+  buffer.resize(bytes);
+  std::string received_message(buffer.begin(), buffer.end());
+  std::cout << "[TCP INFO] Received: " << received_message << std::endl;
+  return buffer;
 }
 
 void TcpClient::send_data(std::vector<uint8_t> &data) {
   if (send(_sockfd, data.data(), data.size(), 0) < 0) {
     throw std::runtime_error("Failed to send data");
   }
-}
-
-void TcpClient::receive_data(std::vector<uint8_t> &buffer) {
-  char tmp[1024];
-  int bytes = recv(_sockfd, tmp, sizeof(tmp), 0);
-  if (bytes > 0)
-    buffer.assign(tmp, tmp + bytes);
 }

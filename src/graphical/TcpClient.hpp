@@ -14,6 +14,7 @@
 #include <thread>
 #include <unistd.h>
 #include <vector>
+#include <fcntl.h>
 
 class TcpClient {
 private:
@@ -23,7 +24,7 @@ private:
 public:
   TcpClient(const std::string &ip, int port);
   void send_data(std::vector<uint8_t> &data);
-  void receive_data(std::vector<uint8_t> &buffer);
+  std::vector<uint8_t> receive_data();
   ~TcpClient() { close(_sockfd); }
 };
 
