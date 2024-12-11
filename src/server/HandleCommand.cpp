@@ -5,8 +5,8 @@
 ** handleCommand
 */
 
-#include "Server.hpp"
 #include "Command.hpp"
+#include "Server.hpp"
 
 void Server::connectCommand(std::vector<uint8_t> buffer,
                             std::unique_ptr<IProtocol> &protocol) {
