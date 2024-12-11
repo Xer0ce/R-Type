@@ -9,6 +9,7 @@
 #define TCPCLIENT_HPP_
 #include <arpa/inet.h>
 #include <cstring>
+#include <fcntl.h>
 #include <iostream>
 #include <sys/socket.h>
 #include <thread>
@@ -23,7 +24,7 @@ private:
 public:
   TcpClient(const std::string &ip, int port);
   void send_data(std::vector<uint8_t> &data);
-  void receive_data(std::vector<uint8_t> &buffer);
+  std::vector<uint8_t> receive_data();
   ~TcpClient() { close(_sockfd); }
 };
 
