@@ -23,10 +23,13 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
     protocol->listenSocket();
     std::vector<uint8_t> buffer = protocol->getBuffer();
+    std::vector<std::string> parsedBuffer;
+
+    parsedBuffer = parseCommandBuffer(buffer);
     std::cout << "[" << protocol->getType() << "] "
               << std::string(buffer.begin(), buffer.end()) << std::endl;
     if (_commands.find(buffer[0]) != _commands.end()) {
-      _commands[buffer[0]](buffer, protocol);
+      _commands[buffer[0]](parsedBuffer, protocol);
     } else {
       std::cout << "Code invalide !" << std::endl;
     }
