@@ -24,14 +24,15 @@ struct Connect {
 
 struct Move {
   std::size_t playerId;
-  std::size_t positionX;
-  std::size_t positionY;
+  float positionX;
+  float positionY;
 };
 
 struct Shoot {
   std::size_t playerId;
-  std::size_t positionX;
-  std::size_t positionY;
-  std::size_t directionX;
-  std::size_t directionY;
+  float positionX;
+  float positionY;
+  float directionX;
+  float directionY;
+  float lengthVector;
 };
