@@ -7,31 +7,31 @@
 
 #pragma once
 
-#include <queue>
-#include <mutex>
 #include "Command.hpp"
+#include <mutex>
+#include <queue>
 
 class Queue {
-    public:
-        Queue();
-        ~Queue();
+public:
+  Queue();
+  ~Queue();
 
-        void pushUdpQueue(Command *command);
-        Command *popUdpQueue();
+  void pushUdpQueue(Command *command);
+  Command *popUdpQueue();
 
-        void pushTcpQueue(Command *command);
-        Command *popTcpQueue();
+  void pushTcpQueue(Command *command);
+  Command *popTcpQueue();
 
-        void pushGameQueue(Command *command);
-        Command *popGameQueue();
+  void pushGameQueue(Command *command);
+  Command *popGameQueue();
 
-    private:
-        std::mutex _udpMutex;
-        std::queue<Command *> _udpQueue;
+private:
+  std::mutex _udpMutex;
+  std::queue<Command *> _udpQueue;
 
-        std::mutex _tcpMutex;
-        std::queue<Command *> _tcpQueue;
+  std::mutex _tcpMutex;
+  std::queue<Command *> _tcpQueue;
 
-        std::mutex _gameMutex;
-        std::queue<Command *> _gameQueue;
+  std::mutex _gameMutex;
+  std::queue<Command *> _gameQueue;
 };
