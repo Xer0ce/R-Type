@@ -33,13 +33,14 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   }
 }
 
-void Server::world_update(){
+void Server::world_update() {
     // logique qui pour chaque element send la data
 };
 
 void Server::game_loop() {
   while (true) {
     // recupe les actions a faire de la queue puis les ececuter
+    // appeler le _game.loop(deltaTime);
     // puis appeler le world update
     return;
   }

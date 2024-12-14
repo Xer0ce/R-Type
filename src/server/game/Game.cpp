@@ -6,7 +6,7 @@
 */
 
 #include "Game.hpp"
-#include "../ecs/EntitiesGestion.hpp"
+#include "../../ecs/EntitiesGestion.hpp"
 #include "Components/Control.hpp"
 #include "Components/Draw.hpp"
 #include "Components/Health.hpp"
