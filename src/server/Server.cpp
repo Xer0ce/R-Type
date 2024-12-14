@@ -33,7 +33,7 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   }
 }
 
-void Server::world_update() {
+void Server::world_update(){
     // logique qui pour chaque element send la data
 };
 
