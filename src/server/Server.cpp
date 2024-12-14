@@ -27,7 +27,8 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
     if (command) {
       if (command->type == CommandType::REPCONNECT) {
         std::cout << command->id << std::endl;
-        protocol->sendData(std::to_string(command->repConnect->id), command->repConnect->id);
+        protocol->sendData(std::to_string(command->repConnect->id),
+                           command->repConnect->id);
       }
     }
     if (protocol->listenSocket()) {
@@ -57,7 +58,8 @@ void Server::game_loop() {
     if (command->type == CommandType::CONNECT) {
       std::cout << "cacazizi" << command->connect->Nickname << std::endl;
       auto player = create_entity<EntityType::Player>(
-          _game.get_ecs(), Position(400, 100), Velocity(), Health(), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+          _game.get_ecs(), Position(400, 100), Velocity(), Health(),
+          Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
       newCommand->type = CommandType::REPCONNECT;
       newCommand->repConnect = new repConnect();
       newCommand->repConnect->id = player;
