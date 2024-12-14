@@ -23,17 +23,31 @@ public:
 
   void start();
 
-  void initCommandMap();
+  void initCommandMapHandle();
+  void initCommandMapSend();
 
   std::vector<std::string> parseCommandBuffer(std::vector<uint8_t> buffer);
 
-  void connectCommand(std::vector<std::string> buffer,
+  void connectCommandHandle(std::vector<std::string> buffer,
                       std::unique_ptr<IProtocol> &protocol);
-  void disconnectCommand(std::vector<std::string> buffer,
+  void disconnectCommandHandle(std::vector<std::string> buffer,
                          std::unique_ptr<IProtocol> &protocol);
-  void moveCommand(std::vector<std::string> buffer,
+  void moveCommandHandle(std::vector<std::string> buffer,
                    std::unique_ptr<IProtocol> &protocol);
-  void shootCommand(std::vector<std::string> buffer,
+  void shootCommandHandle(std::vector<std::string> buffer,
+                    std::unique_ptr<IProtocol> &protocol);
+  
+  void connectCommandSend(std::vector<std::string> buffer,
+                      std::unique_ptr<IProtocol> &protocol);
+  void disconnectCommandSend(std::vector<std::string> buffer,
+                         std::unique_ptr<IProtocol> &protocol);
+  void newPlayerCommandSend(std::vector<std::string> buffer,
+                         std::unique_ptr<IProtocol> &protocol);
+  void moveCommandSend(std::vector<std::string> buffer,
+                   std::unique_ptr<IProtocol> &protocol);
+  void shootCommandSend(std::vector<std::string> buffer,
+                    std::unique_ptr<IProtocol> &protocol);
+  void mapCommandSend(std::vector<std::string> buffer,
                     std::unique_ptr<IProtocol> &protocol);
 
   void game_loop();
@@ -45,5 +59,8 @@ private:
   Game _game;
   std::map<uint8_t, std::function<void(std::vector<std::string>,
                                        std::unique_ptr<IProtocol> &)>>
-      _commands;
+      _commandsHandle;
+  std::map<std::string, std::function<void(std::vector<std::string>,
+                                       std::unique_ptr<IProtocol> &)>>
+      _commandsSend;
 };

@@ -53,7 +53,7 @@ void handleWrongCommand(std::string typeCommand, std::unique_ptr<IProtocol> &pro
   protocol->sendData(response);
 }
 
-void Server::connectCommand(std::vector<std::string> buffer,
+void Server::connectCommandHandle(std::vector<std::string> buffer,
                             std::unique_ptr<IProtocol> &protocol) {
   std::string response;
   Command *cmd = new Command();
@@ -71,13 +71,13 @@ void Server::connectCommand(std::vector<std::string> buffer,
   protocol->sendData(response);
 }
 
-void Server::disconnectCommand(std::vector<std::string> buffer,
+void Server::disconnectCommandHandle(std::vector<std::string> buffer,
                                std::unique_ptr<IProtocol> &protocol) {
   std::string response = "disconnect OK";
   protocol->sendData(response);
 }
 
-void Server::moveCommand(std::vector<std::string> buffer,
+void Server::moveCommandHandle(std::vector<std::string> buffer,
                          std::unique_ptr<IProtocol> &protocol) {
   std::string response;
   Command *cmd = new Command();
@@ -88,7 +88,6 @@ void Server::moveCommand(std::vector<std::string> buffer,
     cmd->move = new Move();
     cmd->move->playerId = 1;
     cmd->move->positionX = std::stof(buffer[0]);
-    cmd->move->positionY = std::stof(buffer[1]);
   } else {
     handleWrongCommand("Move", protocol);
     return;
@@ -100,7 +99,7 @@ void Server::moveCommand(std::vector<std::string> buffer,
   protocol->sendData(response);
 }
 
-void Server::shootCommand(std::vector<std::string> buffer,
+void Server::shootCommandHandle(std::vector<std::string> buffer,
                           std::unique_ptr<IProtocol> &protocol) {
   std::string response;
   Command *cmd = new Command();
@@ -130,21 +129,21 @@ void Server::shootCommand(std::vector<std::string> buffer,
   protocol->sendData(response);
 }
 
-void Server::initCommandMap() {
-  _commands[0x01] = [this](std::vector<std::string> buffer,
+void Server::initCommandMapHandle() {
+  _commandsHandle[0x01] = [this](std::vector<std::string> buffer,
                            std::unique_ptr<IProtocol> &protocol) {
-    connectCommand(buffer, protocol);
+    connectCommandHandle(buffer, protocol);
   };
-  _commands[0x02] = [this](std::vector<std::string> buffer,
+  _commandsHandle[0x02] = [this](std::vector<std::string> buffer,
                            std::unique_ptr<IProtocol> &protocol) {
-    disconnectCommand(buffer, protocol);
+    disconnectCommandHandle(buffer, protocol);
   };
-  _commands[0x03] = [this](std::vector<std::string> buffer,
+  _commandsHandle[0x03] = [this](std::vector<std::string> buffer,
                            std::unique_ptr<IProtocol> &protocol) {
-    moveCommand(buffer, protocol);
+    moveCommandHandle(buffer, protocol);
   };
-  _commands[0x04] = [this](std::vector<std::string> buffer,
+  _commandsHandle[0x04] = [this](std::vector<std::string> buffer,
                            std::unique_ptr<IProtocol> &protocol) {
-    shootCommand(buffer, protocol);
+    shootCommandHandle(buffer, protocol);
   };
 }
