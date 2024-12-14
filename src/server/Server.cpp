@@ -23,23 +23,24 @@ Server::~Server() {}
 
 void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
-    protocol->listenSocket();
-    std::vector<uint8_t> buffer = protocol->getBuffer();
-    std::vector<std::string> parsedBuffer;
+    if (protocol->listenSocket()) {
+      std::vector<uint8_t> buffer = protocol->getBuffer();
+      std::vector<std::string> parsedBuffer;
 
-    parsedBuffer = parseCommandBuffer(buffer);
-    std::cout << "[" << protocol->getType() << "]"
-              << std::string(buffer.begin(), buffer.end()) << std::endl;
-    if (_commandsHandle.find(buffer[0]) != _commandsHandle.end()) {
-      _commandsHandle[buffer[0]](parsedBuffer, protocol);
-    } else {
-      std::cout << "Code invalide !" << std::endl;
+      parsedBuffer = parseCommandBuffer(buffer);
+      std::cout << "[" << protocol->getType() << "] "
+                << std::string(buffer.begin(), buffer.end()) << std::endl;
+      if (_commandsHandle.find(buffer[0]) != _commandsHandle.end()) {
+        _commandsHandle[buffer[0]](parsedBuffer, protocol);
+      } else {
+        std::cout << "Code invalide !" << std::endl;
+      }
     }
   }
 }
 
-void Server::world_update(){
-    // logique qui pour chaque element send la data
+void Server::world_update() {
+  // logique qui pour chaque element send la data
 };
 
 void Server::game_loop() {

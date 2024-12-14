@@ -86,10 +86,15 @@ bool UDP::listenSocket(int backlog) {
       break;
     }
   }
-  _buffer = completeMessage;
-  return true;
-}
 
+  if (!completeMessage.empty()) {
+    std::lock_guard<std::mutex> lock(_messageMutex);
+    _buffer = completeMessage;
+    return true;
+  }
+
+  return false;
+}
 void UDP::closeSocket() {
   if (_socket >= 0) {
     close(_socket);
