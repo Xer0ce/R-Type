@@ -29,26 +29,26 @@ public:
   std::vector<std::string> parseCommandBuffer(std::vector<uint8_t> buffer);
 
   void connectCommandHandle(std::vector<std::string> buffer,
-                      std::unique_ptr<IProtocol> &protocol);
+                            std::unique_ptr<IProtocol> &protocol);
   void disconnectCommandHandle(std::vector<std::string> buffer,
-                         std::unique_ptr<IProtocol> &protocol);
+                               std::unique_ptr<IProtocol> &protocol);
   void moveCommandHandle(std::vector<std::string> buffer,
-                   std::unique_ptr<IProtocol> &protocol);
+                         std::unique_ptr<IProtocol> &protocol);
   void shootCommandHandle(std::vector<std::string> buffer,
-                    std::unique_ptr<IProtocol> &protocol);
-  
+                          std::unique_ptr<IProtocol> &protocol);
+
   void connectCommandSend(std::vector<std::string> buffer,
-                      std::unique_ptr<IProtocol> &protocol);
+                          std::unique_ptr<IProtocol> &protocol);
   void disconnectCommandSend(std::vector<std::string> buffer,
-                         std::unique_ptr<IProtocol> &protocol);
+                             std::unique_ptr<IProtocol> &protocol);
   void newPlayerCommandSend(std::vector<std::string> buffer,
-                         std::unique_ptr<IProtocol> &protocol);
+                            std::unique_ptr<IProtocol> &protocol);
   void moveCommandSend(std::vector<std::string> buffer,
-                   std::unique_ptr<IProtocol> &protocol);
+                       std::unique_ptr<IProtocol> &protocol);
   void shootCommandSend(std::vector<std::string> buffer,
-                    std::unique_ptr<IProtocol> &protocol);
+                        std::unique_ptr<IProtocol> &protocol);
   void mapCommandSend(std::vector<std::string> buffer,
-                    std::unique_ptr<IProtocol> &protocol);
+                      std::unique_ptr<IProtocol> &protocol);
 
   void game_loop();
   void world_update();
@@ -61,6 +61,6 @@ private:
                                        std::unique_ptr<IProtocol> &)>>
       _commandsHandle;
   std::map<std::string, std::function<void(std::vector<std::string>,
-                                       std::unique_ptr<IProtocol> &)>>
+                                           std::unique_ptr<IProtocol> &)>>
       _commandsSend;
 };

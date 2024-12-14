@@ -5,15 +5,20 @@
 ** handleCommand
 */
 
-#include "Server.hpp"
 #include "Command.hpp"
+#include "Server.hpp"
 #include <iostream>
 
-void cleanString(std::string& str) {
-  str.erase(std::remove_if(str.begin(), str.end(), [](unsigned char c) { return !std::isdigit(c) && c != '.' && c != '-'; }), str.end());
+void cleanString(std::string &str) {
+  str.erase(std::remove_if(str.begin(), str.end(),
+                           [](unsigned char c) {
+                             return !std::isdigit(c) && c != '.' && c != '-';
+                           }),
+            str.end());
 }
 
-std::vector<std::string> my_strToWordArray(const std::string& str, char delimiter) {
+std::vector<std::string> my_strToWordArray(const std::string &str,
+                                           char delimiter) {
   std::vector<std::string> resultVec;
   std::stringstream ss(str);
   std::string token;
@@ -28,7 +33,8 @@ std::vector<std::string> my_strToWordArray(const std::string& str, char delimite
   return resultVec;
 }
 
-std::vector<std::string>  Server::parseCommandBuffer(std::vector<uint8_t> buffer) {
+std::vector<std::string>
+Server::parseCommandBuffer(std::vector<uint8_t> buffer) {
   std::string message;
   std::vector<std::string> bufferString;
 
@@ -42,7 +48,8 @@ std::vector<std::string>  Server::parseCommandBuffer(std::vector<uint8_t> buffer
   return bufferString;
 }
 
-void handleWrongCommand(std::string typeCommand, std::unique_ptr<IProtocol> &protocol) {
+void handleWrongCommand(std::string typeCommand,
+                        std::unique_ptr<IProtocol> &protocol) {
   std::string response;
 
   if (!typeCommand.empty()) {
@@ -54,7 +61,7 @@ void handleWrongCommand(std::string typeCommand, std::unique_ptr<IProtocol> &pro
 }
 
 void Server::connectCommandHandle(std::vector<std::string> buffer,
-                            std::unique_ptr<IProtocol> &protocol) {
+                                  std::unique_ptr<IProtocol> &protocol) {
   std::string response;
   Command *cmd = new Command();
   cmd->type = CommandType::CONNECT;
@@ -72,13 +79,13 @@ void Server::connectCommandHandle(std::vector<std::string> buffer,
 }
 
 void Server::disconnectCommandHandle(std::vector<std::string> buffer,
-                               std::unique_ptr<IProtocol> &protocol) {
+                                     std::unique_ptr<IProtocol> &protocol) {
   std::string response = "disconnect OK";
   protocol->sendData(response);
 }
 
 void Server::moveCommandHandle(std::vector<std::string> buffer,
-                         std::unique_ptr<IProtocol> &protocol) {
+                               std::unique_ptr<IProtocol> &protocol) {
   std::string response;
   Command *cmd = new Command();
 
@@ -100,7 +107,7 @@ void Server::moveCommandHandle(std::vector<std::string> buffer,
 }
 
 void Server::shootCommandHandle(std::vector<std::string> buffer,
-                          std::unique_ptr<IProtocol> &protocol) {
+                                std::unique_ptr<IProtocol> &protocol) {
   std::string response;
   Command *cmd = new Command();
 
@@ -131,19 +138,19 @@ void Server::shootCommandHandle(std::vector<std::string> buffer,
 
 void Server::initCommandMapHandle() {
   _commandsHandle[0x01] = [this](std::vector<std::string> buffer,
-                           std::unique_ptr<IProtocol> &protocol) {
+                                 std::unique_ptr<IProtocol> &protocol) {
     connectCommandHandle(buffer, protocol);
   };
   _commandsHandle[0x02] = [this](std::vector<std::string> buffer,
-                           std::unique_ptr<IProtocol> &protocol) {
+                                 std::unique_ptr<IProtocol> &protocol) {
     disconnectCommandHandle(buffer, protocol);
   };
   _commandsHandle[0x03] = [this](std::vector<std::string> buffer,
-                           std::unique_ptr<IProtocol> &protocol) {
+                                 std::unique_ptr<IProtocol> &protocol) {
     moveCommandHandle(buffer, protocol);
   };
   _commandsHandle[0x04] = [this](std::vector<std::string> buffer,
-                           std::unique_ptr<IProtocol> &protocol) {
+                                 std::unique_ptr<IProtocol> &protocol) {
     shootCommandHandle(buffer, protocol);
   };
 }
