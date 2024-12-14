@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "IProtocol.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
 #include <arpa/inet.h>
@@ -25,7 +26,9 @@ public:
             int port_tcp);
   ~Connexion();
 
+  void listen(std::unique_ptr<IProtocol> &protocol);
+
 private:
-  std::unique_ptr<TcpClient> _tcp;
-  std::unique_ptr<UdpClient> _udp;
+  std::unique_ptr<IProtocol> _tcp;
+  std::unique_ptr<IProtocol> _udp;
 };
