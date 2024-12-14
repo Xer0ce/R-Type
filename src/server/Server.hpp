@@ -8,7 +8,7 @@
 #pragma once
 
 #include "../ecs/Registry.hpp"
-#include "../graphical/Game.hpp"
+#include "./game/Game.hpp"
 #include "./tcp/Tcp.hpp"
 #include "./udp/UDP.hpp"
 #include <map>

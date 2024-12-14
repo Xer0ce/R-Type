@@ -44,6 +44,7 @@ void Server::world_update(){
 void Server::game_loop() {
   while (true) {
     // recupe les actions a faire de la queue puis les ececuter
+    // appeler le _game.loop(deltaTime);
     // puis appeler le world update
     world_update();
     return;
