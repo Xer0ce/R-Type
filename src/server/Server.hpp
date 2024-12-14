@@ -51,7 +51,7 @@ public:
                         std::unique_ptr<IProtocol> &protocol);
   void mapCommandSend(std::vector<std::string> buffer,
                       std::unique_ptr<IProtocol> &protocol);
-  
+
   void connectCommandGame(Command *command);
   void disconnectCommandGame(Command *command);
   void moveCommandGame(Command *command);
@@ -69,7 +69,7 @@ private:
   std::map<std::string, std::function<void(std::vector<std::string>,
                                            std::unique_ptr<IProtocol> &)>>
       _commandsSend;
-  std::map<CommandType, std::function<void(Command*)>> _commandsGame;
+  std::map<CommandType, std::function<void(Command *)>> _commandsGame;
 
   std::shared_ptr<Queue> _queue;
 };

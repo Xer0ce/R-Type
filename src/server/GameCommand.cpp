@@ -15,7 +15,6 @@ void Server::connectCommandGame(Command *command) {
 
 void Server::disconnectCommandGame(Command *command) {
   std::cout << "disconnect command" << std::endl;
-
 }
 
 void Server::moveCommandGame(Command *command) {
