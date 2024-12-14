@@ -28,7 +28,6 @@ public:
   void initCommandMapSend();
   void initCommandMapGame();
 
-
   void connectCommandHandle(std::vector<uint8_t> buffer,
                             std::unique_ptr<IProtocol> &protocol);
   void disconnectCommandHandle(std::vector<uint8_t> buffer,

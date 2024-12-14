@@ -22,7 +22,8 @@ void handleWrongCommand(std::string typeCommand,
   protocol->sendData(response);
 }
 
-std::vector<std::string> parseConnectCommand(const std::vector<uint8_t>& buffer) {
+std::vector<std::string>
+parseConnectCommand(const std::vector<uint8_t> &buffer) {
   std::vector<std::string> bufferString;
   std::string bufferStr(buffer.begin(), buffer.end() - 1);
 
