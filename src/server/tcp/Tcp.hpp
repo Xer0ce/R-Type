@@ -10,9 +10,9 @@
 #include "../AProtocol.hpp"
 #include <condition_variable>
 #include <mutex>
-#include <vector>
-#include <string>
 #include <netinet/in.h>
+#include <string>
+#include <vector>
 
 class Tcp : public AProtocol {
 public:
