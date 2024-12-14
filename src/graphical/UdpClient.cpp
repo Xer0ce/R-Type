@@ -73,7 +73,6 @@ std::vector<uint8_t> UdpClient::receive_data() {
 }
 
 std::vector<uint8_t> &UdpClient::getBuffer() {
-  std::mutec
 }
 
 UdpClient::~UdpClient() {
