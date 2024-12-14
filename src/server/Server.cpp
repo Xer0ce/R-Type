@@ -50,15 +50,16 @@ void Server::game_loop() {
     }
     if (command->type == CommandType::CONNECT) {
       std::cout << command->connect->Nickname << std::endl;
-      auto player = create_entity<EntityType::Player>(_game.get_ecs(), Position(400, 100), Velocity(), Health());
+      auto player = create_entity<EntityType::Player>(
+          _game.get_ecs(), Position(400, 100), Velocity(), Health());
       newCommand->type = CommandType::REPCONNECT;
       newCommand->repConnect = new repConnect();
       newCommand->repConnect->id = player;
       newCommand->id = command->id;
       _queue->pushTcpQueue(newCommand);
-    // if (_commandsGame.find(command->type) != _commandsGame.end()) {
-    //   _commandsGame[command->type](command);
-    // }
+      // if (_commandsGame.find(command->type) != _commandsGame.end()) {
+      //   _commandsGame[command->type](command);
+      // }
     }
     world_update();
   }

@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../ecs/Registry.hpp"
 #include "../ecs/EntitiesGestion.hpp"
+#include "../ecs/Registry.hpp"
 #include "../graphical/Components/Control.hpp"
 #include "../graphical/Components/Draw.hpp"
 #include "../graphical/Components/Health.hpp"
