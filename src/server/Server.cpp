@@ -14,7 +14,8 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
                std::string udpIp) {
   _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
   _udp = std::make_unique<UDP>(udpPort, udpIp);
-  initCommandMap();
+  initCommandMapHandle();
+  initCommandMapSend();
 }
 
 Server::~Server() {}
@@ -23,10 +24,13 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
     protocol->listenSocket();
     std::vector<uint8_t> buffer = protocol->getBuffer();
-    std::cout << "[" << protocol->getType() << "] "
+    std::vector<std::string> parsedBuffer;
+
+    parsedBuffer = parseCommandBuffer(buffer);
+    std::cout << "[" << protocol->getType() << "]"
               << std::string(buffer.begin(), buffer.end()) << std::endl;
-    if (_commands.find(buffer[0]) != _commands.end()) {
-      _commands[buffer[0]](buffer, protocol);
+    if (_commandsHandle.find(buffer[0]) != _commandsHandle.end()) {
+      _commandsHandle[buffer[0]](parsedBuffer, protocol);
     } else {
       std::cout << "Code invalide !" << std::endl;
     }
@@ -42,6 +46,7 @@ void Server::game_loop() {
     // recupe les actions a faire de la queue puis les ececuter
     // appeler le _game.loop(deltaTime);
     // puis appeler le world update
+    world_update();
     return;
   }
 };

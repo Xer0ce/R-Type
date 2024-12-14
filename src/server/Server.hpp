@@ -23,15 +23,31 @@ public:
 
   void start();
 
-  void initCommandMap();
+  void initCommandMapHandle();
+  void initCommandMapSend();
 
-  void connectCommand(std::vector<uint8_t> buffer,
+  std::vector<std::string> parseCommandBuffer(std::vector<uint8_t> buffer);
+
+  void connectCommandHandle(std::vector<std::string> buffer,
                       std::unique_ptr<IProtocol> &protocol);
-  void disconnectCommand(std::vector<uint8_t> buffer,
+  void disconnectCommandHandle(std::vector<std::string> buffer,
                          std::unique_ptr<IProtocol> &protocol);
-  void moveCommand(std::vector<uint8_t> buffer,
+  void moveCommandHandle(std::vector<std::string> buffer,
                    std::unique_ptr<IProtocol> &protocol);
-  void shootCommand(std::vector<uint8_t> buffer,
+  void shootCommandHandle(std::vector<std::string> buffer,
+                    std::unique_ptr<IProtocol> &protocol);
+  
+  void connectCommandSend(std::vector<std::string> buffer,
+                      std::unique_ptr<IProtocol> &protocol);
+  void disconnectCommandSend(std::vector<std::string> buffer,
+                         std::unique_ptr<IProtocol> &protocol);
+  void newPlayerCommandSend(std::vector<std::string> buffer,
+                         std::unique_ptr<IProtocol> &protocol);
+  void moveCommandSend(std::vector<std::string> buffer,
+                   std::unique_ptr<IProtocol> &protocol);
+  void shootCommandSend(std::vector<std::string> buffer,
+                    std::unique_ptr<IProtocol> &protocol);
+  void mapCommandSend(std::vector<std::string> buffer,
                     std::unique_ptr<IProtocol> &protocol);
 
   void game_loop();
@@ -41,7 +57,10 @@ private:
   std::unique_ptr<IProtocol> _tcp;
   std::unique_ptr<IProtocol> _udp;
   Game _game;
-  std::map<uint8_t, std::function<void(std::vector<uint8_t>,
+  std::map<uint8_t, std::function<void(std::vector<std::string>,
                                        std::unique_ptr<IProtocol> &)>>
-      _commands;
+      _commandsHandle;
+  std::map<std::string, std::function<void(std::vector<std::string>,
+                                       std::unique_ptr<IProtocol> &)>>
+      _commandsSend;
 };
