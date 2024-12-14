@@ -44,8 +44,13 @@ Server::parseCommandBuffer(std::vector<uint8_t> buffer) {
   }
 
   message = std::string(buffer.begin(), buffer.end());
-  bufferString = my_strToWordArray(message, ' ');
 
+  if (message.find(' ') == std::string::npos) {
+    bufferString.push_back(message);
+    return bufferString;
+  }
+
+  bufferString = my_strToWordArray(message, ' ');
   return bufferString;
 }
 
@@ -73,7 +78,6 @@ void Server::connectCommandHandle(std::vector<std::string> buffer,
     handleWrongCommand("Connect", protocol);
     return;
   }
-
   _queue->pushGameQueue(cmd);
 }
 

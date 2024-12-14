@@ -42,6 +42,8 @@ void Queue::pushGameQueue(Command *command) {
 
 Command *Queue::popGameQueue() {
   std::lock_guard<std::mutex> lock(_gameMutex);
+  if (_gameQueue.empty())
+    return nullptr;
   Command *command = _gameQueue.front();
   _gameQueue.pop();
   return command;
