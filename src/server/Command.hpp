@@ -16,6 +16,7 @@ struct Command {
   struct Connect *connect;
   struct Move *move;
   struct Shoot *shoot;
+  int id;
 };
 
 struct Connect {

@@ -62,10 +62,6 @@ bool UDP::sendData(const std::string &data) {
   return true;
 }
 
-std::string UDP::deserialize_connect(const std::vector<uint8_t> &data) {
-  return 0;
-}
-
 bool UDP::listenSocket(int backlog) {
   _clientAddrLen = sizeof(_clientAddr);
   std::vector<uint8_t> completeMessage;
@@ -90,6 +86,13 @@ bool UDP::listenSocket(int backlog) {
   if (!completeMessage.empty()) {
     std::lock_guard<std::mutex> lock(_messageMutex);
     _buffer = completeMessage;
+    if (!isClientAddressPresent(_clientAddr)) {
+      _clientAddresses.push_back(_clientAddr);
+    }
+    for (const auto &addr : _clientAddresses) {
+      std::cout << "[DEBUG] Client address: " << inet_ntoa(addr.sin_addr) << ":"
+                << ntohs(addr.sin_port) << std::endl;
+    }
     return true;
   }
 
@@ -106,4 +109,14 @@ void UDP::closeSocket() {
 std::vector<uint8_t> &UDP::getBuffer() {
   std::lock_guard<std::mutex> lock(_messageMutex);
   return _buffer;
+}
+
+bool UDP::isClientAddressPresent(const sockaddr_in &clientAddr) {
+  for (const auto &addr : _clientAddresses) {
+    if (addr.sin_addr.s_addr == clientAddr.sin_addr.s_addr &&
+        addr.sin_port == clientAddr.sin_port) {
+      return true;
+    }
+  }
+  return false;
 }
