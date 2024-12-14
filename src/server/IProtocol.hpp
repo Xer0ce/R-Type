@@ -18,7 +18,7 @@ public:
 
   virtual bool initializeSocket() = 0;
   virtual bool bindSocket() = 0;
-  virtual bool sendData(const std::string &data) = 0;
+  virtual bool sendData(const std::string &data, int id) = 0;
   virtual void closeSocket() = 0;
   virtual bool listenSocket(int backlog = 5) = 0;
 

@@ -7,13 +7,6 @@
 
 #pragma once
 
-#include "../ecs/EntitiesGestion.hpp"
-#include "../ecs/Registry.hpp"
-#include "../graphical/Components/Control.hpp"
-#include "../graphical/Components/Draw.hpp"
-#include "../graphical/Components/Health.hpp"
-#include "../graphical/Components/Position.hpp"
-#include "../graphical/Components/Velocity.hpp"
 #include "Queue.hpp"
 #include "game/Game.hpp"
 #include "tcp/Tcp.hpp"

@@ -6,7 +6,6 @@
 */
 
 #include "Server.hpp"
-#include "../graphical/Components/Position.hpp"
 #include <iostream>
 #include <thread>
 
@@ -24,6 +23,13 @@ Server::~Server() {}
 
 void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
+    Command *command = _queue->popTcpQueue();
+    if (command) {
+      if (command->type == CommandType::REPCONNECT) {
+        std::cout << command->id << std::endl;
+        protocol->sendData(std::to_string(command->repConnect->id), command->repConnect->id);
+      }
+    }
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
@@ -49,13 +55,14 @@ void Server::game_loop() {
       continue;
     }
     if (command->type == CommandType::CONNECT) {
-      std::cout << command->connect->Nickname << std::endl;
+      std::cout << "cacazizi" << command->connect->Nickname << std::endl;
       auto player = create_entity<EntityType::Player>(
-          _game.get_ecs(), Position(400, 100), Velocity(), Health());
+          _game.get_ecs(), Position(400, 100), Velocity(), Health(), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
       newCommand->type = CommandType::REPCONNECT;
       newCommand->repConnect = new repConnect();
       newCommand->repConnect->id = player;
       newCommand->id = command->id;
+      std::cout << newCommand->id << std::endl;
       _queue->pushTcpQueue(newCommand);
       // if (_commandsGame.find(command->type) != _commandsGame.end()) {
       //   _commandsGame[command->type](command);

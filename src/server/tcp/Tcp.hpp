@@ -21,7 +21,7 @@ public:
 
   bool initializeSocket() override;
   bool bindSocket() override;
-  bool sendData(const std::string &data) override;
+  bool sendData(const std::string &data, int id) override;
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
   std::vector<uint8_t> &getBuffer() override;

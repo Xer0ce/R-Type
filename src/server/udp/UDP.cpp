@@ -53,7 +53,7 @@ bool UDP::bindSocket() {
   return true;
 }
 
-bool UDP::sendData(const std::string &data) {
+bool UDP::sendData(const std::string &data, int id) {
   if (sendto(_socket, data.c_str(), data.size(), 0, (sockaddr *)&_clientAddr,
              _clientAddrLen) < 0) {
     throw std::runtime_error("Failed to send data.");

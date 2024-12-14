@@ -6,12 +6,6 @@
 */
 
 #include "Game.hpp"
-#include "../../ecs/EntitiesGestion.hpp"
-#include "Components/Control.hpp"
-#include "Components/Draw.hpp"
-#include "Components/Health.hpp"
-#include "Components/Position.hpp"
-#include "Components/Velocity.hpp"
 
 void Game::load_component() {
   _ecs.register_component<Position>();
@@ -83,4 +77,5 @@ Entities Game::create_player() {
       _ecs, Position(100, 100), Velocity(), Health(),
       Draw({0, 255, 0, 255}, {150, 150, 150, 150}));
   _players.push_back(player);
+  return player;
 };

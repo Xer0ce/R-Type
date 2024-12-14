@@ -9,6 +9,7 @@
 #define GAME_HPP
 
 #include "../../ecs/Registry.hpp"
+#include "../../ecs/EntitiesGestion.hpp"
 #include <vector>
 
 class Game {

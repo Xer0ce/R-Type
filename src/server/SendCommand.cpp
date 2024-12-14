@@ -16,7 +16,7 @@ void Server::connectCommandSend(std::vector<std::string> buffer,
   response = "Connect OK"; // ici faut faire la commande si le joeuur a reussi a
                            // ce connecté avec la map les entites ...
 
-  protocol->sendData(response);
+  // protocol->sendData(response);
 }
 
 void Server::disconnectCommandSend(std::vector<std::string> buffer,
@@ -26,7 +26,7 @@ void Server::disconnectCommandSend(std::vector<std::string> buffer,
   response = "disconnect OK"; // ici faut faire la commande disconnect si un
                               // joeur dans la partie c'est deconnecté
 
-  protocol->sendData(response);
+  // protocol->sendData(response);
 }
 
 void Server::newPlayerCommandSend(std::vector<std::string> buffer,
@@ -36,7 +36,7 @@ void Server::newPlayerCommandSend(std::vector<std::string> buffer,
   response = "newPlayer OK"; // ici faut faire la commande si un joeur se
                              // connecte a la partie
 
-  protocol->sendData(response);
+  // protocol->sendData(response);
 }
 
 void Server::moveCommandSend(std::vector<std::string> buffer,
@@ -46,7 +46,7 @@ void Server::moveCommandSend(std::vector<std::string> buffer,
   response = "Move OK"; // ici faut faire la commande move avec la nouvelle pos
                         // du player en cas de probleme;
 
-  protocol->sendData(response);
+  // protocol->sendData(response);
 }
 
 void Server::shootCommandSend(std::vector<std::string> buffer,
@@ -56,7 +56,7 @@ void Server::shootCommandSend(std::vector<std::string> buffer,
   response =
       "Shoot OK"; // ici faut faire la commande shoot si le mec a le droit tiré
 
-  protocol->sendData(response);
+  // protocol->sendData(response);
 }
 
 void Server::mapCommandSend(std::vector<std::string> buffer,
@@ -66,7 +66,7 @@ void Server::mapCommandSend(std::vector<std::string> buffer,
   response = "Map OK"; // ici faut faire la commande map qui retourne la map
                        // donc en gros toutes les pos des entites
 
-  protocol->sendData(response);
+  // protocol->sendData(response);
 }
 
 void Server::initCommandMapSend() {

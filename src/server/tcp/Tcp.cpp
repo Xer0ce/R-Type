@@ -125,7 +125,6 @@ bool Tcp::listenSocket(int backlog) {
                                          _clientSockets.end(), clientSocket),
                              _clientSockets.end());
       } else {
-        std::cout << "clientSocket : " << clientSocket << std::endl;
         buffer.resize(bytesReceived);
         uint8_t clientSocketId = static_cast<uint8_t>(clientSocket);
         buffer.push_back(clientSocketId);
@@ -140,12 +139,10 @@ bool Tcp::listenSocket(int backlog) {
   return false;
 }
 
-bool Tcp::sendData(const std::string &data) {
-  for (int clientSocket : _clientSockets) {
-    if (send(clientSocket, data.c_str(), data.size(), 0) < 0) {
-      perror("Failed to send data");
-      return false;
-    }
+bool Tcp::sendData(const std::string &data, int id) {
+  if (send(id, data.c_str(), data.size(), 0) < 0) {
+    perror("Failed to send data");
+    return false;
   }
   return true;
 }

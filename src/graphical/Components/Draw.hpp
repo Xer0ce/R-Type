@@ -5,10 +5,11 @@
 ** Draw
 */
 
-#include <SDL3/SDL.h>
 
 #ifndef DRAW_HPP
 #define DRAW_HPP
+
+#include <SDL3/SDL.h>
 
 struct Draw {
   SDL_Rect rect;
