@@ -80,7 +80,6 @@ void Server::connectCommandHandle(std::vector<std::string> buffer,
 void Server::disconnectCommandHandle(std::vector<std::string> buffer,
                                      std::unique_ptr<IProtocol> &protocol) {
   // send struct to queue game
-
 }
 
 void Server::moveCommandHandle(std::vector<std::string> buffer,
