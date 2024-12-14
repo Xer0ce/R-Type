@@ -1,5 +1,3 @@
-# exemple d'uitilisation dans le code 
-
 # R-type Engine
 
 #### This is the user documentation about our engine.
