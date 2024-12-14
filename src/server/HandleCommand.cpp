@@ -96,6 +96,7 @@ void Server::moveCommandHandle(std::vector<std::string> buffer,
     cmd->move = new Move();
     cmd->move->playerId = 1;
     cmd->move->positionX = std::stof(buffer[0]);
+    cmd->move->positionY = std::stof(buffer[1]);
   } else {
     handleWrongCommand("Move", protocol);
     return;
@@ -104,7 +105,7 @@ void Server::moveCommandHandle(std::vector<std::string> buffer,
   std::cout << "Player ID : " << cmd->move->playerId << std::endl;
   std::cout << "Player PosX : " << cmd->move->positionX << std::endl;
   std::cout << "Player PosY : " << cmd->move->positionY << std::endl;
-  protocol->sendData(response);
+  _queue->pushGameQueue(cmd);
 }
 
 void Server::shootCommandHandle(std::vector<std::string> buffer,

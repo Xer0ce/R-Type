@@ -8,9 +8,10 @@
 #pragma once
 
 #include "../ecs/Registry.hpp"
-#include "./game/Game.hpp"
-#include "./tcp/Tcp.hpp"
-#include "./udp/UDP.hpp"
+#include "game/Game.hpp"
+#include "tcp/Tcp.hpp"
+#include "udp/UDP.hpp"
+#include "Queue.hpp"
 #include <map>
 
 class Server {
@@ -63,4 +64,5 @@ private:
   std::map<std::string, std::function<void(std::vector<std::string>,
                                            std::unique_ptr<IProtocol> &)>>
       _commandsSend;
+  std::shared_ptr<Queue> _queue;
 };
