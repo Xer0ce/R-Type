@@ -63,7 +63,7 @@ void handleWrongCommand(std::string typeCommand,
   }
   // faire plustard une reponse en uint8 car pour l'instant c'est en std::string
 
-  protocol->sendData(response);
+  // protocol->sendData(response);
 }
 
 void Server::connectCommandHandle(std::vector<std::string> buffer,

@@ -42,13 +42,21 @@ void Server::world_update(){
 };
 
 void Server::game_loop() {
+
   while (true) {
     Command *command = _queue->popGameQueue();
+    Command *newCommand = new Command();
     if (!command) {
       continue;
     }
     if (command->type == CommandType::CONNECT) {
       std::cout << command->connect->Nickname << std::endl;
+      auto player = create_entity<EntityType::Player>(_game.get_ecs(), Position(400, 100), Velocity(), Health());
+      newCommand->type = CommandType::REPCONNECT;
+      newCommand->repConnect = new repConnect();
+      newCommand->repConnect->id = player;
+      newCommand->id = command->id;
+      _queue->pushTcpQueue(newCommand);
     }
     world_update();
   }

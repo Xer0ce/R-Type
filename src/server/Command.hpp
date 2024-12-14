@@ -9,14 +9,19 @@
 
 #include <iostream>
 
-enum CommandType { CONNECT, MOVE, SHOOT };
+enum CommandType { CONNECT, MOVE, SHOOT, REPCONNECT };
 
 struct Command {
   CommandType type;
   struct Connect *connect;
   struct Move *move;
   struct Shoot *shoot;
+  struct repConnect *repConnect;
   int id;
+};
+
+struct repConnect {
+  std::size_t id;
 };
 
 struct Connect {
