@@ -17,6 +17,7 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
   _queue = std::make_unique<Queue>();
   initCommandMapHandle();
   initCommandMapSend();
+  initCommandMapGame();
 }
 
 Server::~Server() {}
@@ -47,8 +48,8 @@ void Server::game_loop() {
     if (!command) {
       continue;
     }
-    if (command->type == CommandType::CONNECT) {
-      std::cout << command->connect->Nickname << std::endl;
+    if (_commandsGame.find(command->type) != _commandsGame.end()) {
+      _commandsGame[command->type](command);
     }
     world_update();
   }

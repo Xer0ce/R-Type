@@ -26,6 +26,7 @@ public:
 
   void initCommandMapHandle();
   void initCommandMapSend();
+  void initCommandMapGame();
 
   std::vector<std::string> parseCommandBuffer(std::vector<uint8_t> buffer);
 
@@ -50,6 +51,10 @@ public:
                         std::unique_ptr<IProtocol> &protocol);
   void mapCommandSend(std::vector<std::string> buffer,
                       std::unique_ptr<IProtocol> &protocol);
+  
+  void connectCommandGame(Command *command);
+  void disconnectCommandGame(Command *command);
+  void moveCommandGame(Command *command);
 
   void game_loop();
   void world_update();
@@ -64,5 +69,7 @@ private:
   std::map<std::string, std::function<void(std::vector<std::string>,
                                            std::unique_ptr<IProtocol> &)>>
       _commandsSend;
+  std::map<CommandType, std::function<void(Command*)>> _commandsGame;
+
   std::shared_ptr<Queue> _queue;
 };

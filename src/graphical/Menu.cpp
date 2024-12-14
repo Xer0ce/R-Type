@@ -9,7 +9,7 @@ void render_text(SDL_Renderer *renderer, TTF_Font *font,
     return;
   }
   SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-  SDL_FRect dstRect = {x, y, surface->w, surface->h};
+  SDL_FRect dstRect = {x, y, static_cast<float>(surface->w), static_cast<float>(surface->h)};
   SDL_RenderTexture(renderer, texture, nullptr, &dstRect);
   SDL_DestroySurface(surface);
   SDL_DestroyTexture(texture);
