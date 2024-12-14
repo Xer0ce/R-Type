@@ -63,12 +63,10 @@ void handleWrongCommand(std::string typeCommand,
 
 void Server::connectCommandHandle(std::vector<std::string> buffer,
                                   std::unique_ptr<IProtocol> &protocol) {
-  std::string response;
   Command *cmd = new Command();
   cmd->type = CommandType::CONNECT;
   cmd->connect = new Connect();
 
-  response = "Connect OK";
   if (!buffer.empty()) {
     cmd->connect->Nickname = buffer[0];
   } else {
@@ -76,13 +74,13 @@ void Server::connectCommandHandle(std::vector<std::string> buffer,
     return;
   }
 
-  protocol->sendData(response);
+  _queue->pushGameQueue(cmd);
 }
 
 void Server::disconnectCommandHandle(std::vector<std::string> buffer,
                                      std::unique_ptr<IProtocol> &protocol) {
-  std::string response = "disconnect OK";
-  protocol->sendData(response);
+  // send struct to queue game
+
 }
 
 void Server::moveCommandHandle(std::vector<std::string> buffer,
@@ -105,15 +103,14 @@ void Server::moveCommandHandle(std::vector<std::string> buffer,
   std::cout << "Player ID : " << cmd->move->playerId << std::endl;
   std::cout << "Player PosX : " << cmd->move->positionX << std::endl;
   std::cout << "Player PosY : " << cmd->move->positionY << std::endl;
+
   _queue->pushGameQueue(cmd);
 }
 
 void Server::shootCommandHandle(std::vector<std::string> buffer,
                                 std::unique_ptr<IProtocol> &protocol) {
-  std::string response;
   Command *cmd = new Command();
 
-  response = "Shoot OK";
   if (buffer.size() == 5) {
     cmd->type = CommandType::SHOOT;
     cmd->shoot = new Shoot();
@@ -128,14 +125,7 @@ void Server::shootCommandHandle(std::vector<std::string> buffer,
     return;
   }
 
-  std::cout << "Player ID : " << cmd->shoot->playerId << std::endl;
-  std::cout << "Player PosX : " << cmd->shoot->positionX << std::endl;
-  std::cout << "Player PosY : " << cmd->shoot->positionY << std::endl;
-  std::cout << "Player PosY : " << cmd->shoot->directionX << std::endl;
-  std::cout << "Player PosY : " << cmd->shoot->directionY << std::endl;
-  std::cout << "Player PosY : " << cmd->shoot->lengthVector << std::endl;
-
-  protocol->sendData(response);
+  _queue->pushGameQueue(cmd);
 }
 
 void Server::initCommandMapHandle() {
