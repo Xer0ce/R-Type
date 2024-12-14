@@ -27,5 +27,5 @@ public:
 private:
   sockaddr_in _clientAddr{};
   socklen_t _clientAddrLen;
-  std::vector<sockaddr_in> _clientAddresses; 
+  std::vector<sockaddr_in> _clientAddresses;
 };
