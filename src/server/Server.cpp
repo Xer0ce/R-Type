@@ -17,6 +17,7 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
   _queue = std::make_unique<Queue>();
   initCommandMapHandle();
   initCommandMapSend();
+  initCommandMapGame();
 }
 
 Server::~Server() {}
@@ -25,12 +26,11 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
-      std::vector<std::string> parsedBuffer;
 
-      std::cout << "[" << protocol->getType() << "] " << std::string(buffer.begin(), buffer.end()) << std::endl;
-      parsedBuffer = parseCommandBuffer(buffer);
+      std::cout << "Recu : [" << protocol->getType() << "] "
+                << std::string(buffer.begin(), buffer.end()) << std::endl;
       if (_commandsHandle.find(buffer[0]) != _commandsHandle.end()) {
-        _commandsHandle[buffer[0]](parsedBuffer, protocol);
+        _commandsHandle[buffer[0]](buffer, protocol);
       } else {
         std::cout << "Code invalide !" << std::endl;
       }
@@ -38,8 +38,7 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   }
 }
 
-void Server::world_update(){
-};
+void Server::world_update(){};
 
 void Server::game_loop() {
 
@@ -57,6 +56,9 @@ void Server::game_loop() {
       newCommand->repConnect->id = player;
       newCommand->id = command->id;
       _queue->pushTcpQueue(newCommand);
+    // if (_commandsGame.find(command->type) != _commandsGame.end()) {
+    //   _commandsGame[command->type](command);
+    // }
     }
     world_update();
   }

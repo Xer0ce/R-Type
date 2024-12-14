@@ -32,16 +32,15 @@ public:
 
   void initCommandMapHandle();
   void initCommandMapSend();
+  void initCommandMapGame();
 
-  std::vector<std::string> parseCommandBuffer(std::vector<uint8_t> buffer);
-
-  void connectCommandHandle(std::vector<std::string> buffer,
+  void connectCommandHandle(std::vector<uint8_t> buffer,
                             std::unique_ptr<IProtocol> &protocol);
-  void disconnectCommandHandle(std::vector<std::string> buffer,
+  void disconnectCommandHandle(std::vector<uint8_t> buffer,
                                std::unique_ptr<IProtocol> &protocol);
-  void moveCommandHandle(std::vector<std::string> buffer,
+  void moveCommandHandle(std::vector<uint8_t> buffer,
                          std::unique_ptr<IProtocol> &protocol);
-  void shootCommandHandle(std::vector<std::string> buffer,
+  void shootCommandHandle(std::vector<uint8_t> buffer,
                           std::unique_ptr<IProtocol> &protocol);
 
   void connectCommandSend(std::vector<std::string> buffer,
@@ -57,6 +56,10 @@ public:
   void mapCommandSend(std::vector<std::string> buffer,
                       std::unique_ptr<IProtocol> &protocol);
 
+  void connectCommandGame(Command *command);
+  void disconnectCommandGame(Command *command);
+  void moveCommandGame(Command *command);
+
   void game_loop();
   void world_update();
 
@@ -64,11 +67,13 @@ private:
   std::unique_ptr<IProtocol> _tcp;
   std::unique_ptr<IProtocol> _udp;
   Game _game;
-  std::map<uint8_t, std::function<void(std::vector<std::string>,
+  std::map<uint8_t, std::function<void(std::vector<uint8_t>,
                                        std::unique_ptr<IProtocol> &)>>
       _commandsHandle;
   std::map<std::string, std::function<void(std::vector<std::string>,
                                            std::unique_ptr<IProtocol> &)>>
       _commandsSend;
+  std::map<CommandType, std::function<void(Command *)>> _commandsGame;
+
   std::shared_ptr<Queue> _queue;
 };

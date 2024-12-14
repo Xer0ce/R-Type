@@ -98,6 +98,7 @@ bool UDP::listenSocket(int backlog) {
 
   return false;
 }
+
 void UDP::closeSocket() {
   if (_socket >= 0) {
     close(_socket);
