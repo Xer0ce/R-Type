@@ -99,7 +99,6 @@ bool Tcp::listenSocket(int backlog) {
     printf("New connection from %s:%d\n", inet_ntoa(clientAddr.sin_addr),
            ntohs(clientAddr.sin_port));
 
-    // Add new client to the set of monitored sockets
     FD_SET(newClientSocket, &_readFds);
     if (newClientSocket > _maxFd) {
       _maxFd = newClientSocket;
@@ -108,7 +107,6 @@ bool Tcp::listenSocket(int backlog) {
     _clientSockets.push_back(newClientSocket);
   }
 
-  // Check for activity on existing connections
   for (int clientSocket : _clientSockets) {
     if (FD_ISSET(clientSocket, &tempFds)) {
       std::vector<uint8_t> buffer(1024);
@@ -127,7 +125,10 @@ bool Tcp::listenSocket(int backlog) {
                                          _clientSockets.end(), clientSocket),
                              _clientSockets.end());
       } else {
+        std::cout << "clientSocket : " << clientSocket << std::endl;
         buffer.resize(bytesReceived);
+        uint8_t clientSocketId = static_cast<uint8_t>(clientSocket);
+        buffer.push_back(clientSocketId);
         {
           std::lock_guard<std::mutex> lock(_bufferMutex);
           _buffer = buffer;
