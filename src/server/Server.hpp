@@ -8,10 +8,10 @@
 #pragma once
 
 #include "../ecs/Registry.hpp"
+#include "Queue.hpp"
 #include "game/Game.hpp"
 #include "tcp/Tcp.hpp"
 #include "udp/UDP.hpp"
-#include "Queue.hpp"
 #include <map>
 
 class Server {
