@@ -8,6 +8,7 @@
 #include "Command.hpp"
 #include "Server.hpp"
 #include <iostream>
+#include <sstream>
 
 void cleanString(std::string &str) {
   str.erase(std::remove_if(str.begin(), str.end(),
