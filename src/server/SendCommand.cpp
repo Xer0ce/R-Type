@@ -125,7 +125,8 @@ void Server::killEnemyCommandSend(Command *command,
                                   std::unique_ptr<IProtocol> &protocol) {
   std::vector<uint8_t> binaryData;
 
-  std::cout << "cacacacajozahjeioazjizjeaoijzoijeoiajzeiojazoij -----" << std::endl;
+  std::cout << "cacacacajozahjeioazjizjeaoijzoijeoiajzeiojazoij -----"
+            << std::endl;
 
   binaryData.push_back(0x07);
 

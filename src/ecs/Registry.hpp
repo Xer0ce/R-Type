@@ -207,7 +207,7 @@ public:
       _available_entities.push_back(value);
       for (auto &elem : _removal_functions) {
         try {
-            elem.second(value);
+          elem.second(value);
         } catch (const std::exception &e) {
           continue;
         }

@@ -110,7 +110,8 @@ bool UDP::listenSocket(int backlog) {
       _clientAddresses.push_back(_clientAddr);
     }
     // for (const auto &addr : _clientAddresses) {
-    //   std::cout << "[DEBUG] Client address: " << inet_ntoa(addr.sin_addr) << ":"
+    //   std::cout << "[DEBUG] Client address: " << inet_ntoa(addr.sin_addr) <<
+    //   ":"
     //             << ntohs(addr.sin_port) << std::endl;
     // }
     return true;

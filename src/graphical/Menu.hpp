@@ -8,8 +8,8 @@
 #ifndef MENU_HPP_
 #define MENU_HPP_
 #include <SDL3/SDL.h>
-#include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <iostream>
 
 bool menu(SDL_Renderer *renderer, TTF_Font *font, SDL_Window *window,
