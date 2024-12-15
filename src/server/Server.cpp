@@ -27,7 +27,8 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
     if (command) {
       if (command->type == CommandType::REPCONNECT) {
         std::cout << "[TCP]" << command->id << std::endl;
-        protocol->sendData(std::to_string(command->repConnect->id), command->id);
+        protocol->sendData(std::to_string(command->repConnect->id),
+                           command->id);
       }
       delete command;
     }
