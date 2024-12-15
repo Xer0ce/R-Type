@@ -297,7 +297,7 @@ void handleShoot(Registry &registry, SDL_Renderer *renderer, int entity,
 
 void killEntity(std::string buffer, Registry &registry,
                 SDL_Renderer *renderer) {
-  std::cout << "Kill entity command received" << std::endl;
+  registry.kill_entity(Entities(buffer[1]));
 }
 
 void initCommandHandle(
