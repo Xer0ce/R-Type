@@ -49,9 +49,7 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
         std::cout << "Code invalide ! [Send]" << std::endl;
       }
     }
-    if (protocol->getType() == "TCP") {
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 }
 
@@ -71,6 +69,7 @@ void Server::game_loop() {
       std::cout << "Code invalide ! [Game]" << std::endl;
     }
     delete command;
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 }
 

@@ -195,6 +195,7 @@ void moveEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer) 
 }
 
 void createEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer) {
+  SDL_Texture *playerTexture = IMG_LoadTexture(renderer, "../src/graphical/assets/enemy.png");
   int id = buffer[1];
 
   std::vector<std::string> bufferString;
@@ -211,7 +212,7 @@ void createEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer
   registry.add_component<Velocity>(entity, Velocity());
   registry.add_component<Health>(entity, Health());
   registry.add_component<Draw>(entity,
-                               Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+                               Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
 }
 
 void initCommandHandle(
@@ -255,6 +256,7 @@ int main() {
     return 1;
   }
 
+
   SDL_Window *window = SDL_CreateWindow("R-Michou", 1920, 1080, 0);
   if (!window) {
     std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
@@ -269,6 +271,8 @@ int main() {
     SDL_Quit();
     return 1;
   }
+
+  SDL_Texture *backgroundTexture = IMG_LoadTexture(renderer, "../src/graphical/assets/level1.png");
 
   TTF_Font *font = TTF_OpenFont("../src/graphical/font/VT323.ttf", 48);
   if (!font) {
@@ -337,10 +341,8 @@ int main() {
       control_system(registry, udp);
       position_system(registry, deltaTime, udp);
 
-      // Recevoir les messages TCP
       handle_tcp_messages(tcp, registry, commandsHandle, renderer);
 
-      // Recevoir les messages UDP
       auto received_data = udp.receive_data();
       if (!received_data.empty()) {
         try {
@@ -360,6 +362,8 @@ int main() {
 
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
       SDL_RenderClear(renderer);
+
+      SDL_RenderTexture(renderer, backgroundTexture, NULL, NULL);
 
       draw_system(registry, renderer);
 
