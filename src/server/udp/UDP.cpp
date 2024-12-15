@@ -8,12 +8,12 @@
 #include "UDP.hpp"
 #include <arpa/inet.h>
 #include <cstring>
+#include <fcntl.h>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <unistd.h>
-#include <fcntl.h>
 
 UDP::UDP(std::size_t port, std::string ip) {
   _port = port;

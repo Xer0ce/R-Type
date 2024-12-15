@@ -28,7 +28,8 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
       if (command) {
         if (command->type == CommandType::REPCONNECT) {
           std::cout << "[TCP]" << command->id << std::endl;
-          protocol->sendData(std::to_string(command->repConnect->id), command->id);
+          protocol->sendData(std::to_string(command->repConnect->id),
+                             command->id);
         }
         delete command;
       }
@@ -37,7 +38,11 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
       Command *command = _queue->popUdpQueue();
       if (command) {
         if (command->type == CommandType::ENEMYMOVE) {
-          protocol->sendData(std::to_string(command->enemyMove->enemyId) + " " + std::to_string(command->enemyMove->positionX) + " " + std::to_string(command->enemyMove->positionY), command->id);
+          protocol->sendData(std::to_string(command->enemyMove->enemyId) + " " +
+                                 std::to_string(command->enemyMove->positionX) +
+                                 " " +
+                                 std::to_string(command->enemyMove->positionY),
+                             command->id);
         }
         delete command;
       }
@@ -59,9 +64,7 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   }
 }
 
-void Server::world_update() {
-  _game.loop(0.1, _queue);
-};
+void Server::world_update() { _game.loop(0.1, _queue); };
 
 void Server::game_loop() {
   _game.load();

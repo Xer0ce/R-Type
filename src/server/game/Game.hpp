@@ -29,7 +29,9 @@ public:
   // systems
   void enemy_system(std::shared_ptr<Queue> &queue);
   void position_system(float deltaTime, std::shared_ptr<Queue> &queue);
-  inline void addPlayerToVector(Entities player) { _players.push_back(player); };
+  inline void addPlayerToVector(Entities player) {
+    _players.push_back(player);
+  };
 
   // generic functions
   Entities create_player();
