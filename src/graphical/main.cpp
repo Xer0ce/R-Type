@@ -215,6 +215,24 @@ void createEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer
                                Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
 }
 
+void handleShoot(Registry &registry, SDL_Renderer *renderer, int entity, float &shootCooldown, float deltaTime) {
+  const bool *keyState = SDL_GetKeyboardState(NULL);
+  auto &positions = registry.get_components<Position>();
+  auto &drawables = registry.get_components<Draw>();
+  shootCooldown -= deltaTime;
+
+  if (keyState[SDL_SCANCODE_SPACE] && shootCooldown <= 0.0f) {
+    auto projectile = registry.spawn_entity();
+
+    SDL_Texture *bulletTexture = IMG_LoadTexture(renderer, "../src/graphical/assets/bullet.png");
+
+    registry.add_component<Position>(projectile, Position(positions[entity]->x + 50, positions[entity]->y + 20));
+    registry.add_component<Velocity>(projectile, Velocity(500, 0));
+    registry.add_component<Draw>(projectile, Draw({255, 255, 255, 255}, {5, 5, 5, 5}, bulletTexture));
+    shootCooldown = 0.2f;
+  }
+}
+
 void initCommandHandle(
     std::map<uint8_t, std::function<void(std::string, Registry &, SDL_Renderer *)>>
         &commandsHandle) {
@@ -241,6 +259,7 @@ void initCommandHandle(
 int main() {
   std::string ipAddress;
   std::string ipPort;
+  float shootCooldown = 0.0f;
   std::map<uint8_t, std::function<void(std::string, Registry &, SDL_Renderer *)>>
       commandsHandle;
 
@@ -340,6 +359,7 @@ int main() {
 
       control_system(registry, udp);
       position_system(registry, deltaTime, udp);
+      handleShoot(registry, renderer, 0, shootCooldown, deltaTime);
 
       handle_tcp_messages(tcp, registry, commandsHandle, renderer);
 
