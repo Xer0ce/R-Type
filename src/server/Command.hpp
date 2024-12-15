@@ -9,7 +9,15 @@
 
 #include <iostream>
 
-enum CommandType { CONNECT, MOVE, SHOOT, REPCONNECT, ENEMYMOVE, CREATEENEMY, KILLENEMY };
+enum CommandType {
+  CONNECT,
+  MOVE,
+  SHOOT,
+  REPCONNECT,
+  ENEMYMOVE,
+  CREATEENEMY,
+  KILLENEMY
+};
 
 struct Command {
   CommandType type;
