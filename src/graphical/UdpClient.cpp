@@ -9,7 +9,11 @@
 #include <fcntl.h>
 #include <stdexcept>
 
-UdpClient::UdpClient(const std::string &ip, int port) {
+UdpClient::UdpClient(std::string ip, std::size_t port) {
+  _ip = ip;
+  _port = port;
+  _type = "UDP";
+
   _sockfd = socket(AF_INET, SOCK_DGRAM, 0);
   if (_sockfd < 0)
     throw std::runtime_error("Failed to create socket");
@@ -31,7 +35,7 @@ UdpClient::UdpClient(const std::string &ip, int port) {
             << port << std::endl;
 }
 
-void UdpClient::send_data(const std::vector<uint8_t> &data) {
+void UdpClient::send_data(std::vector<uint8_t> &data) {
   if (sendto(_sockfd, data.data(), data.size(), 0,
              (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
     perror("Sendto failed");
@@ -66,6 +70,9 @@ std::vector<uint8_t> UdpClient::receive_data() {
 
   buffer.resize(bytes);
   return buffer;
+}
+
+std::vector<uint8_t> &UdpClient::getBuffer() {
 }
 
 UdpClient::~UdpClient() {

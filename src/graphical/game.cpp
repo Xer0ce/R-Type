@@ -1,53 +1,18 @@
-#include "../ecs/Registry.hpp"
-#include "Components/Control.hpp"
-#include "Components/Draw.hpp"
-#include "Components/Health.hpp"
-#include "Components/Position.hpp"
-#include "Components/Velocity.hpp"
-#include "Menu.hpp"
-#include "TcpClient.hpp"
-#include "UdpClient.hpp"
-#include <cstring>
-#include <vector>
-#include <map>
+/*
+** EPITECH PROJECT, 2024
+** R-Type
+** File description:
+** game
+*/
 
-std::vector<uint8_t> serialize_packt(const std::string &position,
-                                     int packet_type, int playerId = -1) {
-  std::vector<uint8_t> packet;
-  packet.push_back(packet_type);
-  if (playerId != -1) {
-    packet.push_back(playerId);
-  }
-  uint16_t playload_size = htons(position.size());
-  packet.push_back((playload_size >> 8) & 0xFF);
-  packet.push_back(playload_size & 0xFF);
-  for (char c : position)
-    packet.push_back(static_cast<uint8_t>(c));
-  return packet;
+#include "Game.hpp"
+
+Game::Game(){
+
 }
 
-void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
-  auto &positions = registry.get_components<Position>();
-  auto &velocities = registry.get_components<Velocity>();
+Game::~Game() {
 
-  for (std::size_t i = 0; i < positions.size(); ++i) {
-    if (positions[i] && velocities[i]) {
-      positions[i]->old_x = positions[i]->x;
-      positions[i]->old_y = positions[i]->y;
-      positions[i]->x += velocities[i]->x * deltaTime;
-      positions[i]->y += velocities[i]->y * deltaTime;
-
-      if (positions[i]->x == positions[i]->old_x &&
-          positions[i]->y == positions[i]->old_y) {
-        continue;
-      } else {
-        auto packet = serialize_packt(std::to_string(positions[i]->x) + " " +
-                                          std::to_string(positions[i]->y),
-                                      3, i);
-        udp.send_data(packet);
-      }
-    }
-  }
 }
 
 void control_system(Registry &registry, UdpClient &udp) {
@@ -78,6 +43,30 @@ void control_system(Registry &registry, UdpClient &udp) {
   }
 }
 
+void position_system(Registry &registry, float deltaTime, UdpClient &udp) {
+  auto &positions = registry.get_components<Position>();
+  auto &velocities = registry.get_components<Velocity>();
+
+  for (std::size_t i = 0; i < positions.size(); ++i) {
+    if (positions[i] && velocities[i]) {
+      positions[i]->old_x = positions[i]->x;
+      positions[i]->old_y = positions[i]->y;
+      positions[i]->x += velocities[i]->x * deltaTime;
+      positions[i]->y += velocities[i]->y * deltaTime;
+
+      if (positions[i]->x == positions[i]->old_x &&
+          positions[i]->y == positions[i]->old_y) {
+        continue;
+      } else {
+        auto packet = serialize_packt(std::to_string(positions[i]->x) + " " +
+                                          std::to_string(positions[i]->y),
+                                      3, i);
+        udp.send_data(packet);
+      }
+    }
+  }
+}
+
 void draw_system(Registry &registry, SDL_Renderer *renderer) {
   auto &positions = registry.get_components<Position>();
   auto &drawables = registry.get_components<Draw>();
@@ -96,65 +85,10 @@ void draw_system(Registry &registry, SDL_Renderer *renderer) {
   }
 }
 
-std::vector<uint8_t> serialize_connect(const std::string &player_name) {
-  std::vector<uint8_t> packet;
-  packet.push_back(0x01);
-  uint16_t payload_size = htons(player_name.size());
-  packet.push_back((payload_size >> 8) & 0xFF);
-  packet.push_back(payload_size & 0xFF);
-  for (char c : player_name)
-    packet.push_back(static_cast<uint8_t>(c));
-  return packet;
-}
-
-void handle_tcp_messages(TcpClient &tcp, Registry &registry, std::map<uint8_t, std::function<void(std::string, Registry &)>> commandsHandle) {
-  auto received_data = tcp.receive_data();
-  if (!received_data.empty()) {
-    try {
-      std::string received_message(received_data.begin(), received_data.end());
-      std::cout << "[TCP INFO] Received: " << received_message << std::endl;
-
-      if (received_data[0] == 0x01) {
-        std::cout << "Connect command received" << std::endl;
-      }
-      if (commandsHandle.find(received_data[0]) != commandsHandle.end()) {
-        commandsHandle[received_data[0]](received_message, registry);
-      } else {
-        std::cout << "Code invalide !" << std::endl;
-      }
-    } catch (const std::exception &e) {
-      std::cerr << "[TCP ERROR] Failed to process packet: " << e.what() << std::endl;
-    }
-  }
-}
-
-void initCommandHandle(std::map<uint8_t, std::function<void(std::string, Registry &)>> &commandsHandle) {
-  commandsHandle[0x01] = [](std::string buffer, Registry &registry) {
-    auto entity = registry.spawn_entity();
-    registry.add_component<Position>(entity, Position(100, 150));
-    registry.add_component<Velocity>(entity, Velocity());
-    registry.add_component<Health>(entity, Health());
-    registry.add_component<Draw>(entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
-    registry.add_component<Control>(entity, Control());
-  };
-  commandsHandle[0x02] = [](std::string buffer, Registry &registry) {
-    std::cout << "Disconnect command received" << std::endl;
-  };
-  commandsHandle[0x03] = [](std::string buffer, Registry &registry) {
-    std::cout << "Move command received" << std::endl;
-  };
-  commandsHandle[0x04] = [](std::string buffer, Registry &registry) {
-    std::cout << "Shoot command received" << std::endl;
-  };
-}
-
-int main() {
+void gameLoop() {
   std::string ipAddress;
   std::string ipPort;
-  std::map<uint8_t, std::function<void(std::string, Registry &)>> commandsHandle;
 
-
-  initCommandHandle(commandsHandle);
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL Initialization failed: " << SDL_GetError() << std::endl;
     return 1;
@@ -228,6 +162,14 @@ int main() {
     registry.register_component<Control>();
     registry.register_component<Health>();
 
+    auto entity = registry.spawn_entity();
+    registry.add_component<Position>(entity, Position(100, 150));
+    registry.add_component<Velocity>(entity, Velocity());
+    registry.add_component<Health>(entity, Health());
+    registry.add_component<Draw>(entity,
+                                 Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+    registry.add_component<Control>(entity, Control());
+
     bool running = true;
     SDL_Event event;
     Uint64 now = SDL_GetPerformanceCounter();
@@ -248,20 +190,18 @@ int main() {
       control_system(registry, udp);
       position_system(registry, deltaTime, udp);
 
-      // Recevoir les messages TCP
-      handle_tcp_messages(tcp, registry, commandsHandle);
-
-      // Recevoir les messages UDP
       auto received_data = udp.receive_data();
       if (!received_data.empty()) {
         try {
-          std::string received_message(received_data.begin(), received_data.end());
+          std::string received_message(received_data.begin(),
+                                       received_data.end());
           std::cout << "[UDP INFO] Received: " << received_message << std::endl;
+
         } catch (const std::exception &e) {
-          std::cerr << "[UDP ERROR] Failed to process packet: " << e.what() << std::endl;
+          std::cerr << "[UDP ERROR] Failed to process packet: " << e.what()
+                    << std::endl;
         }
       }
-
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
       SDL_RenderClear(renderer);
 
