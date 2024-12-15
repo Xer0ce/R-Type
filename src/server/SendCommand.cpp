@@ -75,9 +75,24 @@ void Server::mapCommandSend(Command *command,
 
 void Server::enemyMoveCommandSend(Command *command,
                                   std::unique_ptr<IProtocol> &protocol) {
-  protocol->sendData(std::to_string(command->enemyMove->enemyId) + " " +
-                         std::to_string(command->enemyMove->positionX) + " " +
-                         std::to_string(command->enemyMove->positionY),
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x05);
+
+  uint32_t enemyId = command->enemyMove->enemyId;
+  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&enemyId),
+                    reinterpret_cast<uint8_t *>(&enemyId) + sizeof(enemyId));
+
+  std::string positionX = std::to_string(command->enemyMove->positionX);
+  std::string positionY = std::to_string(command->enemyMove->positionY);
+
+  std::string response = positionX + " " + positionY;
+
+  for (auto &c : response) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendData(std::string(binaryData.begin(), binaryData.end()),
                      command->id);
 }
 
