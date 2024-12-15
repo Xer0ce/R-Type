@@ -114,6 +114,19 @@ std::vector<uint8_t> serialize_connect(const std::string &player_name) {
   return packet;
 }
 
+std::vector<uint8_t> serialize_collision_packet(float x, float y) {
+  std::vector<uint8_t> packet;
+  packet.push_back(0x04);
+  packet.push_back(1);
+
+  std::string str = std::to_string(x) + " " + std::to_string(y);
+
+  for (char c : str)
+    packet.push_back(static_cast<uint8_t>(c));
+
+  return packet;
+}
+
 void cleanString(std::string &str) {
   str.erase(std::remove_if(str.begin(), str.end(),
                            [](unsigned char c) {
@@ -179,13 +192,16 @@ void connectCommand(std::string buffer, Registry &registry,
   registry.add_component<Control>(entity, Control());
 }
 
-void moveEntity(std::string buffer, Registry &registry,
-                SDL_Renderer *renderer) {
+void moveEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer) {
   int id = buffer[1];
 
+  if (id < 0 || id >= registry.get_components<Position>().size()) {
+    std::cerr << "Invalid entity ID: " << id << std::endl;
+    return;
+  }
+
   std::vector<std::string> bufferString;
-  bufferString =
-      my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
+  bufferString = my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
 
   float x = std::stof(bufferString[0]);
   float y = std::stof(bufferString[1]);
@@ -194,15 +210,14 @@ void moveEntity(std::string buffer, Registry &registry,
   registry.get_components<Position>()[id]->y = y;
 }
 
-void createEntity(std::string buffer, Registry &registry,
-                  SDL_Renderer *renderer) {
-  SDL_Texture *playerTexture =
-      IMG_LoadTexture(renderer, "../src/graphical/assets/enemy.png");
+void createEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer) {
+  SDL_Texture *playerTexture = IMG_LoadTexture(renderer, "../src/graphical/assets/enemy.png");
   int id = buffer[1];
 
+
+
   std::vector<std::string> bufferString;
-  bufferString =
-      my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
+  bufferString = my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
 
   float x = std::stof(bufferString[0]);
   float y = std::stof(bufferString[1]);
@@ -213,40 +228,44 @@ void createEntity(std::string buffer, Registry &registry,
   registry.add_component<Position>(entity, Position(x, y));
   registry.add_component<Velocity>(entity, Velocity());
   registry.add_component<Health>(entity, Health(1));
-  registry.add_component<Draw>(entity,
-                               Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
+  registry.add_component<Draw>(entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
 }
 
-void collision_system(Registry &registry) {
-    auto &positions = registry.get_components<Position>();
-    auto &drawables = registry.get_components<Draw>();
-    auto &controls = registry.get_components<Control>();
-    auto &healths = registry.get_components<Health>();
-    auto &velocities = registry.get_components<Velocity>();
+void collision_system(Registry &registry, TcpClient &tcp) {
+  auto &positions = registry.get_components<Position>();
+  auto &drawables = registry.get_components<Draw>();
+  auto &controls = registry.get_components<Control>();
+  auto &healths = registry.get_components<Health>();
+  auto &velocities = registry.get_components<Velocity>();
 
-    std::vector<int> bullets;
-    std::vector<int> enemies;
+  std::vector<Entities> bullets;
+  std::vector<Entities> enemies;
 
-    for (std::size_t i = 0; i < positions.size(); ++i) {
-        if (velocities[i]->x == 512) {
-            bullets.push_back(i);
-        } else if (healths[i]->hp == 1) {
-            enemies.push_back(i);
-        }
+  for (std::size_t i = 0; i < positions.size(); ++i) {
+    if (velocities[i] && velocities[i]->x == 512) {
+      bullets.push_back(Entities(i));
+    } else if (healths[i] && healths[i]->hp == 1) {
+      enemies.push_back(Entities(i));
     }
-    for (std::size_t i = 0; i < bullets.size(); ++i) {
-        for (std::size_t j = 0; j < enemies.size(); ++j) {
-            if (positions[bullets[i]]->x < positions[enemies[j]]->x + 50 &&
-                positions[bullets[i]]->x + 50 > positions[enemies[j]]->x &&
-                positions[bullets[i]]->y < positions[enemies[j]]->y + 50 &&
-                positions[bullets[i]]->y + 50 > positions[enemies[j]]->y) {
-                registry.kill_entity(Entities(i));
-                registry.kill_entity(Entities(j));
-                break;
-            }
-        }
-    }
+  }
 
+  for (std::size_t i = 0; i < bullets.size(); ++i) {
+    for (std::size_t j = 0; j < enemies.size(); ++j) {
+      if (positions[bullets[i]]->x < positions[enemies[j]]->x + 50 &&
+          positions[bullets[i]]->x + 50 > positions[enemies[j]]->x &&
+          positions[bullets[i]]->y < positions[enemies[j]]->y + 50 &&
+          positions[bullets[i]]->y + 50 > positions[enemies[j]]->y) {
+          
+          // auto packet = serialize_collision_packet(positions[bullets[i]]->x, positions[bullets[i]]->y);
+          // tcp.send_data(packet);
+          std::cout << "Collision detected" << std::endl;
+          std::cout << "buller i :" << bullets[i] << std::endl;
+          registry.kill_entity(bullets[i]);
+          std::cout << "acazdazionjdoiazj " << std::endl;
+          return;
+      }
+    }
+  }
 }
 
 void handleShoot(Registry &registry, SDL_Renderer *renderer, int entity, float &shootCooldown, float deltaTime) {
@@ -265,6 +284,10 @@ void handleShoot(Registry &registry, SDL_Renderer *renderer, int entity, float &
     registry.add_component<Draw>(projectile, Draw({255, 255, 255, 255}, {5, 5, 5, 5}, bulletTexture));
     shootCooldown = 0.2f;
   }
+}
+
+void killEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer) {
+  std::cout << "Kill entity command received" << std::endl;
 }
 
 void initCommandHandle(
@@ -294,6 +317,10 @@ void initCommandHandle(
   commandsHandle[0x06] = [](std::string buffer, Registry &registry,
                             SDL_Renderer *renderer) {
     createEntity(buffer, registry, renderer);
+  };
+  commandsHandle[0x07] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    killEntity(buffer, registry, renderer);
   };
 }
 
@@ -414,8 +441,7 @@ int main() {
       control_system(registry, udp);
       position_system(registry, deltaTime, udp);
       handleShoot(registry, renderer, 0, shootCooldown, deltaTime);
-      collision_system(registry);
-
+      collision_system(registry, tcp);
 
       handle_tcp_messages(tcp, registry, commandsHandle, renderer);
 
