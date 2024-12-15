@@ -22,6 +22,30 @@ void handleWrongCommand(std::string typeCommand,
   // protocol->sendData(response);
 }
 
+void cleanString(std::string &str) {
+  str.erase(std::remove_if(str.begin(), str.end(),
+                           [](unsigned char c) {
+                             return !std::isdigit(c) && c != '.' && c != '-';
+                           }),
+            str.end());
+}
+
+std::vector<std::string> my_strToWordArray(const std::string &str,
+                                           char delimiter) {
+  std::vector<std::string> resultVec;
+  std::stringstream ss(str);
+  std::string token;
+
+  while (getline(ss, token, delimiter)) {
+    if (!token.empty()) {
+      cleanString(token);
+      resultVec.push_back(token);
+    }
+  }
+
+  return resultVec;
+}
+
 std::vector<std::string>
 parseConnectCommand(const std::vector<uint8_t> &buffer) {
   std::vector<std::string> bufferString;
@@ -66,49 +90,41 @@ void Server::disconnectCommandHandle(std::vector<uint8_t> buffer,
 
 void Server::moveCommandHandle(std::vector<uint8_t> buffer,
                                std::unique_ptr<IProtocol> &protocol) {
-  std::string response;
-  Command *cmd = new Command();
+  // std::string response;
+  // Command *cmd = new Command();
 
-  response = "Move OK";
-  if (buffer.size() == 2) {
-    cmd->type = CommandType::MOVE;
-    cmd->move = new Move();
-    cmd->move->playerId = 1;
-    // cmd->move->positionX = std::stof(buffer[0]);
-    // cmd->move->positionY = std::stof(buffer[1]);
-    // cmd->id = id;
-  } else {
-    handleWrongCommand("Move", protocol);
-    return;
-  }
+  // response = "Move OK";
+  // if (buffer.size() == 2) {
+  //   cmd->type = CommandType::MOVE;
+  //   cmd->move = new Move();
+  //   cmd->move->playerId = 1;
+  //   // cmd->move->positionX = std::stof(buffer[0]);
+  //   // cmd->move->positionY = std::stof(buffer[1]);
+  //   // cmd->id = id;
+  // } else {
+  //   handleWrongCommand("Move", protocol);
+  //   return;
+  // }
 
-  std::cout << "Player ID : " << cmd->move->playerId << std::endl;
-  std::cout << "Player PosX : " << cmd->move->positionX << std::endl;
-  std::cout << "Player PosY : " << cmd->move->positionY << std::endl;
+  // std::cout << "Player ID : " << cmd->move->playerId << std::endl;
+  // std::cout << "Player PosX : " << cmd->move->positionX << std::endl;
+  // std::cout << "Player PosY : " << cmd->move->positionY << std::endl;
 
-  _queue->pushGameQueue(cmd);
+  // _queue->pushGameQueue(cmd);
 }
 
 void Server::shootCommandHandle(std::vector<uint8_t> buffer,
                                 std::unique_ptr<IProtocol> &protocol) {
   Command *cmd = new Command();
-  std::vector<std::string> bufferString;
 
-  if (buffer.size() == 5) {
-    cmd->type = CommandType::SHOOT;
-    cmd->shoot = new Shoot();
-    cmd->shoot->playerId = 1;
-    // cmd->shoot->positionX = std::stof(buffer[0]);
-    // cmd->shoot->positionY = std::stof(buffer[1]);
-    // cmd->shoot->directionX = std::stof(buffer[2]);
-    // cmd->shoot->directionY = std::stof(buffer[3]);
-    // cmd->shoot->lengthVector = std::stof(buffer[4]);
-    // cmd->id = id;
-  } else {
-    handleWrongCommand("Shoot", protocol);
-    return;
-  }
+  std::vector<std::string> bufferString =
+      my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
 
+  cmd->type = CommandType::SHOOT;
+  cmd->shoot = new Shoot();
+  cmd->shoot->playerId = (int)buffer[1];
+  cmd->shoot->positionX = std::stof(bufferString[0]);
+  cmd->shoot->positionY = std::stof(bufferString[1]);
   _queue->pushGameQueue(cmd);
 }
 

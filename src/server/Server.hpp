@@ -49,10 +49,13 @@ public:
                             std::unique_ptr<IProtocol> &protocol);
   void createEnemyCommandSend(Command *command,
                               std::unique_ptr<IProtocol> &protocol);
+  void killEnemyCommandSend(Command *command,
+                            std::unique_ptr<IProtocol> &protocol);
 
   void connectCommandGame(Command *command);
   void disconnectCommandGame(Command *command);
   void moveCommandGame(Command *command);
+  void killEnemyCommandGame(Command *command);
 
   void game_loop();
   void world_update();

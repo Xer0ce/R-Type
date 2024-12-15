@@ -121,6 +121,20 @@ void Server::createEnemyCommandSend(Command *command,
                      command->id);
 }
 
+void Server::killEnemyCommandSend(Command *command,
+                                  std::unique_ptr<IProtocol> &protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x07);
+
+  uint32_t enemyId = command->killEnemy->enemyId;
+  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&enemyId),
+                    reinterpret_cast<uint8_t *>(&enemyId) + sizeof(enemyId));
+
+  protocol->sendData(std::string(binaryData.begin(), binaryData.end()),
+                     command->id);
+}
+
 void Server::initCommandMapSend() {
   _commandsSend[CommandType::REPCONNECT] =
       [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
@@ -141,5 +155,9 @@ void Server::initCommandMapSend() {
   _commandsSend[CommandType::CREATEENEMY] =
       [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
         createEnemyCommandSend(command, protocol);
+      };
+  _commandsSend[CommandType::KILLENEMY] =
+      [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+        killEnemyCommandSend(command, protocol);
       };
 }
