@@ -8,7 +8,8 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "../ecs/Registry.hpp"
+#include "../../ecs/EntitiesGestion.hpp"
+#include "../../ecs/Registry.hpp"
 #include <vector>
 
 class Game {

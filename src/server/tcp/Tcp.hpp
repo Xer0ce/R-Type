@@ -10,22 +10,28 @@
 #include "../AProtocol.hpp"
 #include <condition_variable>
 #include <mutex>
+#include <netinet/in.h>
+#include <string>
+#include <vector>
 
 class Tcp : public AProtocol {
 public:
   Tcp(std::size_t port = 4243, std::string ip = "0.0.0.0");
   ~Tcp();
+
   bool initializeSocket() override;
   bool bindSocket() override;
-  bool sendData(const std::string &data) override;
+  bool sendData(const std::string &data, int id) override;
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
-  int acceptConnection();
   std::vector<uint8_t> &getBuffer() override;
 
 private:
-  std::mutex _messageMutex;
-  std::condition_variable _messageCondVar;
-  bool _messageUpdated = false;
-  int _clientSocket;
+  int _socket;
+  std::vector<int> _clientSockets;
+  sockaddr_in _addr;
+
+  std::mutex _bufferMutex;
+  fd_set _readFds;
+  int _maxFd;
 };
