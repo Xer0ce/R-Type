@@ -26,9 +26,10 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
     Command *command = _queue->popTcpQueue();
     if (command) {
       if (command->type == CommandType::REPCONNECT) {
-        std::cout << command->id << std::endl;
-        protocol->sendData(std::to_string(command->repConnect->id), command->repConnect->id);
+        std::cout << "[TCP]" << command->id << std::endl;
+        protocol->sendData(std::to_string(command->repConnect->id), command->id);
       }
+      delete command;
     }
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
@@ -41,36 +42,34 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
         std::cout << "Code invalide !" << std::endl;
       }
     }
+    if (protocol->getType() == "TCP") {
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
   }
 }
 
 void Server::world_update(){};
 
 void Server::game_loop() {
-
+  _game.load();
   while (true) {
     Command *command = _queue->popGameQueue();
-    Command *newCommand = new Command();
     if (!command) {
       continue;
     }
     if (command->type == CommandType::CONNECT) {
-      std::cout << "cacazizi" << command->connect->Nickname << std::endl;
+      Command *newCommand = new Command();
       auto player = create_entity<EntityType::Player>(
           _game.get_ecs(), Position(400, 100), Velocity(), Health(), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
       newCommand->type = CommandType::REPCONNECT;
       newCommand->repConnect = new repConnect();
       newCommand->repConnect->id = player;
       newCommand->id = command->id;
-      std::cout << newCommand->id << std::endl;
       _queue->pushTcpQueue(newCommand);
-      // if (_commandsGame.find(command->type) != _commandsGame.end()) {
-      //   _commandsGame[command->type](command);
-      // }
     }
-    world_update();
+    delete command;
   }
-};
+}
 
 void Server::start() {
   if (!_tcp->initializeSocket() || !_tcp->bindSocket()) {

@@ -45,7 +45,7 @@ void Server::connectCommandHandle(std::vector<uint8_t> buffer,
 
   uint8_t messageType = buffer[0];
   uint16_t nameLength = (buffer[1] << 8) | buffer[2];
-  std::string playerName(buffer.begin() + 3, buffer.begin() + 3 + nameLength);
+  std::string playerName = std::string(buffer.begin(), buffer.end());
 
   int clientSocketId = static_cast<int>(buffer.back());
 
@@ -53,6 +53,8 @@ void Server::connectCommandHandle(std::vector<uint8_t> buffer,
   cmd->connect = new Connect();
   cmd->connect->Nickname = playerName;
   cmd->id = clientSocketId;
+
+  std::cout << "Player Name : " << cmd->connect->Nickname << std::endl;
 
   _queue->pushGameQueue(cmd);
 }

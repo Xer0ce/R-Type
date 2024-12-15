@@ -140,6 +140,7 @@ bool Tcp::listenSocket(int backlog) {
 }
 
 bool Tcp::sendData(const std::string &data, int id) {
+  std::cout << "Sending data to client " << id << ": " << data << std::endl;
   if (send(id, data.c_str(), data.size(), 0) < 0) {
     perror("Failed to send data");
     return false;

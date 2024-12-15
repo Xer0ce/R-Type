@@ -6,7 +6,7 @@ Entities create_player_entity(Registry &r, Position position, Velocity velocity,
   r.add_component<Position>(entity, std::move(position));
   r.add_component<Velocity>(entity, std::move(velocity));
   r.add_component<Health>(entity, std::move(health));
-  r.add_component<Draw>(entity, std::move(draw));
+  //r.add_component<Draw>(entity, std::move(draw));
   r.add_component<Control>(entity, Control());
   return entity;
 }

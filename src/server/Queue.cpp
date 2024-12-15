@@ -19,6 +19,8 @@ void Queue::pushUdpQueue(Command *command) {
 Command *Queue::popUdpQueue() {
   std::lock_guard<std::mutex> lock(_udpMutex);
   Command *command = _udpQueue.front();
+  if (_udpQueue.empty())
+    return nullptr;
   _udpQueue.pop();
   return command;
 }
@@ -30,6 +32,8 @@ void Queue::pushTcpQueue(Command *command) {
 
 Command *Queue::popTcpQueue() {
   std::lock_guard<std::mutex> lock(_tcpMutex);
+  if (_tcpQueue.empty())
+    return nullptr;
   Command *command = _tcpQueue.front();
   _tcpQueue.pop();
   return command;
