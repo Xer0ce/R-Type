@@ -17,7 +17,6 @@ public:
 
   virtual void send_data(std::vector<uint8_t> &data) = 0;
   virtual std::vector<uint8_t> receive_data() = 0;
-  
 
 protected:
 private:

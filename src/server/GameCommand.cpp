@@ -12,8 +12,8 @@
 void Server::connectCommandGame(Command *command) {
   Command *newCommand = new Command();
   auto player = create_entity<EntityType::Player>(
-          _game.get_ecs(), Position(400, 100), Velocity(), Health(),
-          Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+      _game.get_ecs(), Position(400, 100), Velocity(), Health(),
+      Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
   _game.addPlayerToVector(player);
   newCommand->type = CommandType::REPCONNECT;
   newCommand->repConnect = new repConnect();

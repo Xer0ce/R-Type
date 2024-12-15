@@ -12,11 +12,11 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
+#include <mutex>
 #include <sys/socket.h>
 #include <thread>
 #include <unistd.h>
 #include <vector>
-#include <mutex>
 
 class TcpClient : public AProtocol {
 public:

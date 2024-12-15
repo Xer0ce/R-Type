@@ -29,13 +29,13 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
     } else if (protocol->getType() == "UDP") {
       command = _queue->popUdpQueue();
     }
-    if (command != nullptr)  {
+    if (command != nullptr) {
       if (_commandsSend.find(command->type) != _commandsSend.end()) {
         _commandsSend[command->type](command, protocol);
       } else {
         std::cout << "Code invalide ! [Send]" << std::endl;
       }
-      delete command; 
+      delete command;
     }
 
     if (protocol->listenSocket()) {

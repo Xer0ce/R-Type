@@ -16,7 +16,7 @@ class AProtocol : public IProtocol {
 public:
   AProtocol(std::string ip = "0.0.0.0", std::size_t port = 4242)
       : _port(port), _ip(ip) {}
-  ~AProtocol() {};
+  ~AProtocol(){};
   std::size_t &getPort() { return _port; }
   std::string &getIp() { return _ip; }
   sockaddr_in &getAddr() { return _addr; }

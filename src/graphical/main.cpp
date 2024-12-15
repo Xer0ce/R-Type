@@ -8,8 +8,8 @@
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
 #include <cstring>
-#include <vector>
 #include <map>
+#include <vector>
 
 std::vector<uint8_t> serialize_packt(const std::string &position,
                                      int packet_type, int playerId = -1) {
@@ -107,7 +107,10 @@ std::vector<uint8_t> serialize_connect(const std::string &player_name) {
   return packet;
 }
 
-void handle_tcp_messages(TcpClient &tcp, Registry &registry, std::map<uint8_t, std::function<void(std::string, Registry &)>> commandsHandle) {
+void handle_tcp_messages(
+    TcpClient &tcp, Registry &registry,
+    std::map<uint8_t, std::function<void(std::string, Registry &)>>
+        commandsHandle) {
   auto received_data = tcp.receive_data();
   if (!received_data.empty()) {
     try {
@@ -123,18 +126,22 @@ void handle_tcp_messages(TcpClient &tcp, Registry &registry, std::map<uint8_t, s
         std::cout << "Code invalide !" << std::endl;
       }
     } catch (const std::exception &e) {
-      std::cerr << "[TCP ERROR] Failed to process packet: " << e.what() << std::endl;
+      std::cerr << "[TCP ERROR] Failed to process packet: " << e.what()
+                << std::endl;
     }
   }
 }
 
-void initCommandHandle(std::map<uint8_t, std::function<void(std::string, Registry &)>> &commandsHandle) {
+void initCommandHandle(
+    std::map<uint8_t, std::function<void(std::string, Registry &)>>
+        &commandsHandle) {
   commandsHandle[0x01] = [](std::string buffer, Registry &registry) {
     auto entity = registry.spawn_entity();
     registry.add_component<Position>(entity, Position(100, 150));
     registry.add_component<Velocity>(entity, Velocity());
     registry.add_component<Health>(entity, Health());
-    registry.add_component<Draw>(entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+    registry.add_component<Draw>(entity,
+                                 Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
     registry.add_component<Control>(entity, Control());
   };
   commandsHandle[0x02] = [](std::string buffer, Registry &registry) {
@@ -151,8 +158,8 @@ void initCommandHandle(std::map<uint8_t, std::function<void(std::string, Registr
 int main() {
   std::string ipAddress;
   std::string ipPort;
-  std::map<uint8_t, std::function<void(std::string, Registry &)>> commandsHandle;
-
+  std::map<uint8_t, std::function<void(std::string, Registry &)>>
+      commandsHandle;
 
   initCommandHandle(commandsHandle);
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -255,10 +262,12 @@ int main() {
       auto received_data = udp.receive_data();
       if (!received_data.empty()) {
         try {
-          std::string received_message(received_data.begin(), received_data.end());
+          std::string received_message(received_data.begin(),
+                                       received_data.end());
           std::cout << "[UDP INFO] Received: " << received_message << std::endl;
         } catch (const std::exception &e) {
-          std::cerr << "[UDP ERROR] Failed to process packet: " << e.what() << std::endl;
+          std::cerr << "[UDP ERROR] Failed to process packet: " << e.what()
+                    << std::endl;
         }
       }
 

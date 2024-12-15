@@ -7,13 +7,9 @@
 
 #include "Game.hpp"
 
-Game::Game(){
+Game::Game() {}
 
-}
-
-Game::~Game() {
-
-}
+Game::~Game() {}
 
 void control_system(Registry &registry, UdpClient &udp) {
   const bool *keyState = SDL_GetKeyboardState(NULL);

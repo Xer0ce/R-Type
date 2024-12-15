@@ -72,8 +72,7 @@ std::vector<uint8_t> UdpClient::receive_data() {
   return buffer;
 }
 
-std::vector<uint8_t> &UdpClient::getBuffer() {
-}
+std::vector<uint8_t> &UdpClient::getBuffer() {}
 
 UdpClient::~UdpClient() {
   close(_sockfd);
