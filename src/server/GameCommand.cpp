@@ -31,6 +31,25 @@ void Server::moveCommandGame(Command *command) {
   std::cout << "move command" << std::endl;
 }
 
+void Server::killEnemyCommandGame(Command *command) {
+  auto &positions = _game.get_ecs().get_components<Position>();
+  auto &velocities = _game.get_ecs().get_components<Velocity>();
+
+  for (std::size_t i = 0; i < positions.size(); ++i) {
+    if (positions[i] && velocities[i]) {
+      if (positions[i]->x == command->shoot->positionX &&
+          positions[i]->y == command->shoot->positionY) {
+        _game.get_ecs().kill_entity(Entities(i));
+        Command *newCommand = new Command();
+        newCommand->type = CommandType::KILLENEMY;
+        newCommand->killEnemy = new killEnemy();
+        newCommand->killEnemy->enemyId = i;
+        _queue->pushTcpQueue(newCommand);
+      }
+    }
+  }
+}
+
 void Server::initCommandMapGame() {
   _commandsGame[CommandType::CONNECT] = [this](Command *command) {
     connectCommandGame(command);
@@ -40,5 +59,8 @@ void Server::initCommandMapGame() {
   };
   _commandsGame[CommandType::MOVE] = [this](Command *command) {
     moveCommandGame(command);
+  };
+  _commandsGame[CommandType::SHOOT] = [this](Command *command) {
+    killEnemyCommandGame(command);
   };
 }

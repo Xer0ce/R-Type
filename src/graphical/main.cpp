@@ -10,6 +10,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <cstring>
 #include <map>
+#include <sstream>
 #include <vector>
 
 std::vector<uint8_t> serialize_packt(const std::string &position,
