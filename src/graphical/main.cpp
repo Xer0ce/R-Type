@@ -212,9 +212,41 @@ void createEntity(std::string buffer, Registry &registry,
   auto entity = registry.spawn_entity();
   registry.add_component<Position>(entity, Position(x, y));
   registry.add_component<Velocity>(entity, Velocity());
-  registry.add_component<Health>(entity, Health());
+  registry.add_component<Health>(entity, Health(1));
   registry.add_component<Draw>(entity,
                                Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
+}
+
+void collision_system(Registry &registry) {
+    auto &positions = registry.get_components<Position>();
+    auto &drawables = registry.get_components<Draw>();
+    auto &controls = registry.get_components<Control>();
+    auto &healths = registry.get_components<Health>();
+    auto &velocities = registry.get_components<Velocity>();
+
+    std::vector<int> bullets;
+    std::vector<int> enemies;
+
+    for (std::size_t i = 0; i < positions.size(); ++i) {
+        if (velocities[i]->x == 512) {
+            bullets.push_back(i);
+        } else if (healths[i]->hp == 1) {
+            enemies.push_back(i);
+        }
+    }
+    for (std::size_t i = 0; i < bullets.size(); ++i) {
+        for (std::size_t j = 0; j < enemies.size(); ++j) {
+            if (positions[bullets[i]]->x < positions[enemies[j]]->x + 50 &&
+                positions[bullets[i]]->x + 50 > positions[enemies[j]]->x &&
+                positions[bullets[i]]->y < positions[enemies[j]]->y + 50 &&
+                positions[bullets[i]]->y + 50 > positions[enemies[j]]->y) {
+                registry.kill_entity(Entities(i));
+                registry.kill_entity(Entities(j));
+                break;
+            }
+        }
+    }
+
 }
 
 void handleShoot(Registry &registry, SDL_Renderer *renderer, int entity, float &shootCooldown, float deltaTime) {
@@ -229,7 +261,7 @@ void handleShoot(Registry &registry, SDL_Renderer *renderer, int entity, float &
     SDL_Texture *bulletTexture = IMG_LoadTexture(renderer, "../src/graphical/assets/bullet.png");
 
     registry.add_component<Position>(projectile, Position(positions[entity]->x + 50, positions[entity]->y + 20));
-    registry.add_component<Velocity>(projectile, Velocity(500, 0));
+    registry.add_component<Velocity>(projectile, Velocity(512, 0));
     registry.add_component<Draw>(projectile, Draw({255, 255, 255, 255}, {5, 5, 5, 5}, bulletTexture));
     shootCooldown = 0.2f;
   }
@@ -305,7 +337,6 @@ int main() {
   }
 
   SDL_Renderer *renderer = SDL_CreateRenderer(window, nullptr);
-  SDL_Texture *backgroundTexture = IMG_LoadTexture(renderer, "../src/graphical/assets/level1.png");
   if (!renderer) {
     std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
     SDL_DestroyWindow(window);
@@ -383,6 +414,7 @@ int main() {
       control_system(registry, udp);
       position_system(registry, deltaTime, udp);
       handleShoot(registry, renderer, 0, shootCooldown, deltaTime);
+      collision_system(registry);
 
 
       handle_tcp_messages(tcp, registry, commandsHandle, renderer);
@@ -398,7 +430,7 @@ int main() {
           } else {
             std::cout << "Code invalide !" << std::endl;
           }
-          std::cout << "[UDP INFO] Received: " << received_message << std::endl;
+          //std::cout << "[UDP INFO] Received: " << received_message << std::endl;
         } catch (const std::exception &e) {
           std::cerr << "[UDP ERROR] Failed to process packet: " << e.what()
                     << std::endl;
