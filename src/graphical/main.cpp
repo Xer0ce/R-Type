@@ -153,8 +153,8 @@ void handle_tcp_messages(
       std::string received_message(received_data.begin(), received_data.end());
       std::cout << "[TCP INFO] Received: " << received_message << std::endl;
 
-      if (received_data[0] == 0x01) {
-        std::cout << "Connect command received" << std::endl;
+      if (received_data[0] == 0x06) {
+        std::cout << "CreateEntity command received" << std::endl;
       }
       if (commandsHandle.find(received_data[0]) != commandsHandle.end()) {
         commandsHandle[received_data[0]](received_message, registry, renderer);
@@ -203,6 +203,8 @@ void createEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer
 
   float x = std::stof(bufferString[0]);
   float y = std::stof(bufferString[1]);  
+
+  std::cout << "Creating entity at position: " << x << " " << y << std::endl;
                             
   auto entity = registry.spawn_entity();
   registry.add_component<Position>(entity, Position(x, y));
