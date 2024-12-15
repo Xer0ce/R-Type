@@ -6,6 +6,7 @@
 */
 
 #include "Game.hpp"
+#include <memory>
 
 void Game::load_component() {
   _ecs.register_component<Position>();
@@ -41,25 +42,36 @@ void Game::load() {
   return;
 };
 
-void Game::loop(float deltaTime) {
-  enemy_system();
-  position_system(deltaTime);
+void Game::loop(float deltaTime, std::shared_ptr<Queue> &queue) {
+  enemy_system(queue);
+  position_system(deltaTime, queue);
   return;
 };
 
-void Game::position_system(float deltaTime) {
+void Game::position_system(float deltaTime, std::shared_ptr<Queue> &queue) {
   auto &positions = _ecs.get_components<Position>();
   auto &velocities = _ecs.get_components<Velocity>();
 
   for (std::size_t i = 0; i < positions.size(); ++i) {
+    if (std::find(_players.begin(), _players.end(), i) != _players.end()) {
+      continue;
+    }
     if (positions[i] && velocities[i]) {
       positions[i]->x += velocities[i]->x * deltaTime;
       positions[i]->y += velocities[i]->y * deltaTime;
+      Command *command = new Command();
+      command->type = CommandType::ENEMYMOVE;
+      command->id = -10;
+      command->enemyMove = new enemyMove();
+      command->enemyMove->positionX = _ecs.get_components<Position>()[i]->x;
+      command->enemyMove->positionY = _ecs.get_components<Position>()[i]->y;
+      command->enemyMove->enemyId = i;
+      queue->pushUdpQueue(command);
     }
   }
 }
 
-void Game::enemy_system() {
+void Game::enemy_system(std::shared_ptr<Queue> &queue) {
   for (auto &enemy : _enemy) {
     if (_ecs.get_components<Position>()[enemy]->y < 0) {
       _ecs.get_components<Velocity>()[enemy]->y = 100;

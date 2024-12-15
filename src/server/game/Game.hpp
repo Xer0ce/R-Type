@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** RType
+** R-Type
 ** File description:
 ** Game
 */
@@ -10,13 +10,16 @@
 
 #include "../../ecs/EntitiesGestion.hpp"
 #include "../../ecs/Registry.hpp"
+#include "../IProtocol.hpp"
+#include "../Queue.hpp"
+#include <memory>
 #include <vector>
 
 class Game {
 public:
   // main fonction
   void load();
-  void loop(float deltaTime);
+  void loop(float deltaTime, std::shared_ptr<Queue> &queue);
 
   // load functions
   void load_component();
@@ -24,8 +27,9 @@ public:
   void load_system();
 
   // systems
-  void enemy_system();
-  void position_system(float deltaTime);
+  void enemy_system(std::shared_ptr<Queue> &queue);
+  void position_system(float deltaTime, std::shared_ptr<Queue> &queue);
+  inline void addPlayerToVector(Entities player) { _players.push_back(player); };
 
   // generic functions
   Entities create_player();

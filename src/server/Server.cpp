@@ -13,7 +13,7 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
                std::string udpIp) {
   _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
   _udp = std::make_unique<UDP>(udpPort, udpIp);
-  _queue = std::make_unique<Queue>();
+  _queue = std::make_shared<Queue>();
   initCommandMapHandle();
   initCommandMapSend();
   initCommandMapGame();
@@ -23,13 +23,24 @@ Server::~Server() {}
 
 void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
-    Command *command = _queue->popTcpQueue();
-    if (command) {
-      if (command->type == CommandType::REPCONNECT) {
-        std::cout << "[TCP]" << command->id << std::endl;
-        protocol->sendData(std::to_string(command->repConnect->id), command->id);
+    if (protocol->getType() == "TCP") {
+      Command *command = _queue->popTcpQueue();
+      if (command) {
+        if (command->type == CommandType::REPCONNECT) {
+          std::cout << "[TCP]" << command->id << std::endl;
+          protocol->sendData(std::to_string(command->repConnect->id), command->id);
+        }
+        delete command;
       }
-      delete command;
+    }
+    if (protocol->getType() == "UDP") {
+      Command *command = _queue->popUdpQueue();
+      if (command) {
+        if (command->type == CommandType::ENEMYMOVE) {
+          protocol->sendData(std::to_string(command->enemyMove->enemyId) + " " + std::to_string(command->enemyMove->positionX) + " " + std::to_string(command->enemyMove->positionY), command->id);
+        }
+        delete command;
+      }
     }
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
@@ -43,16 +54,19 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
       }
     }
     if (protocol->getType() == "TCP") {
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
   }
 }
 
-void Server::world_update(){};
+void Server::world_update() {
+  _game.loop(0.1, _queue);
+};
 
 void Server::game_loop() {
   _game.load();
   while (true) {
+    world_update();
     Command *command = _queue->popGameQueue();
     if (!command) {
       continue;
@@ -62,6 +76,7 @@ void Server::game_loop() {
       auto player = create_entity<EntityType::Player>(
           _game.get_ecs(), Position(400, 100), Velocity(), Health(),
           Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+      _game.addPlayerToVector(player);
       newCommand->type = CommandType::REPCONNECT;
       newCommand->repConnect = new repConnect();
       newCommand->repConnect->id = player;

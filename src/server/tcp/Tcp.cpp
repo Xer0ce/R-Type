@@ -14,6 +14,8 @@ Tcp::Tcp(std::size_t port, std::string ip) {
   _port = port;
   _ip = ip;
   _type = "TCP";
+  _timeout.tv_sec = 0;
+  _timeout.tv_usec = 1;
 }
 
 Tcp::~Tcp() { closeSocket(); }
@@ -30,7 +32,6 @@ bool Tcp::initializeSocket() {
     return false;
   }
 
-  // Configure socket for non-blocking mode
   int flags = fcntl(_socket, F_GETFL, 0);
   if (flags < 0) {
     perror("Failed to get socket flags");
@@ -80,7 +81,7 @@ bool Tcp::bindSocket() {
 bool Tcp::listenSocket(int backlog) {
   fd_set tempFds = _readFds;
 
-  int activity = select(_maxFd + 1, &tempFds, nullptr, nullptr, nullptr);
+  int activity = select(_maxFd + 1, &tempFds, nullptr, nullptr, &_timeout);
   if (activity < 0 && errno != EINTR) {
     perror("Select failed");
     return false;
