@@ -47,6 +47,8 @@ public:
   void mapCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
   void enemyMoveCommandSend(Command *command,
                             std::unique_ptr<IProtocol> &protocol);
+  void createEnemyCommandSend(Command *command,
+                              std::unique_ptr<IProtocol> &protocol);
 
   void connectCommandGame(Command *command);
   void disconnectCommandGame(Command *command);
