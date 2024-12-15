@@ -9,6 +9,7 @@
 
 #include "../AProtocol.hpp"
 #include <arpa/inet.h>
+#include <vector>
 
 class UDP : public AProtocol {
 public:
@@ -17,11 +18,14 @@ public:
 
   bool initializeSocket() override;
   bool bindSocket() override;
-  bool sendData(const std::string &data, const std::string &destIp,
-                std::size_t destPort) override;
-  std::vector<uint8_t> receiveData() override;
+  bool sendData(const std::string &data, int id) override;
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
-  int acceptConnection() override;
-  std::string deserialize_connect(const std::vector<uint8_t> &data);
+  std::vector<uint8_t> &getBuffer() override;
+  bool isClientAddressPresent(const sockaddr_in &clientAddr);
+
+private:
+  sockaddr_in _clientAddr{};
+  socklen_t _clientAddrLen;
+  std::vector<sockaddr_in> _clientAddresses;
 };

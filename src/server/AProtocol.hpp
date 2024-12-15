@@ -10,6 +10,7 @@
 #include "IProtocol.hpp"
 #include <arpa/inet.h>
 #include <cstring>
+#include <mutex>
 #include <stdexcept>
 #include <thread>
 #include <unistd.h>
@@ -32,9 +33,15 @@ public:
   void setSocket(int socket);
   int getSocket();
 
+  std::string getType() override;
+
 protected:
   std::size_t _port;
   std::string _ip;
   sockaddr_in _addr;
   int _socket;
+
+  std::mutex _messageMutex;
+  std::string _type;
+  std::vector<uint8_t> _buffer;
 };

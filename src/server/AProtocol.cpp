@@ -26,3 +26,5 @@ sockaddr_in &AProtocol::getAddr() { return _addr; }
 void AProtocol::setSocket(int socket) { _socket = socket; }
 
 int AProtocol::getSocket() { return _socket; }
+
+std::string AProtocol::getType() { return _type; }

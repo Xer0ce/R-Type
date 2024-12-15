@@ -148,11 +148,6 @@ public:
   template <typename Component> void remove_component(entity_t const &from) {
     auto &components = get_components<Component>();
     components.erase(from);
-    if (components[from].has_value()) {
-      std::cout << "Data at position has a value: " << std::endl;
-    } else {
-      std::cout << "Data at position is nullopt (empty)." << std::endl;
-    }
   };
   ///@}
 
@@ -211,7 +206,11 @@ public:
     if (it != _entities.end()) {
       _available_entities.push_back(value);
       for (auto &elem : _removal_functions) {
-        elem.second(value);
+        try {
+          elem.second(value);
+        } catch (const std::exception &e) {
+          continue;
+        }
       }
     }
   };

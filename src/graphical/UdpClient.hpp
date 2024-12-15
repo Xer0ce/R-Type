@@ -7,25 +7,28 @@
 
 #ifndef UDPCLIENT_HPP_
 #define UDPCLIENT_HPP_
+
+#include "AProtocol.hpp"
 #include <arpa/inet.h>
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 #include <sys/socket.h>
-#include <thread>
 #include <unistd.h>
 #include <vector>
 
-class UdpClient {
+class UdpClient : public AProtocol {
 private:
   int _sockfd;
   sockaddr_in server_addr;
 
 public:
-  UdpClient(const std::string &ip, int port);
-  void send_data(std::vector<uint8_t> &data);
+  UdpClient(std::string ip, std::size_t port);
+  void send_data(std::vector<uint8_t> &data) override;
   void send_data(std::vector<uint8_t> &&data);
-  void receive_data(std::vector<uint8_t> &buffer);
-  ~UdpClient() { close(_sockfd); }
+  std::vector<uint8_t> receive_data() override;
+  std::vector<uint8_t> &getBuffer();
+  ~UdpClient();
 };
 
 #endif /* !UDPCLIENT_HPP_ */

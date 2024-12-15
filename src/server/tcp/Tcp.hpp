@@ -8,6 +8,11 @@
 #pragma once
 
 #include "../AProtocol.hpp"
+#include <condition_variable>
+#include <mutex>
+#include <netinet/in.h>
+#include <string>
+#include <vector>
 
 class Tcp : public AProtocol {
 public:
@@ -16,10 +21,18 @@ public:
 
   bool initializeSocket() override;
   bool bindSocket() override;
-  bool sendData(const std::string &data, const std::string &destIp,
-                std::size_t destPort) override;
-  std::vector<uint8_t> receiveData() override;
+  bool sendData(const std::string &data, int id) override;
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
-  int acceptConnection() override;
+  std::vector<uint8_t> &getBuffer() override;
+
+private:
+  int _socket;
+  std::vector<int> _clientSockets;
+  sockaddr_in _addr;
+  struct timeval _timeout;
+
+  std::mutex _bufferMutex;
+  fd_set _readFds;
+  int _maxFd;
 };
