@@ -41,15 +41,15 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
-      std::cout << "Recu : [" << protocol->getType() << "] "
-                << std::string(buffer.begin(), buffer.end()) << std::endl;
+      std::cout << "Received: " << std::string(buffer.begin(), buffer.end())
+                << std::endl;
       if (_commandsHandle.find(buffer[0]) != _commandsHandle.end()) {
         _commandsHandle[buffer[0]](buffer, protocol);
       } else {
         std::cout << "Code invalide ! [Send]" << std::endl;
       }
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(15));
   }
 }
 
@@ -69,7 +69,7 @@ void Server::game_loop() {
       std::cout << "Code invalide ! [Game]" << std::endl;
     }
     delete command;
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(15));
   }
 }
 

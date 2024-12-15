@@ -115,7 +115,10 @@ void Server::moveCommandHandle(std::vector<uint8_t> buffer,
 
 void Server::shootCommandHandle(std::vector<uint8_t> buffer,
                                 std::unique_ptr<IProtocol> &protocol) {
+
   Command *cmd = new Command();
+
+  std::cout << "commmmmmmmmmmande recu shoot" << std::endl;
 
   std::vector<std::string> bufferString =
       my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
@@ -125,6 +128,7 @@ void Server::shootCommandHandle(std::vector<uint8_t> buffer,
   cmd->shoot->playerId = (int)buffer[1];
   cmd->shoot->positionX = std::stof(bufferString[0]);
   cmd->shoot->positionY = std::stof(bufferString[1]);
+  std::cout << "envoye" << std::endl;
   _queue->pushGameQueue(cmd);
 }
 

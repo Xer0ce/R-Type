@@ -222,7 +222,6 @@ void createEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer
   float x = std::stof(bufferString[0]);
   float y = std::stof(bufferString[1]);
 
-  std::cout << "Creating entity at position: " << x << " " << y << std::endl;
 
   auto entity = registry.spawn_entity();
   registry.add_component<Position>(entity, Position(x, y));
@@ -242,12 +241,17 @@ void collision_system(Registry &registry, TcpClient &tcp) {
   std::vector<Entities> enemies;
 
   for (std::size_t i = 0; i < positions.size(); ++i) {
-    if (velocities[i] && velocities[i]->x == 512) {
-      bullets.push_back(Entities(i));
-    } else if (healths[i] && healths[i]->hp == 1) {
+    if (velocities[i].has_value() && velocities[i]->x == 512) {
+      bullets.push_back(Entities(i)); 
+    }
+  }
+
+  for (std::size_t i = 0; i < healths.size(); ++i) {
+     if (healths[i].has_value() && healths[i]->hp == 1) {
       enemies.push_back(Entities(i));
     }
   }
+
 
   for (std::size_t i = 0; i < bullets.size(); ++i) {
     for (std::size_t j = 0; j < enemies.size(); ++j) {
@@ -255,13 +259,10 @@ void collision_system(Registry &registry, TcpClient &tcp) {
           positions[bullets[i]]->x + 50 > positions[enemies[j]]->x &&
           positions[bullets[i]]->y < positions[enemies[j]]->y + 50 &&
           positions[bullets[i]]->y + 50 > positions[enemies[j]]->y) {
-          
-          // auto packet = serialize_collision_packet(positions[bullets[i]]->x, positions[bullets[i]]->y);
-          // tcp.send_data(packet);
-          std::cout << "Collision detected" << std::endl;
-          std::cout << "buller i :" << bullets[i] << std::endl;
-          registry.kill_entity(bullets[i]);
-          std::cout << "acazdazionjdoiazj " << std::endl;
+  
+          auto packet = serialize_collision_packet(positions[bullets[i]]->x, positions[bullets[i]]->y);
+          tcp.send_data(packet);
+          registry.kill_entity(Entities(bullets[i]));
           return;
       }
     }
