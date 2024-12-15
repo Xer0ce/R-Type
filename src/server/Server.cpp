@@ -60,7 +60,8 @@ void Server::game_loop() {
     if (command->type == CommandType::CONNECT) {
       Command *newCommand = new Command();
       auto player = create_entity<EntityType::Player>(
-          _game.get_ecs(), Position(400, 100), Velocity(), Health(), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+          _game.get_ecs(), Position(400, 100), Velocity(), Health(),
+          Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
       newCommand->type = CommandType::REPCONNECT;
       newCommand->repConnect = new repConnect();
       newCommand->repConnect->id = player;
