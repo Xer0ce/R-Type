@@ -24,6 +24,13 @@ Connexion::Connexion(const std::string &ip_udp, int port_udp,
   }
 }
 
+void Connexion::listen(std::unique_ptr<IProtocol> &proto) {
+  while (true) {
+    proto->receive_data();
+    std::vector<uint8_t> data;
+  }
+}
+
 Connexion::~Connexion() {
   _tcp.reset();
   _udp.reset();

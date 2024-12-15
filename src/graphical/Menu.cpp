@@ -9,7 +9,8 @@ void render_text(SDL_Renderer *renderer, TTF_Font *font,
     return;
   }
   SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-  SDL_FRect dstRect = {x, y, surface->w, surface->h};
+  SDL_FRect dstRect = {x, y, static_cast<float>(surface->w),
+                       static_cast<float>(surface->h)};
   SDL_RenderTexture(renderer, texture, nullptr, &dstRect);
   SDL_DestroySurface(surface);
   SDL_DestroyTexture(texture);
@@ -33,6 +34,8 @@ bool menu(SDL_Renderer *renderer, TTF_Font *font, SDL_Window *window,
 
   SDL_StartTextInput(window);
   float mouseX, mouseY;
+  SDL_Texture *backgroundTexture =
+      IMG_LoadTexture(renderer, "../src/graphical/assets/menu.png");
 
   SDL_FRect ipButton = {100, 150, 400, 50};
   SDL_FRect portButton = {100, 250, 400, 50};
@@ -83,6 +86,7 @@ bool menu(SDL_Renderer *renderer, TTF_Font *font, SDL_Window *window,
 
     SDL_SetRenderDrawColor(renderer, black.r, black.g, black.b, black.a);
     SDL_RenderClear(renderer);
+    SDL_RenderTexture(renderer, backgroundTexture, NULL, NULL);
 
     render_text(renderer, font, "R-Type", 500, 50, white);
 

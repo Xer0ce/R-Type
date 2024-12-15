@@ -7,7 +7,10 @@
 #include "Menu.hpp"
 #include "TcpClient.hpp"
 #include "UdpClient.hpp"
+#include <SDL3_image/SDL_image.h>
 #include <cstring>
+#include <map>
+#include <sstream>
 #include <vector>
 
 std::vector<uint8_t> serialize_packt(const std::string &position,
@@ -87,10 +90,15 @@ void draw_system(Registry &registry, SDL_Renderer *renderer) {
                         static_cast<float>(positions[i]->y),
                         static_cast<float>(drawables[i]->rect.w),
                         static_cast<float>(drawables[i]->rect.h)};
-      SDL_SetRenderDrawColor(renderer, drawables[i]->color.r,
-                             drawables[i]->color.g, drawables[i]->color.b,
-                             drawables[i]->color.a);
-      SDL_RenderFillRect(renderer, &rect);
+
+      if (drawables[i]->texture) {
+        SDL_RenderTexture(renderer, drawables[i]->texture, NULL, &rect);
+      } else {
+        SDL_SetRenderDrawColor(renderer, drawables[i]->color.r,
+                               drawables[i]->color.g, drawables[i]->color.b,
+                               drawables[i]->color.a);
+        SDL_RenderFillRect(renderer, &rect);
+      }
     }
   }
 }
@@ -106,10 +114,235 @@ std::vector<uint8_t> serialize_connect(const std::string &player_name) {
   return packet;
 }
 
+std::vector<uint8_t> serialize_collision_packet(float x, float y) {
+  std::vector<uint8_t> packet;
+  packet.push_back(0x04);
+  packet.push_back(1);
+
+  std::string str = std::to_string(x) + " " + std::to_string(y);
+
+  for (char c : str)
+    packet.push_back(static_cast<uint8_t>(c));
+
+  return packet;
+}
+
+void cleanString(std::string &str) {
+  str.erase(std::remove_if(str.begin(), str.end(),
+                           [](unsigned char c) {
+                             return !std::isdigit(c) && c != '.' && c != '-';
+                           }),
+            str.end());
+}
+
+std::vector<std::string> my_strToWordArray(const std::string &str,
+                                           char delimiter) {
+  std::vector<std::string> resultVec;
+  std::stringstream ss(str);
+  std::string token;
+
+  while (getline(ss, token, delimiter)) {
+    if (!token.empty()) {
+      cleanString(token);
+      resultVec.push_back(token);
+    }
+  }
+
+  return resultVec;
+}
+
+void handle_tcp_messages(
+    TcpClient &tcp, Registry &registry,
+    std::map<uint8_t,
+             std::function<void(std::string, Registry &, SDL_Renderer *)>>
+        commandsHandle,
+    SDL_Renderer *renderer) {
+  auto received_data = tcp.receive_data();
+  if (!received_data.empty()) {
+    try {
+      std::string received_message(received_data.begin(), received_data.end());
+      std::cout << "[TCP INFO] Received: " << received_message << std::endl;
+
+      if (received_data[0] == 0x06) {
+        std::cout << "CreateEntity command received" << std::endl;
+      }
+      if (commandsHandle.find(received_data[0]) != commandsHandle.end()) {
+        commandsHandle[received_data[0]](received_message, registry, renderer);
+      } else {
+        std::cout << "Code invalide !" << std::endl;
+      }
+    } catch (const std::exception &e) {
+      std::cerr << "[TCP ERROR] Failed to process packet: " << e.what()
+                << std::endl;
+    }
+  }
+}
+
+void connectCommand(std::string buffer, Registry &registry,
+                    SDL_Renderer *renderer) {
+  SDL_Texture *playerTexture =
+      IMG_LoadTexture(renderer, "../src/graphical/assets/michou.png");
+
+  auto entity = registry.spawn_entity();
+  registry.add_component<Position>(entity, Position(100, 150));
+  registry.add_component<Velocity>(entity, Velocity());
+  registry.add_component<Health>(entity, Health());
+  registry.add_component<Draw>(
+      entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
+  registry.add_component<Control>(entity, Control());
+}
+
+void moveEntity(std::string buffer, Registry &registry,
+                SDL_Renderer *renderer) {
+  int id = buffer[1];
+
+  if (id < 0 || id >= registry.get_components<Position>().size()) {
+    std::cerr << "Invalid entity ID: " << id << std::endl;
+    return;
+  }
+
+  std::vector<std::string> bufferString;
+  bufferString =
+      my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
+
+  float x = std::stof(bufferString[0]);
+  float y = std::stof(bufferString[1]);
+
+  registry.get_components<Position>()[id]->x = x;
+  registry.get_components<Position>()[id]->y = y;
+}
+
+void createEntity(std::string buffer, Registry &registry,
+                  SDL_Renderer *renderer) {
+  SDL_Texture *playerTexture =
+      IMG_LoadTexture(renderer, "../src/graphical/assets/enemy.png");
+  int id = buffer[1];
+
+  std::vector<std::string> bufferString;
+  bufferString =
+      my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
+
+  float x = std::stof(bufferString[0]);
+  float y = std::stof(bufferString[1]);
+
+  auto entity = registry.spawn_entity();
+  registry.add_component<Position>(entity, Position(x, y));
+  registry.add_component<Velocity>(entity, Velocity());
+  registry.add_component<Health>(entity, Health(1));
+  registry.add_component<Draw>(
+      entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
+}
+
+void collision_system(Registry &registry, TcpClient &tcp) {
+  auto &positions = registry.get_components<Position>();
+  auto &drawables = registry.get_components<Draw>();
+  auto &controls = registry.get_components<Control>();
+  auto &healths = registry.get_components<Health>();
+  auto &velocities = registry.get_components<Velocity>();
+
+  std::vector<Entities> bullets;
+  std::vector<Entities> enemies;
+
+  for (std::size_t i = 0; i < positions.size(); ++i) {
+    if (velocities[i].has_value() && velocities[i]->x == 512) {
+      bullets.push_back(Entities(i));
+    }
+  }
+
+  for (std::size_t i = 0; i < healths.size(); ++i) {
+    if (healths[i].has_value() && healths[i]->hp == 1) {
+      enemies.push_back(Entities(i));
+    }
+  }
+
+  for (std::size_t i = 0; i < bullets.size(); ++i) {
+    for (std::size_t j = 0; j < enemies.size(); ++j) {
+      if (positions[bullets[i]]->x < positions[enemies[j]]->x + 50 &&
+          positions[bullets[i]]->x + 50 > positions[enemies[j]]->x &&
+          positions[bullets[i]]->y < positions[enemies[j]]->y + 50 &&
+          positions[bullets[i]]->y + 50 > positions[enemies[j]]->y) {
+
+        auto packet = serialize_collision_packet(positions[bullets[i]]->x,
+                                                 positions[bullets[i]]->y);
+        tcp.send_data(packet);
+        registry.kill_entity(Entities(bullets[i]));
+        return;
+      }
+    }
+  }
+}
+
+void handleShoot(Registry &registry, SDL_Renderer *renderer, int entity,
+                 float &shootCooldown, float deltaTime) {
+  const bool *keyState = SDL_GetKeyboardState(NULL);
+  auto &positions = registry.get_components<Position>();
+  auto &drawables = registry.get_components<Draw>();
+  shootCooldown -= deltaTime;
+
+  if (keyState[SDL_SCANCODE_SPACE] && shootCooldown <= 0.0f) {
+    auto projectile = registry.spawn_entity();
+
+    SDL_Texture *bulletTexture =
+        IMG_LoadTexture(renderer, "../src/graphical/assets/bullet.png");
+
+    registry.add_component<Position>(
+        projectile,
+        Position(positions[entity]->x + 50, positions[entity]->y + 20));
+    registry.add_component<Velocity>(projectile, Velocity(512, 0));
+    registry.add_component<Draw>(
+        projectile, Draw({255, 255, 255, 255}, {5, 5, 5, 5}, bulletTexture));
+    shootCooldown = 0.2f;
+  }
+}
+
+void killEntity(std::string buffer, Registry &registry,
+                SDL_Renderer *renderer) {
+  std::cout << "Kill entity command received" << std::endl;
+}
+
+void initCommandHandle(
+    std::map<uint8_t,
+             std::function<void(std::string, Registry &, SDL_Renderer *)>>
+        &commandsHandle) {
+  commandsHandle[0x01] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    connectCommand(buffer, registry, renderer);
+  };
+  commandsHandle[0x02] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    std::cout << "Disconnect command received" << std::endl;
+  };
+  commandsHandle[0x03] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    std::cout << "Move command received" << std::endl;
+  };
+  commandsHandle[0x04] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    std::cout << "Shoot command received" << std::endl;
+  };
+  commandsHandle[0x05] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    moveEntity(buffer, registry, renderer);
+  };
+  commandsHandle[0x06] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    createEntity(buffer, registry, renderer);
+  };
+  commandsHandle[0x07] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    killEntity(buffer, registry, renderer);
+  };
+}
+
 int main() {
   std::string ipAddress;
   std::string ipPort;
+  float shootCooldown = 0.0f;
+  std::map<uint8_t,
+           std::function<void(std::string, Registry &, SDL_Renderer *)>>
+      commandsHandle;
 
+  initCommandHandle(commandsHandle);
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL Initialization failed: " << SDL_GetError() << std::endl;
     return 1;
@@ -121,7 +354,20 @@ int main() {
     return 1;
   }
 
-  SDL_Window *window = SDL_CreateWindow("R-Michou", 1920, 1080, 0);
+  SDL_DisplayID displayID = SDL_GetPrimaryDisplay();
+
+  const SDL_DisplayMode *currentMode = SDL_GetCurrentDisplayMode(displayID);
+  if (!currentMode) {
+    printf("Erreur SDL_GetCurrentDisplayMode: %s\n", SDL_GetError());
+    SDL_Quit();
+    return 1;
+  }
+
+  int windowWidth = (int)(currentMode->w * 0.9);
+  int windowHeight = (int)(currentMode->h * 0.8);
+
+  SDL_Window *window =
+      SDL_CreateWindow("R-Michou", windowWidth, windowHeight, 0);
   if (!window) {
     std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
     SDL_Quit();
@@ -135,6 +381,9 @@ int main() {
     SDL_Quit();
     return 1;
   }
+
+  SDL_Texture *backgroundTexture =
+      IMG_LoadTexture(renderer, "../src/graphical/assets/level1.png");
 
   TTF_Font *font = TTF_OpenFont("../src/graphical/font/VT323.ttf", 48);
   if (!font) {
@@ -183,14 +432,6 @@ int main() {
     registry.register_component<Control>();
     registry.register_component<Health>();
 
-    auto entity = registry.spawn_entity();
-    registry.add_component<Position>(entity, Position(100, 150));
-    registry.add_component<Velocity>(entity, Velocity());
-    registry.add_component<Health>(entity, Health());
-    registry.add_component<Draw>(entity,
-                                 Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
-    registry.add_component<Control>(entity, Control());
-
     bool running = true;
     SDL_Event event;
     Uint64 now = SDL_GetPerformanceCounter();
@@ -210,21 +451,34 @@ int main() {
 
       control_system(registry, udp);
       position_system(registry, deltaTime, udp);
+      handleShoot(registry, renderer, 0, shootCooldown, deltaTime);
+      collision_system(registry, tcp);
+
+      handle_tcp_messages(tcp, registry, commandsHandle, renderer);
 
       auto received_data = udp.receive_data();
       if (!received_data.empty()) {
         try {
           std::string received_message(received_data.begin(),
                                        received_data.end());
-          std::cout << "[UDP INFO] Received: " << received_message << std::endl;
-
+          if (commandsHandle.find(received_data[0]) != commandsHandle.end()) {
+            commandsHandle[received_data[0]](received_message, registry,
+                                             renderer);
+          } else {
+            std::cout << "Code invalide !" << std::endl;
+          }
+          // std::cout << "[UDP INFO] Received: " << received_message <<
+          // std::endl;
         } catch (const std::exception &e) {
           std::cerr << "[UDP ERROR] Failed to process packet: " << e.what()
                     << std::endl;
         }
       }
+
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
       SDL_RenderClear(renderer);
+
+      SDL_RenderTexture(renderer, backgroundTexture, NULL, NULL);
 
       draw_system(registry, renderer);
 

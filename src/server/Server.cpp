@@ -6,8 +6,6 @@
 */
 
 #include "Server.hpp"
-#include "../graphical/Components/Position.hpp"
-#include "Command.hpp"
 #include <iostream>
 #include <thread>
 
@@ -15,82 +13,65 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
                std::string udpIp) {
   _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
   _udp = std::make_unique<UDP>(udpPort, udpIp);
-  initCommandMap();
+  _queue = std::make_shared<Queue>();
+  initCommandMapHandle();
+  initCommandMapSend();
+  initCommandMapGame();
 }
+
 Server::~Server() {}
-
-void Server::connectCommand(std::vector<uint8_t> buffer,
-                            std::unique_ptr<IProtocol> &protocol) {
-  std::string response = "OK";
-  Command *cmd = new Command();
-  cmd->type = CommandType::CONNECT;
-  cmd->connect = new Connect();
-  cmd->connect->Nickname = std::string(buffer.begin() + 1, buffer.end());
-  protocol->sendData(response);
-}
-
-void Server::disconnectCommand(std::vector<uint8_t> buffer,
-                               std::unique_ptr<IProtocol> &protocol) {
-  std::string response = "disconnect OK";
-  protocol->sendData(response);
-}
-
-void Server::moveCommand(std::vector<uint8_t> buffer,
-                         std::unique_ptr<IProtocol> &protocol) {
-  std::string response = "Move OK";
-  protocol->sendData(response);
-}
-
-void Server::shootCommand(std::vector<uint8_t> buffer,
-                          std::unique_ptr<IProtocol> &protocol) {
-  std::string response = "shoot OK";
-  protocol->sendData(response);
-}
-
-void Server::initCommandMap() {
-  _commands[0x01] = [this](std::vector<uint8_t> buffer,
-                           std::unique_ptr<IProtocol> &protocol) {
-    connectCommand(buffer, protocol);
-  };
-  _commands[0x02] = [this](std::vector<uint8_t> buffer,
-                           std::unique_ptr<IProtocol> &protocol) {
-    disconnectCommand(buffer, protocol);
-  };
-  _commands[0x03] = [this](std::vector<uint8_t> buffer,
-                           std::unique_ptr<IProtocol> &protocol) {
-    moveCommand(buffer, protocol);
-  };
-  _commands[0x04] = [this](std::vector<uint8_t> buffer,
-                           std::unique_ptr<IProtocol> &protocol) {
-    shootCommand(buffer, protocol);
-  };
-}
 
 void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
-    protocol->listenSocket();
-    std::vector<uint8_t> buffer = protocol->getBuffer();
-    std::cout << "[" << protocol->getType() << "] "
-              << std::string(buffer.begin(), buffer.end()) << std::endl;
-    if (_commands.find(buffer[0]) != _commands.end()) {
-      _commands[buffer[0]](buffer, protocol);
-    } else {
-      std::cout << "Code invalide !" << std::endl;
+    Command *command = nullptr;
+    if (protocol->getType() == "TCP") {
+      command = _queue->popTcpQueue();
+    } else if (protocol->getType() == "UDP") {
+      command = _queue->popUdpQueue();
     }
+    if (command != nullptr) {
+      if (_commandsSend.find(command->type) != _commandsSend.end()) {
+        _commandsSend[command->type](command, protocol);
+      } else {
+        std::cout << "Code invalide ! [Send]" << std::endl;
+      }
+      delete command;
+    }
+
+    if (protocol->listenSocket()) {
+      std::vector<uint8_t> buffer = protocol->getBuffer();
+
+      std::cout << "Received: " << std::string(buffer.begin(), buffer.end())
+                << std::endl;
+      if (_commandsHandle.find(buffer[0]) != _commandsHandle.end()) {
+        _commandsHandle[buffer[0]](buffer, protocol);
+      } else {
+        std::cout << "Code invalide ! [Send]" << std::endl;
+      }
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(15));
   }
 }
 
-void Server::world_update(){
-    // logique qui pour chaque element send la data
-};
+void Server::world_update() { _game.loop(0.1, _queue); };
 
 void Server::game_loop() {
+  _game.load();
   while (true) {
-    // recupe les actions a faire de la queue puis les ececuter
-    // puis appeler le world update
-    return;
+    world_update();
+    Command *command = _queue->popGameQueue();
+    if (!command) {
+      continue;
+    }
+    if (_commandsGame.find(command->type) != _commandsGame.end()) {
+      _commandsGame[command->type](command);
+    } else {
+      std::cout << "Code invalide ! [Game]" << std::endl;
+    }
+    delete command;
+    std::this_thread::sleep_for(std::chrono::milliseconds(15));
   }
-};
+}
 
 void Server::start() {
   if (!_tcp->initializeSocket() || !_tcp->bindSocket()) {

@@ -9,13 +9,46 @@
 
 #include <iostream>
 
-enum CommandType { CONNECT, MOVE, SHOOT };
+enum CommandType {
+  CONNECT,
+  MOVE,
+  SHOOT,
+  REPCONNECT,
+  ENEMYMOVE,
+  CREATEENEMY,
+  KILLENEMY
+};
 
 struct Command {
   CommandType type;
   struct Connect *connect;
   struct Move *move;
   struct Shoot *shoot;
+  struct repConnect *repConnect;
+  struct enemyMove *enemyMove;
+  struct createEnemy *createEnemy;
+  struct killEnemy *killEnemy;
+  int id;
+};
+
+struct killEnemy {
+  int enemyId;
+};
+
+struct createEnemy {
+  float positionX;
+  float positionY;
+  int enemyId;
+};
+
+struct enemyMove {
+  float positionX;
+  float positionY;
+  int enemyId;
+};
+
+struct repConnect {
+  std::size_t id;
 };
 
 struct Connect {
@@ -24,14 +57,12 @@ struct Connect {
 
 struct Move {
   std::size_t playerId;
-  std::size_t positionX;
-  std::size_t positionY;
+  float positionX;
+  float positionY;
 };
 
 struct Shoot {
   std::size_t playerId;
-  std::size_t positionX;
-  std::size_t positionY;
-  std::size_t directionX;
-  std::size_t directionY;
+  float positionX;
+  float positionY;
 };
