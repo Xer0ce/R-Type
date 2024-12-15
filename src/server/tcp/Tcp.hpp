@@ -30,6 +30,7 @@ private:
   int _socket;
   std::vector<int> _clientSockets;
   sockaddr_in _addr;
+  struct timeval _timeout;
 
   std::mutex _bufferMutex;
   fd_set _readFds;

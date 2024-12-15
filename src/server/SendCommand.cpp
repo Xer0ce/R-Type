@@ -66,6 +66,14 @@ void Server::mapCommandSend(Command *command, std::unique_ptr<IProtocol> &protoc
   // protocol->sendData(response);
 }
 
+void Server::enemyMoveCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol) {
+          protocol->sendData(std::to_string(command->enemyMove->enemyId) + " " +
+                                 std::to_string(command->enemyMove->positionX) +
+                                 " " +
+                                 std::to_string(command->enemyMove->positionY),
+                             command->id);
+}
+
 void Server::initCommandMapSend() {
   _commandsSend[CommandType::REPCONNECT] = [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
     connectCommandSend(command, protocol);
@@ -75,5 +83,8 @@ void Server::initCommandMapSend() {
   };
   _commandsSend[CommandType::MOVE] = [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
     moveCommandSend(command, protocol);
+  };
+  _commandsSend[CommandType::ENEMYMOVE] = [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+    enemyMoveCommandSend(command, protocol);
   };
 }

@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-enum CommandType { CONNECT, MOVE, SHOOT, REPCONNECT };
+enum CommandType { CONNECT, MOVE, SHOOT, REPCONNECT, ENEMYMOVE };
 
 struct Command {
   CommandType type;
@@ -17,7 +17,14 @@ struct Command {
   struct Move *move;
   struct Shoot *shoot;
   struct repConnect *repConnect;
+  struct enemyMove *enemyMove;
   int id;
+};
+
+struct enemyMove {
+  float positionX;
+  float positionY;
+  int enemyId;
 };
 
 struct repConnect {

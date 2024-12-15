@@ -42,6 +42,8 @@ public:
   void moveCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
   void shootCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
   void mapCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
+  void enemyMoveCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
+
 
   void connectCommandGame(Command *command);
   void disconnectCommandGame(Command *command);

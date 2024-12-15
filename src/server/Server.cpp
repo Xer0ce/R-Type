@@ -13,7 +13,7 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
                std::string udpIp) {
   _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
   _udp = std::make_unique<UDP>(udpPort, udpIp);
-  _queue = std::make_unique<Queue>();
+  _queue = std::make_shared<Queue>();
   initCommandMapHandle();
   initCommandMapSend();
   initCommandMapGame();
@@ -23,15 +23,21 @@ Server::~Server() {}
 
 void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
-    Command *command = _queue->popTcpQueue();
-    if (command) {
+    Command *command = nullptr;
+    if (protocol->getType() == "TCP") {
+      command = _queue->popTcpQueue();
+    } else if (protocol->getType() == "UDP") {
+      command = _queue->popUdpQueue();
+    }
+    if (command != nullptr)  {
       if (_commandsSend.find(command->type) != _commandsSend.end()) {
         _commandsSend[command->type](command, protocol);
       } else {
-        std::cout << "Code invalide !" << std::endl;
+        std::cout << "Code invalide ! [Send]" << std::endl;
       }
-      delete command;
+      delete command; 
     }
+
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
@@ -44,16 +50,17 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
       }
     }
     if (protocol->getType() == "TCP") {
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
   }
 }
 
-void Server::world_update(){};
+void Server::world_update() { _game.loop(0.1, _queue); };
 
 void Server::game_loop() {
   _game.load();
   while (true) {
+    world_update();
     Command *command = _queue->popGameQueue();
     if (!command) {
       continue;

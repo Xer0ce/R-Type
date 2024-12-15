@@ -8,6 +8,7 @@
 #include "UDP.hpp"
 #include <arpa/inet.h>
 #include <cstring>
+#include <fcntl.h>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -26,6 +27,16 @@ bool UDP::initializeSocket() {
   _socket = socket(AF_INET, SOCK_DGRAM, 0);
   if (_port <= 0 || _ip.empty() || _socket < 0) {
     throw std::runtime_error("Failed to create UDP socket.");
+    return false;
+  }
+
+  int flags = fcntl(_socket, F_GETFL, 0);
+  if (flags == -1) {
+    throw std::runtime_error("Failed to get socket flags.");
+    return false;
+  }
+  if (fcntl(_socket, F_SETFL, flags | O_NONBLOCK) == -1) {
+    throw std::runtime_error("Failed to set socket to non-blocking mode.");
     return false;
   }
 
@@ -54,6 +65,16 @@ bool UDP::bindSocket() {
 }
 
 bool UDP::sendData(const std::string &data, int id) {
+  if (id == -10) {
+    for (const auto &addr : _clientAddresses) {
+      if (sendto(_socket, data.c_str(), data.size(), 0, (sockaddr *)&addr,
+                 sizeof(addr)) < 0) {
+        throw std::runtime_error("Failed to send data.");
+        return false;
+      }
+    }
+    return true;
+  }
   if (sendto(_socket, data.c_str(), data.size(), 0, (sockaddr *)&_clientAddr,
              _clientAddrLen) < 0) {
     throw std::runtime_error("Failed to send data.");
@@ -69,7 +90,6 @@ bool UDP::listenSocket(int backlog) {
   while (true) {
     uint8_t buffer[1024];
     std::memset(buffer, 0, sizeof(buffer));
-
     ssize_t bytesReceived = recvfrom(_socket, buffer, sizeof(buffer) - 1, 0,
                                      (sockaddr *)&_clientAddr, &_clientAddrLen);
     if (bytesReceived > 0) {
