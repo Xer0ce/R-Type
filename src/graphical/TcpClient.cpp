@@ -43,7 +43,6 @@ std::vector<uint8_t> TcpClient::receive_data() {
   }
   buffer.resize(bytes);
   std::string received_message(buffer.begin(), buffer.end());
-  std::cout << "[TCP INFO] Received: " << received_message << std::endl;
   return buffer;
 }
 

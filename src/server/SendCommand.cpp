@@ -9,18 +9,19 @@
 #include "Server.hpp"
 #include <iostream>
 
-void Server::connectCommandSend(std::vector<std::string> buffer,
-                                std::unique_ptr<IProtocol> &protocol) {
-  std::string response;
+void Server::connectCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol) {
+  std::vector<uint8_t> binaryData;
+  binaryData.push_back(0x01);
 
-  response = "Connect OK"; // ici faut faire la commande si le joeuur a reussi a
-                           // ce connecté avec la map les entites ...
+  uint32_t id = command->repConnect->id;
+  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t*>(&id), reinterpret_cast<uint8_t*>(&id) + sizeof(id));
 
-  // protocol->sendData(response);
+  std::string response(binaryData.begin(), binaryData.end());
+
+  protocol->sendData(response, command->id);
 }
 
-void Server::disconnectCommandSend(std::vector<std::string> buffer,
-                                   std::unique_ptr<IProtocol> &protocol) {
+void Server::disconnectCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol) {
   std::string response;
 
   response = "disconnect OK"; // ici faut faire la commande disconnect si un
@@ -29,8 +30,7 @@ void Server::disconnectCommandSend(std::vector<std::string> buffer,
   // protocol->sendData(response);
 }
 
-void Server::newPlayerCommandSend(std::vector<std::string> buffer,
-                                  std::unique_ptr<IProtocol> &protocol) {
+void Server::newPlayerCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol) {
   std::string response;
 
   response = "newPlayer OK"; // ici faut faire la commande si un joeur se
@@ -39,8 +39,7 @@ void Server::newPlayerCommandSend(std::vector<std::string> buffer,
   // protocol->sendData(response);
 }
 
-void Server::moveCommandSend(std::vector<std::string> buffer,
-                             std::unique_ptr<IProtocol> &protocol) {
+void Server::moveCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol) {
   std::string response;
 
   response = "Move OK"; // ici faut faire la commande move avec la nouvelle pos
@@ -49,8 +48,7 @@ void Server::moveCommandSend(std::vector<std::string> buffer,
   // protocol->sendData(response);
 }
 
-void Server::shootCommandSend(std::vector<std::string> buffer,
-                              std::unique_ptr<IProtocol> &protocol) {
+void Server::shootCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol) {
   std::string response;
 
   response =
@@ -59,8 +57,7 @@ void Server::shootCommandSend(std::vector<std::string> buffer,
   // protocol->sendData(response);
 }
 
-void Server::mapCommandSend(std::vector<std::string> buffer,
-                            std::unique_ptr<IProtocol> &protocol) {
+void Server::mapCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol) {
   std::string response;
 
   response = "Map OK"; // ici faut faire la commande map qui retourne la map
@@ -70,28 +67,13 @@ void Server::mapCommandSend(std::vector<std::string> buffer,
 }
 
 void Server::initCommandMapSend() {
-  _commandsSend["connect"] = [this](std::vector<std::string> buffer,
-                                    std::unique_ptr<IProtocol> &protocol) {
-    connectCommandSend(buffer, protocol);
+  _commandsSend[CommandType::REPCONNECT] = [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+    connectCommandSend(command, protocol);
   };
-  _commandsSend["disconnect"] = [this](std::vector<std::string> buffer,
-                                       std::unique_ptr<IProtocol> &protocol) {
-    disconnectCommandSend(buffer, protocol);
+  _commandsSend[CommandType::SHOOT] = [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+    shootCommandSend(command, protocol);
   };
-  _commandsSend["newPlayer"] = [this](std::vector<std::string> buffer,
-                                      std::unique_ptr<IProtocol> &protocol) {
-    newPlayerCommandSend(buffer, protocol);
-  };
-  _commandsSend["move"] = [this](std::vector<std::string> buffer,
-                                 std::unique_ptr<IProtocol> &protocol) {
-    moveCommandSend(buffer, protocol);
-  };
-  _commandsSend["shoot"] = [this](std::vector<std::string> buffer,
-                                  std::unique_ptr<IProtocol> &protocol) {
-    shootCommandSend(buffer, protocol);
-  };
-  _commandsSend["map"] = [this](std::vector<std::string> buffer,
-                                std::unique_ptr<IProtocol> &protocol) {
-    mapCommandSend(buffer, protocol);
+  _commandsSend[CommandType::MOVE] = [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+    moveCommandSend(command, protocol);
   };
 }

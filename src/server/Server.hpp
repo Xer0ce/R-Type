@@ -36,18 +36,12 @@ public:
   void shootCommandHandle(std::vector<uint8_t> buffer,
                           std::unique_ptr<IProtocol> &protocol);
 
-  void connectCommandSend(std::vector<std::string> buffer,
-                          std::unique_ptr<IProtocol> &protocol);
-  void disconnectCommandSend(std::vector<std::string> buffer,
-                             std::unique_ptr<IProtocol> &protocol);
-  void newPlayerCommandSend(std::vector<std::string> buffer,
-                            std::unique_ptr<IProtocol> &protocol);
-  void moveCommandSend(std::vector<std::string> buffer,
-                       std::unique_ptr<IProtocol> &protocol);
-  void shootCommandSend(std::vector<std::string> buffer,
-                        std::unique_ptr<IProtocol> &protocol);
-  void mapCommandSend(std::vector<std::string> buffer,
-                      std::unique_ptr<IProtocol> &protocol);
+  void connectCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
+  void disconnectCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
+  void newPlayerCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
+  void moveCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
+  void shootCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
+  void mapCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
 
   void connectCommandGame(Command *command);
   void disconnectCommandGame(Command *command);
@@ -63,8 +57,7 @@ private:
   std::map<uint8_t, std::function<void(std::vector<uint8_t>,
                                        std::unique_ptr<IProtocol> &)>>
       _commandsHandle;
-  std::map<std::string, std::function<void(std::vector<std::string>,
-                                           std::unique_ptr<IProtocol> &)>>
+  std::map<CommandType, std::function<void(Command *, std::unique_ptr<IProtocol> &)>>
       _commandsSend;
   std::map<CommandType, std::function<void(Command *)>> _commandsGame;
 
