@@ -31,9 +31,12 @@ bool menu(SDL_Renderer *renderer, TTF_Font *font, SDL_Window *window,
 
   std::string inputText = "127.0.0.1";
   std::string inputPort = "4243";
+  
 
   SDL_StartTextInput(window);
   float mouseX, mouseY;
+  SDL_Texture *backgroundTexture = IMG_LoadTexture(renderer, "../src/graphical/assets/menu.png");
+
 
   SDL_FRect ipButton = {100, 150, 400, 50};
   SDL_FRect portButton = {100, 250, 400, 50};
@@ -84,6 +87,7 @@ bool menu(SDL_Renderer *renderer, TTF_Font *font, SDL_Window *window,
 
     SDL_SetRenderDrawColor(renderer, black.r, black.g, black.b, black.a);
     SDL_RenderClear(renderer);
+    SDL_RenderTexture(renderer, backgroundTexture, NULL, NULL);
 
     render_text(renderer, font, "R-Type", 500, 50, white);
 

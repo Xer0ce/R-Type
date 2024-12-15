@@ -275,8 +275,19 @@ int main() {
     return 1;
   }
 
+  SDL_DisplayID displayID = SDL_GetPrimaryDisplay();
 
-  SDL_Window *window = SDL_CreateWindow("R-Michou", 1920, 1080, 0);
+  const SDL_DisplayMode *currentMode = SDL_GetCurrentDisplayMode(displayID);
+  if (!currentMode) {
+    printf("Erreur SDL_GetCurrentDisplayMode: %s\n", SDL_GetError());
+    SDL_Quit();
+    return 1;
+  }
+
+  int windowWidth = (int)(currentMode->w * 0.9);
+  int windowHeight = (int)(currentMode->h * 0.8);
+
+  SDL_Window *window = SDL_CreateWindow("R-Michou", windowWidth, windowHeight, 0);
   if (!window) {
     std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
     SDL_Quit();
@@ -284,14 +295,13 @@ int main() {
   }
 
   SDL_Renderer *renderer = SDL_CreateRenderer(window, nullptr);
+  SDL_Texture *backgroundTexture = IMG_LoadTexture(renderer, "../src/graphical/assets/level1.png");
   if (!renderer) {
     std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 1;
   }
-
-  SDL_Texture *backgroundTexture = IMG_LoadTexture(renderer, "../src/graphical/assets/level1.png");
 
   TTF_Font *font = TTF_OpenFont("../src/graphical/font/VT323.ttf", 48);
   if (!font) {
@@ -360,6 +370,7 @@ int main() {
       control_system(registry, udp);
       position_system(registry, deltaTime, udp);
       handleShoot(registry, renderer, 0, shootCooldown, deltaTime);
+
 
       handle_tcp_messages(tcp, registry, commandsHandle, renderer);
 
