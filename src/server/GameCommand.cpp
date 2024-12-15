@@ -20,6 +20,7 @@ void Server::connectCommandGame(Command *command) {
   newCommand->repConnect->id = player;
   newCommand->id = command->id;
   _queue->pushTcpQueue(newCommand);
+  _game.load_entity(_queue);
 }
 
 void Server::disconnectCommandGame(Command *command) {

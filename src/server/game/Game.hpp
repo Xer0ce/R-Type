@@ -23,7 +23,7 @@ public:
 
   // load functions
   void load_component();
-  void load_entity();
+  void load_entity(std::shared_ptr<Queue> &queue);
   void load_system();
 
   // systems
