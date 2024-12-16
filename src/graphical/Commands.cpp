@@ -90,3 +90,37 @@ void killEntity(std::string buffer, Registry &registry,
                 SDL_Renderer *renderer) {
   registry.kill_entity(Entities(buffer[1]));
 }
+
+void initCommandHandle(
+    std::map<uint8_t,
+             std::function<void(std::string, Registry &, SDL_Renderer *)>>
+        &commandsHandle) {
+  commandsHandle[0x01] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    connectCommand(buffer, registry, renderer);
+  };
+  commandsHandle[0x02] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    std::cout << "Disconnect command received" << std::endl;
+  };
+  commandsHandle[0x03] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    std::cout << "Move command received" << std::endl;
+  };
+  commandsHandle[0x04] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    std::cout << "Shoot command received" << std::endl;
+  };
+  commandsHandle[0x05] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    moveEntity(buffer, registry, renderer);
+  };
+  commandsHandle[0x06] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    createEntity(buffer, registry, renderer);
+  };
+  commandsHandle[0x07] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    killEntity(buffer, registry, renderer);
+  };
+}

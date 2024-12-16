@@ -33,3 +33,8 @@ void createEntity(std::string buffer, Registry &registry,
                   SDL_Renderer *renderer);
 
 void killEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer);
+
+void initCommandHandle(
+    std::map<uint8_t,
+             std::function<void(std::string, Registry &, SDL_Renderer *)>>
+        &commandsHandle);
