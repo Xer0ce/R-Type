@@ -51,3 +51,30 @@ void TcpClient::send_data(std::vector<uint8_t> &data) {
     throw std::runtime_error("Failed to send data");
   }
 }
+
+void TcpClient::handle_tcp_messages(
+    Registry &registry,
+    std::map<uint8_t,
+             std::function<void(std::string, Registry &, SDL_Renderer *)>>
+        commandsHandle,
+    SDL_Renderer *renderer) {
+  auto received_data = receive_data();
+  if (!received_data.empty()) {
+    try {
+      std::string received_message(received_data.begin(), received_data.end());
+      std::cout << "[TCP INFO] Received: " << received_message << std::endl;
+
+      if (received_data[0] == 0x06) {
+        std::cout << "CreateEntity command received" << std::endl;
+      }
+      if (commandsHandle.find(received_data[0]) != commandsHandle.end()) {
+        commandsHandle[received_data[0]](received_message, registry, renderer);
+      } else {
+        std::cout << "Code invalide !" << std::endl;
+      }
+    } catch (const std::exception &e) {
+      std::cerr << "[TCP ERROR] Failed to process packet: " << e.what()
+                << std::endl;
+    }
+  }
+}
