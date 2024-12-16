@@ -61,6 +61,9 @@ void Game::run() {
       }
     }
 
+    if (!running)
+      break;
+
     handleSystems(deltaTime);
     handleNetworkMessages();
     render();

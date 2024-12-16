@@ -15,7 +15,6 @@ int main() {
   }
 
   game.run();
-  game.cleanup();
 
   return 0;
 }
