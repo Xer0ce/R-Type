@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <cstdint>
-#include <string>
 #include <arpa/inet.h>
+#include <cstdint>
+#include <iostream>
+#include <string>
+#include <vector>
 
 std::vector<uint8_t> serialize_packt(const std::string &position,
                                      int packet_type, int playerId = -1);
