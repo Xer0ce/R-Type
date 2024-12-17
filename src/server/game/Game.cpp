@@ -91,6 +91,9 @@ void Game::position_system(float deltaTime, std::shared_ptr<Queue> &queue) {
     if (std::find(_players.begin(), _players.end(), i) != _players.end()) {
       continue;
     }
+    if (!positions[i].has_value()) {
+      continue;
+    }
     if (positions[i] && velocities[i]) {
       positions[i]->x += velocities[i]->x * deltaTime;
       positions[i]->y += velocities[i]->y * deltaTime;

@@ -41,6 +41,8 @@ void Server::killEnemyCommandGame(Command *command) {
         command->shoot->positionY < positions[i]->y + 50 &&
         command->shoot->positionX + 50 > positions[i]->y) {
       _game.get_ecs().kill_entity(Entities(i));
+      std::cout << "kill enemy : " << i << std::endl;
+      auto &positions2 = _game.get_ecs().get_components<Position>();
       Command *newCommand = new Command();
       newCommand->type = CommandType::KILLENEMY;
       newCommand->killEnemy = new killEnemy();
