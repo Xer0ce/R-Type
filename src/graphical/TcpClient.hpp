@@ -5,26 +5,37 @@
 ** TcpClient
 */
 
-#ifndef TCPCLIENT_HPP_
-#define TCPCLIENT_HPP_
+#pragma once
+
+#include "../ecs/Registry.hpp"
+#include "AProtocol.hpp"
+#include <SDL3/SDL.h>
 #include <arpa/inet.h>
 #include <cstring>
+#include <fcntl.h>
 #include <iostream>
+#include <map>
+#include <mutex>
+#include <sstream>
 #include <sys/socket.h>
 #include <thread>
 #include <unistd.h>
 #include <vector>
 
-class TcpClient {
-private:
-  int _sockfd;
-  sockaddr_in server_addr;
-
+class TcpClient : public AProtocol {
 public:
-  TcpClient(const std::string &ip, int port);
-  void send_data(std::vector<uint8_t> &data);
-  void receive_data(std::vector<uint8_t> &buffer);
-  ~TcpClient() { close(_sockfd); }
-};
+  TcpClient(std::string ip, std::size_t port);
+  void send_data(std::vector<uint8_t> &data) override;
+  std::vector<uint8_t> receive_data() override;
+  std::vector<uint8_t> &getBuffer();
+  void handle_tcp_messages(
+      Registry &registry,
+      std::map<uint8_t,
+               std::function<void(std::string, Registry &, SDL_Renderer *)>>
+          commandsHandle,
+      SDL_Renderer *renderer);
+  ~TcpClient() { close(_socket); }
 
-#endif /* !TCPCLIENT_HPP_ */
+private:
+  sockaddr_in server_addr;
+};

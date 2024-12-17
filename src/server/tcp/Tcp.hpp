@@ -2,19 +2,22 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** UDP
+** tcp
 */
 
 #pragma once
 
 #include "../AProtocol.hpp"
-#include <arpa/inet.h>
+#include <condition_variable>
+#include <mutex>
+#include <netinet/in.h>
+#include <string>
 #include <vector>
 
-class UDP : public AProtocol {
+class Tcp : public AProtocol {
 public:
-  UDP(std::size_t port = 4242, std::string ip = "0.0.0.0");
-  ~UDP();
+  Tcp(std::size_t port = 4243, std::string ip = "0.0.0.0");
+  ~Tcp();
 
   bool initializeSocket() override;
   bool bindSocket() override;
@@ -22,10 +25,14 @@ public:
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
   std::vector<uint8_t> &getBuffer() override;
-  bool isClientAddressPresent(const sockaddr_in &clientAddr);
 
 private:
-  sockaddr_in _clientAddr{};
-  socklen_t _clientAddrLen;
-  std::vector<sockaddr_in> _clientAddresses;
+  int _socket;
+  std::vector<int> _clientSockets;
+  sockaddr_in _addr;
+  struct timeval _timeout;
+
+  std::mutex _bufferMutex;
+  fd_set _readFds;
+  int _maxFd;
 };

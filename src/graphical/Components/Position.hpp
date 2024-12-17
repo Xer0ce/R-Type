@@ -9,8 +9,9 @@
 #define POSITION_HPP
 
 struct Position {
-    float x, y;
-    Position(int x = 0, int y = 0) : x(x), y(y) {}
+  float x, y;
+  float old_x, old_y;
+  Position(int x = 0, int y = 0) : x(x), y(y) {}
 };
 
-#endif //POSITION_HPP
+#endif // POSITION_HPP
