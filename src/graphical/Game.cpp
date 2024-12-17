@@ -21,15 +21,9 @@ bool Game::initialize() {
   if (!initMenu())
     return false;
 
-  int port = std::stoi(ipPort);
-  if (port < 0 || port > 65535) {
-    std::cerr << "Invalid port number" << std::endl;
-    return false;
-  }
-
   try {
-    tcpClient = new TcpClient(ipAddress, port);
-    udpClient = new UdpClient(ipAddress, 4242);
+    tcpClient = new TcpClient("127.0.0.1", 4243);
+    udpClient = new UdpClient("127.0.0.1", 4242);
 
     std::string player_name = "PRESIDENTMACRON";
     auto connect_packet = serialize_connect(player_name);
@@ -132,7 +126,28 @@ bool Game::initSDL() {
 }
 
 bool Game::initMenu() {
-  return menu(renderer, font, window, ipAddress, ipPort);
+  Menu menu(renderer);
+  int selectedOption = menu.run();
+
+  switch (selectedOption) {
+  case 0:
+    std::cout << "Selected: Heberger" << std::endl;
+    break;
+  case 1:
+    std::cout << "Selected: Rejoindre" << std::endl;
+    break;
+  case 2:
+    std::cout << "Selected: Parametres" << std::endl;
+    break;
+  case 3:
+    std::cout << "Selected: Quiter" << std::endl;
+    return false;
+  default:
+    std::cerr << "Invalid menu option selected." << std::endl;
+    return false;
+  }
+
+  return true;
 }
 
 void Game::registerComponents() {
