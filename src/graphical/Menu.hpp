@@ -30,7 +30,7 @@ private:
   bool running;
 
   SDL_Texture *loadTexture(const char *path);
-  void renderText(const std::string &text, int x, int y, bool isSelected);
+  void renderText(const std::string &text, float x, float y, bool isSelected);
 };
 
 #endif
