@@ -75,18 +75,21 @@ void Menu::renderMenuItems() {
   }
 }
 
-void Menu::renderText(const std::string &text, int x, int y, bool isSelected) {
+void Menu::renderText(const std::string &text, float x, float y,
+                      bool isSelected) {
   SDL_Color color = isSelected ? SDL_Color{255, 255, 255, 255}
                                : SDL_Color{200, 200, 200, 255};
   SDL_Surface *surface =
       TTF_RenderText_Solid(font, text.c_str(), text.length(), color);
   SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-  SDL_FRect destRect = {x, y, surface->w, surface->h};
+  SDL_FRect destRect = {x, y, static_cast<float>(surface->w),
+                        static_cast<float>(surface->h)};
 
   if (isSelected) {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_FRect rect = {x - 10, y - 5, surface->w + 20, surface->h + 10};
+    SDL_FRect rect = {x - 10, y - 5, static_cast<float>(surface->w + 20),
+                      static_cast<float>(surface->h + 10)};
     SDL_RenderRect(renderer, &rect);
   }
 
