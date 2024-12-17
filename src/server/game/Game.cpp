@@ -18,16 +18,16 @@ void Game::load_component() {
 
 void Game::load_entity(std::shared_ptr<Queue> &queue) {
   auto enemy = create_entity<EntityType::Player>(
-      _ecs, Position(400, 100), Velocity(0, -100), Health(),
+      _ecs, Position(800, 100), Velocity(0, -100), Health(),
       Draw({0, 255, 0, 255}, {150, 150, 150, 150}));
   auto enemy2 = create_entity<EntityType::Player>(
-      _ecs, Position(200, 100), Velocity(0, -100), Health(),
+      _ecs, Position(700, 100), Velocity(0, -100), Health(),
       Draw({0, 255, 0, 255}, {150, 150, 150, 150}));
   auto enemy3 = create_entity<EntityType::Player>(
-      _ecs, Position(500, 100), Velocity(0, -100), Health(),
+      _ecs, Position(600, 100), Velocity(0, -100), Health(),
       Draw({0, 255, 0, 255}, {150, 150, 150, 150}));
   auto enemy4 = create_entity<EntityType::Player>(
-      _ecs, Position(400, 400), Velocity(0, -100), Health(),
+      _ecs, Position(500, 400), Velocity(0, -100), Health(),
       Draw({0, 255, 0, 255}, {150, 150, 150, 150}));
   _enemy.push_back(enemy);
   _enemy.push_back(enemy2);
