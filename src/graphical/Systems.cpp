@@ -105,6 +105,9 @@ void collision_system(Registry &registry, TcpClient &tcp) {
   }
 
   for (std::size_t i = 0; i < bullets.size(); ++i) {
+    if (positions[bullets[i]]->x > 1000) {
+      registry.kill_entity(Entities(bullets[i]));
+    }
     for (std::size_t j = 0; j < enemies.size(); ++j) {
       if (positions[bullets[i]]->x < positions[enemies[j]]->x + 50 &&
           positions[bullets[i]]->x + 50 > positions[enemies[j]]->x &&
