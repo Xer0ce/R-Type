@@ -117,11 +117,11 @@ public:
    *
    * @param index Index of the element to access.
    * @return Reference to the optional component at the given index.
-   * @return std::nullopt If the index is out of bounds.
+   * @throws std::out_of_range If the index is out of bounds.
    */
   reference_type operator[](std::size_t index) {
     if (index >= _data.size()) {
-      return std::nullopt;
+      throw std::out_of_range("SparseArray::operator[]");
     }
     return _data[index];
   };
@@ -131,11 +131,11 @@ public:
    *
    * @param index Index of the element to access.
    * @return Constant reference to the optional component at the given index.
-   * @return std::nullopt If the index is out of bounds.
+   * @throws std::out_of_range If the index is out of bounds.
    */
   const_reference_type operator[](std::size_t index) const {
     if (index >= _data.size()) {
-      return std::nullopt;
+      throw std::out_of_range("SparseArray::operator[]");
     }
     return _data[index];
   };
