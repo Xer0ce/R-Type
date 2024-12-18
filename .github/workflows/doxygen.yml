@@ -3,10 +3,11 @@ name: Deploy Documentation
 on:
   push:
     branches:
-      - main
+    - dev
 
 permissions:
   contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -15,8 +16,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Setup Rust for mdBook
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+    - name: Install mdBook
+      run: cargo install mdbook
+
+    - name: Build mdBook
+      working-directory: docs/mdbook
+      run: mdbook build
+
     - name: Install Doxygen
-      run: sudo apt-get install doxygen graphviz -y
+      run: sudo apt-get update && sudo apt-get install doxygen graphviz -y
 
     - name: Build Doxygen
       run: doxygen Doxyfile
