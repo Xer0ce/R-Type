@@ -60,13 +60,24 @@ void Menu::render() {
 }
 
 void Menu::renderMenuItems() {
-  int startY = 250;
-  int spacing = 60;
+  float startY = 250;
+  float spacing = 60;
+  int rectPadding = 10;
 
   for (size_t i = 0; i < menuOptions.size(); ++i) {
     SDL_Color color = (i == selectedIndex) ? SDL_Color{255, 255, 255, 255}
                                            : SDL_Color{200, 200, 200, 255};
     renderText(menuOptions[i], 100, startY + static_cast<int>(i) * spacing,
                color);
+
+    if (i == selectedIndex) {
+      SDL_FRect selectionRect = {90, startY + (i)*spacing - rectPadding / 2,
+                                 300, 50};
+      renderShape(selectionRect, {255, 255, 255, 255}, false);
+    }
+    renderLine(
+        90, 200, 400, 200,
+        {255, 255, 255, 255}); // c'est la ligne qui sépare le titre du menu
+                               // après c'est juste un exemple pour le coup
   }
 }

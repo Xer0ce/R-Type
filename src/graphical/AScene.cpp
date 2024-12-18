@@ -51,3 +51,19 @@ void AScene::render() {
   if (backgroundTexture)
     SDL_RenderTexture(renderer, backgroundTexture, nullptr, nullptr);
 }
+
+void AScene::renderShape(const SDL_FRect &rect, SDL_Color color, bool filled) {
+  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+  if (filled) {
+    SDL_RenderFillRect(renderer, &rect);
+  } else {
+    SDL_RenderRect(renderer, &rect);
+  }
+}
+
+void AScene::renderLine(float x1, float y1, float x2, float y2,
+                        SDL_Color color) {
+  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+  SDL_RenderLine(renderer, (x1), (y1), (x2), (y2));
+}

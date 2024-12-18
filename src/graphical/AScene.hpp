@@ -30,4 +30,6 @@ protected:
 
   SDL_Texture *loadTexture(const char *path);
   void renderText(const std::string &text, float x, float y, SDL_Color color);
+  void renderShape(const SDL_FRect &rect, SDL_Color color, bool filled);
+  void renderLine(float x1, float y1, float x2, float y2, SDL_Color color);
 };
