@@ -23,25 +23,34 @@ Menu::~Menu() {
     TTF_CloseFont(font);
 }
 
+int Menu::handleInput(SDL_Event &event) {
+  if (event.type == SDL_EVENT_QUIT) {
+    running = false;
+    return -1;
+  }
+  if (event.type == SDL_EVENT_KEY_DOWN) {
+    if (event.key.key == SDLK_DOWN) {
+      selectedIndex = (selectedIndex + 1) % menuOptions.size();
+    } else if (event.key.key == SDLK_UP) {
+      selectedIndex =
+          (selectedIndex - 1 + menuOptions.size()) % menuOptions.size();
+    } else if (event.key.key == SDLK_RETURN) {
+      running = false;
+      return selectedIndex;
+    }
+  }
+  return -1;
+}
+
 int Menu::run() {
   SDL_Event event;
+  int result = -1;
 
   while (running) {
     while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_EVENT_QUIT) {
-        running = false;
-        return -1;
-      }
-      if (event.type == SDL_EVENT_KEY_DOWN) {
-        if (event.key.key == SDLK_DOWN) {
-          selectedIndex = (selectedIndex + 1) % menuOptions.size();
-        } else if (event.key.key == SDLK_UP) {
-          selectedIndex =
-              (selectedIndex - 1 + menuOptions.size()) % menuOptions.size();
-        } else if (event.key.key == SDLK_RETURN) {
-          running = false;
-          return selectedIndex;
-        }
+      result = handleInput(event);
+      if (result != -1) {
+        return result;
       }
     }
     render();

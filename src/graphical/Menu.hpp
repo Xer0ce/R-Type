@@ -16,7 +16,7 @@ public:
   void render();
 
 private:
-  void handleInput();
+  int handleInput(SDL_Event &event);
   void renderTitle();
   void renderMenuItems();
 
