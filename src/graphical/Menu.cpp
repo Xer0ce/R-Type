@@ -75,9 +75,9 @@ void Menu::renderMenuItems() {
                                  300, 50};
       renderShape(selectionRect, {255, 255, 255, 255}, false);
     }
-    renderLine(
-        90, 200, 400, 200,
-        {255, 255, 255, 255}); // c'est la ligne qui sépare le titre du menu
-                               // après c'est juste un exemple pour le coup
+    renderLine(90, 200, 400, 200,
+               {255, 255, 255, 255}); // c'est la ligne qui sépare le titre du
+                                      // menu après c'est juste un exemple pour
+                                      // le coup donc on pourra la delete apès
   }
 }
