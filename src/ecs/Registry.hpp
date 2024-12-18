@@ -60,6 +60,9 @@ public:
       _removal_functions[typeid(Component)] = [this](entity_t const &e) {
         remove_component<Component>(e);
       };
+      _resize_functions[typeid(Component)] = [this](entity_t const &e) {
+        resize_component<Component>(e);
+      };
       return std::any_cast<SparseArray<Component> &>(
           _components_arrays[std::type_index(typeid(Component))]);
     } else {
@@ -119,6 +122,9 @@ public:
   typename SparseArray<Component>::reference_type
   add_component(entity_t const &to, Component &&c) {
     SparseArray<Component> &a_component = get_components<Component>();
+    for (auto &elem : _resize_functions) {
+      elem.second(to);
+    }
     return a_component.insert_at(to, std::forward<Component>(c));
   };
 
@@ -135,6 +141,9 @@ public:
   typename SparseArray<Component>::reference_type
   emplace_component(entity_t const &to, Params &&...p) {
     SparseArray<Component> &a_component = get_components<Component>();
+    for (auto &elem : _resize_functions) {
+      elem.second(to);
+    }
     return a_component.emplace_at(to, std::forward<Params>(p)...);
     ;
   };
@@ -148,6 +157,17 @@ public:
   template <typename Component> void remove_component(entity_t const &from) {
     auto &components = get_components<Component>();
     components.erase(from);
+  };
+
+  /**
+   * @brief Resize a component from an entity size.
+   *
+   * @tparam Component The type of the component to resize.
+   * @param from The entity from which the component will be resize.
+   */
+  template <typename Component> void resize_component(entity_t const &to) {
+    auto &components = get_components<Component>();
+    components.resize(to);
   };
   ///@}
 
@@ -252,6 +272,14 @@ private:
   std::unordered_map<std::type_index, std::function<void(entity_t const &e)>>
       _removal_functions;
 
+  /**
+   * @brief Map of component types to their resize functions.
+   *
+   * These functions handle the resize of a specific component type from an
+   * entity size.
+   */
+  std::unordered_map<std::type_index, std::function<void(entity_t const &e)>>
+      _resize_functions;
   /**
    * @brief List of all active entities.
    */
