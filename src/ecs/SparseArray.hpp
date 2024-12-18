@@ -244,9 +244,9 @@ public:
     return static_cast<size_type>(-1);
   };
 
-/**
- * @brief Resizes the internal storage of the sparse array.
- */
+  /**
+   * @brief Resizes the internal storage of the sparse array.
+   */
   void resize(size_type pos) {
     if (pos >= _data.size()) {
       _data.resize(pos + 1);
