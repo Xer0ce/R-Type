@@ -1,18 +1,36 @@
-/*
-** EPITECH PROJECT, 2024
-** R-Type
-** File description:
-** menu
-*/
+#ifndef MENU_HPP
+#define MENU_HPP
 
-#ifndef MENU_HPP_
-#define MENU_HPP_
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
-#include <iostream>
+#include <string>
+#include <vector>
 
-bool menu(SDL_Renderer *renderer, TTF_Font *font, SDL_Window *window,
-          std::string &ipAddress, std::string &port);
+class Menu {
+public:
+  Menu(SDL_Renderer *renderer);
+  ~Menu();
 
-#endif /* !MENU_HPP_ */
+  int run();
+  void render();
+
+private:
+  void handleInput();
+  void renderTitle();
+  void renderMenuItems();
+
+  SDL_Renderer *renderer;
+  SDL_Texture *backgroundTexture;
+  TTF_Font *font;
+
+  int selectedIndex;
+  std::vector<std::string> menuOptions;
+
+  bool running;
+
+  SDL_Texture *loadTexture(const char *path);
+  void renderText(const std::string &text, float x, float y, bool isSelected);
+};
+
+#endif

@@ -1,119 +1,108 @@
 #include "Menu.hpp"
+#include <iostream>
 
-void render_text(SDL_Renderer *renderer, TTF_Font *font,
-                 const std::string &text, float x, float y, SDL_Color color) {
-  SDL_Surface *surface =
-      TTF_RenderText_Blended(font, text.c_str(), text.length(), color);
-  if (!surface) {
-    std::cerr << "Text rendering failed: " << SDL_GetError() << std::endl;
-    return;
+Menu::Menu(SDL_Renderer *renderer)
+    : renderer(renderer), selectedIndex(0), running(true) {
+  backgroundTexture = loadTexture("../src/graphical/assets/menu.png");
+  if (!backgroundTexture) {
+    std::cerr << "Failed to load background texture\n";
   }
-  SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-  SDL_FRect dstRect = {x, y, static_cast<float>(surface->w),
-                       static_cast<float>(surface->h)};
-  SDL_RenderTexture(renderer, texture, nullptr, &dstRect);
-  SDL_DestroySurface(surface);
-  SDL_DestroyTexture(texture);
+
+  font = TTF_OpenFont("../src/graphical/font/VT323.ttf", 48);
+  if (!font) {
+    std::cerr << "Failed to load font: " << SDL_GetError() << "\n";
+  }
+
+  menuOptions = {"Heberger", "Rejoindre", "Parametres", "Quiter"};
 }
 
-bool is_mouse_over(int x, int y, int w, int h, int mouseX, int mouseY) {
-  return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
+Menu::~Menu() {
+  if (backgroundTexture)
+    SDL_DestroyTexture(backgroundTexture);
+  if (font)
+    TTF_CloseFont(font);
 }
 
-bool menu(SDL_Renderer *renderer, TTF_Font *font, SDL_Window *window,
-          std::string &ipAddress, std::string &port) {
-  bool inMenu = true;
+int Menu::run() {
   SDL_Event event;
-  SDL_Color white = {255, 255, 255, 255};
-  SDL_Color green = {0, 255, 0, 255};
-  SDL_Color black = {0, 0, 0, 255};
-  SDL_Color blue = {0, 0, 255, 255};
 
-  std::string inputText = "127.0.0.1";
-  std::string inputPort = "4243";
-
-  SDL_StartTextInput(window);
-  float mouseX, mouseY;
-  SDL_Texture *backgroundTexture =
-      IMG_LoadTexture(renderer, "../src/graphical/assets/menu.png");
-
-  SDL_FRect ipButton = {100, 150, 400, 50};
-  SDL_FRect portButton = {100, 250, 400, 50};
-  SDL_FRect connectButton = {100, 350, 200, 50};
-
-  while (inMenu) {
-    SDL_GetMouseState(&mouseX, &mouseY);
-
+  while (running) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_EVENT_QUIT) {
-        return false;
+        running = false;
+        return -1;
       }
-
-      if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-        if (is_mouse_over(ipButton.x, ipButton.y, ipButton.w, ipButton.h,
-                          mouseX, mouseY)) {
-        } else if (is_mouse_over(portButton.x, portButton.y, portButton.w,
-                                 portButton.h, mouseX, mouseY)) {
-        } else if (is_mouse_over(connectButton.x, connectButton.y,
-                                 connectButton.w, connectButton.h, mouseX,
-                                 mouseY)) {
-          ipAddress = inputText;
-          port = inputPort;
-          inMenu = false;
-        }
-      } else if (event.type == SDL_EVENT_TEXT_INPUT) {
-        if (is_mouse_over(ipButton.x, ipButton.y, ipButton.w, ipButton.h,
-                          mouseX, mouseY)) {
-          inputText += event.text.text;
-        } else if (is_mouse_over(portButton.x, portButton.y, portButton.w,
-                                 portButton.h, mouseX, mouseY)) {
-          inputPort += event.text.text;
-        }
-      } else if (event.type == SDL_EVENT_KEY_DOWN) {
-        if (event.key.key == SDLK_BACKSPACE) {
-          if (is_mouse_over(ipButton.x, ipButton.y, ipButton.w, ipButton.h,
-                            mouseX, mouseY) &&
-              !inputText.empty()) {
-            inputText.pop_back();
-          } else if (is_mouse_over(portButton.x, portButton.y, portButton.w,
-                                   portButton.h, mouseX, mouseY) &&
-                     !inputPort.empty()) {
-            inputPort.pop_back();
-          }
+      if (event.type == SDL_EVENT_KEY_DOWN) {
+        if (event.key.key == SDLK_DOWN) {
+          selectedIndex = (selectedIndex + 1) % menuOptions.size();
+        } else if (event.key.key == SDLK_UP) {
+          selectedIndex =
+              (selectedIndex - 1 + menuOptions.size()) % menuOptions.size();
+        } else if (event.key.key == SDLK_RETURN) {
+          running = false;
+          return selectedIndex;
         }
       }
     }
+    render();
+  }
+  return selectedIndex;
+}
 
-    SDL_SetRenderDrawColor(renderer, black.r, black.g, black.b, black.a);
-    SDL_RenderClear(renderer);
-    SDL_RenderTexture(renderer, backgroundTexture, NULL, NULL);
+void Menu::render() {
+  SDL_RenderClear(renderer);
 
-    render_text(renderer, font, "R-Type", 500, 50, white);
+  SDL_RenderTexture(renderer, backgroundTexture, nullptr, nullptr);
 
-    SDL_SetRenderDrawColor(renderer, white.r, white.g, white.b, white.a);
-    SDL_RenderFillRect(renderer, &ipButton);
-    render_text(renderer, font, "Server IP: " + inputText, ipButton.x + 10,
-                ipButton.y + 10, black);
+  renderTitle();
+  renderMenuItems();
 
-    SDL_SetRenderDrawColor(renderer, white.r, white.g, white.b, white.a);
-    SDL_RenderFillRect(renderer, &portButton);
-    render_text(renderer, font, "Port: " + inputPort, portButton.x + 10,
-                portButton.y + 10, black);
+  SDL_RenderPresent(renderer);
+}
 
-    SDL_SetRenderDrawColor(renderer,
-                           is_mouse_over(connectButton.x, connectButton.y,
-                                         connectButton.w, connectButton.h,
-                                         mouseX, mouseY)
-                               ? green.r
-                               : blue.r,
-                           green.g, green.b, green.a);
-    SDL_RenderFillRect(renderer, &connectButton);
-    render_text(renderer, font, "Connect", connectButton.x + 30,
-                connectButton.y + 10, white);
+void Menu::renderTitle() {
+  renderText("Saint-Vérgeron", 100, 50, false);
+  renderText("The Revenge", 120, 120, false);
+}
 
-    SDL_RenderPresent(renderer);
+void Menu::renderMenuItems() {
+  int startY = 250;
+  int spacing = 60;
+
+  for (size_t i = 0; i < menuOptions.size(); ++i) {
+    renderText(menuOptions[i], 100, startY + static_cast<int>(i) * spacing,
+               i == selectedIndex);
+  }
+}
+
+void Menu::renderText(const std::string &text, float x, float y,
+                      bool isSelected) {
+  SDL_Color color = isSelected ? SDL_Color{255, 255, 255, 255}
+                               : SDL_Color{200, 200, 200, 255};
+  SDL_Surface *surface =
+      TTF_RenderText_Solid(font, text.c_str(), text.length(), color);
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+  SDL_FRect destRect = {x, y, static_cast<float>(surface->w),
+                        static_cast<float>(surface->h)};
+
+  if (isSelected) {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_FRect rect = {x - 10, y - 5, static_cast<float>(surface->w + 20),
+                      static_cast<float>(surface->h + 10)};
+    SDL_RenderRect(renderer, &rect);
   }
 
-  SDL_StopTextInput(window);
-  return true;
+  SDL_RenderTexture(renderer, texture, nullptr, &destRect);
+
+  SDL_DestroyTexture(texture);
+  SDL_DestroySurface(surface);
+}
+
+SDL_Texture *Menu::loadTexture(const char *path) {
+  SDL_Texture *texture = IMG_LoadTexture(renderer, path);
+  if (!texture) {
+    std::cerr << "Failed to load texture: " << SDL_GetError() << "\n";
+  }
+  return texture;
 }
