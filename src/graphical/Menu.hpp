@@ -7,34 +7,22 @@
 
 #pragma once
 
-#include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
-#include <SDL3_ttf/SDL_ttf.h>
+#include "AScene.hpp"
 #include <string>
 #include <vector>
 
-class Menu {
+class Menu : public AScene {
 public:
   Menu(SDL_Renderer *renderer);
-  ~Menu();
+  ~Menu() override = default;
 
-  int run();
-  void render();
+  int run() override;
+  void render() override;
 
 private:
   int handleInput(SDL_Event &event);
-  void renderTitle();
   void renderMenuItems();
-
-  SDL_Renderer *renderer;
-  SDL_Texture *backgroundTexture;
-  TTF_Font *font;
 
   int selectedIndex;
   std::vector<std::string> menuOptions;
-
-  bool running;
-
-  SDL_Texture *loadTexture(const char *path);
-  void renderText(const std::string &text, float x, float y, bool isSelected);
 };
