@@ -24,12 +24,13 @@ Entities create_projectile_entity(Registry &r);
 
 template <EntityType T, typename... Args>
 Entities create_entity(Registry &r, Args &&...args) {
-  switch (T) {
-  case EntityType::Player:
+  if constexpr (T == EntityType::Player) {
     return create_player_entity(r, std::forward<Args>(args)...);
-  case EntityType::Enemy:
+  }
+  if constexpr (T == EntityType::Enemy) {
     return create_enemy_entity(r);
-  case EntityType::Projectile:
+  }
+  if constexpr (T == EntityType::Projectile) {
     return create_projectile_entity(r);
   }
 }

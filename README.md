@@ -17,3 +17,9 @@
     in the same folder `make`
 - ### step 4
     you'l have 3 binaries !
+
+
+## Documentation
+
+https://m0ugou-club.github.io/R-Type/mdbook/book/index.html
+https://m0ugou-club.github.io/R-Type/doxygen/html/
