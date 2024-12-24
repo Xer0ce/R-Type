@@ -19,7 +19,7 @@ public:
   virtual ~AScene();
 
   void render() override;
-  virtual int run() = 0;
+  virtual int run() override;
 
 protected:
   SDL_Renderer *renderer;

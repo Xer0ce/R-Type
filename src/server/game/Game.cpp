@@ -148,3 +148,12 @@ Entities Game::create_player() {
   _players.push_back(player);
   return player;
 };
+
+bool Game::initialize() {
+  // Implémentation de la méthode initialize
+  return true;
+}
+
+void Game::run() {
+  // Implémentation de la méthode run
+}

@@ -67,3 +67,7 @@ void AScene::renderLine(float x1, float y1, float x2, float y2,
   SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
   SDL_RenderLine(renderer, (x1), (y1), (x2), (y2));
 }
+
+int AScene::run() {
+  return 0;
+}

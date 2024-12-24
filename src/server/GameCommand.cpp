@@ -32,8 +32,6 @@ void Server::moveCommandGame(Command *command) {
 }
 
 void Server::killEnemyCommandGame(Command *command) {
-  auto lock = _game.lock_ecs();
-
   auto &ecs = _game.get_ecs();
   auto &positions = ecs.get_components<Position>();
   auto &velocities = ecs.get_components<Velocity>();

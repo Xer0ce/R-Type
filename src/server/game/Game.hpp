@@ -20,6 +20,8 @@ public:
   // main fonction
   void load();
   void loop(float deltaTime, std::shared_ptr<Queue> &queue);
+  bool initialize();
+  void run();
 
   // load functions
   void load_component();
