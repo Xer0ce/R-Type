@@ -70,7 +70,7 @@ private:
   std::map<CommandType,
            std::function<void(Command *, std::unique_ptr<IProtocol> &)>>
       _commandsSend;
-  std::map<CommandType, std::function<void(Command *)>> _commandsGame; 
+  std::map<CommandType, std::function<void(Command *)>> _commandsGame;
 
   std::shared_ptr<Queue> _queue;
 };

@@ -10,7 +10,8 @@
 #include <thread>
 
 Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
-               std::string udpIp, Game &game) : _game(game) {
+               std::string udpIp, Game &game)
+    : _game(game) {
   _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
   _udp = std::make_unique<UDP>(udpPort, udpIp);
   _queue = std::make_shared<Queue>();
@@ -52,9 +53,9 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   }
 }
 
-void Server::world_update() { 
+void Server::world_update() {
   _game.lock_ecs();
-  _game.loop(0.1, _queue); 
+  _game.loop(0.1, _queue);
 };
 
 void Server::game_loop() {

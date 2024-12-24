@@ -144,7 +144,8 @@ bool Tcp::sendData(const std::string &data, int id) {
   std::string modifiedData = data + "\r\n";
   if (id == -10) {
     for (int clientSocket : _clientSockets) {
-      if (send(clientSocket, modifiedData.c_str(), modifiedData.size(), 0) < 0) {
+      if (send(clientSocket, modifiedData.c_str(), modifiedData.size(), 0) <
+          0) {
         perror("Failed to send data");
         return false;
       }

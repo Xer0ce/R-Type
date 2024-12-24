@@ -13,7 +13,7 @@ Entities create_player_entity(Registry &r, Position position, Velocity velocity,
 }
 
 Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
-                              Health health, Draw draw) {
+                             Health health, Draw draw) {
   auto entity = r.spawn_entity();
   r.add_component<Position>(entity, std::move(position));
   r.add_component<Velocity>(entity, std::move(velocity));

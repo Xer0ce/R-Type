@@ -90,7 +90,8 @@ void UdpClient::handle_udp_messages(
       buffer.erase(0, pos + 2);
 
       if (commandsHandle.find(received_message[0]) != commandsHandle.end()) {
-        commandsHandle[received_message[0]](received_message, registry, renderer);
+        commandsHandle[received_message[0]](received_message, registry,
+                                            renderer);
       } else {
         std::cout << "Code invalide !" << std::endl;
       }

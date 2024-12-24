@@ -32,37 +32,37 @@ void Server::moveCommandGame(Command *command) {
 }
 
 void Server::killEnemyCommandGame(Command *command) {
-    auto lock = _game.lock_ecs();
+  auto lock = _game.lock_ecs();
 
-    auto &ecs = _game.get_ecs();
-    auto &positions = ecs.get_components<Position>();
-    auto &velocities = ecs.get_components<Velocity>();
-    auto &entityType = ecs.get_components<EntityType>();
+  auto &ecs = _game.get_ecs();
+  auto &positions = ecs.get_components<Position>();
+  auto &velocities = ecs.get_components<Velocity>();
+  auto &entityType = ecs.get_components<EntityType>();
 
-    for (std::size_t i = 0; i < entityType.size(); ++i) {
-      if (entityType[i].has_value() && positions[i].has_value()) {
-        if (entityType[i] && entityType[i] == EntityType::Enemy) {
-            if (command->shoot->positionX < positions[i]->x + 50 &&
-                command->shoot->positionX + 50 > positions[i]->x &&
-                command->shoot->positionY < positions[i]->y + 50 &&
-                command->shoot->positionX + 50 > positions[i]->y) {
+  for (std::size_t i = 0; i < entityType.size(); ++i) {
+    if (entityType[i].has_value() && positions[i].has_value()) {
+      if (entityType[i] && entityType[i] == EntityType::Enemy) {
+        if (command->shoot->positionX < positions[i]->x + 50 &&
+            command->shoot->positionX + 50 > positions[i]->x &&
+            command->shoot->positionY < positions[i]->y + 50 &&
+            command->shoot->positionX + 50 > positions[i]->y) {
 
-                ecs.kill_entity(Entities(i));
+          ecs.kill_entity(Entities(i));
 
-                if (!positions[i].has_value()) {
-                    std::cout << "Position supprimée : " << i << std::endl;
-                }
+          if (!positions[i].has_value()) {
+            std::cout << "Position supprimée : " << i << std::endl;
+          }
 
-                Command *newCommand = new Command();
-                newCommand->type = CommandType::KILLENEMY;
-                newCommand->killEnemy = new killEnemy();
-                newCommand->killEnemy->enemyId = i;
-                newCommand->id = -10;
-                _queue->pushTcpQueue(newCommand);
-            }
+          Command *newCommand = new Command();
+          newCommand->type = CommandType::KILLENEMY;
+          newCommand->killEnemy = new killEnemy();
+          newCommand->killEnemy->enemyId = i;
+          newCommand->id = -10;
+          _queue->pushTcpQueue(newCommand);
         }
       }
     }
+  }
 }
 
 void Server::initCommandMapGame() {
