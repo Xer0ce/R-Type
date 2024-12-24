@@ -15,7 +15,8 @@
 #include <vector>
 
 int main() {
-  Server server(4243, "0.0.0.0", 4242, "0.0.0.0");
+  Game game;
+  Server server(4243, "0.0.0.0", 4242, "0.0.0.0", game);
   server.start();
   return 0;
 }

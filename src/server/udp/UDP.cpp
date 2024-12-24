@@ -65,9 +65,10 @@ bool UDP::bindSocket() {
 }
 
 bool UDP::sendData(const std::string &data, int id) {
+  std::string modifiedData = data + "\r\n";
   if (id == -10) {
     for (const auto &addr : _clientAddresses) {
-      if (sendto(_socket, data.c_str(), data.size(), 0, (sockaddr *)&addr,
+      if (sendto(_socket, modifiedData.c_str(), modifiedData.size(), 0, (sockaddr *)&addr,
                  sizeof(addr)) < 0) {
         throw std::runtime_error("Failed to send data.");
         return false;
@@ -75,7 +76,7 @@ bool UDP::sendData(const std::string &data, int id) {
     }
     return true;
   }
-  if (sendto(_socket, data.c_str(), data.size(), 0, (sockaddr *)&_clientAddr,
+  if (sendto(_socket, modifiedData.c_str(), modifiedData.size(), 0, (sockaddr *)&_clientAddr,
              _clientAddrLen) < 0) {
     throw std::runtime_error("Failed to send data.");
     return false;

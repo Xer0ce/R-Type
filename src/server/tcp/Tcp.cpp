@@ -141,19 +141,17 @@ bool Tcp::listenSocket(int backlog) {
 }
 
 bool Tcp::sendData(const std::string &data, int id) {
+  std::string modifiedData = data + "\r\n";
   if (id == -10) {
     for (int clientSocket : _clientSockets) {
-      std::cout << "Sending data to client " << clientSocket << ": " << data
-                << std::endl;
-      if (send(clientSocket, data.c_str(), data.size(), 0) < 0) {
+      if (send(clientSocket, modifiedData.c_str(), modifiedData.size(), 0) < 0) {
         perror("Failed to send data");
         return false;
       }
     }
     return true;
   }
-  std::cout << "Sending data to client " << id << ": " << data << std::endl;
-  if (send(id, data.c_str(), data.size(), 0) < 0) {
+  if (send(id, modifiedData.c_str(), modifiedData.size(), 0) < 0) {
     perror("Failed to send data");
     return false;
   }
