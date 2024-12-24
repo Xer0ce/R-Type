@@ -52,9 +52,7 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   }
 }
 
-void Server::world_update() {
-  _game.loop(0.1, _queue);
-};
+void Server::world_update() { _game.loop(0.1, _queue); };
 
 void Server::game_loop() {
   _game.load();
