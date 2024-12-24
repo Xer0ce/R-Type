@@ -58,23 +58,20 @@ void TcpClient::handle_tcp_messages(
              std::function<void(std::string, Registry &, SDL_Renderer *)>>
         commandsHandle,
     SDL_Renderer *renderer) {
+  static std::string buffer;
   auto received_data = receive_data();
   if (!received_data.empty()) {
-    try {
-      std::string received_message(received_data.begin(), received_data.end());
-      std::cout << "[TCP INFO] Received: " << received_message << std::endl;
+    buffer.append(received_data.begin(), received_data.end());
+    size_t pos = 0;
+    while ((pos = buffer.find("\r\n")) != std::string::npos) {
+      std::string received_message = buffer.substr(0, pos);
+      buffer.erase(0, pos + 2);
 
-      if (received_data[0] == 0x06) {
-        std::cout << "CreateEntity command received" << std::endl;
-      }
-      if (commandsHandle.find(received_data[0]) != commandsHandle.end()) {
-        commandsHandle[received_data[0]](received_message, registry, renderer);
+      if (commandsHandle.find(received_message[0]) != commandsHandle.end()) {
+        commandsHandle[received_message[0]](received_message, registry, renderer);
       } else {
         std::cout << "Code invalide !" << std::endl;
       }
-    } catch (const std::exception &e) {
-      std::cerr << "[TCP ERROR] Failed to process packet: " << e.what()
-                << std::endl;
     }
   }
 }

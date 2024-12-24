@@ -54,6 +54,8 @@ void moveEntity(std::string buffer, Registry &registry,
     return;
   }
 
+  std::cout << "Moving entity with id: " << id << std::endl;
+
   std::vector<std::string> bufferString;
   bufferString =
       my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
@@ -88,7 +90,10 @@ void createEntity(std::string buffer, Registry &registry,
 
 void killEntity(std::string buffer, Registry &registry,
                 SDL_Renderer *renderer) {
-  registry.kill_entity(Entities(buffer[1]));
+  // Convert the string representation of the ID to an integer
+  int id = std::stoi(buffer.substr(1));
+  std::cout << "Killing entity with id: " << id << std::endl;
+  registry.kill_entity(Entities(id));
 }
 
 void initCommandHandle(
