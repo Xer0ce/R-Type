@@ -26,6 +26,8 @@ public:
   void load_entity(std::shared_ptr<Queue> &queue);
   void load_system();
 
+  std::unique_lock<std::mutex> lock_ecs();
+
   // systems
   void enemy_system(std::shared_ptr<Queue> &queue);
   void position_system(float deltaTime, std::shared_ptr<Queue> &queue);
@@ -43,6 +45,7 @@ private:
   std::vector<Entities> _players;
   std::vector<Entities> _enemy;
   Registry _ecs;
+  std::mutex ecsMutex;
 };
 
 #endif // GAME_HPP
