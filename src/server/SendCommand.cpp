@@ -128,8 +128,13 @@ void Server::killEnemyCommandSend(Command *command,
   binaryData.push_back(0x07);
 
   uint32_t enemyId = command->killEnemy->enemyId;
-  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&enemyId),
-                    reinterpret_cast<uint8_t *>(&enemyId) + sizeof(enemyId));
+  std::cout << "Killing enemy with id: " << enemyId << std::endl;
+
+  std::string enemyIdStr = std::to_string(enemyId);
+
+  for (auto &c : enemyIdStr) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
 
   protocol->sendData(std::string(binaryData.begin(), binaryData.end()),
                      command->id);
