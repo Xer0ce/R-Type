@@ -10,7 +10,7 @@
 #include <thread>
 
 Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
-               std::string udpIp) {
+               std::string udpIp, Game &game) : _game(game) {
   _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
   _udp = std::make_unique<UDP>(udpPort, udpIp);
   _queue = std::make_shared<Queue>();
@@ -49,11 +49,13 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
         std::cout << "Code invalide ! [Send]" << std::endl;
       }
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(15));
   }
 }
 
-void Server::world_update() { _game.loop(0.1, _queue); };
+void Server::world_update() { 
+  _game.lock_ecs();
+  _game.loop(0.1, _queue); 
+};
 
 void Server::game_loop() {
   _game.load();
@@ -69,7 +71,6 @@ void Server::game_loop() {
       std::cout << "Code invalide ! [Game]" << std::endl;
     }
     delete command;
-    std::this_thread::sleep_for(std::chrono::milliseconds(15));
   }
 }
 
