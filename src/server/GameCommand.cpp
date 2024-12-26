@@ -12,15 +12,15 @@
 void Server::connectCommandGame(Command *command) {
   Command *newCommand = new Command();
   auto player = create_entity<EntityType::Player>(
-      _game.get_ecs(), Position(400, 100), Velocity(), Health(),
+      _game->get_ecs(), Position(400, 100), Velocity(), Health(),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
-  _game.addPlayerToVector(player);
+  _game->addPlayerToVector(player);
   newCommand->type = CommandType::REPCONNECT;
   newCommand->repConnect = new repConnect();
   newCommand->repConnect->id = player;
   newCommand->id = command->id;
   _queue->pushTcpQueue(newCommand);
-  _game.load_entity(_queue);
+  _game->load_entity(_queue);
 }
 
 void Server::disconnectCommandGame(Command *command) {
@@ -32,7 +32,7 @@ void Server::moveCommandGame(Command *command) {
 }
 
 void Server::killEnemyCommandGame(Command *command) {
-  auto &ecs = _game.get_ecs();
+  auto &ecs = _game->get_ecs();
   auto &positions = ecs.get_components<Position>();
   auto &velocities = ecs.get_components<Velocity>();
   auto &entityType = ecs.get_components<EntityType>();

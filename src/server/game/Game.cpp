@@ -8,6 +8,12 @@
 #include "Game.hpp"
 #include <memory>
 
+Game::Game() {
+}
+
+Game::~Game() {
+}
+
 void Game::load_component() {
   _ecs.register_component<Position>();
   _ecs.register_component<Velocity>();
@@ -74,13 +80,7 @@ void Game::load() {
   return;
 };
 
-std::unique_lock<std::mutex> Game::lock_ecs() {
-  return std::unique_lock<std::mutex>(ecsMutex);
-};
-
 void Game::loop(float deltaTime, std::shared_ptr<Queue> &queue) {
-  std::lock_guard<std::mutex> lock(ecsMutex);
-
   enemy_system(queue);
   position_system(deltaTime, queue);
   return;

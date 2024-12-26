@@ -18,6 +18,8 @@
 class Game {
 public:
   // main fonction
+  Game();
+  ~Game();
   void load();
   void loop(float deltaTime, std::shared_ptr<Queue> &queue);
   bool initialize();
@@ -27,8 +29,6 @@ public:
   void load_component();
   void load_entity(std::shared_ptr<Queue> &queue);
   void load_system();
-
-  std::unique_lock<std::mutex> lock_ecs();
 
   // systems
   void enemy_system(std::shared_ptr<Queue> &queue);
@@ -47,7 +47,6 @@ private:
   std::vector<Entities> _players;
   std::vector<Entities> _enemy;
   Registry _ecs;
-  std::mutex ecsMutex;
 };
 
 #endif // GAME_HPP

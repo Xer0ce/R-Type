@@ -63,7 +63,7 @@ public:
 private:
   std::unique_ptr<IProtocol> _tcp;
   std::unique_ptr<IProtocol> _udp;
-  Game _game;
+  std::shared_ptr<Game> _game;
   std::map<uint8_t, std::function<void(std::vector<uint8_t>,
                                        std::unique_ptr<IProtocol> &)>>
       _commandsHandle;
