@@ -135,7 +135,7 @@ void Server::killEnemyCommandSend(Command command,
   for (auto &c : enemyIdStr) {
     binaryData.push_back(static_cast<uint8_t>(c));
   }
-
+  
   protocol->sendData(std::string(binaryData.begin(), binaryData.end()),
                      command.id);
 }

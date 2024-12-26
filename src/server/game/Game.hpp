@@ -47,6 +47,7 @@ private:
   std::vector<Entities> _players;
   std::vector<Entities> _enemy;
   Registry _ecs;
+  std::mutex _mutex;
 };
 
 #endif // GAME_HPP

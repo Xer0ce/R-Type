@@ -22,6 +22,8 @@ void Game::load_component() {
 };
 
 void Game::load_entity(std::shared_ptr<Queue> &queue) {
+  std::lock_guard<std::mutex> lock(_mutex);
+
   auto enemy = create_entity<EntityType::Enemy>(
       _ecs, Position(800, 100), Velocity(0, -100), Health(),
       Draw({0, 255, 0, 255}, {150, 150, 150, 150}));
@@ -81,6 +83,7 @@ void Game::loop(float deltaTime, std::shared_ptr<Queue> &queue) {
 };
 
 void Game::position_system(float deltaTime, std::shared_ptr<Queue> &queue) {
+  std::lock_guard<std::mutex> lock(_mutex);
   auto &entityType = _ecs.get_components<EntityType>();
   auto &positions = _ecs.get_components<Position>();
   auto &health = _ecs.get_components<Health>();
@@ -88,8 +91,6 @@ void Game::position_system(float deltaTime, std::shared_ptr<Queue> &queue) {
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (!entityType[i].has_value()) {
-      std::cout << "[position system] Entity " << i << " not found !"
-                << std::endl;
       continue;
     }
     if (entityType[i].has_value() && entityType[i] == EntityType::Enemy) {
@@ -109,6 +110,7 @@ void Game::position_system(float deltaTime, std::shared_ptr<Queue> &queue) {
 }
 
 void Game::enemy_system(std::shared_ptr<Queue> &queue) {
+  std::lock_guard<std::mutex> lock(_mutex);
   auto &entityType = _ecs.get_components<EntityType>();
   auto &positions = _ecs.get_components<Position>();
   auto &health = _ecs.get_components<Health>();
@@ -116,7 +118,6 @@ void Game::enemy_system(std::shared_ptr<Queue> &queue) {
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (!entityType[i].has_value()) {
-      std::cout << "[enemy system] Entity " << i << " not found !" << std::endl;
       continue;
     }
     if (entityType[i].has_value() && entityType[i] == EntityType::Enemy) {
@@ -135,6 +136,7 @@ void Game::enemy_system(std::shared_ptr<Queue> &queue) {
 }
 
 Entities Game::create_player() {
+  std::lock_guard<std::mutex> lock(_mutex);
   auto player = create_entity<EntityType::Player>(
       _ecs, Position(100, 100), Velocity(), Health(),
       Draw({0, 255, 0, 255}, {150, 150, 150, 150}));
