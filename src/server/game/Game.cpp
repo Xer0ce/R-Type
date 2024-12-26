@@ -8,11 +8,9 @@
 #include "Game.hpp"
 #include <memory>
 
-Game::Game() {
-}
+Game::Game() {}
 
-Game::~Game() {
-}
+Game::~Game() {}
 
 void Game::load_component() {
   _ecs.register_component<Position>();
