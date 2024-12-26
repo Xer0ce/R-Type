@@ -60,7 +60,7 @@ parseConnectCommand(const std::vector<uint8_t> &buffer) {
 
 void Server::connectCommandHandle(std::vector<uint8_t> buffer,
                                   std::unique_ptr<IProtocol> &protocol) {
-  Command *cmd = new Command();
+  Command cmd;
 
   if (buffer.size() < 5) {
     handleWrongCommand("Connect", protocol);
@@ -73,12 +73,12 @@ void Server::connectCommandHandle(std::vector<uint8_t> buffer,
 
   int clientSocketId = static_cast<int>(buffer.back());
 
-  cmd->type = CommandType::CONNECT;
-  cmd->connect = new Connect();
-  cmd->connect->Nickname = playerName;
-  cmd->id = clientSocketId;
+  cmd.type = CommandType::CONNECT;
+  cmd.connect;
+  cmd.connect.Nickname = playerName;
+  cmd.id = clientSocketId;
 
-  std::cout << "Player Name : " << cmd->connect->Nickname << std::endl;
+  std::cout << "Player Name : " << cmd.connect.Nickname << std::endl;
 
   _queue->pushGameQueue(cmd);
 }
@@ -90,44 +90,23 @@ void Server::disconnectCommandHandle(std::vector<uint8_t> buffer,
 
 void Server::moveCommandHandle(std::vector<uint8_t> buffer,
                                std::unique_ptr<IProtocol> &protocol) {
-  // std::string response;
-  // Command *cmd = new Command();
 
-  // response = "Move OK";
-  // if (buffer.size() == 2) {
-  //   cmd->type = CommandType::MOVE;
-  //   cmd->move = new Move();
-  //   cmd->move->playerId = 1;
-  //   // cmd->move->positionX = std::stof(buffer[0]);
-  //   // cmd->move->positionY = std::stof(buffer[1]);
-  //   // cmd->id = id;
-  // } else {
-  //   handleWrongCommand("Move", protocol);
-  //   return;
-  // }
-
-  // std::cout << "Player ID : " << cmd->move->playerId << std::endl;
-  // std::cout << "Player PosX : " << cmd->move->positionX << std::endl;
-  // std::cout << "Player PosY : " << cmd->move->positionY << std::endl;
-
-  // _queue->pushGameQueue(cmd);
 }
 
 void Server::shootCommandHandle(std::vector<uint8_t> buffer,
                                 std::unique_ptr<IProtocol> &protocol) {
 
-  Command *cmd = new Command();
+  Command cmd;
 
   std::cout << "commmmmmmmmmmande recu shoot" << std::endl;
 
   std::vector<std::string> bufferString =
       my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
 
-  cmd->type = CommandType::SHOOT;
-  cmd->shoot = new Shoot();
-  cmd->shoot->playerId = (int)buffer[1];
-  cmd->shoot->positionX = std::stof(bufferString[0]);
-  cmd->shoot->positionY = std::stof(bufferString[1]);
+  cmd.type = CommandType::SHOOT;
+  cmd.shoot.playerId = (int)buffer[1];
+  cmd.shoot.positionX = std::stof(bufferString[0]);
+  cmd.shoot.positionY = std::stof(bufferString[1]);
   std::cout << "envoye" << std::endl;
   _queue->pushGameQueue(cmd);
 }

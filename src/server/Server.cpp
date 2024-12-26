@@ -24,21 +24,19 @@ Server::~Server() {}
 
 void Server::listen(std::unique_ptr<IProtocol> &protocol) {
   while (true) {
-    Command *command = nullptr;
+    Command command;
     if (protocol->getType() == "TCP") {
       command = _queue->popTcpQueue();
     } else if (protocol->getType() == "UDP") {
       command = _queue->popUdpQueue();
     }
-    if (command != nullptr) {
-      if (_commandsSend.find(command->type) != _commandsSend.end()) {
-        _commandsSend[command->type](command, protocol);
+    if (command.type != EMPTY) {
+      if (_commandsSend.find(command.type) != _commandsSend.end()) {
+        _commandsSend[command.type](command, protocol);
       } else {
         std::cout << "Code invalide ! [Send]" << std::endl;
       }
-      delete command;
     }
-
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
@@ -59,16 +57,15 @@ void Server::game_loop() {
   _game->load();
   while (true) {
     world_update();
-    Command *command = _queue->popGameQueue();
-    if (!command) {
+    Command command = _queue->popGameQueue();
+    if (command.type == EMPTY) {
       continue;
     }
-    if (_commandsGame.find(command->type) != _commandsGame.end()) {
-      _commandsGame[command->type](command);
+    if (_commandsGame.find(command.type) != _commandsGame.end()) {
+      _commandsGame[command.type](command);
     } else {
       std::cout << "Code invalide ! [Game]" << std::endl;
     }
-    delete command;
   }
 }
 

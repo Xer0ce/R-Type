@@ -36,26 +36,26 @@ public:
   void shootCommandHandle(std::vector<uint8_t> buffer,
                           std::unique_ptr<IProtocol> &protocol);
 
-  void connectCommandSend(Command *command,
+  void connectCommandSend(Command command,
                           std::unique_ptr<IProtocol> &protocol);
-  void disconnectCommandSend(Command *command,
+  void disconnectCommandSend(Command command,
                              std::unique_ptr<IProtocol> &protocol);
-  void newPlayerCommandSend(Command *command,
+  void newPlayerCommandSend(Command command,
                             std::unique_ptr<IProtocol> &protocol);
-  void moveCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
-  void shootCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
-  void mapCommandSend(Command *command, std::unique_ptr<IProtocol> &protocol);
-  void enemyMoveCommandSend(Command *command,
+  void moveCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
+  void shootCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
+  void mapCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
+  void enemyMoveCommandSend(Command command,
                             std::unique_ptr<IProtocol> &protocol);
-  void createEnemyCommandSend(Command *command,
+  void createEnemyCommandSend(Command command,
                               std::unique_ptr<IProtocol> &protocol);
-  void killEnemyCommandSend(Command *command,
+  void killEnemyCommandSend(Command command,
                             std::unique_ptr<IProtocol> &protocol);
 
-  void connectCommandGame(Command *command);
-  void disconnectCommandGame(Command *command);
-  void moveCommandGame(Command *command);
-  void killEnemyCommandGame(Command *command);
+  void connectCommandGame(Command command);
+  void disconnectCommandGame(Command command);
+  void moveCommandGame(Command command);
+  void killEnemyCommandGame(Command command);
 
   void game_loop();
   void world_update();
@@ -68,9 +68,9 @@ private:
                                        std::unique_ptr<IProtocol> &)>>
       _commandsHandle;
   std::map<CommandType,
-           std::function<void(Command *, std::unique_ptr<IProtocol> &)>>
+           std::function<void(Command, std::unique_ptr<IProtocol> &)>>
       _commandsSend;
-  std::map<CommandType, std::function<void(Command *)>> _commandsGame;
+  std::map<CommandType, std::function<void(Command)>> _commandsGame;
 
   std::shared_ptr<Queue> _queue;
 };
