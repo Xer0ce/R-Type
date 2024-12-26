@@ -89,9 +89,7 @@ void Server::disconnectCommandHandle(std::vector<uint8_t> buffer,
 }
 
 void Server::moveCommandHandle(std::vector<uint8_t> buffer,
-                               std::unique_ptr<IProtocol> &protocol) {
-
-}
+                               std::unique_ptr<IProtocol> &protocol) {}
 
 void Server::shootCommandHandle(std::vector<uint8_t> buffer,
                                 std::unique_ptr<IProtocol> &protocol) {
