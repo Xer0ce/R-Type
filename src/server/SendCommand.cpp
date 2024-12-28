@@ -15,12 +15,16 @@ void Server::connectCommandSend(Command command,
   binaryData.push_back(0x01);
 
   uint32_t id = command.repConnect.id;
+
   binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&id),
                     reinterpret_cast<uint8_t *>(&id) + sizeof(id));
 
-  std::string response(binaryData.begin(), binaryData.end());
+  std::string endOfMessage = "\r\n";
+  for (auto &c : endOfMessage) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
 
-  protocol->sendData(response, command.id);
+  protocol->sendData(command.id, binaryData);
 }
 
 void Server::disconnectCommandSend(Command command,
@@ -86,14 +90,13 @@ void Server::enemyMoveCommandSend(Command command,
   std::string positionX = std::to_string(command.enemyMove.positionX);
   std::string positionY = std::to_string(command.enemyMove.positionY);
 
-  std::string response = positionX + " " + positionY;
+  std::string response = positionX + " " + positionY + "\r\n";
 
   for (auto &c : response) {
     binaryData.push_back(static_cast<uint8_t>(c));
   }
 
-  protocol->sendData(std::string(binaryData.begin(), binaryData.end()),
-                     command.id);
+  protocol->sendData(command.id, binaryData);
 }
 
 void Server::createEnemyCommandSend(Command command,
@@ -109,16 +112,16 @@ void Server::createEnemyCommandSend(Command command,
   std::string positionX = std::to_string(command.createEnemy.positionX);
   std::string positionY = std::to_string(command.createEnemy.positionY);
 
-  std::string response = positionX + " " + positionY;
+  std::string response = positionX + " " + positionY + "\r\n";
 
   for (auto &c : response) {
     binaryData.push_back(static_cast<uint8_t>(c));
   }
 
+
   std::cout << "Sending create enemy command" << std::endl;
 
-  protocol->sendData(std::string(binaryData.begin(), binaryData.end()),
-                     command.id);
+  protocol->sendData(command.id, binaryData);
 }
 
 void Server::killEnemyCommandSend(Command command,
@@ -130,14 +133,13 @@ void Server::killEnemyCommandSend(Command command,
   uint32_t enemyId = command.killEnemy.enemyId;
   std::cout << "Killing enemy with id: " << enemyId << std::endl;
 
-  std::string enemyIdStr = std::to_string(enemyId);
+  std::string enemyIdStr = std::to_string(enemyId) + "\r\n";
 
   for (auto &c : enemyIdStr) {
     binaryData.push_back(static_cast<uint8_t>(c));
   }
 
-  protocol->sendData(std::string(binaryData.begin(), binaryData.end()),
-                     command.id);
+  protocol->sendData(command.id, binaryData);
 }
 
 void Server::initCommandMapSend() {

@@ -42,7 +42,12 @@ std::vector<uint8_t> TcpClient::receive_data() {
     }
   }
   buffer.resize(bytes);
+  if (buffer[0] == 0x01) {
+    std::cout << "Received connect:  " << std::string(buffer.begin(), buffer.end())
+              << std::endl;
+  }
   std::string received_message(buffer.begin(), buffer.end());
+  
   return buffer;
 }
 
@@ -64,6 +69,10 @@ void TcpClient::handle_tcp_messages(
     buffer.append(received_data.begin(), received_data.end());
     size_t pos = 0;
     while ((pos = buffer.find("\r\n")) != std::string::npos) {
+      if (buffer[0] == 0x01) {
+        std::cout << "Received connect dans la fonc:  " << std::string(received_data.begin(), received_data.end())
+                  << std::endl;
+      }
       std::string received_message = buffer.substr(0, pos);
       buffer.erase(0, pos + 2);
 

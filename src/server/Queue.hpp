@@ -18,6 +18,7 @@ public:
 
   void pushUdpQueue(Command command);
   Command popUdpQueue();
+  void popUdpQueueEnemy(int id);
 
   void pushTcpQueue(Command command);
   Command popTcpQueue();
