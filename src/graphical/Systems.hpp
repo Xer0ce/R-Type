@@ -7,6 +7,7 @@
 
 #pragma once
 #include "../ecs/Registry.hpp"
+#include "../ecs/EntitiesGestion.hpp"
 #include "Components/Control.hpp"
 #include "Components/Draw.hpp"
 #include "Components/Health.hpp"
@@ -30,5 +31,5 @@ void draw_system(Registry &registry, SDL_Renderer *renderer);
 
 void collision_system(Registry &registry, TcpClient &tcp);
 
-void handleShoot(Registry &registry, SDL_Renderer *renderer, int entity,
+void handleShoot(Registry &registry, SDL_Renderer *renderer,
                  float &shootCooldown, float deltaTime);

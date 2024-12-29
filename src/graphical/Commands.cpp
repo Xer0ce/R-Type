@@ -5,7 +5,7 @@
 ** Commands
 */
 
-#include "Commands.hpp"
+#include "Game.hpp"
 
 void cleanString(std::string &str) {
   str.erase(std::remove_if(str.begin(), str.end(),
@@ -31,21 +31,28 @@ std::vector<std::string> my_strToWordArray(const std::string &str,
   return resultVec;
 }
 
-void connectCommand(std::string buffer, Registry &registry,
+void Game::connectCommand(std::string buffer, Registry &registry,
                     SDL_Renderer *renderer) {
   SDL_Texture *playerTexture =
       IMG_LoadTexture(renderer, "../src/graphical/assets/michou.png");
 
-  auto entity = registry.spawn_entity();
-  registry.add_component<Position>(entity, Position(100, 150));
-  registry.add_component<Velocity>(entity, Velocity());
-  registry.add_component<Health>(entity, Health());
-  registry.add_component<Draw>(
-      entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
-  registry.add_component<Control>(entity, Control());
+  int id = buffer[1];
+
+  std::vector<std::string> bufferString;
+  bufferString =
+      my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
+
+  float x = std::stof(bufferString[0]);
+  float y = std::stof(bufferString[1]);
+
+  std::cout << "Creating player with id: " << id << std::endl;
+  auto player = create_entity<EntityType::Player>(
+      registry, Position(x, y), Velocity(), Health(1),
+      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture), std::optional<Control>(Control()), std::optional<std::size_t>(id));
+  std::cout << "tu ad cree  player with id: " << id << std::endl;
 }
 
-void moveEntity(std::string buffer, Registry &registry,
+void Game::movePlayer(std::string buffer, Registry &registry,
                 SDL_Renderer *renderer) {
   int id = buffer[1];
 
@@ -53,8 +60,6 @@ void moveEntity(std::string buffer, Registry &registry,
     std::cerr << "Invalid entity ID: " << id << std::endl;
     return;
   }
-
-  std::cout << "Moving entity with id: " << id << std::endl;
 
   std::vector<std::string> bufferString;
   bufferString =
@@ -67,7 +72,27 @@ void moveEntity(std::string buffer, Registry &registry,
   registry.get_components<Position>()[id]->y = y;
 }
 
-void createEntity(std::string buffer, Registry &registry,
+void Game::moveEntity(std::string buffer, Registry &registry,
+                SDL_Renderer *renderer) {
+  int id = buffer[1];
+
+  if (id < 0 || id >= registry.get_components<Position>().size()) {
+    std::cerr << "Invalid entity ID: " << id << std::endl;
+    return;
+  }
+
+  std::vector<std::string> bufferString;
+  bufferString =
+      my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
+
+  float x = std::stof(bufferString[0]);
+  float y = std::stof(bufferString[1]);
+
+  registry.get_components<Position>()[id]->x = x;
+  registry.get_components<Position>()[id]->y = y;
+}
+
+void Game::createEnemy(std::string buffer, Registry &registry,
                   SDL_Renderer *renderer) {
   SDL_Texture *playerTexture =
       IMG_LoadTexture(renderer, "../src/graphical/assets/enemy.png");
@@ -80,15 +105,13 @@ void createEntity(std::string buffer, Registry &registry,
   float x = std::stof(bufferString[0]);
   float y = std::stof(bufferString[1]);
 
-  auto entity = registry.spawn_entity();
-  registry.add_component<Position>(entity, Position(x, y));
-  registry.add_component<Velocity>(entity, Velocity());
-  registry.add_component<Health>(entity, Health(1));
-  registry.add_component<Draw>(
-      entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
+
+  auto enemy = create_entity<EntityType::Enemy>(
+      registry, Position(x, y), Velocity(0, -50), Health(1),
+      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture), std::optional<std::size_t>(id));
 }
 
-void killEntity(std::string buffer, Registry &registry,
+void Game::killEntity(std::string buffer, Registry &registry,
                 SDL_Renderer *renderer) {
   // Convert the string representation of the ID to an integer
   int id = std::stoi(buffer.substr(1));
@@ -96,51 +119,58 @@ void killEntity(std::string buffer, Registry &registry,
   registry.kill_entity(Entities(id));
 }
 
-void newPlayer(std::string buffer, Registry &registry, SDL_Renderer *renderer) {
+void Game::newPlayer(std::string buffer, Registry &registry, SDL_Renderer *renderer) {
   SDL_Texture *playerTexture =
       IMG_LoadTexture(renderer, "../src/graphical/assets/michou.png");
 
-  auto entity = registry.spawn_entity();
-  registry.add_component<Position>(entity, Position(100, 150));
-  registry.add_component<Velocity>(entity, Velocity());
-  registry.add_component<Health>(entity, Health());
-  registry.add_component<Draw>(
-      entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
+  int id = buffer[1];
+
+  std::vector<std::string> bufferString;
+  bufferString =
+      my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
+
+  std::cout << "New player create" << std::endl;
+  float x = std::stof(bufferString[0]);
+  float y = std::stof(bufferString[1]);
+
+  auto player = create_entity<EntityType::Player>(
+      registry, Position(x, y), Velocity(), Health(1),
+      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture), std::nullopt, std::optional<std::size_t>(id));
 }
 
-void initCommandHandle(
+void Game::initCommandHandle(
     std::map<uint8_t,
              std::function<void(std::string, Registry &, SDL_Renderer *)>>
         &commandsHandle) {
-  commandsHandle[0x01] = [](std::string buffer, Registry &registry,
+  commandsHandle[0x01] = [this](std::string buffer, Registry &registry,
                             SDL_Renderer *renderer) {
     connectCommand(buffer, registry, renderer);
   };
-  commandsHandle[0x02] = [](std::string buffer, Registry &registry,
+  commandsHandle[0x02] = [this](std::string buffer, Registry &registry,
                             SDL_Renderer *renderer) {
     std::cout << "Disconnect command received" << std::endl;
   };
-  commandsHandle[0x03] = [](std::string buffer, Registry &registry,
+  commandsHandle[0x03] = [this](std::string buffer, Registry &registry,
                             SDL_Renderer *renderer) {
-    std::cout << "Move command received" << std::endl;
+    movePlayer(buffer, registry, renderer);
   };
-  commandsHandle[0x04] = [](std::string buffer, Registry &registry,
+  commandsHandle[0x04] = [this](std::string buffer, Registry &registry,
                             SDL_Renderer *renderer) {
     std::cout << "Shoot command received" << std::endl;
   };
-  commandsHandle[0x05] = [](std::string buffer, Registry &registry,
+  commandsHandle[0x05] = [this](std::string buffer, Registry &registry,
                             SDL_Renderer *renderer) {
     moveEntity(buffer, registry, renderer);
   };
-  commandsHandle[0x06] = [](std::string buffer, Registry &registry,
+  commandsHandle[0x06] = [this](std::string buffer, Registry &registry,
                             SDL_Renderer *renderer) {
-    createEntity(buffer, registry, renderer);
+    createEnemy(buffer, registry, renderer);
   };
-  commandsHandle[0x07] = [](std::string buffer, Registry &registry,
+  commandsHandle[0x07] = [this](std::string buffer, Registry &registry,
                             SDL_Renderer *renderer) {
     killEntity(buffer, registry, renderer);
   };
-  commandsHandle[0x08] = [](std::string buffer, Registry &registry,
+  commandsHandle[0x08] = [this](std::string buffer, Registry &registry,
                             SDL_Renderer *renderer) {
     newPlayer(buffer, registry, renderer);
   };

@@ -20,6 +20,7 @@
 #include <map>
 #include <sstream>
 #include <vector>
+#include "../ecs/EntitiesGestion.hpp"
 
 std::vector<std::string> my_strToWordArray(const std::string &str,
                                            char delimiter);
@@ -29,7 +30,7 @@ void connectCommand(std::string buffer, Registry &registry,
 
 void moveEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer);
 
-void createEntity(std::string buffer, Registry &registry,
+void createEnemy(std::string buffer, Registry &registry,
                   SDL_Renderer *renderer);
 
 void killEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer);

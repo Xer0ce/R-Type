@@ -154,14 +154,15 @@ void Game::registerComponents() {
   registry.register_component<Position>();
   registry.register_component<Velocity>();
   registry.register_component<Draw>();
-  registry.register_component<Control>();
   registry.register_component<Health>();
+  registry.register_component<Control>();
+  registry.register_component<EntityType>();
 }
 
 void Game::handleSystems(float deltaTime) {
   control_system(registry, *udpClient);
   position_system(registry, deltaTime, *udpClient);
-  handleShoot(registry, renderer, 0, shootCooldown, deltaTime);
+  handleShoot(registry, renderer, shootCooldown, deltaTime);
   collision_system(registry, *tcpClient);
 }
 

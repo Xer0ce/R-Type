@@ -69,10 +69,8 @@ void TcpClient::handle_tcp_messages(
     buffer.append(received_data.begin(), received_data.end());
     size_t pos = 0;
     while ((pos = buffer.find("\r\n")) != std::string::npos) {
-      if (buffer[0] == 0x01) {
-        std::cout << "Received connect dans la fonc:  "
-                  << std::string(received_data.begin(), received_data.end())
-                  << std::endl;
+      if (buffer[0] == 0x07) {
+        std::cout << "Killing enemy with id: " << buffer[1] << std::endl;
       }
       std::string received_message = buffer.substr(0, pos);
       buffer.erase(0, pos + 2);
