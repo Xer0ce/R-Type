@@ -15,7 +15,8 @@ add_subdirectory(external/SDL3_image)
 
 if(BUILD_CLIENT)
     file(GLOB SOURCES_CLIENT "src/graphical/*.cpp")
-    add_executable(r-type_client ${SOURCES_CLIENT})
+    file(GLOB SOURCES_ECS "src/ecs/*.cpp")
+    add_executable(r-type_client ${SOURCES_CLIENT} ${SOURCES_ECS})
     target_include_directories(r-type_client PRIVATE include/graphical)
 
     target_link_libraries(r-type_client PRIVATE SDL3::SDL3)
