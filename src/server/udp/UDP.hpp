@@ -8,8 +8,8 @@
 #pragma once
 
 #include "../AProtocol.hpp"
-#include <string>
 #include <arpa/inet.h>
+#include <string>
 #include <vector>
 
 class UDP : public AProtocol {

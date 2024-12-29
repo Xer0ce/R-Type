@@ -91,28 +91,28 @@ void Game::position_system(float deltaTime, std::shared_ptr<Queue> &queue) {
   auto &positions = _ecs.get_components<Position>();
   auto &velocities = _ecs.get_components<Velocity>();
 
-    if (timer >= 1.0f) {
-        timer = 0;
-        for (std::size_t i = 0; i < entityType.size(); ++i) {
-            if (!entityType[i].has_value()) {
-                continue;
-            }
-            if (entityType[i] == EntityType::Enemy) {
-                if (positions[i].has_value() && velocities[i].has_value()) {
-                    positions[i]->x += velocities[i]->x * deltaTime;
-                    positions[i]->y += velocities[i]->y * deltaTime;
-                    Command command;
-                    command.type = CommandType::ENEMYMOVE;
-                    command.id = -10;
-                    command.enemyMove.positionX = positions[i]->x;
-                    command.enemyMove.positionY = positions[i]->y;
-                    command.enemyMove.enemyId = i;
-                    queue->pushUdpQueue(command);
-                    queue->popUdpQueueEnemy(i);
-                }
-            }
+  if (timer >= 1.0f) {
+    timer = 0;
+    for (std::size_t i = 0; i < entityType.size(); ++i) {
+      if (!entityType[i].has_value()) {
+        continue;
+      }
+      if (entityType[i] == EntityType::Enemy) {
+        if (positions[i].has_value() && velocities[i].has_value()) {
+          positions[i]->x += velocities[i]->x * deltaTime;
+          positions[i]->y += velocities[i]->y * deltaTime;
+          Command command;
+          command.type = CommandType::ENEMYMOVE;
+          command.id = -10;
+          command.enemyMove.positionX = positions[i]->x;
+          command.enemyMove.positionY = positions[i]->y;
+          command.enemyMove.enemyId = i;
+          queue->pushUdpQueue(command);
+          queue->popUdpQueueEnemy(i);
         }
+      }
     }
+  }
 }
 
 void Game::enemy_system(std::shared_ptr<Queue> &queue) {

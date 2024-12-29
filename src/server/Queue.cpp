@@ -34,31 +34,32 @@ void Queue::popUdpQueueEnemy(int id) {
   std::lock_guard<std::mutex> lock(_udpMutex);
   std::queue<Command> tempQueue;
 
-  // Parcourt la file pour conserver uniquement les commandes non liées à l'ID ennemi donné
+  // Parcourt la file pour conserver uniquement les commandes non liées à l'ID
+  // ennemi donné
   while (!_udpQueue.empty()) {
     Command command = _udpQueue.front();
     _udpQueue.pop();
 
     bool shouldKeep = true;
     switch (command.type) {
-      case ENEMYMOVE:
-        if (command.enemyMove.enemyId == id) {
-          shouldKeep = false;
-        }
-        break;
-      case CREATEENEMY:
-        if (command.createEnemy.enemyId == id) {
-          shouldKeep = false;
-        }
-        break;
-      case KILLENEMY:
-        if (command.killEnemy.enemyId == id) {
-          shouldKeep = false;
-        }
-        break;
-      default:
-        // Garder toutes les autres commandes
-        break;
+    case ENEMYMOVE:
+      if (command.enemyMove.enemyId == id) {
+        shouldKeep = false;
+      }
+      break;
+    case CREATEENEMY:
+      if (command.createEnemy.enemyId == id) {
+        shouldKeep = false;
+      }
+      break;
+    case KILLENEMY:
+      if (command.killEnemy.enemyId == id) {
+        shouldKeep = false;
+      }
+      break;
+    default:
+      // Garder toutes les autres commandes
+      break;
     }
 
     if (shouldKeep) {
@@ -69,7 +70,6 @@ void Queue::popUdpQueueEnemy(int id) {
   // Remplace la queue originale par la nouvelle
   _udpQueue = std::move(tempQueue);
 }
-
 
 void Queue::pushTcpQueue(Command command) {
   std::lock_guard<std::mutex> lock(_tcpMutex);

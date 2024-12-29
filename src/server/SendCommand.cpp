@@ -109,7 +109,6 @@ void Server::createEnemyCommandSend(Command command,
     binaryData.push_back(static_cast<uint8_t>(c));
   }
 
-
   std::cout << "Sending create enemy command" << std::endl;
 
   protocol->sendData(command.id, binaryData);
