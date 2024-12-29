@@ -66,7 +66,6 @@ void Server::connectCommandGame(Command command) {
       }
     }
   }
-
 }
 
 void Server::disconnectCommandGame(Command command) {

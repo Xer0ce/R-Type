@@ -174,7 +174,8 @@ void Server::newPlayerCommandSend(Command command,
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 
-void Server::createPlayerCommandSend(Command command, std::unique_ptr<IProtocol> &protocol) {
+void Server::createPlayerCommandSend(Command command,
+                                     std::unique_ptr<IProtocol> &protocol) {
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x08);
