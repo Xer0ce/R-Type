@@ -59,7 +59,7 @@ void Game::position_system(float deltaTime, std::shared_ptr<Queue> &queue) {
   auto &positions = _ecs.get_components<Position>();
   auto &velocities = _ecs.get_components<Velocity>();
 
-  if (timer >= 0.5f) {
+  if (timer >= 0.05f) {
     for (std::size_t i = 0; i < entityType.size(); ++i) {
       if (!entityType[i].has_value()) {
         continue;
@@ -98,9 +98,9 @@ void Game::enemy_system(std::shared_ptr<Queue> &queue) {
     if (entityType[i].has_value() && entityType[i] == EntityType::Enemy) {
       if (positions[i].has_value() && velocities[i].has_value()) {
         if (positions[i]->y < 0) {
-          velocities[i]->y = 5;
+          velocities[i]->y = 10;
         } else if (positions[i]->y > 500) {
-          velocities[i]->y = -5;
+          velocities[i]->y = -10;
         }
         if (health[i]->hp <= 0) {
           _ecs.kill_entity(Entities(i));
