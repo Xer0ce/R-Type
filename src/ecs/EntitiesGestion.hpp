@@ -16,15 +16,19 @@ enum class EntityType {
 };
 
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
-                              Health health, Draw draw);
+                              Health health, Draw draw, 
+                              std::optional<Control> control = std::nullopt, 
+                              std::optional<std::size_t> id = std::nullopt);
 
 Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
-                             Health health, Draw draw);
+                             Health health, Draw draw, std::optional<std::size_t> id = std::nullopt);
 
-Entities create_projectile_entity(Registry &r);
+Entities create_projectile_entity(Registry &r, Position position, Velocity velocity, Draw draw, std::optional<std::size_t> id = std::nullopt);
 
 template <EntityType T, typename... Args>
 Entities create_entity(Registry &r, Args &&...args) {
+  std::cout << "[ecs] je passe dans les if " << std::endl;
+
   if constexpr (T == EntityType::Player) {
     return create_player_entity(r, std::forward<Args>(args)...);
   }
@@ -32,7 +36,7 @@ Entities create_entity(Registry &r, Args &&...args) {
     return create_enemy_entity(r, std::forward<Args>(args)...);
   }
   if constexpr (T == EntityType::Projectile) {
-    return create_projectile_entity(r);
+    return create_projectile_entity(r, std::forward<Args>(args)...);
   }
 }
 
