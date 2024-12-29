@@ -56,18 +56,18 @@ void Game::load_entity(std::shared_ptr<Queue> &queue) {
   Command command3;
   command3.type = CommandType::CREATEENEMY;
   command3.id = -10;
-  command3.createEnemy.positionX =
-  _ecs.get_components<Position>()[enemy3]->x; command3.createEnemy.positionY
-  = _ecs.get_components<Position>()[enemy3]->y; command3.createEnemy.enemyId
-  = enemy3; queue->pushTcpQueue(command3);
+  command3.createEnemy.positionX = _ecs.get_components<Position>()[enemy3]->x;
+  command3.createEnemy.positionY = _ecs.get_components<Position>()[enemy3]->y;
+  command3.createEnemy.enemyId = enemy3;
+  queue->pushTcpQueue(command3);
 
   Command command4;
   command4.type = CommandType::CREATEENEMY;
   command4.id = -10;
-  command4.createEnemy.positionX =
-  _ecs.get_components<Position>()[enemy4]->x; command4.createEnemy.positionY
-  = _ecs.get_components<Position>()[enemy4]->y; command4.createEnemy.enemyId
-  = enemy4; queue->pushTcpQueue(command4);
+  command4.createEnemy.positionX = _ecs.get_components<Position>()[enemy4]->x;
+  command4.createEnemy.positionY = _ecs.get_components<Position>()[enemy4]->y;
+  command4.createEnemy.enemyId = enemy4;
+  queue->pushTcpQueue(command4);
   return;
 };
 
@@ -152,9 +152,6 @@ Entities Game::create_player() {
   return player;
 };
 
-bool Game::initialize() {
-  return true;
-}
+bool Game::initialize() { return true; }
 
-void Game::run() {
-}
+void Game::run() {}
