@@ -51,6 +51,7 @@ public:
                             std::unique_ptr<IProtocol> &protocol);
   void newPlayerCommandSend(Command command,
                             std::unique_ptr<IProtocol> &protocol);
+  void createPlayerCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
 
   void connectCommandGame(Command command);
   void disconnectCommandGame(Command command);

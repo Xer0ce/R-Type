@@ -13,6 +13,7 @@ enum CommandType {
   CONNECT,
   DISCONNECT,
   NEWPLAYER,
+  CREATEPLAYER,
   MOVE,
   SHOOT,
   REPCONNECT,
@@ -71,6 +72,13 @@ struct Shoot {
   float positionY;
 };
 
+struct CreatePlayer {
+  float positionX;
+  float positionY;
+  std::size_t id;
+  std::string Nickname;
+};
+
 struct Command {
   CommandType type;
   struct Connect connect;
@@ -81,5 +89,6 @@ struct Command {
   struct createEnemy createEnemy;
   struct killEnemy killEnemy;
   struct NewPlayer newPlayer;
+  struct CreatePlayer createPlayer;
   int id;
 };

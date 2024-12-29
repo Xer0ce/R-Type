@@ -127,7 +127,7 @@ void Server::createEnemyCommandSend(Command command,
 
   std::cout << "Sending create enemy command" << std::endl;
 
-  protocol->sendDataToAll(binaryData);
+  protocol->sendData(command.id, binaryData);
 }
 
 void Server::killEnemyCommandSend(Command command,
@@ -174,6 +174,31 @@ void Server::newPlayerCommandSend(Command command,
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 
+void Server::createPlayerCommandSend(Command command, std::unique_ptr<IProtocol> &protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x08);
+
+  std::string playerName = command.createPlayer.Nickname + "\r\n";
+
+  uint32_t id = command.createPlayer.id;
+
+  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&id),
+                    reinterpret_cast<uint8_t *>(&id) + sizeof(id));
+
+  std::string positionX = std::to_string(command.createPlayer.positionX);
+  std::string positionY = std::to_string(command.createPlayer.positionY);
+
+  std::string response =
+      positionX + " " + positionY + " " + playerName + "\r\n";
+
+  for (auto &c : response) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendData(command.id, binaryData);
+}
+
 void Server::initCommandMapSend() {
   _commandsSend[CommandType::REPCONNECT] =
       [this](Command command, std::unique_ptr<IProtocol> &protocol) {
@@ -202,5 +227,9 @@ void Server::initCommandMapSend() {
   _commandsSend[CommandType::NEWPLAYER] =
       [this](Command command, std::unique_ptr<IProtocol> &protocol) {
         newPlayerCommandSend(command, protocol);
+      };
+  _commandsSend[CommandType::CREATEPLAYER] =
+      [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        createPlayerCommandSend(command, protocol);
       };
 }

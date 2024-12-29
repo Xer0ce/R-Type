@@ -36,39 +36,6 @@ void Game::load_entity(std::shared_ptr<Queue> &queue) {
   auto enemy4 = create_entity<EntityType::Enemy>(
       _ecs, Position(500, 400), Velocity(0, -50), Health(),
       Draw({0, 255, 0, 255}, {150, 150, 150, 150}));
-
-  Command command;
-  command.type = CommandType::CREATEENEMY;
-  command.id = -10;
-  command.createEnemy.positionX = _ecs.get_components<Position>()[enemy]->x;
-  command.createEnemy.positionY = _ecs.get_components<Position>()[enemy]->y;
-  command.createEnemy.enemyId = enemy;
-  queue->pushTcpQueue(command);
-
-  Command command2;
-  command2.type = CommandType::CREATEENEMY;
-  command2.id = -10;
-  command2.createEnemy.positionX = _ecs.get_components<Position>()[enemy2]->x;
-  command2.createEnemy.positionY = _ecs.get_components<Position>()[enemy2]->y;
-  command2.createEnemy.enemyId = enemy2;
-  queue->pushTcpQueue(command2);
-
-  Command command3;
-  command3.type = CommandType::CREATEENEMY;
-  command3.id = -10;
-  command3.createEnemy.positionX = _ecs.get_components<Position>()[enemy3]->x;
-  command3.createEnemy.positionY = _ecs.get_components<Position>()[enemy3]->y;
-  command3.createEnemy.enemyId = enemy3;
-  queue->pushTcpQueue(command3);
-
-  Command command4;
-  command4.type = CommandType::CREATEENEMY;
-  command4.id = -10;
-  command4.createEnemy.positionX = _ecs.get_components<Position>()[enemy4]->x;
-  command4.createEnemy.positionY = _ecs.get_components<Position>()[enemy4]->y;
-  command4.createEnemy.enemyId = enemy4;
-  queue->pushTcpQueue(command4);
-  return;
 };
 
 void Game::load() {
@@ -104,7 +71,7 @@ void Game::position_system(float deltaTime, std::shared_ptr<Queue> &queue) {
 
           Command command;
           command.type = CommandType::ENEMYMOVE;
-          command.id = -10; // ID générique ou spécial
+          command.id = -10;
           command.enemyMove.positionX = positions[i]->x;
           command.enemyMove.positionY = positions[i]->y;
           command.enemyMove.enemyId = i;

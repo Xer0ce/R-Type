@@ -54,16 +54,16 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
 void Server::world_update(float deltaTime) { _game->loop(deltaTime, _queue); };
 
 void Server::game_loop() {
-  _game->load();
   auto lastTime = std::chrono::high_resolution_clock::now();
 
+  _game->load();
+  _game->load_entity(_queue);
   while (true) {
     auto currentTime = std::chrono::high_resolution_clock::now();
     float deltaTime =
         std::chrono::duration<float>(currentTime - lastTime).count();
     lastTime = currentTime;
 
-    // Mise à jour des systèmes avec un deltaTime dynamique
     world_update(deltaTime);
 
     Command command = _queue->popGameQueue();
