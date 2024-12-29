@@ -58,7 +58,7 @@ public:
   void killEnemyCommandGame(Command command);
 
   void game_loop();
-  void world_update();
+  void world_update(float deltaTime);
 
 private:
   std::unique_ptr<IProtocol> _tcp;

@@ -39,6 +39,8 @@ struct enemyMove {
 };
 
 struct repConnect {
+  float positionX;
+  float positionY;
   std::size_t id;
 };
 
@@ -51,6 +53,9 @@ struct Disconnect {
 };
 
 struct NewPlayer {
+  float positionX;
+  float positionY;
+  std::size_t id;
   std::string Nickname;
 };
 

@@ -87,7 +87,9 @@ bool UDP::sendDataToAll(std::vector<uint8_t> binaryData) {
 bool UDP::sendDataToAllExceptOne(std::size_t socketId,
                                  std::vector<uint8_t> binaryData) {
   for (const auto &addr : _clientAddresses) {
-    if (addr.sin_port != socketId) {
+    std::size_t clientPort = ntohs(addr.sin_port);
+
+    if (clientPort != socketId) {
       if (sendto(_socket, binaryData.data(), binaryData.size(), 0,
                  (sockaddr *)&addr, sizeof(addr)) < 0) {
         throw std::runtime_error("Failed to send data.");
@@ -118,22 +120,24 @@ bool UDP::listenSocket(int backlog) {
     }
   }
 
-  if (!completeMessage.empty()) {
-    std::lock_guard<std::mutex> lock(_messageMutex);
-    _buffer = completeMessage;
-    if (!isClientAddressPresent(_clientAddr)) {
-      _clientAddresses.push_back(_clientAddr);
-    }
-    // for (const auto &addr : _clientAddresses) {
-    //   std::cout << "[DEBUG] Client address: " << inet_ntoa(addr.sin_addr) <<
-    //   ":"
-    //             << ntohs(addr.sin_port) << std::endl;
-    // }
-    return true;
+if (!completeMessage.empty()) {
+  std::lock_guard<std::mutex> lock(_messageMutex);
+
+  uint16_t clientPort = ntohs(_clientAddr.sin_port);
+  completeMessage.push_back(clientPort >> 8);
+  completeMessage.push_back(clientPort & 0xFF);
+
+  _buffer = completeMessage;
+
+  if (!isClientAddressPresent(_clientAddr)) {
+    _clientAddresses.push_back(_clientAddr);
   }
+  return true;
+}
 
   return false;
 }
+
 
 void UDP::closeSocket() {
   if (_socket >= 0) {

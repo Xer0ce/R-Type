@@ -153,6 +153,8 @@ bool Tcp::sendDataToAll(std::vector<uint8_t> binaryData) {
     if (send(clientSocket, binaryData.data(), binaryData.size(), 0) < 0) {
       perror("Failed to send data");
       return false;
+    } else {
+      std::cout << "Data sent to all clients" << std::endl;
     }
   }
   return true;
