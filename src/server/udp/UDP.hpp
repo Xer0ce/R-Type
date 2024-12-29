@@ -21,7 +21,8 @@ public:
   bool bindSocket() override;
   bool sendData(std::size_t id, std::vector<uint8_t> binaryData) override;
   bool sendDataToAll(std::vector<uint8_t> binaryData) override;
-  bool sendDataToAllExceptOne(std::size_t socketId, std::vector<uint8_t> binaryData) override;
+  bool sendDataToAllExceptOne(std::size_t socketId,
+                              std::vector<uint8_t> binaryData) override;
   void closeSocket() override;
   bool listenSocket(int backlog = 5) override;
   std::vector<uint8_t> &getBuffer() override;
