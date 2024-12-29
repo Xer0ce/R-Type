@@ -120,24 +120,23 @@ bool UDP::listenSocket(int backlog) {
     }
   }
 
-if (!completeMessage.empty()) {
-  std::lock_guard<std::mutex> lock(_messageMutex);
+  if (!completeMessage.empty()) {
+    std::lock_guard<std::mutex> lock(_messageMutex);
 
-  uint16_t clientPort = ntohs(_clientAddr.sin_port);
-  completeMessage.push_back(clientPort >> 8);
-  completeMessage.push_back(clientPort & 0xFF);
+    uint16_t clientPort = ntohs(_clientAddr.sin_port);
+    completeMessage.push_back(clientPort >> 8);
+    completeMessage.push_back(clientPort & 0xFF);
 
-  _buffer = completeMessage;
+    _buffer = completeMessage;
 
-  if (!isClientAddressPresent(_clientAddr)) {
-    _clientAddresses.push_back(_clientAddr);
+    if (!isClientAddressPresent(_clientAddr)) {
+      _clientAddresses.push_back(_clientAddr);
+    }
+    return true;
   }
-  return true;
-}
 
   return false;
 }
-
 
 void UDP::closeSocket() {
   if (_socket >= 0) {

@@ -83,44 +83,43 @@ void Game::loop(float deltaTime, std::shared_ptr<Queue> &queue) {
 };
 
 void Game::position_system(float deltaTime, std::shared_ptr<Queue> &queue) {
-    static float timer = 0; // Timer global pour gérer l'intervalle
-    timer += deltaTime; // Incrémentation du timer avec le temps écoulé
+  static float timer = 0; // Timer global pour gérer l'intervalle
+  timer += deltaTime;     // Incrémentation du timer avec le temps écoulé
 
-    // Verrou pour protéger les accès concurrents
-    std::lock_guard<std::mutex> lock(_mutex);
+  // Verrou pour protéger les accès concurrents
+  std::lock_guard<std::mutex> lock(_mutex);
 
-    auto &entityType = _ecs.get_components<EntityType>();
-    auto &positions = _ecs.get_components<Position>();
-    auto &velocities = _ecs.get_components<Velocity>();
+  auto &entityType = _ecs.get_components<EntityType>();
+  auto &positions = _ecs.get_components<Position>();
+  auto &velocities = _ecs.get_components<Velocity>();
 
-    if (timer >= 0.5f) { // Si 0.5 seconde s'est écoulée
-        for (std::size_t i = 0; i < entityType.size(); ++i) {
-            if (!entityType[i].has_value()) {
-                continue;
-            }
-            if (entityType[i] == EntityType::Enemy) {
-                if (positions[i].has_value() && velocities[i].has_value()) {
-                    // Mise à jour des positions toutes les 0.5 secondes
-                    positions[i]->x += velocities[i]->x;
-                    positions[i]->y += velocities[i]->y;
+  if (timer >= 0.5f) { // Si 0.5 seconde s'est écoulée
+    for (std::size_t i = 0; i < entityType.size(); ++i) {
+      if (!entityType[i].has_value()) {
+        continue;
+      }
+      if (entityType[i] == EntityType::Enemy) {
+        if (positions[i].has_value() && velocities[i].has_value()) {
+          // Mise à jour des positions toutes les 0.5 secondes
+          positions[i]->x += velocities[i]->x;
+          positions[i]->y += velocities[i]->y;
 
-                    // Préparation de la commande pour le mouvement des ennemis
-                    Command command;
-                    command.type = CommandType::ENEMYMOVE;
-                    command.id = -10; // ID générique ou spécial
-                    command.enemyMove.positionX = positions[i]->x;
-                    command.enemyMove.positionY = positions[i]->y;
-                    command.enemyMove.enemyId = i;
+          // Préparation de la commande pour le mouvement des ennemis
+          Command command;
+          command.type = CommandType::ENEMYMOVE;
+          command.id = -10; // ID générique ou spécial
+          command.enemyMove.positionX = positions[i]->x;
+          command.enemyMove.positionY = positions[i]->y;
+          command.enemyMove.enemyId = i;
 
-                    // Ajout à la file UDP
-                    queue->pushUdpQueue(command);
-                }
-            }
+          // Ajout à la file UDP
+          queue->pushUdpQueue(command);
         }
-        timer = 0; // Réinitialisation du timer après mise à jour
+      }
     }
+    timer = 0; // Réinitialisation du timer après mise à jour
+  }
 }
-
 
 void Game::enemy_system(std::shared_ptr<Queue> &queue) {
   std::lock_guard<std::mutex> lock(_mutex);

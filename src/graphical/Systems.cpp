@@ -112,17 +112,16 @@ void collision_system(Registry &registry, TcpClient &tcp) {
     if (entityTypes[i] == EntityType::Projectile) {
       if (positions[i]->x > 1200) {
         registry.kill_entity(Entities(i));
-        std::cout << "Kill de la bullet pcq trop loin id : " << i
-                    << std::endl;
+        std::cout << "Kill de la bullet pcq trop loin id : " << i << std::endl;
       }
       for (std::size_t j = 0; j < entityTypes.size(); ++j) {
         if (positions[i]->x < positions[j]->x + 50 &&
-          positions[i]->x + 50 > positions[j]->x &&
-          positions[i]->y < positions[j]->y + 50 &&
-          positions[i]->y + 50 > positions[j]->y) {
+            positions[i]->x + 50 > positions[j]->x &&
+            positions[i]->y < positions[j]->y + 50 &&
+            positions[i]->y + 50 > positions[j]->y) {
           if (entityTypes[j] == EntityType::Enemy) {
-            auto packet = serialize_collision_packet(positions[i]->x,
-                                                       positions[i]->y);
+            auto packet =
+                serialize_collision_packet(positions[i]->x, positions[i]->y);
             tcp.send_data(packet);
             registry.kill_entity(Entities(i));
             std::cout << "Kill de la bullet id : " << i << std::endl;
@@ -144,7 +143,7 @@ void handleShoot(Registry &registry, SDL_Renderer *renderer,
 
   if (keyState[SDL_SCANCODE_SPACE] && shootCooldown <= 0.0f) {
     auto projectile = registry.spawn_entity();
-    
+
     for (std::size_t i = 0; i < entityTypes.size(); ++i) {
       if (entityTypes[i] == EntityType::Player && controllables[i]) {
         auto bulletTexture =

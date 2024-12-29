@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../ecs/Registry.hpp"
 #include "../ecs/EntitiesGestion.hpp"
+#include "../ecs/Registry.hpp"
 #include "Components/Control.hpp"
 #include "Components/Draw.hpp"
 #include "Components/Health.hpp"
@@ -36,22 +36,26 @@ public:
   void cleanup();
 
   void connectCommand(std::string buffer, Registry &registry,
-                    SDL_Renderer *renderer);
+                      SDL_Renderer *renderer);
 
-  void moveEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer);
-  void movePlayer(std::string buffer, Registry &registry, SDL_Renderer *renderer);
-
-  void createEnemy(std::string buffer, Registry &registry,
+  void moveEntity(std::string buffer, Registry &registry,
+                  SDL_Renderer *renderer);
+  void movePlayer(std::string buffer, Registry &registry,
                   SDL_Renderer *renderer);
 
-  void killEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer);
+  void createEnemy(std::string buffer, Registry &registry,
+                   SDL_Renderer *renderer);
 
-  void newPlayer(std::string buffer, Registry &registry, SDL_Renderer *renderer);
+  void killEntity(std::string buffer, Registry &registry,
+                  SDL_Renderer *renderer);
+
+  void newPlayer(std::string buffer, Registry &registry,
+                 SDL_Renderer *renderer);
 
   void initCommandHandle(
-    std::map<uint8_t,
-             std::function<void(std::string, Registry &, SDL_Renderer *)>>
-        &commandsHandle);
+      std::map<uint8_t,
+               std::function<void(std::string, Registry &, SDL_Renderer *)>>
+          &commandsHandle);
 
 private:
   bool initSDL();

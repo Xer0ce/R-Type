@@ -164,8 +164,8 @@ void Server::newPlayerCommandSend(Command command,
   std::string positionX = std::to_string(command.newPlayer.positionX);
   std::string positionY = std::to_string(command.newPlayer.positionY);
 
-
-  std::string response = positionX + " " + positionY + " " + playerName + "\r\n";
+  std::string response =
+      positionX + " " + positionY + " " + playerName + "\r\n";
 
   for (auto &c : response) {
     binaryData.push_back(static_cast<uint8_t>(c));

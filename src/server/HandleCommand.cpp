@@ -93,9 +93,9 @@ void Server::moveCommandHandle(std::vector<uint8_t> buffer,
 
   size_t bufferSize = buffer.size();
   uint16_t clientPort = (buffer[bufferSize - 2] << 8) | buffer[bufferSize - 1];
-  
+
   std::vector<std::string> bufferString =
-    my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
+      my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
 
   cmd.type = CommandType::MOVE;
   cmd.move.playerId = (int)buffer[1];

@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../ecs/EntitiesGestion.hpp"
 #include "../ecs/Registry.hpp"
 #include "Components/Control.hpp"
 #include "Components/Draw.hpp"
@@ -20,7 +21,6 @@
 #include <map>
 #include <sstream>
 #include <vector>
-#include "../ecs/EntitiesGestion.hpp"
 
 std::vector<std::string> my_strToWordArray(const std::string &str,
                                            char delimiter);
@@ -31,7 +31,7 @@ void connectCommand(std::string buffer, Registry &registry,
 void moveEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer);
 
 void createEnemy(std::string buffer, Registry &registry,
-                  SDL_Renderer *renderer);
+                 SDL_Renderer *renderer);
 
 void killEntity(std::string buffer, Registry &registry, SDL_Renderer *renderer);
 
