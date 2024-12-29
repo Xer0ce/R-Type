@@ -37,16 +37,6 @@ void Server::disconnectCommandSend(Command command,
   // protocol->sendData(response);
 }
 
-void Server::newPlayerCommandSend(Command command,
-                                  std::unique_ptr<IProtocol> &protocol) {
-  std::string response;
-
-  response = "newPlayer OK"; // ici faut faire la commande si un joeur se
-                             // connecte a la partie
-
-  // protocol->sendData(response);
-}
-
 void Server::moveCommandSend(Command command,
                              std::unique_ptr<IProtocol> &protocol) {
   std::string response;
@@ -69,12 +59,13 @@ void Server::shootCommandSend(Command command,
 
 void Server::mapCommandSend(Command command,
                             std::unique_ptr<IProtocol> &protocol) {
-  std::string response;
+  // std::vector<uint8_t> binaryData;
 
-  response = "Map OK"; // ici faut faire la commande map qui retourne la map
-                       // donc en gros toutes les pos des entites
+  // binaryData.push_back(0x04);
 
-  // protocol->sendData(response);
+  // uint32_t playerId = command.move.playerId;
+
+  // protocol->sendData(command.id, binaryData);
 }
 
 void Server::enemyMoveCommandSend(Command command,
@@ -133,13 +124,28 @@ void Server::killEnemyCommandSend(Command command,
   uint32_t enemyId = command.killEnemy.enemyId;
   std::cout << "Killing enemy with id: " << enemyId << std::endl;
 
-  std::string enemyIdStr = std::to_string(enemyId) + "\r\n";
+  std::string enemyIdStr = std::to_string(enemyId);
 
   for (auto &c : enemyIdStr) {
     binaryData.push_back(static_cast<uint8_t>(c));
   }
 
   protocol->sendData(command.id, binaryData);
+}
+
+void Server::newPlayerCommandSend(Command command,
+                                  std::unique_ptr<IProtocol> &protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x08);
+
+  std::string playerName = command.newPlayer.Nickname;
+
+  for (auto &c : playerName) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 
 void Server::initCommandMapSend() {
@@ -166,5 +172,9 @@ void Server::initCommandMapSend() {
   _commandsSend[CommandType::KILLENEMY] =
       [this](Command command, std::unique_ptr<IProtocol> &protocol) {
         killEnemyCommandSend(command, protocol);
+      };
+  _commandsSend[CommandType::NEWPLAYER] =
+      [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        newPlayerCommandSend(command, protocol);
       };
 }

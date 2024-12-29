@@ -17,9 +17,17 @@ void Server::connectCommandGame(Command command) {
   _game->addPlayerToVector(player);
   newCommand.type = CommandType::REPCONNECT;
   newCommand.repConnect.id = player;
-  newCommand.id = command.id;
+  newCommand.id = -10;
   _queue->pushTcpQueue(newCommand);
   _game->load_entity(_queue);
+
+  Command newCommandPlayer;
+
+  newCommandPlayer.type = CommandType::NEWPLAYER;
+  newCommandPlayer.newPlayer.Nickname = command.connect.Nickname;
+  newCommandPlayer.id = command.id;
+
+  _queue->pushTcpQueue(newCommandPlayer);
 }
 
 void Server::disconnectCommandGame(Command command) {

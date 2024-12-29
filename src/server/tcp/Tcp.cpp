@@ -141,18 +141,32 @@ bool Tcp::listenSocket(int backlog) {
 }
 
 bool Tcp::sendData(std::size_t id, std::vector<uint8_t> binaryData) {
-  if (id == -10) {
-    for (int clientSocket : _clientSockets) {
+  if (send(id, binaryData.data(), binaryData.size(), 0) < 0) {
+    perror("Failed to send data");
+    return false;
+  }
+  return true;
+}
+
+bool Tcp::sendDataToAll(std::vector<uint8_t> binaryData) {
+  for (int clientSocket : _clientSockets) {
+    if (send(clientSocket, binaryData.data(), binaryData.size(), 0) < 0) {
+      perror("Failed to send data");
+      return false;
+    }
+  }
+  return true;
+}
+
+bool Tcp::sendDataToAllExceptOne(std::size_t socketId,
+                                 std::vector<uint8_t> binaryData) {
+  for (int clientSocket : _clientSockets) {
+    if (clientSocket != socketId) {
       if (send(clientSocket, binaryData.data(), binaryData.size(), 0) < 0) {
         perror("Failed to send data");
         return false;
       }
     }
-    return true;
-  }
-  if (send(id, binaryData.data(), binaryData.size(), 0) < 0) {
-    perror("Failed to send data");
-    return false;
   }
   return true;
 }

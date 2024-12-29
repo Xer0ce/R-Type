@@ -5,7 +5,7 @@
 ** UDP
 */
 
-#include "UDP.hpp"
+#include "Udp.hpp"
 #include <arpa/inet.h>
 #include <cstring>
 #include <fcntl.h>
@@ -65,20 +65,35 @@ bool UDP::bindSocket() {
 }
 
 bool UDP::sendData(std::size_t id, std::vector<uint8_t> binaryData) {
-  if (id == -10) {
-    for (const auto &addr : _clientAddresses) {
+  if (sendto(_socket, binaryData.data(), binaryData.size(), 0,
+             (sockaddr *)&_clientAddr, sizeof(_clientAddr)) < 0) {
+    throw std::runtime_error("Failed to send data.");
+    return false;
+  }
+  return true;
+}
+
+bool UDP::sendDataToAll(std::vector<uint8_t> binaryData) {
+  for (const auto &addr : _clientAddresses) {
+    if (sendto(_socket, binaryData.data(), binaryData.size(), 0,
+               (sockaddr *)&addr, sizeof(addr)) < 0) {
+      throw std::runtime_error("Failed to send data.");
+      return false;
+    }
+  }
+  return true;
+}
+
+bool UDP::sendDataToAllExceptOne(std::size_t socketId,
+                                 std::vector<uint8_t> binaryData) {
+  for (const auto &addr : _clientAddresses) {
+    if (addr.sin_port != socketId) {
       if (sendto(_socket, binaryData.data(), binaryData.size(), 0,
                  (sockaddr *)&addr, sizeof(addr)) < 0) {
         throw std::runtime_error("Failed to send data.");
         return false;
       }
     }
-    return true;
-  }
-  if (sendto(_socket, binaryData.data(), binaryData.size(), 0,
-             (sockaddr *)&_clientAddr, sizeof(_clientAddr)) < 0) {
-    throw std::runtime_error("Failed to send data.");
-    return false;
   }
   return true;
 }

@@ -74,7 +74,6 @@ void Server::connectCommandHandle(std::vector<uint8_t> buffer,
   int clientSocketId = static_cast<int>(buffer.back());
 
   cmd.type = CommandType::CONNECT;
-  cmd.connect;
   cmd.connect.Nickname = playerName;
   cmd.id = clientSocketId;
 

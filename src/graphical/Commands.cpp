@@ -96,6 +96,18 @@ void killEntity(std::string buffer, Registry &registry,
   registry.kill_entity(Entities(id));
 }
 
+void newPlayer(std::string buffer, Registry &registry, SDL_Renderer *renderer) {
+  SDL_Texture *playerTexture =
+      IMG_LoadTexture(renderer, "../src/graphical/assets/michou.png");
+
+  auto entity = registry.spawn_entity();
+  registry.add_component<Position>(entity, Position(100, 150));
+  registry.add_component<Velocity>(entity, Velocity());
+  registry.add_component<Health>(entity, Health());
+  registry.add_component<Draw>(
+      entity, Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture));
+}
+
 void initCommandHandle(
     std::map<uint8_t,
              std::function<void(std::string, Registry &, SDL_Renderer *)>>
@@ -127,5 +139,9 @@ void initCommandHandle(
   commandsHandle[0x07] = [](std::string buffer, Registry &registry,
                             SDL_Renderer *renderer) {
     killEntity(buffer, registry, renderer);
+  };
+  commandsHandle[0x08] = [](std::string buffer, Registry &registry,
+                            SDL_Renderer *renderer) {
+    newPlayer(buffer, registry, renderer);
   };
 }

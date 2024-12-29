@@ -10,7 +10,7 @@
 #include "Queue.hpp"
 #include "game/Game.hpp"
 #include "tcp/Tcp.hpp"
-#include "udp/UDP.hpp"
+#include "udp/Udp.hpp"
 #include <map>
 
 class Server {
@@ -40,8 +40,6 @@ public:
                           std::unique_ptr<IProtocol> &protocol);
   void disconnectCommandSend(Command command,
                              std::unique_ptr<IProtocol> &protocol);
-  void newPlayerCommandSend(Command command,
-                            std::unique_ptr<IProtocol> &protocol);
   void moveCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
   void shootCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
   void mapCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
@@ -50,6 +48,8 @@ public:
   void createEnemyCommandSend(Command command,
                               std::unique_ptr<IProtocol> &protocol);
   void killEnemyCommandSend(Command command,
+                            std::unique_ptr<IProtocol> &protocol);
+  void newPlayerCommandSend(Command command,
                             std::unique_ptr<IProtocol> &protocol);
 
   void connectCommandGame(Command command);
