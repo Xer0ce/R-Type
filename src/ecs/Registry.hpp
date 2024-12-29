@@ -199,16 +199,17 @@ public:
   /**
    * @brief Creates a new entity with a precize id.
    *
-   * Reuses an available entity ID if possible or generates a new one if the id in parameters is already atrivute.
+   * Reuses an available entity ID if possible or generates a new one if the id
+   * in parameters is already atrivute.
    *
    * @param value The entity to destroy
    * @return The newly created entity.
    */
   entity_t spawn_entity(std::size_t id) {
     Entities new_entity(id);
-    auto it = std::find_if(
-        _entities.begin(), _entities.end(),
-        [&id](const Entities &entity) { return entity == id; });
+    auto it =
+        std::find_if(_entities.begin(), _entities.end(),
+                     [&id](const Entities &entity) { return entity == id; });
 
     if (it == _entities.end()) {
       _entities.push_back(new_entity);
