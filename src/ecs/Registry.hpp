@@ -197,6 +197,37 @@ public:
   };
 
   /**
+   * @brief Creates a new entity with a precize id.
+   *
+   * Reuses an available entity ID if possible or generates a new one if the id in parameters is already atrivute.
+   *
+   * @param value The entity to destroy
+   * @return The newly created entity.
+   */
+  entity_t spawn_entity(std::size_t id) {
+    Entities new_entity(id);
+    auto it = std::find_if(
+        _entities.begin(), _entities.end(),
+        [&id](const Entities &entity) { return entity == id; });
+
+    if (it == _entities.end()) {
+      _entities.push_back(new_entity);
+      return new_entity;
+    }
+    if (!_available_entities.empty()) {
+      std::size_t id = _available_entities.back();
+      _available_entities.pop_back();
+      _entities[id] = Entities(id);
+      new_entity = _entities[id];
+    } else {
+      std::size_t id = _entities.size();
+      _entities.push_back(Entities(id));
+      new_entity = _entities.back();
+    }
+    return new_entity;
+  };
+
+  /**
    * @brief Retrieves an entity by its index.
    *
    * @param idx The index of the entity to retrieve.

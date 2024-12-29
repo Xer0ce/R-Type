@@ -1,8 +1,9 @@
 #include "EntitiesGestion.hpp"
 
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
-                              Health health, Draw draw) {
-  auto entity = r.spawn_entity();
+                              Health health, Draw draw,
+                              std::optional<std::size_t> id = std::nullopt) {
+  auto entity = id.has_value() ? r.spawn_entity(id.value()) : r.spawn_entity();
   r.add_component<Position>(entity, std::move(position));
   r.add_component<Velocity>(entity, std::move(velocity));
   r.add_component<Health>(entity, std::move(health));
