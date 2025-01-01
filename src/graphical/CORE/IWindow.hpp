@@ -11,8 +11,8 @@
 
 class IWindow {
 public:
-    virtual ~IWindow() = default;
-    virtual void initialize() = 0;
-    virtual void update() = 0;
-    virtual void render(SDL_Renderer* renderer) = 0;
+  virtual ~IWindow() = default;
+  virtual void initialize() = 0;
+  virtual void update() = 0;
+  virtual void render(SDL_Renderer *renderer) = 0;
 };

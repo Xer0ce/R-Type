@@ -10,14 +10,14 @@
 
 class AWindow : public IWindow {
 protected:
-    int width;
-    int height;
-    float volume;
+  int width;
+  int height;
+  float volume;
 
 public:
-    AWindow(int w, int h, float v) : width(w), height(h), volume(v) {}
-    virtual ~AWindow() = default;
+  AWindow(int w, int h, float v) : width(w), height(h), volume(v) {}
+  virtual ~AWindow() = default;
 
-    void setVolume(float v) { volume = v; }
-    float getVolume() const { return volume; }
+  void setVolume(float v) { volume = v; }
+  float getVolume() const { return volume; }
 };

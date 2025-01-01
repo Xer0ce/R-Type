@@ -53,7 +53,7 @@ bool Tcp::initializeSocket() {
     perror("Invalid IP address");
     return false;
   }
-  
+
   if (_mode == Mode::SERVER) {
     _maxFd = _socket;
     FD_ZERO(&_readFds);
@@ -76,7 +76,7 @@ bool Tcp::bindSocket() {
     }
 
     std::cout << "[DEBUG] Successfully bound to " << _ip << ":" << _port
-            << std::endl;
+              << std::endl;
 
     if (listen(_socket, 4) < 0) {
       perror("Listen failed");
@@ -84,28 +84,29 @@ bool Tcp::bindSocket() {
     }
   } else if (_mode == Mode::CLIENT) {
     if (connect(_socket, (sockaddr *)&_addr, sizeof(_addr)) < 0) {
-        if (errno == EINPROGRESS) {
-            fd_set writeFds;
-            FD_ZERO(&writeFds);
-            FD_SET(_socket, &writeFds);
-            struct timeval timeout = {5, 0};
+      if (errno == EINPROGRESS) {
+        fd_set writeFds;
+        FD_ZERO(&writeFds);
+        FD_SET(_socket, &writeFds);
+        struct timeval timeout = {5, 0};
 
-            int result = select(_socket + 1, nullptr, &writeFds, nullptr, &timeout);
-            if (result <= 0) {
-                perror("Connection timed out or failed");
-                return false;
-            }
-
-            int optval;
-            socklen_t optlen = sizeof(optval);
-            if (getsockopt(_socket, SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0 || optval != 0) {
-                perror("Connection failed after select");
-                return false;
-            }
-        } else {
-            perror("Failed to connect");
-            return false;
+        int result = select(_socket + 1, nullptr, &writeFds, nullptr, &timeout);
+        if (result <= 0) {
+          perror("Connection timed out or failed");
+          return false;
         }
+
+        int optval;
+        socklen_t optlen = sizeof(optval);
+        if (getsockopt(_socket, SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0 ||
+            optval != 0) {
+          perror("Connection failed after select");
+          return false;
+        }
+      } else {
+        perror("Failed to connect");
+        return false;
+      }
     }
     std::cout << "Connected to server " << _ip << ":" << _port << std::endl;
   }

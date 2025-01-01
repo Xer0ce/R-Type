@@ -8,10 +8,10 @@
 #pragma once
 
 class Logger {
-    public:
-        Logger();
-        ~Logger();
+public:
+  Logger();
+  ~Logger();
 
-    protected:
-    private:
+protected:
+private:
 };

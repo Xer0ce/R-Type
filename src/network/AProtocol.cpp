@@ -7,7 +7,8 @@
 
 #include "AProtocol.hpp"
 
-AProtocol::AProtocol(std::size_t port, std::string ip, Mode mode) : _port(port), _ip(ip), _mode(mode) {}
+AProtocol::AProtocol(std::size_t port, std::string ip, Mode mode)
+    : _port(port), _ip(ip), _mode(mode) {}
 
 AProtocol::~AProtocol() {}
 

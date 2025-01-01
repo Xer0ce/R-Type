@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "Queue.hpp"
-#include "game/Game.hpp"
 #include "../network/tcp/Tcp.hpp"
 #include "../network/udp/Udp.hpp"
+#include "Queue.hpp"
+#include "game/Game.hpp"
 #include <map>
 
 class Server {

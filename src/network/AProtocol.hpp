@@ -20,7 +20,8 @@ class AProtocol : public IProtocol {
 public:
   enum Mode { SERVER, CLIENT };
 
-  AProtocol(std::size_t port = 4242, std::string ip = "0.0.0.0", Mode mode = Mode::SERVER);
+  AProtocol(std::size_t port = 4242, std::string ip = "0.0.0.0",
+            Mode mode = Mode::SERVER);
   ~AProtocol();
 
   void setPort(std::size_t port);

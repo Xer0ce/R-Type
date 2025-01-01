@@ -14,14 +14,14 @@
 
 class GameWindow : public IWindow {
 public:
-    GameWindow(WindowManager& manager, ConnectionManager &connectionManager);
-    ~GameWindow();
+  GameWindow(WindowManager &manager, ConnectionManager &connectionManager);
+  ~GameWindow();
 
-    void initialize() override;
-    void update() override;
-    void render(SDL_Renderer* renderer) override;
+  void initialize() override;
+  void update() override;
+  void render(SDL_Renderer *renderer) override;
 
 private:
-    WindowManager& windowManager;
-    ConnectionManager &connectionManager;
+  WindowManager &windowManager;
+  ConnectionManager &connectionManager;
 };

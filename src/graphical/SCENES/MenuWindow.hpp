@@ -13,14 +13,14 @@
 
 class MenuWindow : public IWindow {
 public:
-    MenuWindow(WindowManager& manager, ConnectionManager &connectionManager);
-    ~MenuWindow();
+  MenuWindow(WindowManager &manager, ConnectionManager &connectionManager);
+  ~MenuWindow();
 
-    void initialize() override;
-    void update() override;
-    void render(SDL_Renderer* renderer) override;
+  void initialize() override;
+  void update() override;
+  void render(SDL_Renderer *renderer) override;
+
 private:
-    WindowManager& windowManager;
-    ConnectionManager &connectionManager;
+  WindowManager &windowManager;
+  ConnectionManager &connectionManager;
 };
-

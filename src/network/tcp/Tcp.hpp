@@ -13,11 +13,11 @@
 #include <netinet/in.h>
 #include <string>
 #include <vector>
-#include <string>
 
 class Tcp : public AProtocol {
 public:
-  Tcp(std::size_t port = 4243, std::string ip = "0.0.0.0", Mode mode = Mode::SERVER);
+  Tcp(std::size_t port = 4243, std::string ip = "0.0.0.0",
+      Mode mode = Mode::SERVER);
   ~Tcp();
 
   bool initializeSocket() override;

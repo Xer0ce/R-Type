@@ -25,7 +25,8 @@ void Connexion::listen(std::unique_ptr<IProtocol> &protocol) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
       // Traitez les données reçues ici
-      std::cout << "Received: " << std::string(buffer.begin(), buffer.end()) << std::endl;
+      std::cout << "Received: " << std::string(buffer.begin(), buffer.end())
+                << std::endl;
 
       // Ajoutez ici la logique de traitement des commandes si nécessaire
     }
