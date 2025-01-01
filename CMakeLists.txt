@@ -15,17 +15,11 @@ add_subdirectory(external/SDL3_image)
 
 if(BUILD_CLIENT)
     file(GLOB SOURCES_CLIENT "src/graphical/*.cpp")
-    file(GLOB SOURCES_CLIENT_CORE "src/graphical/CORE/*.cpp")
-    file(GLOB SOURCES_CLIENT_SCENES "src/graphical/SCENES/*.cpp")
-    file(GLOB SOURCES_CLIENT_SYSTEMS "src/graphical/SYSTEMS/*.cpp")
-    file(GLOB SOURCES_CLIENT_UTILS "src/graphical/UTILS/*.cpp")
-
-    file(GLOB SOURCES_NETWORK "src/network/*.cpp")
-    file(GLOB SOURCES_NETWORK_TCP "src/network/tcp/*.cpp")
-    file(GLOB SOURCES_NETWORK_UDP "src/network/udp/*.cpp")
+    file(GLOB SOURCES_CLIENT_SCENES "src/graphical/scenes/*.cpp")
+    file(GLOB SOURCES_CLIENT_NETWORK "src/graphical/network/*.cpp")
 
     file(GLOB SOURCES_ECS "src/ecs/*.cpp")
-    add_executable(r-type_client ${SOURCES_CLIENT} ${SOURCES_ECS} ${SOURCES_NETWORK} ${SOURCES_NETWORK_TCP} ${SOURCES_NETWORK_UDP} ${SOURCES_CLIENT_CORE} ${SOURCES_CLIENT_SCENES} ${SOURCES_CLIENT_SYSTEMS} ${SOURCES_CLIENT_UTILS})
+    add_executable(r-type_client ${SOURCES_CLIENT} ${SOURCES_ECS} ${SOURCES_CLIENT_SCENES} ${SOURCES_CLIENT_NETWORK})
     target_include_directories(r-type_client PRIVATE include/graphical)
 
     target_link_libraries(r-type_client PRIVATE SDL3::SDL3)

@@ -18,10 +18,7 @@
 
 class AProtocol : public IProtocol {
 public:
-  enum Mode { SERVER, CLIENT };
-
-  AProtocol(std::size_t port = 4242, std::string ip = "0.0.0.0",
-            Mode mode = Mode::SERVER);
+  AProtocol(std::size_t port = 4242, std::string ip = "0.0.0.0");
   ~AProtocol();
 
   void setPort(std::size_t port);
@@ -44,7 +41,6 @@ protected:
   sockaddr_in _addr;
   int _socket;
 
-  Mode _mode;
   std::mutex _messageMutex;
   std::string _type;
   std::vector<uint8_t> _buffer;

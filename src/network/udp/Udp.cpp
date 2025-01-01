@@ -15,11 +15,10 @@
 #include <stdexcept>
 #include <unistd.h>
 
-UDP::UDP(std::size_t port, std::string ip, Mode mode) {
+UDP::UDP(std::size_t port, std::string ip) {
   _port = port;
   _ip = ip;
   _type = "UDP";
-  _mode = mode;
 }
 
 UDP::~UDP() { closeSocket(); }

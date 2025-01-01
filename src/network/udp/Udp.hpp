@@ -14,8 +14,7 @@
 
 class UDP : public AProtocol {
 public:
-  UDP(std::size_t port = 4242, std::string ip = "0.0.0.0",
-      Mode mode = Mode::SERVER);
+  UDP(std::size_t port = 4242, std::string ip = "0.0.0.0");
   ~UDP();
 
   bool initializeSocket() override;

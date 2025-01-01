@@ -11,8 +11,8 @@
 
 Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
                std::string udpIp) {
-  _tcp = std::make_unique<Tcp>(tcpPort, tcpIp, AProtocol::Mode::SERVER);
-  _udp = std::make_unique<UDP>(udpPort, udpIp, AProtocol::Mode::SERVER);
+  _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
+  _udp = std::make_unique<UDP>(udpPort, udpIp);
   _queue = std::make_shared<Queue>();
   _game = std::make_shared<Game>();
   initCommandMapHandle();
