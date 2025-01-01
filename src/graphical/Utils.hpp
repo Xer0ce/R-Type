@@ -13,3 +13,14 @@ enum sceneType {
   ENDLESS,
   ONE_VS_ONE,
 };
+
+enum keyType {
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+  SPACE,
+  ENTER,
+  ESCAPE,
+  NONE,
+};

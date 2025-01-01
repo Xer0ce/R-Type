@@ -18,7 +18,7 @@ void Window::init() {
     exit(84);
   }
 
-  _window = SDL_CreateWindow("R-Type", 800, 600, 0);
+  _window = SDL_CreateWindow("R-Type", 1920, 1080, 0);
   if (!_window) {
     std::cerr << "Erreur lors de la création de la fenêtre : " << SDL_GetError()
               << std::endl;
@@ -51,8 +51,10 @@ bool Window::checkingCloseWindow() {
   return true;
 }
 
-void Window::draw(SDL_Texture *texture, SDL_FRect rect) {
-  SDL_RenderTexture(_renderer, texture, nullptr, &rect);
+void Window::draw(SDL_Texture *texture, SDL_Rect rect) {
+  SDL_FRect rec = {static_cast<float>(rect.x), static_cast<float>(rect.y),
+                   static_cast<float>(rect.w), static_cast<float>(rect.h)};
+  SDL_RenderTexture(_renderer, texture, nullptr, &rec);
 }
 
 void Window::render() { SDL_RenderPresent(_renderer); }
@@ -61,4 +63,27 @@ void Window::clear() { SDL_RenderClear(_renderer); }
 
 SDL_Texture *Window::loadTexture(const char *path) {
   return IMG_LoadTexture(_renderer, path);
+}
+
+void Window::setBackground(SDL_Texture *texture) {
+  _background = texture;
+}
+
+void Window::drawBackground() {
+  SDL_RenderTexture(_renderer, _background, nullptr, nullptr);
+}
+
+keyType Window::catchKey() {
+  const bool *keyState = SDL_GetKeyboardState(NULL);
+
+  if (keyState[SDL_SCANCODE_UP]) {
+    return UP;
+  } else if (keyState[SDL_SCANCODE_RIGHT]) {
+    return RIGHT;
+  } else if (keyState[SDL_SCANCODE_DOWN]) {
+    return DOWN;
+  } else if (keyState[SDL_SCANCODE_LEFT]) {
+    return LEFT;
+  }
+  return NONE;
 }
