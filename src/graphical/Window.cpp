@@ -65,9 +65,7 @@ SDL_Texture *Window::loadTexture(const char *path) {
   return IMG_LoadTexture(_renderer, path);
 }
 
-void Window::setBackground(SDL_Texture *texture) {
-  _background = texture;
-}
+void Window::setBackground(SDL_Texture *texture) { _background = texture; }
 
 void Window::drawBackground() {
   SDL_RenderTexture(_renderer, _background, nullptr, nullptr);

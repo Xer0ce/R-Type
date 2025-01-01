@@ -102,14 +102,15 @@ void Game::game() {
       _ecs, Position(100, 100), Velocity(), Health(1),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50},
            _window->loadTexture("../src/graphical/assets/michou.png")),
-           std::optional<Control>());
+      std::optional<Control>());
 
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
 
   bool running = true;
 
-  _window->setBackground(_window->loadTexture("../src/graphical/assets/level1.png"));
+  _window->setBackground(
+      _window->loadTexture("../src/graphical/assets/level1.png"));
 
   while (running) {
     running = _window->checkingCloseWindow();
