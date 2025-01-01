@@ -9,21 +9,29 @@
 #include "Server.hpp"
 #include <iostream>
 
-void Server::connectCommandSend(Command *command,
+void Server::connectCommandSend(Command command,
                                 std::unique_ptr<IProtocol> &protocol) {
   std::vector<uint8_t> binaryData;
   binaryData.push_back(0x01);
 
-  uint32_t id = command->repConnect->id;
+  uint32_t id = command.repConnect.id;
+
   binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&id),
                     reinterpret_cast<uint8_t *>(&id) + sizeof(id));
 
-  std::string response(binaryData.begin(), binaryData.end());
+  std::string positionX = std::to_string(command.repConnect.positionX);
+  std::string positionY = std::to_string(command.repConnect.positionY);
 
-  protocol->sendData(response, command->id);
+  std::string response = positionX + " " + positionY + "\r\n";
+
+  for (auto &c : response) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendData(command.id, binaryData);
 }
 
-void Server::disconnectCommandSend(Command *command,
+void Server::disconnectCommandSend(Command command,
                                    std::unique_ptr<IProtocol> &protocol) {
   std::string response;
 
@@ -33,27 +41,29 @@ void Server::disconnectCommandSend(Command *command,
   // protocol->sendData(response);
 }
 
-void Server::newPlayerCommandSend(Command *command,
-                                  std::unique_ptr<IProtocol> &protocol) {
-  std::string response;
-
-  response = "newPlayer OK"; // ici faut faire la commande si un joeur se
-                             // connecte a la partie
-
-  // protocol->sendData(response);
-}
-
-void Server::moveCommandSend(Command *command,
+void Server::moveCommandSend(Command command,
                              std::unique_ptr<IProtocol> &protocol) {
-  std::string response;
+  std::vector<uint8_t> binaryData;
 
-  response = "Move OK"; // ici faut faire la commande move avec la nouvelle pos
-                        // du player en cas de probleme;
+  binaryData.push_back(0x03);
 
-  // protocol->sendData(response);
+  uint32_t playerId = command.move.playerId;
+  std::string positionX = std::to_string(command.move.positionX);
+  std::string positionY = std::to_string(command.move.positionY);
+
+  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&playerId),
+                    reinterpret_cast<uint8_t *>(&playerId) + sizeof(playerId));
+
+  std::string response = positionX + " " + positionY + "\r\n";
+
+  for (auto &c : response) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 
-void Server::shootCommandSend(Command *command,
+void Server::shootCommandSend(Command command,
                               std::unique_ptr<IProtocol> &protocol) {
   std::string response;
 
@@ -63,53 +73,53 @@ void Server::shootCommandSend(Command *command,
   // protocol->sendData(response);
 }
 
-void Server::mapCommandSend(Command *command,
+void Server::mapCommandSend(Command command,
                             std::unique_ptr<IProtocol> &protocol) {
-  std::string response;
+  // std::vector<uint8_t> binaryData;
 
-  response = "Map OK"; // ici faut faire la commande map qui retourne la map
-                       // donc en gros toutes les pos des entites
+  // binaryData.push_back(0x04);
 
-  // protocol->sendData(response);
+  // uint32_t playerId = command.move.playerId;
+
+  // protocol->sendData(command.id, binaryData);
 }
 
-void Server::enemyMoveCommandSend(Command *command,
+void Server::enemyMoveCommandSend(Command command,
                                   std::unique_ptr<IProtocol> &protocol) {
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x05);
 
-  uint32_t enemyId = command->enemyMove->enemyId;
+  uint32_t enemyId = command.enemyMove.enemyId;
   binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&enemyId),
                     reinterpret_cast<uint8_t *>(&enemyId) + sizeof(enemyId));
 
-  std::string positionX = std::to_string(command->enemyMove->positionX);
-  std::string positionY = std::to_string(command->enemyMove->positionY);
+  std::string positionX = std::to_string(command.enemyMove.positionX);
+  std::string positionY = std::to_string(command.enemyMove.positionY);
 
-  std::string response = positionX + " " + positionY;
+  std::string response = positionX + " " + positionY + "\r\n";
 
   for (auto &c : response) {
     binaryData.push_back(static_cast<uint8_t>(c));
   }
 
-  protocol->sendData(std::string(binaryData.begin(), binaryData.end()),
-                     command->id);
+  protocol->sendDataToAll(binaryData);
 }
 
-void Server::createEnemyCommandSend(Command *command,
+void Server::createEnemyCommandSend(Command command,
                                     std::unique_ptr<IProtocol> &protocol) {
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x06);
 
-  uint32_t enemyId = command->createEnemy->enemyId;
+  uint32_t enemyId = command.createEnemy.enemyId;
   binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&enemyId),
                     reinterpret_cast<uint8_t *>(&enemyId) + sizeof(enemyId));
 
-  std::string positionX = std::to_string(command->createEnemy->positionX);
-  std::string positionY = std::to_string(command->createEnemy->positionY);
+  std::string positionX = std::to_string(command.createEnemy.positionX);
+  std::string positionY = std::to_string(command.createEnemy.positionY);
 
-  std::string response = positionX + " " + positionY;
+  std::string response = positionX + " " + positionY + "\r\n";
 
   for (auto &c : response) {
     binaryData.push_back(static_cast<uint8_t>(c));
@@ -117,47 +127,110 @@ void Server::createEnemyCommandSend(Command *command,
 
   std::cout << "Sending create enemy command" << std::endl;
 
-  protocol->sendData(std::string(binaryData.begin(), binaryData.end()),
-                     command->id);
+  protocol->sendData(command.id, binaryData);
 }
 
-void Server::killEnemyCommandSend(Command *command,
+void Server::killEnemyCommandSend(Command command,
                                   std::unique_ptr<IProtocol> &protocol) {
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x07);
 
-  uint32_t enemyId = command->killEnemy->enemyId;
-  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&enemyId),
-                    reinterpret_cast<uint8_t *>(&enemyId) + sizeof(enemyId));
+  uint32_t enemyId = command.killEnemy.enemyId;
+  std::cout << "Killing enemy with id: " << enemyId << std::endl;
 
-  protocol->sendData(std::string(binaryData.begin(), binaryData.end()),
-                     command->id);
+  std::string enemyIdStr = std::to_string(enemyId) + "\r\n";
+
+  for (auto &c : enemyIdStr) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void Server::newPlayerCommandSend(Command command,
+                                  std::unique_ptr<IProtocol> &protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x08);
+
+  std::string playerName = command.newPlayer.Nickname + "\r\n";
+
+  uint32_t id = command.newPlayer.id;
+
+  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&id),
+                    reinterpret_cast<uint8_t *>(&id) + sizeof(id));
+
+  std::string positionX = std::to_string(command.newPlayer.positionX);
+  std::string positionY = std::to_string(command.newPlayer.positionY);
+
+  std::string response =
+      positionX + " " + positionY + " " + playerName + "\r\n";
+
+  for (auto &c : response) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendDataToAllExceptOne(command.id, binaryData);
+}
+
+void Server::createPlayerCommandSend(Command command,
+                                     std::unique_ptr<IProtocol> &protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x08);
+
+  std::string playerName = command.createPlayer.Nickname + "\r\n";
+
+  uint32_t id = command.createPlayer.id;
+
+  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&id),
+                    reinterpret_cast<uint8_t *>(&id) + sizeof(id));
+
+  std::string positionX = std::to_string(command.createPlayer.positionX);
+  std::string positionY = std::to_string(command.createPlayer.positionY);
+
+  std::string response =
+      positionX + " " + positionY + " " + playerName + "\r\n";
+
+  for (auto &c : response) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendData(command.id, binaryData);
 }
 
 void Server::initCommandMapSend() {
   _commandsSend[CommandType::REPCONNECT] =
-      [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+      [this](Command command, std::unique_ptr<IProtocol> &protocol) {
         connectCommandSend(command, protocol);
       };
   _commandsSend[CommandType::SHOOT] =
-      [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+      [this](Command command, std::unique_ptr<IProtocol> &protocol) {
         shootCommandSend(command, protocol);
       };
   _commandsSend[CommandType::MOVE] =
-      [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+      [this](Command command, std::unique_ptr<IProtocol> &protocol) {
         moveCommandSend(command, protocol);
       };
   _commandsSend[CommandType::ENEMYMOVE] =
-      [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+      [this](Command command, std::unique_ptr<IProtocol> &protocol) {
         enemyMoveCommandSend(command, protocol);
       };
   _commandsSend[CommandType::CREATEENEMY] =
-      [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+      [this](Command command, std::unique_ptr<IProtocol> &protocol) {
         createEnemyCommandSend(command, protocol);
       };
   _commandsSend[CommandType::KILLENEMY] =
-      [this](Command *command, std::unique_ptr<IProtocol> &protocol) {
+      [this](Command command, std::unique_ptr<IProtocol> &protocol) {
         killEnemyCommandSend(command, protocol);
+      };
+  _commandsSend[CommandType::NEWPLAYER] =
+      [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        newPlayerCommandSend(command, protocol);
+      };
+  _commandsSend[CommandType::CREATEPLAYER] =
+      [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        createPlayerCommandSend(command, protocol);
       };
 }

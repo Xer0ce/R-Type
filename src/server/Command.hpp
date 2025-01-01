@@ -11,24 +11,16 @@
 
 enum CommandType {
   CONNECT,
+  DISCONNECT,
+  NEWPLAYER,
+  CREATEPLAYER,
   MOVE,
   SHOOT,
   REPCONNECT,
   ENEMYMOVE,
   CREATEENEMY,
-  KILLENEMY
-};
-
-struct Command {
-  CommandType type;
-  struct Connect *connect;
-  struct Move *move;
-  struct Shoot *shoot;
-  struct repConnect *repConnect;
-  struct enemyMove *enemyMove;
-  struct createEnemy *createEnemy;
-  struct killEnemy *killEnemy;
-  int id;
+  KILLENEMY,
+  EMPTY,
 };
 
 struct killEnemy {
@@ -48,10 +40,23 @@ struct enemyMove {
 };
 
 struct repConnect {
+  float positionX;
+  float positionY;
   std::size_t id;
 };
 
 struct Connect {
+  std::string Nickname;
+};
+
+struct Disconnect {
+  std::size_t playerId;
+};
+
+struct NewPlayer {
+  float positionX;
+  float positionY;
+  std::size_t id;
   std::string Nickname;
 };
 
@@ -65,4 +70,25 @@ struct Shoot {
   std::size_t playerId;
   float positionX;
   float positionY;
+};
+
+struct CreatePlayer {
+  float positionX;
+  float positionY;
+  std::size_t id;
+  std::string Nickname;
+};
+
+struct Command {
+  CommandType type;
+  struct Connect connect;
+  struct Move move;
+  struct Shoot shoot;
+  struct repConnect repConnect;
+  struct enemyMove enemyMove;
+  struct createEnemy createEnemy;
+  struct killEnemy killEnemy;
+  struct NewPlayer newPlayer;
+  struct CreatePlayer createPlayer;
+  int id;
 };

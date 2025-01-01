@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, 2024
+** EPITECH PROJECT, 2025
 ** R-Type
 ** File description:
 ** main
@@ -7,14 +7,12 @@
 
 #include "Game.hpp"
 
-int main() {
+int main(void) {
   Game game;
 
-  if (!game.initialize()) {
-    return 1;
-  }
+  std::cout << "Current scene: " << game.getCurrentSceneName() << std::endl;
 
-  game.run();
-
+  game.load_component();
+  game.init();
   return 0;
 }
