@@ -9,8 +9,8 @@
 
 #include "Queue.hpp"
 #include "game/Game.hpp"
-#include "tcp/Tcp.hpp"
-#include "udp/Udp.hpp"
+#include "../network/tcp/Tcp.hpp"
+#include "../network/udp/Udp.hpp"
 #include <map>
 
 class Server {

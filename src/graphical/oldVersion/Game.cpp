@@ -181,3 +181,4 @@ void Game::render() {
 
   SDL_RenderPresent(renderer);
 }
+  

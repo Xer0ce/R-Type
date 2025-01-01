@@ -1,20 +1,40 @@
-/*
-** EPITECH PROJECT, 2024
-** R-Type
-** File description:
-** main
-*/
+#include <iostream>
+#include "CORE/WindowManager.hpp"
+#include "SCENES/MenuWindow.hpp"
+#include "SCENES/GameWindow.hpp"
+#include "SYSTEMS/ConnectionManager.hpp"
+#include "UTILS/Logger.hpp"
 
-#include "Game.hpp"
+int main(int argc, char* argv[]) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        std::cerr << "Erreur d'initialisation de SDL : " << SDL_GetError() << std::endl;
+        return EXIT_FAILURE;
+    }
 
-int main() {
-  Game game;
 
-  if (!game.initialize()) {
-    return 1;
-  }
+    try {
+        ConnectionManager connectionManager;
+        WindowManager windowManager(connectionManager);
 
-  game.run();
+        windowManager.addWindow("menu", std::make_unique<MenuWindow>(windowManager, connectionManager));
+        windowManager.addWindow("game", std::make_unique<GameWindow>(windowManager, connectionManager));
 
-  return 0;
+
+        windowManager.setBackground("menu", "../src/graphical/assets/menu.png");
+        windowManager.setBackground("game", "../src/graphical/assets/level1.png");
+
+        windowManager.setActiveWindow("menu");
+
+        while (windowManager.isRunning()) {
+            windowManager.update();
+            windowManager.render();
+        }
+    } catch (const std::exception& e) {
+        std::cout << "Erreur : " << e.what() << std::endl;
+        SDL_Quit();
+        return EXIT_FAILURE;
+    }
+
+    SDL_Quit();
+    return EXIT_SUCCESS;
 }

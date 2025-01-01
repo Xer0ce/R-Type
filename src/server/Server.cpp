@@ -11,8 +11,8 @@
 
 Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
                std::string udpIp) {
-  _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
-  _udp = std::make_unique<UDP>(udpPort, udpIp);
+  _tcp = std::make_unique<Tcp>(tcpPort, tcpIp, AProtocol::Mode::SERVER);
+  _udp = std::make_unique<UDP>(udpPort, udpIp, AProtocol::Mode::SERVER);
   _queue = std::make_shared<Queue>();
   _game = std::make_shared<Game>();
   initCommandMapHandle();
@@ -40,8 +40,6 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
-      // std::cout << "Received: " << std::string(buffer.begin(), buffer.end())
-      //           << std::endl;
       if (_commandsHandle.find(buffer[0]) != _commandsHandle.end()) {
         _commandsHandle[buffer[0]](buffer, protocol);
       } else {

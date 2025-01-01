@@ -30,7 +30,6 @@ Entities create_projectile_entity(Registry &r, Position position,
 
 template <EntityType T, typename... Args>
 Entities create_entity(Registry &r, Args &&...args) {
-  std::cout << "[ecs] je passe dans les if " << std::endl;
 
   if constexpr (T == EntityType::Player) {
     return create_player_entity(r, std::forward<Args>(args)...);

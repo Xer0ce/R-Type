@@ -10,10 +10,14 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-Tcp::Tcp(std::size_t port, std::string ip) {
+Tcp::Tcp(std::size_t port, std::string ip, Mode mode) {
+  std::cout << "Creating TCP socket" << std::endl;
+  std::cout << "Port: " << port << std::endl;
+  std::cout << "IP: " << ip << std::endl;
   _port = port;
   _ip = ip;
   _type = "TCP";
+  _mode = mode;
   _timeout.tv_sec = 0;
   _timeout.tv_usec = 1;
 }
@@ -49,30 +53,61 @@ bool Tcp::initializeSocket() {
     perror("Invalid IP address");
     return false;
   }
+  
+  if (_mode == Mode::SERVER) {
+    _maxFd = _socket;
+    FD_ZERO(&_readFds);
+    FD_SET(_socket, &_readFds);
+  }
 
-  _maxFd = _socket;
-  FD_ZERO(&_readFds);
-  FD_SET(_socket, &_readFds);
   return true;
 }
 
 bool Tcp::bindSocket() {
-  if (_port <= 0 || _ip.empty() || _socket < 0) {
-    std::cerr << "Invalid port, IP or socket." << std::endl;
-    return false;
-  }
+  if (_mode == Mode::SERVER) {
+    if (_port <= 0 || _ip.empty() || _socket < 0) {
+      std::cerr << "Invalid port, IP or socket." << std::endl;
+      return false;
+    }
 
-  if (bind(_socket, (sockaddr *)&_addr, sizeof(_addr)) < 0) {
-    perror("Bind failed");
-    return false;
-  }
+    if (bind(_socket, (sockaddr *)&_addr, sizeof(_addr)) < 0) {
+      perror("Bind failed");
+      return false;
+    }
 
-  std::cout << "[DEBUG] Successfully bound to " << _ip << ":" << _port
+    std::cout << "[DEBUG] Successfully bound to " << _ip << ":" << _port
             << std::endl;
 
-  if (listen(_socket, 4) < 0) {
-    perror("Listen failed");
-    return false;
+    if (listen(_socket, 4) < 0) {
+      perror("Listen failed");
+      return false;
+    }
+  } else if (_mode == Mode::CLIENT) {
+    if (connect(_socket, (sockaddr *)&_addr, sizeof(_addr)) < 0) {
+        if (errno == EINPROGRESS) {
+            fd_set writeFds;
+            FD_ZERO(&writeFds);
+            FD_SET(_socket, &writeFds);
+            struct timeval timeout = {5, 0};
+
+            int result = select(_socket + 1, nullptr, &writeFds, nullptr, &timeout);
+            if (result <= 0) {
+                perror("Connection timed out or failed");
+                return false;
+            }
+
+            int optval;
+            socklen_t optlen = sizeof(optval);
+            if (getsockopt(_socket, SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0 || optval != 0) {
+                perror("Connection failed after select");
+                return false;
+            }
+        } else {
+            perror("Failed to connect");
+            return false;
+        }
+    }
+    std::cout << "Connected to server " << _ip << ":" << _port << std::endl;
   }
 
   return true;
@@ -141,9 +176,19 @@ bool Tcp::listenSocket(int backlog) {
 }
 
 bool Tcp::sendData(std::size_t id, std::vector<uint8_t> binaryData) {
-  if (send(id, binaryData.data(), binaryData.size(), 0) < 0) {
-    perror("Failed to send data");
-    return false;
+  if (_mode == Mode::CLIENT) {
+    std::cout << "Sending data to server en tcp" << std::endl;
+    if (send(_socket, binaryData.data(), binaryData.size(), 0) < 0) {
+      perror("Failed to send data");
+      return false;
+    }
+    return true;
+  } else if (_mode == Mode::SERVER) {
+    if (send(id, binaryData.data(), binaryData.size(), 0) < 0) {
+      perror("Failed to send data");
+      return false;
+    }
+    return true;
   }
   return true;
 }
