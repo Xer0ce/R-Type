@@ -40,9 +40,7 @@ void Window::destroyWindow() {
   SDL_Quit();
 }
 
-void Window::delay(int time) {
-  SDL_Delay(time);
-}
+void Window::delay(int time) { SDL_Delay(time); }
 
 bool Window::checkingCloseWindow() {
   while (SDL_PollEvent(&_event)) {
@@ -57,13 +55,9 @@ void Window::draw(SDL_Texture *texture, SDL_FRect rect) {
   SDL_RenderTexture(_renderer, texture, nullptr, &rect);
 }
 
-void Window::render() {
-  SDL_RenderPresent(_renderer);
-}
+void Window::render() { SDL_RenderPresent(_renderer); }
 
-void Window::clear() {
-  SDL_RenderClear(_renderer);
-}
+void Window::clear() { SDL_RenderClear(_renderer); }
 
 SDL_Texture *Window::loadTexture(const char *path) {
   return IMG_LoadTexture(_renderer, path);

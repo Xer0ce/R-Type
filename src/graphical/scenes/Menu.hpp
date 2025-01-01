@@ -10,9 +10,9 @@
 #include "AScene.hpp"
 
 class Menu : public AScene {
-    public:
-        Menu();
-        ~Menu();
+public:
+  Menu();
+  ~Menu();
 
-    private:
+private:
 };

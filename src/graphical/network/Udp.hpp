@@ -8,17 +8,17 @@
 #pragma once
 
 #include "AClient.hpp"
-#include <iostream>
-#include <cstring>
 #include <arpa/inet.h>
+#include <cstring>
+#include <iostream>
 #include <unistd.h>
 
 class Udp : public AClient {
-    public:
-        Udp(std::string ip, int port);
-        ~Udp();
+public:
+  Udp(std::string ip, int port);
+  ~Udp();
 
-        void initSocket() override;
-        void sendToServer(std::vector<uint8_t> data) override;
-        void receiveFromServer() override;
+  void initSocket() override;
+  void sendToServer(std::vector<uint8_t> data) override;
+  void receiveFromServer() override;
 };

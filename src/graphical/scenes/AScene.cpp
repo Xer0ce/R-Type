@@ -7,15 +7,8 @@
 
 #include "AScene.hpp"
 
-AScene::AScene()
-{
-}
+AScene::AScene() {}
 
-AScene::~AScene()
-{
-}
+AScene::~AScene() {}
 
-std::string AScene::getName() const
-{
-    return _name;
-}
+std::string AScene::getName() const { return _name; }

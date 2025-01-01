@@ -7,11 +7,6 @@
 
 #include "EndLess.hpp"
 
-EndLess::EndLess()
-{
-    _name = "EndLess";
-}
+EndLess::EndLess() { _name = "EndLess"; }
 
-EndLess::~EndLess()
-{
-}
+EndLess::~EndLess() {}

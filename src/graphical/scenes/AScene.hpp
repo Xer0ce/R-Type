@@ -10,12 +10,12 @@
 #include "IScene.hpp"
 
 class AScene : public IScene {
-    public:
-        AScene();
-        ~AScene();
+public:
+  AScene();
+  ~AScene();
 
-        std::string getName() const override;
+  std::string getName() const override;
 
-    protected:
-        std::string _name;
+protected:
+  std::string _name;
 };

@@ -8,8 +8,8 @@
 #pragma once
 
 enum sceneType {
-    MENU,
-    HISTORY,
-    ENDLESS,
-    ONE_VS_ONE,
+  MENU,
+  HISTORY,
+  ENDLESS,
+  ONE_VS_ONE,
 };

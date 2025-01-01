@@ -7,11 +7,6 @@
 
 #include "OneVsOne.hpp"
 
-OneVsOne::OneVsOne()
-{
-    _name = "OneVsOne";
-}
+OneVsOne::OneVsOne() { _name = "OneVsOne"; }
 
-OneVsOne::~OneVsOne()
-{
-}
+OneVsOne::~OneVsOne() {}

@@ -12,16 +12,16 @@
 #include <iostream>
 
 class AClient : public IClient {
-    public:
-        AClient();
-        ~AClient();
+public:
+  AClient();
+  ~AClient();
 
-        std::vector<uint8_t> getBuffer() override;
+  std::vector<uint8_t> getBuffer() override;
 
-    protected:
-        std::vector<uint8_t> _buffer;
-        int _socket;
-        std::string _ip;
-        int _port;
-        struct sockaddr_in _server;
+protected:
+  std::vector<uint8_t> _buffer;
+  int _socket;
+  std::string _ip;
+  int _port;
+  struct sockaddr_in _server;
 };

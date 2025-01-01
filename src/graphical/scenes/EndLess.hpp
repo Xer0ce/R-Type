@@ -10,9 +10,9 @@
 #include "AScene.hpp"
 
 class EndLess : public AScene {
-    public:
-        EndLess();
-        ~EndLess();
+public:
+  EndLess();
+  ~EndLess();
 
-    private:
+private:
 };

@@ -47,8 +47,6 @@ void Game::init() {
   _udp->initSocket();
   _window->init();
 
-
-
   _tcp->sendToServer({0x01, 'S', 'a', 'r', 'k', 'o', 'z', 'y'});
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
 
@@ -66,7 +64,8 @@ void Game::game() {
   auto &draw = _ecs.get_components<Draw>();
   auto player = create_entity<EntityType::Player>(
       _ecs, Position(100, 100), Velocity(), Health(1),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, _window->loadTexture("assets/michou.png")));
+      Draw({0, 255, 0, 255}, {100, 150, 50, 50},
+           _window->loadTexture("assets/michou.png")));
   bool running = true;
 
   while (running) {
@@ -79,9 +78,9 @@ void Game::game() {
       }
       std::cout << "Drawing entity" << std::endl;
       SDL_FRect rect = {static_cast<float>(positions[i]->x),
-                  static_cast<float>(positions[i]->y),
-                  static_cast<float>(draw[i]->rect.w),
-                  static_cast<float>(draw[i]->rect.h)};
+                        static_cast<float>(positions[i]->y),
+                        static_cast<float>(draw[i]->rect.w),
+                        static_cast<float>(draw[i]->rect.h)};
       _window->draw(draw[i]->texture, rect);
     }
     _window->render();

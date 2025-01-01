@@ -10,9 +10,9 @@
 #include "AScene.hpp"
 
 class History : public AScene {
-    public:
-        History();
-        ~History();
+public:
+  History();
+  ~History();
 
-    private:
+private:
 };

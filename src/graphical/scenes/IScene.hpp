@@ -10,11 +10,11 @@
 #include <iostream>
 
 class IScene {
-    public:
-        IScene() = default;
-        ~IScene() = default;
+public:
+  IScene() = default;
+  ~IScene() = default;
 
-        virtual std::string getName() const = 0;
+  virtual std::string getName() const = 0;
 
-    protected:
+protected:
 };

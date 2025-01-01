@@ -7,16 +7,16 @@
 
 #pragma once
 
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 class IClient {
-    public:
-        IClient() = default;
-        ~IClient() = default;
+public:
+  IClient() = default;
+  ~IClient() = default;
 
-        virtual void initSocket() = 0;
-        virtual void sendToServer(std::vector<uint8_t> data) = 0;
-        virtual void receiveFromServer() = 0;
-        virtual std::vector<uint8_t> getBuffer() = 0;
+  virtual void initSocket() = 0;
+  virtual void sendToServer(std::vector<uint8_t> data) = 0;
+  virtual void receiveFromServer() = 0;
+  virtual std::vector<uint8_t> getBuffer() = 0;
 };

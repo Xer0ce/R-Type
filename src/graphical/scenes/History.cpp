@@ -7,11 +7,6 @@
 
 #include "History.hpp"
 
-History::History()
-{
-    _name = "History";
-}
+History::History() { _name = "History"; }
 
-History::~History()
-{
-}
+History::~History() {}

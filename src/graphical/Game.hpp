@@ -7,6 +7,13 @@
 
 #pragma once
 
+#include "../ecs/EntitiesGestion.hpp"
+#include "../ecs/Registry.hpp"
+#include "Components/Control.hpp"
+#include "Components/Draw.hpp"
+#include "Components/Health.hpp"
+#include "Components/Position.hpp"
+#include "Components/Velocity.hpp"
 #include "Utils.hpp"
 #include "Window.hpp"
 #include "network/IClient.hpp"
@@ -17,13 +24,6 @@
 #include "scenes/IScene.hpp"
 #include "scenes/Menu.hpp"
 #include "scenes/OneVsOne.hpp"
-#include "../ecs/Registry.hpp"
-#include "Components/Control.hpp"
-#include "Components/Draw.hpp"
-#include "Components/Health.hpp"
-#include "Components/Position.hpp"
-#include "Components/Velocity.hpp"
-#include "../ecs/EntitiesGestion.hpp"
 #include <iostream>
 #include <map>
 #include <memory>

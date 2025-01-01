@@ -10,9 +10,9 @@
 #include "AScene.hpp"
 
 class OneVsOne : public AScene {
-    public:
-        OneVsOne();
-        ~OneVsOne();
+public:
+  OneVsOne();
+  ~OneVsOne();
 
-    private:
+private:
 };
