@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "IScene.hpp"
 #include "../../ecs/EntitiesGestion.hpp"
 #include "../../ecs/Registry.hpp"
 #include "../Components/Control.hpp"
@@ -15,6 +14,7 @@
 #include "../Components/Health.hpp"
 #include "../Components/Position.hpp"
 #include "../Components/Velocity.hpp"
+#include "IScene.hpp"
 
 class AScene : public IScene {
 public:

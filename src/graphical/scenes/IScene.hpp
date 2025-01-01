@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <iostream>
-#include "../Window.hpp"
 #include "../../ecs/Registry.hpp"
+#include "../Window.hpp"
+#include <iostream>
 
 class IScene {
 public:
