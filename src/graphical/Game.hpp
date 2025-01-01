@@ -47,10 +47,6 @@ public:
 
   void listen(IClient &protocol);
 
-  void control_system(keyType key);
-
-  void position_system(float deltaTime);
-
   void init();
   void game();
 

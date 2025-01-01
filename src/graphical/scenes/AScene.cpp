@@ -12,3 +12,7 @@ AScene::AScene() {}
 AScene::~AScene() {}
 
 std::string AScene::getName() const { return _name; }
+
+void AScene::setWindow(Window *window) { _window = window; }
+
+void AScene::setEcs(Registry ecs) { _ecs = ecs; }

@@ -10,3 +10,14 @@
 Menu::Menu() { _name = "Menu"; }
 
 Menu::~Menu() {}
+
+sceneType Menu::loop()
+{
+    auto key = _window->catchKey();
+
+    if (key == SPACE) {
+        std::cout << "switch to history" << std::endl;
+        return (sceneType::HISTORY);
+    }
+    return (sceneType::NO_SWITCH);
+}

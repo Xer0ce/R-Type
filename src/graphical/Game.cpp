@@ -14,7 +14,7 @@ Game::Game() {
   _scenes[sceneType::ENDLESS] = std::make_shared<EndLess>();
   _scenes[sceneType::ONE_VS_ONE] = std::make_shared<OneVsOne>();
 
-  _currentScene = sceneType::MENU;
+  _currentScene = sceneType::HISTORY;
 
   _window = std::make_shared<Window>();
 
@@ -60,43 +60,6 @@ void Game::init() {
   gameThread.join();
 }
 
-void Game::control_system(keyType key) {
-  auto &control = _ecs.get_components<Control>();
-  auto &velocities = _ecs.get_components<Velocity>();
-
-  for (std::size_t i = 0; i < control.size(); ++i) {
-    if (key == keyType::UP) {
-      velocities[i]->y = -1;
-    } else if (key == keyType::RIGHT) {
-      velocities[i]->x = 1;
-    } else if (key == keyType::DOWN) {
-      velocities[i]->y = 1;
-    } else if (key == keyType::LEFT) {
-      velocities[i]->x = -1;
-    } else if (key == keyType::NONE) {
-      velocities[i]->x = 0;
-      velocities[i]->y = 0;
-    }
-  }
-}
-
-void Game::position_system(float deltaTime) {
-  auto &positions = _ecs.get_components<Position>();
-  auto &draw = _ecs.get_components<Draw>();
-  auto &velocities = _ecs.get_components<Velocity>();
-
-  for (std::size_t i = 0; i < positions.size(); ++i) {
-    if (!positions[i].has_value() || !velocities[i].has_value())
-      continue;
-    if (velocities[i]->x == 0 && velocities[i]->y == 0)
-      continue;
-    positions[i]->x += velocities[i]->x * deltaTime;
-    positions[i]->y += velocities[i]->y * deltaTime;
-    draw[i]->rect.x = positions[i]->x;
-    draw[i]->rect.y = positions[i]->y;
-  }
-}
-
 void Game::game() {
   auto player = create_entity<EntityType::Player>(
       _ecs, Position(100, 100), Velocity(), Health(1),
@@ -104,27 +67,23 @@ void Game::game() {
            _window->loadTexture("../src/graphical/assets/michou.png")),
       std::optional<Control>());
 
-  auto &positions = _ecs.get_components<Position>();
-  auto &draw = _ecs.get_components<Draw>();
-
   bool running = true;
 
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
 
+  _scenes[_currentScene]->setWindow(_window.get());
+  _scenes[_currentScene]->setEcs(_ecs);
+
   while (running) {
     running = _window->checkingCloseWindow();
     _window->clear();
-    _window->drawBackground();
+    auto switchScene = _scenes[_currentScene]->loop();
 
-    control_system(_window->catchKey());
-
-    position_system(0.05f);
-
-    for (std::size_t i = 0; i < draw.size(); ++i) {
-      if (!draw[i].has_value())
-        continue;
-      _window->draw(draw[i]->texture, draw[i]->rect);
+    if (switchScene != sceneType::NO_SWITCH) {
+      _currentScene = switchScene;
+      _scenes[_currentScene]->setWindow(_window.get());
+      _scenes[_currentScene]->setEcs(_ecs);
     }
     _window->render();
   }

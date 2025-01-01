@@ -14,5 +14,7 @@ public:
   Menu();
   ~Menu();
 
+  sceneType loop() override;
+
 private:
 };

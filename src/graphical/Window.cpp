@@ -82,6 +82,10 @@ keyType Window::catchKey() {
     return DOWN;
   } else if (keyState[SDL_SCANCODE_LEFT]) {
     return LEFT;
+  } else if (keyState[SDL_SCANCODE_ESCAPE]) {
+    return ESCAPE;
+  } else if (keyState[SDL_SCANCODE_SPACE]) {
+    return SPACE;
   }
   return NONE;
 }

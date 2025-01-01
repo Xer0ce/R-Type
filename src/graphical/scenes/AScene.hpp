@@ -8,6 +8,13 @@
 #pragma once
 
 #include "IScene.hpp"
+#include "../../ecs/EntitiesGestion.hpp"
+#include "../../ecs/Registry.hpp"
+#include "../Components/Control.hpp"
+#include "../Components/Draw.hpp"
+#include "../Components/Health.hpp"
+#include "../Components/Position.hpp"
+#include "../Components/Velocity.hpp"
 
 class AScene : public IScene {
 public:
@@ -16,6 +23,12 @@ public:
 
   std::string getName() const override;
 
+  void setWindow(Window *window) override;
+
+  void setEcs(Registry ecs) override;
+
 protected:
   std::string _name;
+  Window *_window;
+  Registry _ecs;
 };

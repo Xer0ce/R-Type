@@ -14,5 +14,11 @@ public:
   History();
   ~History();
 
+  sceneType loop() override;
+
+  void control_system(keyType key);
+
+  void position_system(float deltaTime);
+
 private:
 };
