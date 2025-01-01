@@ -1,0 +1,51 @@
+@startuml
+
+class Window {
+    ~ Window()
+    ~ ~Window()
+}
+
+interface IScene {
+}
+
+class Connection {
+    ~ Connection()
+    ~ ~Connection()
+}
+
+abstract class AScene {
+    ~ AScene() = default
+    ~ ~AScene() = default
+    - Window _window
+    - Connection _connection
+}
+
+class Menu {
+    ~ Menu(Window &window, Connection &connection)
+    ~ ~Menu()
+}
+
+class OneVsOne {
+    ~ OneVsOne(Window &window, Connection &connection)
+    ~ ~OneVsOne()
+}
+
+class Endless {
+    ~ Endless(Window &window, Connection &connection)
+    ~ ~Endless()
+}
+
+class History {
+    ~ History(Window &window, Connection &connection)
+    ~ ~History()
+}
+
+IScene --|> AScene
+
+AScene --|> Menu
+
+AScene --|> OneVsOne
+AScene --|> Endless
+AScene --|> History
+
+@enduml
