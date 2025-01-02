@@ -5,7 +5,7 @@
 ** handleCommand
 */
 
-#include "Command.hpp"
+#include "../queue/Command.hpp"
 #include "Server.hpp"
 #include <iostream>
 #include <sstream>
