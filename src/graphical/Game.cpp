@@ -20,6 +20,8 @@ Game::Game() {
 
   _tcp = std::make_shared<Tcp>("127.0.0.1", 4243);
   _udp = std::make_shared<Udp>("127.0.0.1", 4242);
+
+  _queue = std::make_shared<Queue>();
 }
 
 Game::~Game() {}

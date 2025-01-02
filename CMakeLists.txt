@@ -16,10 +16,11 @@ add_subdirectory(external/SDL3_image)
 if(BUILD_CLIENT)
     file(GLOB SOURCES_CLIENT "src/graphical/*.cpp")
     file(GLOB SOURCES_CLIENT_SCENES "src/graphical/scenes/*.cpp")
-    file(GLOB SOURCES_CLIENT_NETWORK "src/graphical/network/*.cpp")
+    file(GLOB SOURCES_CLIENT_NETWORK "src/network/client/*.cpp")
+    file(GLOB SOURCES_QUEUE "src/queue/*.cpp")
 
     file(GLOB SOURCES_ECS "src/ecs/*.cpp")
-    add_executable(r-type_client ${SOURCES_CLIENT} ${SOURCES_ECS} ${SOURCES_CLIENT_SCENES} ${SOURCES_CLIENT_NETWORK})
+    add_executable(r-type_client ${SOURCES_CLIENT} ${SOURCES_ECS} ${SOURCES_CLIENT_SCENES} ${SOURCES_CLIENT_NETWORK} ${SOURCES_QUEUE})
     target_include_directories(r-type_client PRIVATE include/graphical)
 
     target_link_libraries(r-type_client PRIVATE SDL3::SDL3)
@@ -32,14 +33,15 @@ endif()
 if(BUILD_SERVER)
     file(GLOB SOURCES_SERVER "src/server/*.cpp")
 
-    file(GLOB SOURCES_NETWORK "src/network/*.cpp")
-    file(GLOB SOURCES_NETWORK_TCP "src/network/tcp/*.cpp")
-    file(GLOB SOURCES_NETWORK_UDP "src/network/udp/*.cpp")
+    file(GLOB SOURCES_NETWORK "src/network/server/*.cpp")
+    file(GLOB SOURCES_NETWORK_TCP "src/network/server/tcp/*.cpp")
+    file(GLOB SOURCES_NETWORK_UDP "src/network/server/udp/*.cpp")
+    file(GLOB SOURCES_QUEUE "src/queue/*.cpp")
 
     file(GLOB SOURCES_SERVER_GAME "src/server/game/*.cpp")
 
     file(GLOB SOURCES_ECS "src/ecs/*.cpp")
-    add_executable(r-type_server ${SOURCES_SERVER} ${SOURCES_NETWORK} ${SOURCES_NETWORK_TCP} ${SOURCES_NETWORK_UDP} ${SOURCES_SERVER_GAME} ${SOURCES_ECS})
+    add_executable(r-type_server ${SOURCES_SERVER} ${SOURCES_NETWORK} ${SOURCES_NETWORK_TCP} ${SOURCES_NETWORK_UDP} ${SOURCES_SERVER_GAME} ${SOURCES_ECS} ${SOURCES_QUEUE})
     target_include_directories(r-type_server PRIVATE include/server)
 
     target_link_libraries(r-type_server PRIVATE SDL3::SDL3)

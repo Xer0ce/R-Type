@@ -16,14 +16,15 @@
 #include "Components/Velocity.hpp"
 #include "Utils.hpp"
 #include "Window.hpp"
-#include "network/IClient.hpp"
-#include "network/Tcp.hpp"
-#include "network/Udp.hpp"
+#include "../network/client/IClient.hpp"
+#include "../network/client/Tcp.hpp"
+#include "../network/client/Udp.hpp"
 #include "scenes/EndLess.hpp"
 #include "scenes/History.hpp"
 #include "scenes/IScene.hpp"
 #include "scenes/Menu.hpp"
 #include "scenes/OneVsOne.hpp"
+#include "../queue/Queue.hpp"
 #include <iostream>
 #include <map>
 #include <memory>
@@ -58,6 +59,8 @@ private:
 
   std::shared_ptr<IClient> _tcp;
   std::shared_ptr<IClient> _udp;
+
+  std::shared_ptr<Queue> _queue;
 
   Registry _ecs;
 };

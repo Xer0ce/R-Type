@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "../network/tcp/Tcp.hpp"
-#include "../network/udp/Udp.hpp"
-#include "Queue.hpp"
+#include "../network/server/tcp/Tcp.hpp"
+#include "../network/server/udp/Udp.hpp"
+#include "../queue/Queue.hpp"
 #include "game/Game.hpp"
 #include <map>
 

@@ -10,8 +10,8 @@
 
 #include "../../ecs/EntitiesGestion.hpp"
 #include "../../ecs/Registry.hpp"
-#include "../../network/IProtocol.hpp"
-#include "../Queue.hpp"
+#include "../../network/server/IProtocol.hpp"
+#include "../../queue/Queue.hpp"
 #include <memory>
 #include <vector>
 
