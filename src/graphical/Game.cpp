@@ -55,11 +55,11 @@ void Game::init() {
 
   std::thread tcpThread([this]() { listen(*_tcp.get()); });
   std::thread udpThread([this]() { listen(*_udp.get()); });
-  std::thread gameThread([this]() { game(); });
+
+  game();
 
   tcpThread.join();
   udpThread.join();
-  gameThread.join();
 }
 
 void Game::game() {
