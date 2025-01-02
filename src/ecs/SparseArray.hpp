@@ -137,11 +137,7 @@ public:
     if (index >= _data.size()) {
       throw std::out_of_range("SparseArray::operator[]");
     }
-    if (_data[index].has_value()) {
-      return _data[index];
-    } else {
-      return std::nullopt;
-    }
+    return _data[index];
   };
 
   /** @brief Returns an iterator to the beginning of the container. */
@@ -247,6 +243,15 @@ public:
     }
     return static_cast<size_type>(-1);
   };
+
+  /**
+   * @brief Resizes the internal storage of the sparse array.
+   */
+  void resize(size_type pos) {
+    if (pos >= _data.size()) {
+      _data.resize(pos + 1);
+    }
+  }
   ///@}
 
 private:

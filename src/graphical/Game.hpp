@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, 2024
+** EPITECH PROJECT, 2025
 ** R-Type
 ** File description:
 ** Game
@@ -7,61 +7,60 @@
 
 #pragma once
 
+#include "../ecs/EntitiesGestion.hpp"
 #include "../ecs/Registry.hpp"
-#include "Commands.hpp"
+#include "../network/client/IClient.hpp"
+#include "../network/client/Tcp.hpp"
+#include "../network/client/Udp.hpp"
+#include "../queue/Queue.hpp"
 #include "Components/Control.hpp"
 #include "Components/Draw.hpp"
 #include "Components/Health.hpp"
 #include "Components/Position.hpp"
 #include "Components/Velocity.hpp"
-#include "Menu.hpp"
-#include "Serialisation.hpp"
-#include "Systems.hpp"
-#include "TcpClient.hpp"
-#include "UdpClient.hpp"
-#include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
-#include <SDL3_ttf/SDL_ttf.h>
-#include <functional>
+#include "Utils.hpp"
+#include "Window.hpp"
+#include "scenes/EndLess.hpp"
+#include "scenes/History.hpp"
+#include "scenes/IScene.hpp"
+#include "scenes/Menu.hpp"
+#include "scenes/OneVsOne.hpp"
+#include <iostream>
 #include <map>
-#include <string>
+#include <memory>
 
 class Game {
 public:
   Game();
   ~Game();
 
-  bool initialize();
-  void run();
-  void cleanup();
+  void load_component() {
+    _ecs.register_component<Position>();
+    _ecs.register_component<Velocity>();
+    _ecs.register_component<Draw>();
+    _ecs.register_component<Health>();
+    _ecs.register_component<Control>();
+    _ecs.register_component<EntityType>();
+  };
+
+  void loadScene(sceneType sceneName);
+  std::string getCurrentSceneName();
+
+  void listen(IClient &protocol);
+
+  void init();
+  void game();
 
 private:
-  bool initSDL();
-  bool initMenu();
-  void registerComponents();
-  void handleSystems(float deltaTime);
-  void handleNetworkMessages();
-  void render();
+  std::map<sceneType, std::shared_ptr<IScene>> _scenes;
+  sceneType _currentScene;
 
-  std::string ipAddress;
-  std::string ipPort;
-  float shootCooldown;
+  std::shared_ptr<Window> _window;
 
-  bool running;
-  Uint64 now;
-  Uint64 last;
-  float deltaTime;
+  std::shared_ptr<IClient> _tcp;
+  std::shared_ptr<IClient> _udp;
 
-  SDL_Window *window;
-  SDL_Renderer *renderer;
-  SDL_Texture *backgroundTexture;
-  TTF_Font *font;
+  std::shared_ptr<Queue> _queue;
 
-  TcpClient *tcpClient;
-  UdpClient *udpClient;
-
-  Registry registry;
-  std::map<uint8_t,
-           std::function<void(std::string, Registry &, SDL_Renderer *)>>
-      commandsHandle;
+  Registry _ecs;
 };

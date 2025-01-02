@@ -10,16 +10,20 @@
 
 #include "../../ecs/EntitiesGestion.hpp"
 #include "../../ecs/Registry.hpp"
-#include "../IProtocol.hpp"
-#include "../Queue.hpp"
+#include "../../network/server/IProtocol.hpp"
+#include "../../queue/Queue.hpp"
 #include <memory>
 #include <vector>
 
 class Game {
 public:
   // main fonction
+  Game();
+  ~Game();
   void load();
   void loop(float deltaTime, std::shared_ptr<Queue> &queue);
+  bool initialize();
+  void run();
 
   // load functions
   void load_component();
@@ -43,6 +47,7 @@ private:
   std::vector<Entities> _players;
   std::vector<Entities> _enemy;
   Registry _ecs;
+  std::mutex _mutex;
 };
 
 #endif // GAME_HPP
