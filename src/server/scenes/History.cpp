@@ -25,8 +25,13 @@ void History::position_system(float deltaTime) {
   for (std::size_t i = 0; i < position.size(); i++) {
     position[i]->x += velocity[i]->x * deltaTime;
     position[i]->y += velocity[i]->y * deltaTime;
-    std::cout << i << " : Position x: " << position[i]->x << " y: " << position[i]->y
-              << std::endl;
+
+    Command command;
+    command.type = CommandType::ENEMYMOVE;
+    command.enemyMove.positionX = position[i]->x;
+    command.enemyMove.positionY = position[i]->y;
+    command.enemyMove.enemyId = i;
+    _queue->pushUdpQueue(command);
   }
 }
 

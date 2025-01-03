@@ -25,6 +25,17 @@ Server::~Server() {}
 
 void Server::listen(IProtocol *protocol) {
   while (true) {
+    if (protocol->getType() == "UDP") {
+      Command command = _queue->popUdpQueue();
+      if (command.type != CommandType::EMPTY) {
+        // Handle Queue
+      }
+    } else if (protocol->getType() == "TCP") {
+      Command command = _queue->popTcpQueue();
+      if (command.type != CommandType::EMPTY) {
+        // Handle Queue
+      }
+    }
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
       if (buffer.size() > 0) {
