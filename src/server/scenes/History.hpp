@@ -14,6 +14,10 @@ public:
   History();
   ~History();
 
+  void position_system(float deltaTime);
+
+  void enemy_system();
+
   sceneType loop() override;
 
   void init() override;

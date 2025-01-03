@@ -12,9 +12,42 @@ History::History() { _name = "History"; }
 History::~History() {}
 
 void History::init() {
-  std::cout << "Init History" << std::endl;
+  create_entity<EntityType::Enemy>(*_ecs, Position(800, 0), Velocity(),
+                                   Health(1), Draw({}, {}, nullptr));
+  create_entity<EntityType::Enemy>(*_ecs, Position(800, 0), Velocity(),
+                                   Health(1), Draw({}, {}, nullptr));
+}
+
+void History::position_system(float deltaTime) {
+  auto &velocity = _ecs->get_components<Velocity>();
+  auto &position = _ecs->get_components<Position>();
+
+  for (std::size_t i = 0; i < position.size(); i++) {
+    position[i]->x += velocity[i]->x * deltaTime;
+    position[i]->y += velocity[i]->y * deltaTime;
+    std::cout << i << " : Position x: " << position[i]->x << " y: " << position[i]->y
+              << std::endl;
+  }
+}
+
+void History::enemy_system() {
+  auto &velocity = _ecs->get_components<Velocity>();
+  auto &position = _ecs->get_components<Position>();
+  auto &entityType = _ecs->get_components<EntityType>();
+
+  for (std::size_t i = 0; i < entityType.size(); i++) {
+    if (entityType[i] == EntityType::Enemy) {
+        if (position[i]->y <= 0) {
+          velocity[i]->y = 10;
+        } else if (position[i]->y >= 1080) {
+          velocity[i]->y = -10;
+        }
+    }
+  }
 }
 
 sceneType History::loop() {
+  enemy_system();
+  position_system(1);
   return sceneType::NO_SWITCH;
 }
