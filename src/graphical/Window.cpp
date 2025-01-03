@@ -18,6 +18,11 @@ void Window::init() {
     exit(84);
   }
 
+  if (!TTF_Init()) {
+        std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
+        exit(84);
+    }
+
   _window = SDL_CreateWindow("R-Type", 1920, 1080, 0);
   if (!_window) {
     std::cerr << "Erreur lors de la création de la fenêtre : " << SDL_GetError()
@@ -37,6 +42,7 @@ void Window::init() {
 
 void Window::destroyWindow() {
   SDL_DestroyWindow(_window);
+  TTF_Quit();
   SDL_Quit();
 }
 
@@ -55,6 +61,18 @@ void Window::draw(SDL_Texture *texture, SDL_Rect rect) {
   SDL_FRect rec = {static_cast<float>(rect.x), static_cast<float>(rect.y),
                    static_cast<float>(rect.w), static_cast<float>(rect.h)};
   SDL_RenderTexture(_renderer, texture, nullptr, &rec);
+}
+
+void Window::drawText() {
+  for (auto &text : _texts) {
+    text.drawText();
+  }
+}
+
+void Window::addText(std::string text, int x, int y, int w, int h) {
+  Text myText = Text(text, x, y, w, h, _renderer);
+  myText.init();
+  _texts.push_back(myText);
 }
 
 void Window::render() { SDL_RenderPresent(_renderer); }

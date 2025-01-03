@@ -11,12 +11,18 @@ Menu::Menu() { _name = "Menu"; }
 
 Menu::~Menu() {}
 
-sceneType Menu::loop() {
-  auto key = _window->catchKey();
+void Menu::init() {
+    _window->addText("R-Type", 1920 / 2, 1080 / 2, 0, 0);
+}
 
-  if (key == SPACE) {
-    std::cout << "switch to history" << std::endl;
-    return (sceneType::HISTORY);
-  }
-  return (sceneType::NO_SWITCH);
+sceneType Menu::loop() {
+    auto key = _window->catchKey();
+
+    _window->drawText();
+
+    if (key == SPACE) {
+        std::cout << "switch to history" << std::endl;
+        return sceneType::HISTORY;
+    }
+    return sceneType::NO_SWITCH;
 }

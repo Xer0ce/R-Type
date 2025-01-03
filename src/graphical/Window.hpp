@@ -11,6 +11,8 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include "Text.hpp"
+#include <vector>
 #include <cstddef>
 
 class Window {
@@ -29,6 +31,10 @@ public:
 
   void draw(SDL_Texture *texture, SDL_Rect rect);
 
+  void drawText();
+
+  void addText(std::string text, int x, int y, int w, int h);
+
   void render();
 
   void clear();
@@ -44,4 +50,5 @@ private:
   SDL_Renderer *_renderer;
   SDL_Event _event;
   SDL_Texture *_background;
+  std::vector<Text> _texts;
 };

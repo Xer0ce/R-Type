@@ -20,5 +20,7 @@ public:
 
   void position_system(float deltaTime);
 
+  void init() override{};
+
 private:
 };

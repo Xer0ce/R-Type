@@ -76,6 +76,7 @@ void Game::game() {
 
   _scenes[_currentScene]->setWindow(_window.get());
   _scenes[_currentScene]->setEcs(_ecs);
+  _scenes[_currentScene]->init();
 
   while (running) {
     running = _window->checkingCloseWindow();
@@ -86,6 +87,7 @@ void Game::game() {
       _currentScene = switchScene;
       _scenes[_currentScene]->setWindow(_window.get());
       _scenes[_currentScene]->setEcs(_ecs);
+      _scenes[_currentScene]->init();
     }
     _window->render();
   }

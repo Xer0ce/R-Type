@@ -16,5 +16,7 @@ public:
 
   sceneType loop() override { return sceneType::NO_SWITCH; };
 
+  void init() override{};
+
 private:
 };
