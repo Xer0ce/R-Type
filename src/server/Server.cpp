@@ -15,9 +15,6 @@ Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
   _udp = std::make_unique<UDP>(udpPort, udpIp);
   _queue = std::make_shared<Queue>();
   _game = std::make_shared<Game>();
-  initCommandMapHandle();
-  initCommandMapSend();
-  initCommandMapGame();
 }
 
 Server::~Server() {}
@@ -31,20 +28,12 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
       command = _queue->popUdpQueue();
     }
     if (command.type != EMPTY) {
-      if (_commandsSend.find(command.type) != _commandsSend.end()) {
-        _commandsSend[command.type](command, protocol);
-      } else {
-        std::cout << "Code invalide ! [Send]" << std::endl;
-      }
+      commandSend.executeCommandSend(command, protocol);
     }
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
-      if (_commandsHandle.find(buffer[0]) != _commandsHandle.end()) {
-        _commandsHandle[buffer[0]](buffer, protocol);
-      } else {
-        std::cout << "Code invalide ! [Send]" << std::endl;
-      }
+      commandHandle.executeCommandHandle(buffer[0], buffer, protocol, _queue);
     }
   }
 }
@@ -68,11 +57,7 @@ void Server::game_loop() {
     if (command.type == EMPTY) {
       continue;
     }
-    if (_commandsGame.find(command.type) != _commandsGame.end()) {
-      _commandsGame[command.type](command);
-    } else {
-      std::cout << "Code invalide ! [Game]" << std::endl;
-    }
+    commandGame.executeCommandGame(command, _queue, _game);
   }
 }
 

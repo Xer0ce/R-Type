@@ -11,6 +11,9 @@
 #include "../network/server/udp/Udp.hpp"
 #include "../queue/Queue.hpp"
 #include "game/Game.hpp"
+#include "commandSystem/CommandHandle.hpp"
+#include "commandSystem/CommandSend.hpp"
+#include "commandSystem/CommandGame.hpp"
 #include <map>
 
 class Server {
@@ -66,13 +69,9 @@ private:
   std::unique_ptr<IProtocol> _tcp;
   std::unique_ptr<IProtocol> _udp;
   std::shared_ptr<Game> _game;
-  std::map<uint8_t, std::function<void(std::vector<uint8_t>,
-                                       std::unique_ptr<IProtocol> &)>>
-      _commandsHandle;
-  std::map<CommandType,
-           std::function<void(Command, std::unique_ptr<IProtocol> &)>>
-      _commandsSend;
-  std::map<CommandType, std::function<void(Command)>> _commandsGame;
+  CommandHandle commandHandle;
+  CommandSend commandSend;
+  CommandGame commandGame;
 
   std::shared_ptr<Queue> _queue;
 };
