@@ -19,4 +19,6 @@ public:
   sceneType loop() override;
 
 private:
+  float mouseX;
+  float mouseY;
 };

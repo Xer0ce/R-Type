@@ -12,6 +12,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include "Text.hpp"
+#include "Button.hpp"
 #include <vector>
 #include <cstddef>
 
@@ -33,7 +34,11 @@ public:
 
   void drawText();
 
+  void drawButton();
+
   void addText(std::string text, int x, int y, int w, int h, int size, std::string fontPath, SDL_Color color);
+
+  void addButton(float x, float y, float w, float h, const std::string &text);
 
   void render();
 
@@ -51,4 +56,5 @@ private:
   SDL_Event _event;
   SDL_Texture *_background;
   std::vector<Text> _texts;
+  std::vector<Button> _buttons;
 };

@@ -69,10 +69,22 @@ void Window::drawText() {
   }
 }
 
+void Window::drawButton() {
+  for (auto &button : _buttons) {
+    button.drawButton();
+  }
+}
+
 void Window::addText(std::string text, int x, int y, int w, int h, int size, std::string fontPath, SDL_Color color) {
   Text myText = Text(text, x, y, w, h, _renderer, size, fontPath, color);
   myText.init();
   _texts.push_back(myText);
+}
+
+void Window::addButton(float x, float y, float w, float h, const std::string &text) {
+  Button myButton = Button(x, y, w, h, _renderer, text);
+  myButton.init();
+  _buttons.push_back(myButton);
 }
 
 void Window::render() { SDL_RenderPresent(_renderer); }

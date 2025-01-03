@@ -25,7 +25,7 @@ class Text {
         const std::string *_text;
         TTF_Font *_font;
         SDL_Color _color;
-        SDL_Rect _rect;
+        SDL_FRect _rect;
         SDL_Texture *_texture;
         SDL_Renderer *_renderer;
 };
