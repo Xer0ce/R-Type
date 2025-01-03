@@ -23,7 +23,7 @@ public:
 
   void init();
 
-  bool checkingCloseWindow();
+  eventType updateEvents();
 
   void delay(int time);
   void destroyWindow();
@@ -49,6 +49,8 @@ public:
   void drawBackground();
 
   keyType catchKey();
+
+  SDL_Event catchEvent();
 
 private:
   SDL_Window *_window;

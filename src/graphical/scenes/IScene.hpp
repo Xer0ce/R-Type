@@ -18,7 +18,7 @@ public:
 
   virtual std::string getName() const = 0;
 
-  virtual sceneType loop() = 0;
+  virtual sceneType loop(eventType event) = 0;
 
   virtual void setWindow(Window *window) = 0;
 

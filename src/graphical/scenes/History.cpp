@@ -48,7 +48,7 @@ void History::position_system(float deltaTime) {
   }
 }
 
-sceneType History::loop() {
+sceneType History::loop(eventType event) {
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
 

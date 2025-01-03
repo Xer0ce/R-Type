@@ -16,9 +16,12 @@ void Menu::init() {
     _window->addButton(1920 / 2, 1080 / 2 + 100, 100, 50, "Play");
 }
 
-sceneType Menu::loop() {
+sceneType Menu::loop(eventType event) {
     auto key = _window->catchKey();
-    SDL_GetMouseState(&mouseX, &mouseY);
+
+    if (event == MOUSE_CLICK) {
+        std::cout << "Mouse clicked" << std::endl;
+    }
 
     _window->drawText();
     _window->drawButton();

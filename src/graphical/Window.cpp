@@ -48,13 +48,16 @@ void Window::destroyWindow() {
 
 void Window::delay(int time) { SDL_Delay(time); }
 
-bool Window::checkingCloseWindow() {
+eventType Window::updateEvents() {
   while (SDL_PollEvent(&_event)) {
     if (_event.type == SDL_EVENT_QUIT) {
-      return false;
+      return CLOSE_WINDOW;
+    }
+    if (_event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+      return MOUSE_CLICK;
     }
   }
-  return true;
+  return NO_EVENT;
 }
 
 void Window::draw(SDL_Texture *texture, SDL_Rect rect) {
@@ -119,3 +122,5 @@ keyType Window::catchKey() {
   }
   return NONE;
 }
+
+SDL_Event Window::catchEvent() { return _event; }

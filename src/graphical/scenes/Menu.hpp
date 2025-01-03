@@ -16,9 +16,7 @@ public:
 
   void init() override;
 
-  sceneType loop() override;
+  sceneType loop(eventType event) override;
 
 private:
-  float mouseX;
-  float mouseY;
 };

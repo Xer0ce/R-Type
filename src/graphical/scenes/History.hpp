@@ -14,7 +14,7 @@ public:
   History();
   ~History();
 
-  sceneType loop() override;
+  sceneType loop(eventType event) override;
 
   void control_system(keyType key);
 

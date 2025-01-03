@@ -69,7 +69,7 @@ void Game::game() {
            _window->loadTexture("../src/graphical/assets/michou.png")),
       std::optional<Control>());
 
-  bool running = true;
+  eventType event = NO_EVENT;
 
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
@@ -78,10 +78,10 @@ void Game::game() {
   _scenes[_currentScene]->setEcs(_ecs);
   _scenes[_currentScene]->init();
 
-  while (running) {
-    running = _window->checkingCloseWindow();
+  while (event != CLOSE_WINDOW) {
+    event = _window->updateEvents();
     _window->clear();
-    auto switchScene = _scenes[_currentScene]->loop();
+    auto switchScene = _scenes[_currentScene]->loop(event);
 
     if (switchScene != sceneType::NO_SWITCH) {
       _currentScene = switchScene;
