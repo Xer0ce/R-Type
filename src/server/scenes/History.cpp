@@ -42,11 +42,11 @@ void History::enemy_system() {
 
   for (std::size_t i = 0; i < entityType.size(); i++) {
     if (entityType[i] == EntityType::Enemy) {
-        if (position[i]->y <= 0) {
-          velocity[i]->y = 10;
-        } else if (position[i]->y >= 1080) {
-          velocity[i]->y = -10;
-        }
+      if (position[i]->y <= 0) {
+        velocity[i]->y = 10;
+      } else if (position[i]->y >= 1080) {
+        velocity[i]->y = -10;
+      }
     }
   }
 }

@@ -39,7 +39,8 @@ void Server::listen(IProtocol *protocol) {
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
       if (buffer.size() > 0) {
-        std::cout << "Received data: " << std::string(buffer.begin(), buffer.end()) << std::endl;
+        std::cout << "Received data: "
+                  << std::string(buffer.begin(), buffer.end()) << std::endl;
       }
     }
   }
@@ -48,10 +49,10 @@ void Server::listen(IProtocol *protocol) {
 void Server::init() {
   if (!_tcp->initializeSocket())
     exit(84);
-  if(!_tcp->bindSocket())
+  if (!_tcp->bindSocket())
     exit(84);
 
-  if(!_udp->initializeSocket())
+  if (!_udp->initializeSocket())
     exit(84);
   if (!_udp->bindSocket())
     exit(84);
@@ -74,7 +75,8 @@ void Server::game() {
 
   while (true) {
     auto currentTime = std::chrono::high_resolution_clock::now();
-    float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+    float deltaTime =
+        std::chrono::duration<float>(currentTime - lastTime).count();
     if (deltaTime > 0.01f) {
       auto switchScene = _scenes[_currentScene]->loop();
       lastTime = currentTime;

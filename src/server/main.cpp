@@ -7,13 +7,12 @@
 
 #include "Server.hpp"
 
-int main (void)
-{
-    Server server;
+int main(void) {
+  Server server;
 
-    server.load_component();
+  server.load_component();
 
-    server.init();
+  server.init();
 
-    return (0);
+  return (0);
 }

@@ -26,6 +26,7 @@ public:
   void setEcs(Registry *ecs) override;
 
   void setQueue(Queue *queue) override;
+
 protected:
   std::string _name;
   Registry *_ecs;

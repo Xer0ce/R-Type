@@ -26,5 +26,6 @@ public:
   virtual void setQueue(Queue *queue) = 0;
 
   virtual void init() = 0;
+
 protected:
 };

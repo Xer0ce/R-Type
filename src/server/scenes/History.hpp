@@ -21,5 +21,6 @@ public:
   sceneType loop() override;
 
   void init() override;
+
 private:
 };
