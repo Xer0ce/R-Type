@@ -69,8 +69,8 @@ void Window::drawText() {
   }
 }
 
-void Window::addText(std::string text, int x, int y, int w, int h) {
-  Text myText = Text(text, x, y, w, h, _renderer);
+void Window::addText(std::string text, int x, int y, int w, int h, int size, std::string fontPath, SDL_Color color) {
+  Text myText = Text(text, x, y, w, h, _renderer, size, fontPath, color);
   myText.init();
   _texts.push_back(myText);
 }

@@ -12,7 +12,7 @@ Menu::Menu() { _name = "Menu"; }
 Menu::~Menu() {}
 
 void Menu::init() {
-    _window->addText("R-Type", 1920 / 2, 1080 / 2, 0, 0);
+    _window->addText("R-Type", 1920 / 2, 1080 / 2, 0, 0, 50, "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
 }
 
 sceneType Menu::loop() {

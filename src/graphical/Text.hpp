@@ -14,7 +14,7 @@
 
 class Text {
     public:
-        Text(const std::string &text, int x, int y, int w, int h, SDL_Renderer *renderer);
+        Text(const std::string &text, int x, int y, int w, int h, SDL_Renderer *renderer, int size, const std::string &fontPath, SDL_Color color);
         ~Text();
 
         void init();

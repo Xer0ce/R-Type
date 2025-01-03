@@ -33,7 +33,7 @@ public:
 
   void drawText();
 
-  void addText(std::string text, int x, int y, int w, int h);
+  void addText(std::string text, int x, int y, int w, int h, int size, std::string fontPath, SDL_Color color);
 
   void render();
 
