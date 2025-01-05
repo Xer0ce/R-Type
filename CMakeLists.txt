@@ -37,11 +37,10 @@ if(BUILD_SERVER)
     file(GLOB SOURCES_NETWORK_TCP "src/network/server/tcp/*.cpp")
     file(GLOB SOURCES_NETWORK_UDP "src/network/server/udp/*.cpp")
     file(GLOB SOURCES_QUEUE "src/queue/*.cpp")
-
-    file(GLOB SOURCES_SERVER_GAME "src/server/game/*.cpp")
+    file(GLOB SOURCES_CLIENT_SCENES "src/server/scenes/*.cpp")
 
     file(GLOB SOURCES_ECS "src/ecs/*.cpp")
-    add_executable(r-type_server ${SOURCES_SERVER} ${SOURCES_NETWORK} ${SOURCES_NETWORK_TCP} ${SOURCES_NETWORK_UDP} ${SOURCES_SERVER_GAME} ${SOURCES_ECS} ${SOURCES_QUEUE})
+    add_executable(r-type_server ${SOURCES_SERVER} ${SOURCES_NETWORK} ${SOURCES_NETWORK_TCP} ${SOURCES_NETWORK_UDP} ${SOURCES_ECS} ${SOURCES_QUEUE} ${SOURCES_CLIENT_SCENES})
     target_include_directories(r-type_server PRIVATE include/server)
 
     target_link_libraries(r-type_server PRIVATE SDL3::SDL3)
