@@ -9,7 +9,7 @@
 
 #include "../../queue/Command.hpp"
 #include "../../queue/Queue.hpp"
-#include "../network/IProtocol.hpp"
+#include "../../network/server/IProtocol.hpp"
 #include <iostream>
 #include <memory>
 #include <map>
@@ -21,12 +21,13 @@ class CommandHandle {
         CommandHandle();
         ~CommandHandle();
 
-        void executeCommandHandle(uint8_t commandType, std::vector<uint8_t> buffer, std::unique_ptr<IProtocol> &protocol, std::shared_ptr<Queue> &queue);
-        void connect(std::vector<uint8_t> buffer, std::unique_ptr<IProtocol> &protocol, std::shared_ptr<Queue> &queue);
-        void disconnect(std::vector<uint8_t> buffer, std::unique_ptr<IProtocol> &protocol, std::shared_ptr<Queue> &queue);
-        void move(std::vector<uint8_t> buffer, std::unique_ptr<IProtocol> &protocol, std::shared_ptr<Queue> &queue);
-        void shoot(std::vector<uint8_t> buffer, std::unique_ptr<IProtocol> &protocol, std::shared_ptr<Queue> &queue);
+        void executeCommandHandle(uint8_t commandType, std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue);
         
     private:
-        std::map<uint8_t, std::function<void(std::vector<uint8_t>, std::unique_ptr<IProtocol> &, std::shared_ptr<Queue> &)>> _commandMap;
+        void connect(std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue);
+        void disconnect(std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue);
+        void move(std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue);
+        void shoot(std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue);
+
+        std::map<uint8_t, std::function<void(std::vector<uint8_t>, IProtocol *, Queue *)>> _commandMap;
 };

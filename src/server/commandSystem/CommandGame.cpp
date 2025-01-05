@@ -9,16 +9,16 @@
 
 CommandGame::CommandGame()
 {
-    _commandMap[CommandType::CONNECT] = [this](Command command, std::shared_ptr<Queue> &queue, std::shared_ptr<Game> &game) {
+    _commandMap[CommandType::CONNECT] = [this](Command command, Queue *queue, Game *game) {
         connect(command, queue, game);
     };
-    _commandMap[CommandType::DISCONNECT] = [this](Command command, std::shared_ptr<Queue> &queue, std::shared_ptr<Game> &game) {
+    _commandMap[CommandType::DISCONNECT] = [this](Command command, Queue *queue, Game *game) {
         disconnect(command, queue, game);
     };
-    _commandMap[CommandType::MOVE] = [this](Command command, std::shared_ptr<Queue> &queue, std::shared_ptr<Game> &game) {
+    _commandMap[CommandType::MOVE] = [this](Command command, Queue *queue, Game *game) {
         move(command, queue, game);
     };
-    _commandMap[CommandType::KILLENEMY] = [this](Command command, std::shared_ptr<Queue> &queue, std::shared_ptr<Game> &game) {
+    _commandMap[CommandType::KILLENEMY] = [this](Command command, Queue *queue, Game *game) {
         killEnemy(command, queue, game);
     };
 }
@@ -27,8 +27,9 @@ CommandGame::~CommandGame()
 {
 }
 
-void CommandGame::executeCommandGame(Command command, std::shared_ptr<Queue> &queue, std::shared_ptr<Game> &game)
+void CommandGame::executeCommandGame(Command command, Queue *queue, Game *game)
 {
+    std::cout << "Execute command game" << std::endl;
     if (_commandMap.find(command.type) != _commandMap.end()) {
         _commandMap[command.type](command, queue, game);
     } else {
@@ -36,7 +37,7 @@ void CommandGame::executeCommandGame(Command command, std::shared_ptr<Queue> &qu
     }
 }
 
-void CommandGame::connect(Command command, std::shared_ptr<Queue> &queue, std::shared_ptr<Game> &game)
+void CommandGame::connect(Command command, Queue *queue, Game *game)
 {
   Command newCommand;
 
@@ -96,12 +97,12 @@ void CommandGame::connect(Command command, std::shared_ptr<Queue> &queue, std::s
   }
 }
 
-void CommandGame::disconnect(Command command, std::shared_ptr<Queue> &queue, std::shared_ptr<Game> &game)
+void CommandGame::disconnect(Command command, Queue *queue, Game *game)
 {
   std::cout << "disconnect command" << std::endl;
 }
 
-void CommandGame::move(Command command, std::shared_ptr<Queue> &queue, std::shared_ptr<Game> &game)
+void CommandGame::move(Command command, Queue *queue, Game *game)
 {
   auto &ecs = game->get_ecs();
   auto &positions = ecs.get_components<Position>();
@@ -123,7 +124,7 @@ void CommandGame::move(Command command, std::shared_ptr<Queue> &queue, std::shar
   }
 }
 
-void CommandGame::killEnemy(Command command, std::shared_ptr<Queue> &queue, std::shared_ptr<Game> &game)
+void CommandGame::killEnemy(Command command, Queue *queue, Game *game)
 {
   auto &ecs = game->get_ecs();
   auto &positions = ecs.get_components<Position>();
