@@ -54,6 +54,8 @@ public:
 
   SDL_Event catchEvent();
 
+  SDL_Renderer *getRenderer() { return _renderer; }
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
