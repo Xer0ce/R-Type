@@ -9,6 +9,7 @@
 
 #include "../../ecs/EntitiesGestion.hpp"
 #include "../../ecs/Registry.hpp"
+#include "../../queue/Queue.hpp"
 #include "../Components/Control.hpp"
 #include "../Components/Draw.hpp"
 #include "../Components/Health.hpp"
@@ -27,8 +28,11 @@ public:
 
   void setEcs(Registry ecs) override;
 
+  void setQueue(Queue *queue) override;
+
 protected:
   std::string _name;
   Window *_window;
   Registry _ecs;
+  Queue *_queue;
 };
