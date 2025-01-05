@@ -9,7 +9,8 @@
 
 #include "../../queue/Command.hpp"
 #include "../../queue/Queue.hpp"
-#include "../game/Game.hpp"
+#include "../../ecs/Registry.hpp"
+#include "../../ecs/EntitiesGestion.hpp"
 #include <map>
 #include <functional>
 
@@ -18,13 +19,13 @@ class CommandGame {
         CommandGame();
         ~CommandGame();
 
-        void executeCommandGame(Command command, Queue *queue, Game *game);
+        void executeCommandGame(Command command, Queue *queue, Registry *ecs);
 
     private:
-        void connect(Command command, Queue *queue, Game *game);
-        void disconnect(Command command, Queue *queue, Game *game);
-        void move(Command command, Queue *queue, Game *game);
-        void killEnemy(Command command, Queue *queue, Game *game);
+        void connect(Command command, Queue *queue, Registry *ecs);
+        void disconnect(Command command, Queue *queue, Registry *ecs);
+        void move(Command command, Queue *queue, Registry *ecs);
+        void killEnemy(Command command, Queue *queue, Registry *ecs);
 
-        std::map<CommandType, std::function<void(Command, Queue *, Game *)>> _commandMap;
+        std::map<CommandType, std::function<void(Command, Queue *, Registry *)>> _commandMap;
 };

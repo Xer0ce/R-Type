@@ -9,17 +9,17 @@
 
 CommandGame::CommandGame()
 {
-    _commandMap[CommandType::CONNECT] = [this](Command command, Queue *queue, Game *game) {
-        connect(command, queue, game);
+    _commandMap[CommandType::CONNECT] = [this](Command command, Queue *queue, Registry *ecs) {
+        connect(command, queue, ecs);
     };
-    _commandMap[CommandType::DISCONNECT] = [this](Command command, Queue *queue, Game *game) {
-        disconnect(command, queue, game);
+    _commandMap[CommandType::DISCONNECT] = [this](Command command, Queue *queue, Registry *ecs) {
+        disconnect(command, queue, ecs);
     };
-    _commandMap[CommandType::MOVE] = [this](Command command, Queue *queue, Game *game) {
-        move(command, queue, game);
+    _commandMap[CommandType::MOVE] = [this](Command command, Queue *queue, Registry *ecs) {
+        move(command, queue, ecs);
     };
-    _commandMap[CommandType::KILLENEMY] = [this](Command command, Queue *queue, Game *game) {
-        killEnemy(command, queue, game);
+    _commandMap[CommandType::KILLENEMY] = [this](Command command, Queue *queue, Registry *ecs) {
+        killEnemy(command, queue, ecs);
     };
 }
 
@@ -27,25 +27,24 @@ CommandGame::~CommandGame()
 {
 }
 
-void CommandGame::executeCommandGame(Command command, Queue *queue, Game *game)
+void CommandGame::executeCommandGame(Command command, Queue *queue, Registry *ecs)
 {
     std::cout << "Execute command game" << std::endl;
     if (_commandMap.find(command.type) != _commandMap.end()) {
-        _commandMap[command.type](command, queue, game);
+        _commandMap[command.type](command, queue, ecs);
     } else {
         std::cout << "Invalid command type! [Game]" << std::endl;
     }
 }
 
-void CommandGame::connect(Command command, Queue *queue, Game *game)
+void CommandGame::connect(Command command, Queue *queue, Registry *ecs)
 {
   Command newCommand;
 
   auto player = create_entity<EntityType::Player>(
-      game->get_ecs(), Position(400, 100), Velocity(), Health(),
+      *ecs, Position(400, 100), Velocity(), Health(),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
-  game->addPlayerToVector(player);
-
+  
   newCommand.type = CommandType::REPCONNECT;
   newCommand.repConnect.id = player;
   newCommand.repConnect.positionX = 400;
@@ -65,9 +64,8 @@ void CommandGame::connect(Command command, Queue *queue, Game *game)
 
   queue->pushTcpQueue(newCommandPlayer);
 
-  auto &ecs = game->get_ecs();
-  auto &entityType = ecs.get_components<EntityType>();
-  auto &entityPosition = ecs.get_components<Position>();
+  auto &entityType = ecs->get_components<EntityType>();
+  auto &entityPosition = ecs->get_components<Position>();
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && entityPosition[i].has_value()) {
@@ -97,17 +95,16 @@ void CommandGame::connect(Command command, Queue *queue, Game *game)
   }
 }
 
-void CommandGame::disconnect(Command command, Queue *queue, Game *game)
+void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs)
 {
   std::cout << "disconnect command" << std::endl;
 }
 
-void CommandGame::move(Command command, Queue *queue, Game *game)
+void CommandGame::move(Command command, Queue *queue, Registry *ecs)
 {
-  auto &ecs = game->get_ecs();
-  auto &positions = ecs.get_components<Position>();
-  auto &velocities = ecs.get_components<Velocity>();
-  auto &entityType = ecs.get_components<EntityType>();
+  auto &positions = ecs->get_components<Position>();
+  auto &velocities = ecs->get_components<Velocity>();
+  auto &entityType = ecs->get_components<EntityType>();
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && positions[i].has_value() &&
@@ -124,12 +121,11 @@ void CommandGame::move(Command command, Queue *queue, Game *game)
   }
 }
 
-void CommandGame::killEnemy(Command command, Queue *queue, Game *game)
+void CommandGame::killEnemy(Command command, Queue *queue, Registry *ecs)
 {
-  auto &ecs = game->get_ecs();
-  auto &positions = ecs.get_components<Position>();
-  auto &velocities = ecs.get_components<Velocity>();
-  auto &entityType = ecs.get_components<EntityType>();
+  auto &positions = ecs->get_components<Position>();
+  auto &velocities = ecs->get_components<Velocity>();
+  auto &entityType = ecs->get_components<EntityType>();
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && positions[i].has_value()) {
@@ -139,7 +135,7 @@ void CommandGame::killEnemy(Command command, Queue *queue, Game *game)
             command.shoot.positionY < positions[i]->y + 50 &&
             command.shoot.positionX + 50 > positions[i]->y) {
 
-          ecs.kill_entity(Entities(i));
+          ecs->kill_entity(Entities(i));
 
           if (!positions[i].has_value()) {
             std::cout << "Position supprimée : " << i << std::endl;
