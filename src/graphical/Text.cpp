@@ -40,6 +40,7 @@ void Text::init()
 
 void Text::drawText()
 {
+    SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderTexture(_renderer, _texture, nullptr, &_rect);
 }
 

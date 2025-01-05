@@ -10,7 +10,7 @@
 Button::Button(float x, float y, float w, float h, SDL_Renderer *renderer, const std::string &text)
     : _renderer(renderer),
       _rect(new SDL_FRect{x, y, w, h}),
-      _normalColor({100, 100, 100, 255}),
+      _normalColor({0, 0, 0, 0}),
       _hoverColor({255, 255, 255, 255}),
       _text(text)
 {
@@ -35,6 +35,8 @@ bool Button::isClicked(float mouseX, float mouseY) const
 void Button::drawButton()
 {
     SDL_GetMouseState(&_mouseX, &_mouseY);
+    SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
+
 
     Text text(_text, _rect->x, _rect->y, _rect->w, _rect->h, _renderer,  40, "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
 
@@ -45,7 +47,7 @@ void Button::drawButton()
         SDL_SetRenderDrawColor(_renderer, _normalColor.r, _normalColor.g, _normalColor.b, _normalColor.a);
     }
     SDL_RenderFillRect(_renderer, _rect);
-    SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 0);
     SDL_RenderRect(_renderer, _rect);
     text.init();
     text.drawText();
