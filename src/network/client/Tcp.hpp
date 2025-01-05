@@ -22,5 +22,4 @@ public:
   void initSocket() override;
   void sendToServer(std::vector<uint8_t> data) override;
   bool receiveFromServer() override;
-  
 };

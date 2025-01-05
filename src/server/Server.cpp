@@ -37,7 +37,8 @@ void Server::listen(IProtocol *protocol) {
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
-      commandHandle.executeCommandHandle(buffer[0], buffer, protocol, _queue.get());
+      commandHandle.executeCommandHandle(buffer[0], buffer, protocol,
+                                         _queue.get());
     }
   }
 }

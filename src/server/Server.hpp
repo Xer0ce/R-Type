@@ -10,10 +10,10 @@
 #include "../network/server/tcp/Tcp.hpp"
 #include "../network/server/udp/Udp.hpp"
 #include "../queue/Queue.hpp"
-#include "game/Game.hpp"
+#include "commandSystem/CommandGame.hpp"
 #include "commandSystem/CommandHandle.hpp"
 #include "commandSystem/CommandSend.hpp"
-#include "commandSystem/CommandGame.hpp"
+#include "game/Game.hpp"
 #include <map>
 
 class Server {
