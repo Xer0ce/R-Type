@@ -128,7 +128,8 @@ void CommandHandle::enemyMove(std::vector<uint8_t> buffer, IClient *protocol,
   std::cout << "Enemy move command receive" << std::endl;
 }
 
-std::vector<std::string> parseCreateEnemyCommand(const std::vector<uint8_t> &buffer) {
+std::vector<std::string>
+parseCreateEnemyCommand(const std::vector<uint8_t> &buffer) {
   std::vector<std::string> bufferString;
   uint32_t enemyId = *reinterpret_cast<const uint32_t *>(&buffer[1]);
 
@@ -142,7 +143,8 @@ std::vector<std::string> parseCreateEnemyCommand(const std::vector<uint8_t> &buf
   return bufferString;
 }
 
-void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) {
+void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
+                                Queue *queue) {
   std::cout << "Create enemy command receive" << std::endl;
   Command cmd;
 
