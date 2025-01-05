@@ -33,6 +33,9 @@ void Text::init()
     SDL_Surface *surface = TTF_RenderText_Blended(_font, (*_text).c_str(), (*_text).length(), _color);
     _texture = SDL_CreateTextureFromSurface(_renderer, surface);
 
+    _rect.w = static_cast<float>(surface->w);
+    _rect.h = static_cast<float>(surface->h);
+
 }
 
 void Text::drawText()

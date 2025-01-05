@@ -36,17 +36,18 @@ void Button::drawButton()
 {
     SDL_GetMouseState(&_mouseX, &_mouseY);
 
-    Text text(_text, _rect->x, _rect->y, _rect->w, _rect->h, _renderer,  1000, "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
-    text.init();
+    Text text(_text, _rect->x, _rect->y, _rect->w, _rect->h, _renderer,  40, "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
 
     if (isMouseOver()) {
         SDL_SetRenderDrawColor(_renderer, _hoverColor.r, _hoverColor.g, _hoverColor.b, _hoverColor.a);
+        text.setColor({0, 0, 0, 0});
     } else {
         SDL_SetRenderDrawColor(_renderer, _normalColor.r, _normalColor.g, _normalColor.b, _normalColor.a);
     }
     SDL_RenderFillRect(_renderer, _rect);
     SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
     SDL_RenderRect(_renderer, _rect);
+    text.init();
     text.drawText();
 }
 
