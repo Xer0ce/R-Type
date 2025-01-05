@@ -20,35 +20,21 @@ Button::~Button()
 {
 }
 
-void Button::updateMousePos(float mouseX, float mouseY)
-{
-
-}
-
 bool Button::isMouseOver() const
 {
     return (_mouseX > _rect->x && _mouseX < _rect->x + _rect->w &&
             _mouseY > _rect->y && _mouseY < _rect->y + _rect->h);
 }
 
-bool Button::isClicked() const
+bool Button::isClicked(float mouseX, float mouseY) const
 {
-    SDL_Event event;
-    // pour fix faut faire event poll etc dans une boucle
-    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && isMouseOver()) {
-        std::cout << "Button clicked" << std::endl;
-        return true;
-    }
-    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-        std::cout << "Button released" << std::endl;
-    }
-    return false;
+    return (mouseX > _rect->x && mouseX < _rect->x + _rect->w &&
+            mouseY > _rect->y && mouseY < _rect->y + _rect->h);
 }
 
 void Button::drawButton()
 {
     SDL_GetMouseState(&_mouseX, &_mouseY);
-    isClicked();
 
     Text text(_text, _rect->x, _rect->y, _rect->w, _rect->h, _renderer,  1000, "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
     text.init();

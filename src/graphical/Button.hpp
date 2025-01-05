@@ -19,15 +19,15 @@ public:
     Button(float x, float y, float w, float h, SDL_Renderer *renderer, const std::string &text);
     ~Button();
 
-    void updateMousePos(float mouseX, float mouseY);
-
     bool isMouseOver() const;
 
-    bool isClicked() const;
+    bool isClicked(float mouseX, float mouseY) const;
 
     void init();
 
     void drawButton();
+
+    std::string getText() { return _text; }
 
 private:
     SDL_Renderer *_renderer;

@@ -40,6 +40,8 @@ public:
 
   void addButton(float x, float y, float w, float h, const std::string &text);
 
+  std::vector<Button> getButtons() { return _buttons; }
+
   void render();
 
   void clear();
