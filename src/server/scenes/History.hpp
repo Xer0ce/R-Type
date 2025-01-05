@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "AScene.hpp"
 #include "../commandSystem/CommandGame.hpp"
+#include "AScene.hpp"
 
 class History : public AScene {
 public:

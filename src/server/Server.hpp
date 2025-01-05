@@ -9,8 +9,6 @@
 
 #include "../ecs/EntitiesGestion.hpp"
 #include "../ecs/Registry.hpp"
-#include "commandSystem/CommandSend.hpp"
-#include "commandSystem/CommandHandle.hpp"
 #include "../graphical/Components/Draw.hpp"
 #include "../graphical/Components/Health.hpp"
 #include "../graphical/Components/Position.hpp"
@@ -19,6 +17,8 @@
 #include "../network/server/tcp/Tcp.hpp"
 #include "../network/server/udp/Udp.hpp"
 #include "../queue/Queue.hpp"
+#include "commandSystem/CommandHandle.hpp"
+#include "commandSystem/CommandSend.hpp"
 #include "scenes/EndLess.hpp"
 #include "scenes/History.hpp"
 #include "scenes/OneVsOne.hpp"

@@ -51,14 +51,13 @@ void History::enemy_system() {
   }
 }
 
-sceneType History::loop() 
-{
+sceneType History::loop() {
   Command command;
 
   command = _queue->popGameQueue();
   if (command.type != EMPTY)
     _commandGame.executeCommandGame(command, _queue, _ecs);
-  
+
   enemy_system();
   position_system(1);
   return sceneType::NO_SWITCH;
