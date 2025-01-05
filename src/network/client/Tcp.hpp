@@ -21,5 +21,6 @@ public:
 
   void initSocket() override;
   void sendToServer(std::vector<uint8_t> data) override;
-  void receiveFromServer() override;
+  bool receiveFromServer() override;
+  
 };
