@@ -24,5 +24,7 @@ public:
 
   virtual void setEcs(Registry ecs) = 0;
 
+  virtual void setQueue(Queue *queue) = 0;
+
 protected:
 };
