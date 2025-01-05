@@ -1,21 +1,49 @@
 /*
-** EPITECH PROJECT, 2024
+** EPITECH PROJECT, 2025
 ** R-Type
 ** File description:
-** handleCommand
+** CommandGame
 */
 
-#include "../queue/Command.hpp"
-#include "Server.hpp"
-#include <iostream>
+#include "CommandGame.hpp"
 
-void Server::connectCommandGame(Command command) {
+CommandGame::CommandGame() {
+  _commandMap[CommandType::CONNECT] = [this](Command command, Queue *queue,
+                                             Registry *ecs) {
+    connect(command, queue, ecs);
+  };
+  _commandMap[CommandType::DISCONNECT] = [this](Command command, Queue *queue,
+                                                Registry *ecs) {
+    disconnect(command, queue, ecs);
+  };
+  _commandMap[CommandType::MOVE] = [this](Command command, Queue *queue,
+                                          Registry *ecs) {
+    move(command, queue, ecs);
+  };
+  _commandMap[CommandType::KILLENEMY] = [this](Command command, Queue *queue,
+                                               Registry *ecs) {
+    killEnemy(command, queue, ecs);
+  };
+}
+
+CommandGame::~CommandGame() {}
+
+void CommandGame::executeCommandGame(Command command, Queue *queue,
+                                     Registry *ecs) {
+  std::cout << "Execute command game" << std::endl;
+  if (_commandMap.find(command.type) != _commandMap.end()) {
+    _commandMap[command.type](command, queue, ecs);
+  } else {
+    std::cout << "Invalid command type! [Game]" << std::endl;
+  }
+}
+
+void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   Command newCommand;
 
   auto player = create_entity<EntityType::Player>(
-      _game->get_ecs(), Position(400, 100), Velocity(), Health(),
+      *ecs, Position(400, 100), Velocity(), Health(),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
-  _game->addPlayerToVector(player);
 
   newCommand.type = CommandType::REPCONNECT;
   newCommand.repConnect.id = player;
@@ -23,7 +51,7 @@ void Server::connectCommandGame(Command command) {
   newCommand.repConnect.positionY = 100;
   newCommand.id = command.id;
   std::cout << "cree le player avec id: " << player << std::endl;
-  _queue->pushTcpQueue(newCommand);
+  queue->pushTcpQueue(newCommand);
 
   Command newCommandPlayer;
 
@@ -34,11 +62,10 @@ void Server::connectCommandGame(Command command) {
   newCommandPlayer.newPlayer.positionY = 100;
   newCommandPlayer.id = command.id;
 
-  _queue->pushTcpQueue(newCommandPlayer);
+  queue->pushTcpQueue(newCommandPlayer);
 
-  auto &ecs = _game->get_ecs();
-  auto &entityType = ecs.get_components<EntityType>();
-  auto &entityPosition = ecs.get_components<Position>();
+  auto &entityType = ecs->get_components<EntityType>();
+  auto &entityPosition = ecs->get_components<Position>();
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && entityPosition[i].has_value()) {
@@ -49,7 +76,7 @@ void Server::connectCommandGame(Command command) {
         newCommandEnemy.createEnemy.positionY = entityPosition[i]->y;
         newCommandEnemy.createEnemy.enemyId = i;
         newCommandEnemy.id = command.id;
-        _queue->pushTcpQueue(newCommandEnemy);
+        queue->pushTcpQueue(newCommandEnemy);
       }
       if (entityType[i] && entityType[i] == EntityType::Player) {
         if (i != player) {
@@ -61,22 +88,21 @@ void Server::connectCommandGame(Command command) {
           newCommandPlayer.createPlayer.positionX = entityPosition[i]->x;
           newCommandPlayer.createPlayer.positionY = entityPosition[i]->y;
           newCommandPlayer.id = command.id;
-          _queue->pushTcpQueue(newCommandPlayer);
+          queue->pushTcpQueue(newCommandPlayer);
         }
       }
     }
   }
 }
 
-void Server::disconnectCommandGame(Command command) {
+void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs) {
   std::cout << "disconnect command" << std::endl;
 }
 
-void Server::moveCommandGame(Command command) {
-  auto &ecs = _game->get_ecs();
-  auto &positions = ecs.get_components<Position>();
-  auto &velocities = ecs.get_components<Velocity>();
-  auto &entityType = ecs.get_components<EntityType>();
+void CommandGame::move(Command command, Queue *queue, Registry *ecs) {
+  auto &positions = ecs->get_components<Position>();
+  auto &velocities = ecs->get_components<Velocity>();
+  auto &entityType = ecs->get_components<EntityType>();
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && positions[i].has_value() &&
@@ -86,18 +112,17 @@ void Server::moveCommandGame(Command command) {
           positions[i]->x = command.move.positionX;
           positions[i]->y = command.move.positionY;
 
-          _queue->pushUdpQueue(command);
+          queue->pushUdpQueue(command);
         }
       }
     }
   }
 }
 
-void Server::killEnemyCommandGame(Command command) {
-  auto &ecs = _game->get_ecs();
-  auto &positions = ecs.get_components<Position>();
-  auto &velocities = ecs.get_components<Velocity>();
-  auto &entityType = ecs.get_components<EntityType>();
+void CommandGame::killEnemy(Command command, Queue *queue, Registry *ecs) {
+  auto &positions = ecs->get_components<Position>();
+  auto &velocities = ecs->get_components<Velocity>();
+  auto &entityType = ecs->get_components<EntityType>();
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && positions[i].has_value()) {
@@ -107,7 +132,7 @@ void Server::killEnemyCommandGame(Command command) {
             command.shoot.positionY < positions[i]->y + 50 &&
             command.shoot.positionX + 50 > positions[i]->y) {
 
-          ecs.kill_entity(Entities(i));
+          ecs->kill_entity(Entities(i));
 
           if (!positions[i].has_value()) {
             std::cout << "Position supprimée : " << i << std::endl;
@@ -117,24 +142,9 @@ void Server::killEnemyCommandGame(Command command) {
           newCommand.type = CommandType::KILLENEMY;
           newCommand.killEnemy.enemyId = i;
           newCommand.id = -10;
-          _queue->pushTcpQueue(newCommand);
+          queue->pushTcpQueue(newCommand);
         }
       }
     }
   }
-}
-
-void Server::initCommandMapGame() {
-  _commandsGame[CommandType::CONNECT] = [this](Command command) {
-    connectCommandGame(command);
-  };
-  _commandsGame[CommandType::SHOOT] = [this](Command command) {
-    disconnectCommandGame(command);
-  };
-  _commandsGame[CommandType::MOVE] = [this](Command command) {
-    moveCommandGame(command);
-  };
-  _commandsGame[CommandType::SHOOT] = [this](Command command) {
-    killEnemyCommandGame(command);
-  };
 }

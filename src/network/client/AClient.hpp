@@ -17,6 +17,7 @@ public:
   ~AClient();
 
   std::vector<uint8_t> getBuffer() override;
+  std::string getType() override;
 
 protected:
   std::vector<uint8_t> _buffer;
@@ -24,4 +25,5 @@ protected:
   std::string _ip;
   int _port;
   struct sockaddr_in _server;
+  std::string _type;
 };

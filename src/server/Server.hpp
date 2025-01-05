@@ -17,6 +17,8 @@
 #include "../network/server/tcp/Tcp.hpp"
 #include "../network/server/udp/Udp.hpp"
 #include "../queue/Queue.hpp"
+#include "commandSystem/CommandHandle.hpp"
+#include "commandSystem/CommandSend.hpp"
 #include "scenes/EndLess.hpp"
 #include "scenes/History.hpp"
 #include "scenes/OneVsOne.hpp"
@@ -46,4 +48,7 @@ private:
   std::shared_ptr<Registry> _ecs;
 
   std::shared_ptr<Queue> _queue;
+
+  CommandHandle commandHandle;
+  CommandSend commandSend;
 };

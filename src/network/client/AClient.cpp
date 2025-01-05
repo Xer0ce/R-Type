@@ -12,3 +12,5 @@ AClient::AClient() {}
 AClient::~AClient() {}
 
 std::vector<uint8_t> AClient::getBuffer() { return _buffer; }
+
+std::string AClient::getType() { return _type; }

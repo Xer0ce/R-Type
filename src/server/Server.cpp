@@ -19,29 +19,28 @@ Server::Server() {
   _ecs = std::make_shared<Registry>();
 
   _queue = std::make_shared<Queue>();
+  commandSend = CommandSend();
+  commandHandle = CommandHandle();
 }
 
 Server::~Server() {}
 
 void Server::listen(IProtocol *protocol) {
   while (true) {
-    if (protocol->getType() == "UDP") {
-      Command command = _queue->popUdpQueue();
-      if (command.type != CommandType::EMPTY) {
-        // Handle Queue
-      }
-    } else if (protocol->getType() == "TCP") {
-      Command command = _queue->popTcpQueue();
-      if (command.type != CommandType::EMPTY) {
-        // Handle Queue
-      }
+    Command command;
+    if (protocol->getType() == "TCP") {
+      command = _queue->popTcpQueue();
+    } else if (protocol->getType() == "UDP") {
+      command = _queue->popUdpQueue();
+    }
+    if (command.type != EMPTY) {
+      commandSend.executeCommandSend(command, protocol);
     }
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
-      if (buffer.size() > 0) {
-        std::cout << "Received data: "
-                  << std::string(buffer.begin(), buffer.end()) << std::endl;
-      }
+
+      commandHandle.executeCommandHandle(buffer[0], buffer, protocol,
+                                         _queue.get());
     }
   }
 }

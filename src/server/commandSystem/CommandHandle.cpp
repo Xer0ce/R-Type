@@ -1,17 +1,41 @@
 /*
-** EPITECH PROJECT, 2024
+** EPITECH PROJECT, 2025
 ** R-Type
 ** File description:
-** handleCommand
+** CommandHandle
 */
 
-#include "../queue/Command.hpp"
-#include "Server.hpp"
-#include <iostream>
-#include <sstream>
+#include "CommandHandle.hpp"
 
-void handleWrongCommand(std::string typeCommand,
-                        std::unique_ptr<IProtocol> &protocol) {
+CommandHandle::CommandHandle() {
+  _commandMap[0x01] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                             Queue *queue) {
+    connect(buffer, protocol, queue);
+  };
+  _commandMap[0x02] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                             Queue *queue) {
+    disconnect(buffer, protocol, queue);
+  };
+  _commandMap[0x03] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                             Queue *queue) { move(buffer, protocol, queue); };
+  _commandMap[0x04] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                             Queue *queue) { shoot(buffer, protocol, queue); };
+}
+
+CommandHandle::~CommandHandle() {}
+
+void CommandHandle::executeCommandHandle(uint8_t commandType,
+                                         std::vector<uint8_t> buffer,
+                                         IProtocol *protocol, Queue *queue) {
+  std::cout << "Execute command handle" << std::endl;
+  if (_commandMap.find(commandType) != _commandMap.end()) {
+    _commandMap[commandType](buffer, protocol, queue);
+  } else {
+    std::cout << "Invalid command type! [Handle]" << std::endl;
+  }
+}
+
+void handleWrongCommand(std::string typeCommand) {
   std::string response;
 
   if (!typeCommand.empty()) {
@@ -58,12 +82,12 @@ parseConnectCommand(const std::vector<uint8_t> &buffer) {
   return bufferString;
 }
 
-void Server::connectCommandHandle(std::vector<uint8_t> buffer,
-                                  std::unique_ptr<IProtocol> &protocol) {
+void CommandHandle::connect(std::vector<uint8_t> buffer, IProtocol *protocol,
+                            Queue *queue) {
   Command cmd;
 
   if (buffer.size() < 5) {
-    handleWrongCommand("Connect", protocol);
+    handleWrongCommand("Connect");
     return;
   }
 
@@ -79,16 +103,16 @@ void Server::connectCommandHandle(std::vector<uint8_t> buffer,
 
   std::cout << "Player Name : " << cmd.connect.Nickname << std::endl;
 
-  _queue->pushGameQueue(cmd);
+  queue->pushGameQueue(cmd);
 }
 
-void Server::disconnectCommandHandle(std::vector<uint8_t> buffer,
-                                     std::unique_ptr<IProtocol> &protocol) {
+void CommandHandle::disconnect(std::vector<uint8_t> buffer, IProtocol *protocol,
+                               Queue *queue) {
   // send struct to queue game
 }
 
-void Server::moveCommandHandle(std::vector<uint8_t> buffer,
-                               std::unique_ptr<IProtocol> &protocol) {
+void CommandHandle::move(std::vector<uint8_t> buffer, IProtocol *protocol,
+                         Queue *queue) {
   Command cmd;
 
   size_t bufferSize = buffer.size();
@@ -103,11 +127,11 @@ void Server::moveCommandHandle(std::vector<uint8_t> buffer,
   cmd.move.positionY = std::stof(bufferString[1]);
   cmd.id = static_cast<int>(clientPort);
 
-  _queue->pushGameQueue(cmd);
+  queue->pushGameQueue(cmd);
 }
 
-void Server::shootCommandHandle(std::vector<uint8_t> buffer,
-                                std::unique_ptr<IProtocol> &protocol) {
+void CommandHandle::shoot(std::vector<uint8_t> buffer, IProtocol *protocol,
+                          Queue *queue) {
 
   Command cmd;
 
@@ -118,24 +142,5 @@ void Server::shootCommandHandle(std::vector<uint8_t> buffer,
   cmd.shoot.playerId = (int)buffer[1];
   cmd.shoot.positionX = std::stof(bufferString[0]);
   cmd.shoot.positionY = std::stof(bufferString[1]);
-  _queue->pushGameQueue(cmd);
-}
-
-void Server::initCommandMapHandle() {
-  _commandsHandle[0x01] = [this](std::vector<uint8_t> buffer,
-                                 std::unique_ptr<IProtocol> &protocol) {
-    connectCommandHandle(buffer, protocol);
-  };
-  _commandsHandle[0x02] = [this](std::vector<uint8_t> buffer,
-                                 std::unique_ptr<IProtocol> &protocol) {
-    disconnectCommandHandle(buffer, protocol);
-  };
-  _commandsHandle[0x03] = [this](std::vector<uint8_t> buffer,
-                                 std::unique_ptr<IProtocol> &protocol) {
-    moveCommandHandle(buffer, protocol);
-  };
-  _commandsHandle[0x04] = [this](std::vector<uint8_t> buffer,
-                                 std::unique_ptr<IProtocol> &protocol) {
-    shootCommandHandle(buffer, protocol);
-  };
+  queue->pushGameQueue(cmd);
 }

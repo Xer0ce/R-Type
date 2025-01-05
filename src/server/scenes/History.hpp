@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../commandSystem/CommandGame.hpp"
 #include "AScene.hpp"
 
 class History : public AScene {
@@ -23,4 +24,5 @@ public:
   void init() override;
 
 private:
+  CommandGame _commandGame;
 };

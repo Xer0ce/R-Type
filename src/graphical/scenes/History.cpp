@@ -7,7 +7,10 @@
 
 #include "History.hpp"
 
-History::History() { _name = "History"; }
+History::History() {
+  _name = "History";
+  commandGame = CommandGame();
+}
 
 History::~History() {}
 
@@ -51,6 +54,11 @@ void History::position_system(float deltaTime) {
 sceneType History::loop() {
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
+  Command command;
+
+  command = _queue->popGameQueue();
+  if (command.type != EMPTY)
+    commandGame.executeCommandGame(command, _queue, &_ecs, _window);
 
   _window->drawBackground();
   keyType key = _window->catchKey();

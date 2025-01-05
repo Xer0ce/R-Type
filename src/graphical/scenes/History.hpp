@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../commandSystem/CommandGame.hpp"
 #include "AScene.hpp"
 
 class History : public AScene {
@@ -21,4 +22,5 @@ public:
   void position_system(float deltaTime);
 
 private:
+  CommandGame commandGame;
 };

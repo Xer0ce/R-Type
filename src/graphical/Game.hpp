@@ -20,6 +20,8 @@
 #include "Components/Velocity.hpp"
 #include "Utils.hpp"
 #include "Window.hpp"
+#include "commandSystem/CommandHandle.hpp"
+#include "commandSystem/CommandSend.hpp"
 #include "scenes/EndLess.hpp"
 #include "scenes/History.hpp"
 #include "scenes/IScene.hpp"
@@ -61,6 +63,8 @@ private:
   std::shared_ptr<IClient> _udp;
 
   std::shared_ptr<Queue> _queue;
+  CommandHandle commandHandle;
+  CommandSend commandSend;
 
   Registry _ecs;
 };
