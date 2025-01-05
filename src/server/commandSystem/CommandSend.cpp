@@ -51,7 +51,6 @@ void CommandSend::executeCommandSend(Command command, IProtocol *protocol) {
 }
 
 void CommandSend::connect(Command command, IProtocol *protocol) {
-  std::cout << "Connect command" << std::endl;
   std::vector<uint8_t> binaryData;
   binaryData.push_back(0x01);
 
@@ -83,7 +82,6 @@ void CommandSend::disconnect(Command command, IProtocol *protocol) {
 }
 
 void CommandSend::move(Command command, IProtocol *protocol) {
-  std::cout << "Move command" << std::endl;
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x03);
@@ -147,7 +145,6 @@ void CommandSend::enemyMove(Command command, IProtocol *protocol) {
 }
 
 void CommandSend::createEnemy(Command command, IProtocol *protocol) {
-  std::cout << "Create enemy command" << std::endl;
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x06);
@@ -165,19 +162,15 @@ void CommandSend::createEnemy(Command command, IProtocol *protocol) {
     binaryData.push_back(static_cast<uint8_t>(c));
   }
 
-  std::cout << "Sending create enemy command" << std::endl;
-
   protocol->sendData(command.id, binaryData);
 }
 
 void CommandSend::killEnemy(Command command, IProtocol *protocol) {
-  std::cout << "Kill enemy command" << std::endl;
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x07);
 
   uint32_t enemyId = command.killEnemy.enemyId;
-  std::cout << "Killing enemy with id: " << enemyId << std::endl;
 
   std::string enemyIdStr = std::to_string(enemyId) + "\r\n";
 
@@ -189,7 +182,6 @@ void CommandSend::killEnemy(Command command, IProtocol *protocol) {
 }
 
 void CommandSend::newPlayer(Command command, IProtocol *protocol) {
-  std::cout << "New player command" << std::endl;
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x08);
@@ -215,7 +207,6 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
 }
 
 void CommandSend::createPlayer(Command command, IProtocol *protocol) {
-  std::cout << "Create player command" << std::endl;
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x08);
