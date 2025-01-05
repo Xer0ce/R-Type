@@ -8,7 +8,7 @@
 #pragma once
 
 #include "../../queue/Command.hpp"
-#include "../network/IProtocol.hpp"
+#include "../../network/server/IProtocol.hpp"
 #include <memory>
 #include <map>
 #include <functional>
@@ -18,19 +18,20 @@ class CommandSend {
         CommandSend();
         ~CommandSend();
 
-        void executeCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
+        void executeCommandSend(Command command, IProtocol *protocol);
 
     private:
-        void connect(Command command, std::unique_ptr<IProtocol> &protocol);
-        void disconnect(Command command, std::unique_ptr<IProtocol> &protocol);
-        void move(Command command, std::unique_ptr<IProtocol> &protocol);
-        void shoot(Command command, std::unique_ptr<IProtocol> &protocol);
-        void map(Command command, std::unique_ptr<IProtocol> &protocol);
-        void enemyMove(Command command, std::unique_ptr<IProtocol> &protocol);
-        void createEnemy(Command command, std::unique_ptr<IProtocol> &protocol);
-        void killEnemy(Command command, std::unique_ptr<IProtocol> &protocol);
-        void newPlayer(Command command, std::unique_ptr<IProtocol> &protocol);
-        void createPlayer(Command command, std::unique_ptr<IProtocol> &protocol);
+        void connect(Command command, IProtocol *protocol);
+        void disconnect(Command command, IProtocol *protocol);
+        void move(Command command, IProtocol *protocol);
+        void shoot(Command command, IProtocol *protocol);
+        void map(Command command, IProtocol *protocol);
+        void enemyMove(Command command, IProtocol *protocol);
+        void createEnemy(Command command, IProtocol *protocol);
+        void killEnemy(Command command, IProtocol *protocol);
+        void newPlayer(Command command, IProtocol *protocol);
+        void createPlayer(Command command, IProtocol *protocol);
 
-        std::map<CommandType, std::function<void(Command, std::unique_ptr<IProtocol> &)>> _commandMap;
+        std::map<CommandType, std::function<void(Command, IProtocol *)>> _commandMap;
+
 };

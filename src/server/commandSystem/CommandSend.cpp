@@ -10,35 +10,35 @@
 CommandSend::CommandSend()
 {
     _commandMap[CommandType::REPCONNECT] =
-        [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        [this](Command command, IProtocol *protocol) {
             connect(command, protocol);
         };
     _commandMap[CommandType::SHOOT] =
-        [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        [this](Command command, IProtocol *protocol) {
             shoot(command, protocol);
         };
     _commandMap[CommandType::MOVE] =
-        [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        [this](Command command, IProtocol *protocol) {
             move(command, protocol);
         };
     _commandMap[CommandType::ENEMYMOVE] =
-        [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        [this](Command command, IProtocol *protocol) {
             enemyMove(command, protocol);
         };
     _commandMap[CommandType::CREATEENEMY] =
-        [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        [this](Command command, IProtocol *protocol) {
             createEnemy(command, protocol);
         };
     _commandMap[CommandType::KILLENEMY] =
-        [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        [this](Command command, IProtocol *protocol) {
             killEnemy(command, protocol);
         };
     _commandMap[CommandType::NEWPLAYER] =
-        [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        [this](Command command, IProtocol *protocol) {
             newPlayer(command, protocol);
         };
     _commandMap[CommandType::CREATEPLAYER] =
-        [this](Command command, std::unique_ptr<IProtocol> &protocol) {
+        [this](Command command, IProtocol *protocol) {
             createPlayer(command, protocol);
         };
 }
@@ -47,7 +47,7 @@ CommandSend::~CommandSend()
 {
 }
 
-void CommandSend::executeCommandSend(Command command, std::unique_ptr<IProtocol> &protocol)
+void CommandSend::executeCommandSend(Command command, IProtocol *protocol)
 {
     if (_commandMap.find(command.type) != _commandMap.end()) {
         _commandMap[command.type](command, protocol);
@@ -56,8 +56,9 @@ void CommandSend::executeCommandSend(Command command, std::unique_ptr<IProtocol>
     }
 }
 
-void CommandSend::connect(Command command,
-                                std::unique_ptr<IProtocol> &protocol) {
+void CommandSend::connect(Command command, IProtocol *protocol)
+{
+  std::cout << "Connect command" << std::endl;
   std::vector<uint8_t> binaryData;
   binaryData.push_back(0x01);
 
@@ -78,18 +79,20 @@ void CommandSend::connect(Command command,
   protocol->sendData(command.id, binaryData);
 }
 
-void CommandSend::disconnect(Command command,
-                                   std::unique_ptr<IProtocol> &protocol) {
+void CommandSend::disconnect(Command command, IProtocol *protocol) 
+{
+  std::cout << "Disconnect command" << std::endl;
   std::string response;
 
   response = "disconnect OK"; // ici faut faire la commande disconnect si un
                               // joeur dans la partie c'est deconnecté
 
-  // protocol->sendData(response);
+  // _protocol->sendData(command.id, binaryData);
 }
 
-void CommandSend::move(Command command,
-                             std::unique_ptr<IProtocol> &protocol) {
+void CommandSend::move(Command command, IProtocol *protocol) 
+{
+  std::cout << "Move command" << std::endl;
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x03);
@@ -110,8 +113,9 @@ void CommandSend::move(Command command,
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 
-void CommandSend::shoot(Command command,
-                              std::unique_ptr<IProtocol> &protocol) {
+void CommandSend::shoot(Command command, IProtocol *protocol)
+{
+  std::cout << "Shoot command" << std::endl;
   std::string response;
 
   response =
@@ -120,8 +124,9 @@ void CommandSend::shoot(Command command,
   // protocol->sendData(response);
 }
 
-void CommandSend::map(Command command,
-                            std::unique_ptr<IProtocol> &protocol) {
+void CommandSend::map(Command command, IProtocol *protocol)
+{
+  std::cout << "Map command" << std::endl;
   // std::vector<uint8_t> binaryData;
 
   // binaryData.push_back(0x04);
@@ -131,8 +136,8 @@ void CommandSend::map(Command command,
   // protocol->sendData(command.id, binaryData);
 }
 
-void CommandSend::enemyMove(Command command,
-                                  std::unique_ptr<IProtocol> &protocol) {
+void CommandSend::enemyMove(Command command, IProtocol *protocol)
+{
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x05);
@@ -153,8 +158,9 @@ void CommandSend::enemyMove(Command command,
   protocol->sendDataToAll(binaryData);
 }
 
-void CommandSend::createEnemy(Command command,
-                                    std::unique_ptr<IProtocol> &protocol) {
+void CommandSend::createEnemy(Command command, IProtocol *protocol)
+{
+  std::cout << "Create enemy command" << std::endl;
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x06);
@@ -177,8 +183,9 @@ void CommandSend::createEnemy(Command command,
   protocol->sendData(command.id, binaryData);
 }
 
-void CommandSend::killEnemy(Command command,
-                                  std::unique_ptr<IProtocol> &protocol) {
+void CommandSend::killEnemy(Command command, IProtocol *protocol)
+{
+  std::cout << "Kill enemy command" << std::endl;
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x07);
@@ -195,8 +202,9 @@ void CommandSend::killEnemy(Command command,
   protocol->sendDataToAll(binaryData);
 }
 
-void CommandSend::newPlayer(Command command,
-                                  std::unique_ptr<IProtocol> &protocol) {
+void CommandSend::newPlayer(Command command, IProtocol *protocol)
+{
+  std::cout << "New player command" << std::endl;
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x08);
@@ -221,8 +229,9 @@ void CommandSend::newPlayer(Command command,
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 
-void CommandSend::createPlayer(Command command,
-                                     std::unique_ptr<IProtocol> &protocol) {
+void CommandSend::createPlayer(Command command, IProtocol *protocol)
+{
+  std::cout << "Create player command" << std::endl;
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x08);
