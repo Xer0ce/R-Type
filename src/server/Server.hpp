@@ -22,52 +22,16 @@ public:
          std::string udpIp);
   ~Server();
 
-  void listen(std::unique_ptr<IProtocol> &protocol);
+  void listen(IProtocol *protocol);
 
   void start();
-
-  void initCommandMapHandle();
-  void initCommandMapSend();
-  void initCommandMapGame();
-
-  void connectCommandHandle(std::vector<uint8_t> buffer,
-                            std::unique_ptr<IProtocol> &protocol);
-  void disconnectCommandHandle(std::vector<uint8_t> buffer,
-                               std::unique_ptr<IProtocol> &protocol);
-  void moveCommandHandle(std::vector<uint8_t> buffer,
-                         std::unique_ptr<IProtocol> &protocol);
-  void shootCommandHandle(std::vector<uint8_t> buffer,
-                          std::unique_ptr<IProtocol> &protocol);
-
-  void connectCommandSend(Command command,
-                          std::unique_ptr<IProtocol> &protocol);
-  void disconnectCommandSend(Command command,
-                             std::unique_ptr<IProtocol> &protocol);
-  void moveCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
-  void shootCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
-  void mapCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
-  void enemyMoveCommandSend(Command command,
-                            std::unique_ptr<IProtocol> &protocol);
-  void createEnemyCommandSend(Command command,
-                              std::unique_ptr<IProtocol> &protocol);
-  void killEnemyCommandSend(Command command,
-                            std::unique_ptr<IProtocol> &protocol);
-  void newPlayerCommandSend(Command command,
-                            std::unique_ptr<IProtocol> &protocol);
-  void createPlayerCommandSend(Command command,
-                               std::unique_ptr<IProtocol> &protocol);
-
-  void connectCommandGame(Command command);
-  void disconnectCommandGame(Command command);
-  void moveCommandGame(Command command);
-  void killEnemyCommandGame(Command command);
 
   void game_loop();
   void world_update(float deltaTime);
 
 private:
-  std::unique_ptr<IProtocol> _tcp;
-  std::unique_ptr<IProtocol> _udp;
+  std::shared_ptr<IProtocol> _tcp;
+  std::shared_ptr<IProtocol> _udp;
   std::shared_ptr<Game> _game;
   CommandHandle commandHandle;
   CommandSend commandSend;
