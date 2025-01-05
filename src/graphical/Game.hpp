@@ -18,6 +18,8 @@
 #include "Components/Health.hpp"
 #include "Components/Position.hpp"
 #include "Components/Velocity.hpp"
+#include "commandSystem/CommandHandle.hpp"
+#include "commandSystem/CommandSend.hpp"
 #include "Utils.hpp"
 #include "Window.hpp"
 #include "scenes/EndLess.hpp"
@@ -61,6 +63,8 @@ private:
   std::shared_ptr<IClient> _udp;
 
   std::shared_ptr<Queue> _queue;
+  CommandHandle commandHandle;
+  CommandSend commandSend;
 
   Registry _ecs;
 };
