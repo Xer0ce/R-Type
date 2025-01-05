@@ -44,14 +44,15 @@ void Game::listen(IClient &protocol) {
       command = _queue->popUdpQueue();
     }
     if (command.type != EMPTY) {
-      //commandSend.executeCommandSend(command, &protocol);
+      // commandSend.executeCommandSend(command, &protocol);
       std::cout << "Execute command send" << std::endl;
     }
 
     if (protocol.receiveFromServer()) {
       std::vector<uint8_t> buffer = protocol.getBuffer();
-      
-      commandHandle.executeCommandHandle(buffer[0], buffer, &protocol, _queue.get());
+
+      commandHandle.executeCommandHandle(buffer[0], buffer, &protocol,
+                                         _queue.get());
     }
   }
 }

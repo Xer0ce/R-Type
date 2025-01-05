@@ -7,9 +7,8 @@
 
 #include "History.hpp"
 
-History::History()
-{ 
-  _name = "History"; 
+History::History() {
+  _name = "History";
   commandGame = CommandGame();
 }
 
@@ -60,7 +59,7 @@ sceneType History::loop() {
   command = _queue->popGameQueue();
   if (command.type != EMPTY)
     commandGame.executeCommandGame(command, _queue, &_ecs, _window);
-  
+
   _window->drawBackground();
   keyType key = _window->catchKey();
   if (key == keyType::ESCAPE) {

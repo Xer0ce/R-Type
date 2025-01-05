@@ -13,11 +13,12 @@
 #include "../../ecs/EntitiesGestion.hpp"
 #include <map>
 #include <functional>
+#include <map>
 
 class CommandGame {
-    public:
-        CommandGame();
-        ~CommandGame();
+public:
+  CommandGame();
+  ~CommandGame();
 
         void executeCommandGame(Command command, Queue *queue, Registry *ecs);
 

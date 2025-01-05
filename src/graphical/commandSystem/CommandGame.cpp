@@ -7,39 +7,41 @@
 
 #include "CommandGame.hpp"
 
-CommandGame::CommandGame()
-{
-    _commandMap[CommandType::REPCONNECT] = [this](Command command, Queue *queue, Registry *ecs, Window *window) {
-        connect(command, queue, ecs, window);
-    };
-    _commandMap[CommandType::DISCONNECT] = [this](Command command, Queue *queue, Registry *ecs, Window *window) {
-        disconnect(command, queue, ecs, window);
-    };
-    _commandMap[CommandType::MOVE] = [this](Command command, Queue *queue, Registry *ecs, Window *window) {
-        move(command, queue, ecs, window);
-    };
-    _commandMap[CommandType::KILLENEMY] = [this](Command command, Queue *queue, Registry *ecs, Window *window) {
-        killEnemy(command, queue, ecs, window);
-    };
+CommandGame::CommandGame() {
+  _commandMap[CommandType::REPCONNECT] = [this](Command command, Queue *queue,
+                                                Registry *ecs, Window *window) {
+    connect(command, queue, ecs, window);
+  };
+  _commandMap[CommandType::DISCONNECT] = [this](Command command, Queue *queue,
+                                                Registry *ecs, Window *window) {
+    disconnect(command, queue, ecs, window);
+  };
+  _commandMap[CommandType::MOVE] = [this](Command command, Queue *queue,
+                                          Registry *ecs, Window *window) {
+    move(command, queue, ecs, window);
+  };
+  _commandMap[CommandType::KILLENEMY] = [this](Command command, Queue *queue,
+                                               Registry *ecs, Window *window) {
+    killEnemy(command, queue, ecs, window);
+  };
 }
 
-CommandGame::~CommandGame()
-{
+CommandGame::~CommandGame() {}
+
+void CommandGame::executeCommandGame(Command command, Queue *queue,
+                                     Registry *ecs, Window *window) {
+  std::cout << "Execute command game" << std::endl;
+  if (_commandMap.find(command.type) != _commandMap.end()) {
+    _commandMap[command.type](command, queue, ecs, window);
+  } else {
+    std::cout << "Invalid command type! [Game]" << std::endl;
+  }
 }
 
-void CommandGame::executeCommandGame(Command command, Queue *queue, Registry *ecs, Window *window)
-{
-    std::cout << "Execute command game" << std::endl;
-    if (_commandMap.find(command.type) != _commandMap.end()) {
-        _commandMap[command.type](command, queue, ecs, window);
-    } else {
-        std::cout << "Invalid command type! [Game]" << std::endl;
-    }
-}
-
-void CommandGame::connect(Command command, Queue *queue, Registry *ecs, Window *window)
-{
-  SDL_Texture *playerTexture = window->loadTexture("../src/graphical/assets/michou.png");
+void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
+                          Window *window) {
+  SDL_Texture *playerTexture =
+      window->loadTexture("../src/graphical/assets/michou.png");
 
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(100, 100), Velocity(), Health(1),
@@ -47,17 +49,17 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs, Window *
       std::optional<Control>(Control()), std::optional<std::size_t>(0));
 }
 
-void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs, Window *window)
-{
+void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs,
+                             Window *window) {
   std::cout << "disconnect command" << std::endl;
 }
 
-void CommandGame::move(Command command, Queue *queue, Registry *ecs, Window *window)
-{
+void CommandGame::move(Command command, Queue *queue, Registry *ecs,
+                       Window *window) {
   std::cout << "move command" << std::endl;
 }
 
-void CommandGame::killEnemy(Command command, Queue *queue, Registry *ecs, Window *window)
-{
+void CommandGame::killEnemy(Command command, Queue *queue, Registry *ecs,
+                            Window *window) {
   std::cout << "killEnemy command" << std::endl;
 }

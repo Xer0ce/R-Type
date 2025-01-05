@@ -36,7 +36,6 @@ void Server::listen(IProtocol *protocol) {
     if (command.type != EMPTY) {
       commandSend.executeCommandSend(command, protocol);
     }
-
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 

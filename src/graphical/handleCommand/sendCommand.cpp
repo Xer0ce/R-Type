@@ -5,7 +5,4 @@
 ** sendCommand
 */
 
-void initSendcommand() 
-{
-    
-}
+void initSendcommand() {}

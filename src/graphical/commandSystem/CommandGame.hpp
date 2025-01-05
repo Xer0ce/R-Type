@@ -12,21 +12,24 @@
 #include "../../queue/Command.hpp"
 #include "../../queue/Queue.hpp"
 #include "../Window.hpp"
-#include <map>
 #include <functional>
+#include <map>
 
 class CommandGame {
-    public:
-        CommandGame();
-        ~CommandGame();
+public:
+  CommandGame();
+  ~CommandGame();
 
-        void executeCommandGame(Command command, Queue *queue, Registry *ecs, Window *window);
+  void executeCommandGame(Command command, Queue *queue, Registry *ecs,
+                          Window *window);
 
-    private:
-        void connect(Command command, Queue *queue, Registry *ecs, Window *window);
-        void disconnect(Command command, Queue *queue, Registry *ecs, Window *window);
-        void move(Command command, Queue *queue, Registry *ecs, Window *window);
-        void killEnemy(Command command, Queue *queue, Registry *ecs, Window *window);
+private:
+  void connect(Command command, Queue *queue, Registry *ecs, Window *window);
+  void disconnect(Command command, Queue *queue, Registry *ecs, Window *window);
+  void move(Command command, Queue *queue, Registry *ecs, Window *window);
+  void killEnemy(Command command, Queue *queue, Registry *ecs, Window *window);
 
-        std::map<CommandType, std::function<void(Command, Queue *, Registry *, Window *)>> _commandMap;
+  std::map<CommandType,
+           std::function<void(Command, Queue *, Registry *, Window *)>>
+      _commandMap;
 };

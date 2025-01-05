@@ -7,36 +7,36 @@
 
 #include "CommandHandle.hpp"
 
-CommandHandle::CommandHandle()
-{
-    _commandMap[0x01] = [this](std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) {
-        connect(buffer, protocol, queue);
-    };
-    _commandMap[0x02] = [this](std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) {
-        disconnect(buffer, protocol, queue);
-    };
-    _commandMap[0x03] = [this](std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) {
-        move(buffer, protocol, queue);
-    };
-    _commandMap[0x04] = [this](std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) {
-        shoot(buffer, protocol, queue);
-    };
-    _commandMap[0x05] = [this](std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) {
-        enemyMove(buffer, protocol, queue);
-    };}
-
-CommandHandle::~CommandHandle()
-{
+CommandHandle::CommandHandle() {
+  _commandMap[0x01] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    connect(buffer, protocol, queue);
+  };
+  _commandMap[0x02] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    disconnect(buffer, protocol, queue);
+  };
+  _commandMap[0x03] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) { move(buffer, protocol, queue); };
+  _commandMap[0x04] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) { shoot(buffer, protocol, queue); };
+  _commandMap[0x05] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    enemyMove(buffer, protocol, queue);
+  };
 }
 
-void CommandHandle::executeCommandHandle(uint8_t commandType, std::vector<uint8_t> buffer, IClient *protocol, Queue *queue)
-{
-    std::cout << "Execute command handle" << std::endl;
-    if (_commandMap.find(commandType) != _commandMap.end()) {
-        _commandMap[commandType](buffer, protocol, queue);
-    } else {
-        std::cout << "Invalid command type! [Handle]" << std::endl;
-    }
+CommandHandle::~CommandHandle() {}
+
+void CommandHandle::executeCommandHandle(uint8_t commandType,
+                                         std::vector<uint8_t> buffer,
+                                         IClient *protocol, Queue *queue) {
+  std::cout << "Execute command handle" << std::endl;
+  if (_commandMap.find(commandType) != _commandMap.end()) {
+    _commandMap[commandType](buffer, protocol, queue);
+  } else {
+    std::cout << "Invalid command type! [Handle]" << std::endl;
+  }
 }
 
 void handleWrongCommand(std::string typeCommand) {
@@ -74,7 +74,8 @@ std::vector<std::string> my_strToWordArray(const std::string &str,
   return resultVec;
 }
 
-std::vector<std::string> parseConnectCommand(const std::vector<uint8_t> &buffer) {
+std::vector<std::string>
+parseConnectCommand(const std::vector<uint8_t> &buffer) {
   std::vector<std::string> bufferString;
   uint32_t id = *reinterpret_cast<const uint32_t *>(&buffer[1]);
 
@@ -88,8 +89,8 @@ std::vector<std::string> parseConnectCommand(const std::vector<uint8_t> &buffer)
   return bufferString;
 }
 
-void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue)
-{
+void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
+                            Queue *queue) {
   std::cout << "Connect command receive" << std::endl;
   Command cmd;
 
@@ -105,22 +106,22 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol, Queu
   queue->pushGameQueue(cmd);
 }
 
-void CommandHandle::disconnect(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) 
-{
+void CommandHandle::disconnect(std::vector<uint8_t> buffer, IClient *protocol,
+                               Queue *queue) {
   std::cout << "Disconnect command receive" << std::endl;
 }
 
-void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) 
-{
+void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,
+                         Queue *queue) {
   std::cout << "Move command receive" << std::endl;
 }
 
-void CommandHandle::shoot(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) 
-{
+void CommandHandle::shoot(std::vector<uint8_t> buffer, IClient *protocol,
+                          Queue *queue) {
   std::cout << "Shoot command receive" << std::endl;
 }
 
-void CommandHandle::enemyMove(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) 
-{
+void CommandHandle::enemyMove(std::vector<uint8_t> buffer, IClient *protocol,
+                              Queue *queue) {
   std::cout << "Enemy move command receive" << std::endl;
 }

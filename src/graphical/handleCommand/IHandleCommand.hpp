@@ -8,12 +8,12 @@
 #pragma once
 
 class IHandleCommand {
-    public:
-        IHandleCommand();
-        ~IHandleCommand();
+public:
+  IHandleCommand();
+  ~IHandleCommand();
 
-        virtual void initCommand() = 0;
-        virtual void handleCommand() = 0;
-    private:
+  virtual void initCommand() = 0;
+  virtual void handleCommand() = 0;
+
+private:
 };
-
