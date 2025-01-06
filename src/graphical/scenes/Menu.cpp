@@ -35,7 +35,8 @@ sceneType Menu::loop(eventType event) {
     for (auto &button : _window->getButtons()) {
       if (button.isClicked(mouseX, mouseY)) {
         if (button.getText() == "Heberger") {
-          //_window->deleteTexts();
+          _window->deleteTexts();
+          _window->deleteButtons();
           return sceneType::LOBBY;
         }
       }

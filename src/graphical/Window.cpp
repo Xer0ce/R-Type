@@ -145,3 +145,5 @@ int Window::getMouseState(float *x, float *y) {
 }
 
 void Window::deleteTexts() { _texts.clear(); }
+
+void Window::deleteButtons() { _buttons.clear(); }
