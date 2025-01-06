@@ -39,9 +39,7 @@ sceneType Lobby::loop(eventType event) {
       if (button.isClicked(mouseX, mouseY)) {
         if (button.getText() == "Start") {
           Command command;
-
           std::cout << "Start game" << std::endl;
-
           command.type = CommandType::STARTGAME;
           _queue->pushTcpQueue(command);
         }

@@ -43,11 +43,11 @@ CommandSend::CommandSend() {
 CommandSend::~CommandSend() {}
 
 void CommandSend::executeCommandSend(Command command, IClient *protocol) {
-  std::cout << "Execute command send" << std::endl;
+  // std::cout << "Execute command send" << std::endl;
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
-    std::cout << "Invalid command type! [Send]" << std::endl;
+    // std::cout << "Invalid command type! [Send]" << std::endl;
   }
 }
 
