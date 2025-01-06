@@ -65,6 +65,8 @@ public:
 
   void deleteButtons();
 
+  void deleteText(std::string text);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;

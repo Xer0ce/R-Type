@@ -147,3 +147,11 @@ int Window::getMouseState(float *x, float *y) {
 void Window::deleteTexts() { _texts.clear(); }
 
 void Window::deleteButtons() { _buttons.clear(); }
+
+void Window::deleteText(std::string text) {
+  for (auto &t : _texts) {
+    if (t.getText() == text) {
+      t.destroyText();
+    }
+  }
+}
