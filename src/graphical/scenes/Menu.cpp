@@ -62,11 +62,9 @@ std::string Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
   if (event == MOUSE_CLICK) {
     for (auto &button : _window->getButtons()) {
       if (button.isClicked(mouseX, mouseY)) {
-        // _window->deleteTexts();
-        // _window->deleteButtons();
-        // return sceneType::LOBBY;
         std::string menu = button.getText();
         setMenu(menu);
+        return menu;
       }
     }
   }
@@ -82,11 +80,6 @@ sceneType Menu::loop(eventType event) {
   auto &position = _ecs.get_components<Position>();
 
   auto button = mouseHandler(mouseX, mouseY, event);
-  if (button == "Quitter") {
-    _window->deleteTexts();
-    _window->deleteButtons();
-    return sceneType::LOBBY;
-  }
   _window->drawBackground();
   _window->drawButton();
   _window->createMenuPipe();
@@ -99,6 +92,12 @@ sceneType Menu::loop(eventType event) {
     }
   }
   _window->drawText();
+
+  if (button == "Quitter") {
+    _window->deleteTexts();
+    _window->deleteButtons();
+    return sceneType::HISTORY;
+  }
 
   return sceneType::NO_SWITCH;
 }
