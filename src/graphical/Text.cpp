@@ -7,10 +7,10 @@
 
 #include "Text.hpp"
 
-Text::Text(const std::string &text, int x, int y, int w, int h,
+Text::Text(std::string text, int x, int y, int w, int h,
            SDL_Renderer *renderer, int size, const std::string &fontPath,
            SDL_Color color)
-    : _text(&text), _renderer(renderer), _color(color) {
+    : _text(text), _renderer(renderer), _color(color) {
   _rect.x = x;
   _rect.y = y;
   _rect.w = w;
@@ -19,16 +19,16 @@ Text::Text(const std::string &text, int x, int y, int w, int h,
 }
 
 Text::~Text() {
-  if (_font) {
-    std::cout << "destroying font" << std::endl;
-    TTF_CloseFont(_font);
-    _font = nullptr;
-  }
+  // if (_font) {
+  //   std::cout << "destroying font" << std::endl;
+  //   TTF_CloseFont(_font);
+  //   _font = nullptr;
+  // }
 }
 
 void Text::init() {
-  SDL_Surface *surface = TTF_RenderText_Blended(_font, (*_text).c_str(),
-                                                (*_text).length(), _color);
+  SDL_Surface *surface = TTF_RenderText_Blended(_font, (_text).c_str(),
+                                                (_text).length(), _color);
   _texture = SDL_CreateTextureFromSurface(_renderer, surface);
 
   _rect.w = static_cast<float>(surface->w);
@@ -47,3 +47,5 @@ void Text::destroyText() {
     _font = nullptr;
   }
 }
+
+std::string Text::getText() { return _text; }
