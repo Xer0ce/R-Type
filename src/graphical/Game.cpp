@@ -72,6 +72,7 @@ void Game::init() {
 }
 
 void Game::game() {
+  auto lastTime = std::chrono::high_resolution_clock::now();
   bool running = true;
   eventType event = NO_EVENT;
 
@@ -85,21 +86,26 @@ void Game::game() {
   _scenes[_currentScene]->setQueue(_queue.get());
 
   while (event != CLOSE_WINDOW) {
-    event = _window->updateEvents();
-    _window->clear();
-    auto switchScene = _scenes[_currentScene]->loop(event);
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float deltaTime =
+        std::chrono::duration<float>(currentTime - lastTime).count();
 
-    if (switchScene != sceneType::NO_SWITCH) {
-      if (switchScene != MENU) {
-        init();
+    if (deltaTime > 0.01f) {
+      event = _window->updateEvents();
+      _window->clear();
+      auto switchScene = _scenes[_currentScene]->loop(event);
+
+      if (switchScene != sceneType::NO_SWITCH) {
+        if (switchScene != MENU)
+          init();
+        _currentScene = switchScene;
+        _scenes[_currentScene]->setWindow(_window.get());
+        _scenes[_currentScene]->setEcs(_ecs);
+        _scenes[_currentScene]->setQueue(_queue.get());
+        _scenes[_currentScene]->init();
       }
-      _currentScene = switchScene;
-      _scenes[_currentScene]->setWindow(_window.get());
-      _scenes[_currentScene]->setEcs(_ecs);
-      _scenes[_currentScene]->setQueue(_queue.get());
-      _scenes[_currentScene]->init();
+      _window->render();
     }
-    _window->render();
   }
   _window->destroyWindow();
   exit(0);
