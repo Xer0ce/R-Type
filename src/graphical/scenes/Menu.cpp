@@ -62,9 +62,6 @@ std::string Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
   if (event == MOUSE_CLICK) {
     for (auto &button : _window->getButtons()) {
       if (button.isClicked(mouseX, mouseY)) {
-        // _window->deleteTexts();
-        // _window->deleteButtons();
-        // return sceneType::LOBBY;
         std::string menu = button.getText();
         setMenu(menu);
         return menu;
