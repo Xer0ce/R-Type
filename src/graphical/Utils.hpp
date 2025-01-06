@@ -26,8 +26,4 @@ enum keyType {
   NONE,
 };
 
-enum eventType {
-  MOUSE_CLICK,
-  CLOSE_WINDOW,
-  NO_EVENT
-};
+enum eventType { MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT };

@@ -19,9 +19,9 @@ void Window::init() {
   }
 
   if (!TTF_Init()) {
-        std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
-        exit(84);
-    }
+    std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
 
   _window = SDL_CreateWindow("R-Type", 1920, 1080, 0);
   if (!_window) {
@@ -78,13 +78,15 @@ void Window::drawButton() {
   }
 }
 
-void Window::addText(std::string text, int x, int y, int w, int h, int size, std::string fontPath, SDL_Color color) {
+void Window::addText(std::string text, int x, int y, int w, int h, int size,
+                     std::string fontPath, SDL_Color color) {
   Text myText = Text(text, x, y, w, h, _renderer, size, fontPath, color);
   myText.init();
   _texts.push_back(myText);
 }
 
-void Window::addButton(float x, float y, float w, float h, const std::string &text) {
+void Window::addButton(float x, float y, float w, float h,
+                       const std::string &text) {
   Button myButton = Button(x, y, w, h, _renderer, text);
   myButton.init();
   _buttons.push_back(myButton);
@@ -126,19 +128,19 @@ keyType Window::catchKey() {
 SDL_Event Window::catchEvent() { return _event; }
 
 void Window::createMenuPipe() {
-    SDL_Renderer *renderer = getRenderer();
-    SDL_FRect pipeRect;
+  SDL_Renderer *renderer = getRenderer();
+  SDL_FRect pipeRect;
 
-    pipeRect.x = 45;
-    pipeRect.y = 200;
-    pipeRect.w = 5;
-    pipeRect.h = 400;
+  pipeRect.x = 45;
+  pipeRect.y = 200;
+  pipeRect.w = 5;
+  pipeRect.h = 400;
 
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &pipeRect);
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+  SDL_RenderFillRect(renderer, &pipeRect);
 }
 
-int Window::getMouseState (float *x, float *y) {
-    return SDL_GetMouseState(x, y);
+int Window::getMouseState(float *x, float *y) {
+  return SDL_GetMouseState(x, y);
 }
