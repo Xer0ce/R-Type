@@ -60,7 +60,6 @@ void Game::listen(IClient &protocol) {
 void Game::init() {
   _tcp->initSocket();
   _udp->initSocket();
-  _window->init();
 
   _tcp->sendToServer({0x01, 'S', 'a', 'r', 'k', 'o', 'z', 'y'});
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
@@ -68,16 +67,15 @@ void Game::init() {
   std::thread tcpThread([this]() { listen(*_tcp.get()); });
   std::thread udpThread([this]() { listen(*_udp.get()); });
 
-  game();
-
-  tcpThread.join();
-  udpThread.join();
+  tcpThread.detach();
+  udpThread.detach();
 }
 
 void Game::game() {
   bool running = true;
   eventType event = NO_EVENT;
 
+  _window->init();
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
 
@@ -92,6 +90,9 @@ void Game::game() {
     auto switchScene = _scenes[_currentScene]->loop(event);
 
     if (switchScene != sceneType::NO_SWITCH) {
+      if (switchScene != MENU) {
+        init();
+      }
       _currentScene = switchScene;
       _scenes[_currentScene]->setWindow(_window.get());
       _scenes[_currentScene]->setEcs(_ecs);

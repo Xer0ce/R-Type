@@ -13,6 +13,6 @@ int main(void) {
   std::cout << "Current scene: " << game.getCurrentSceneName() << std::endl;
 
   game.load_component();
-  game.init();
+  game.game();
   return 0;
 }
