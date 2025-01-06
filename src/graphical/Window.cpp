@@ -131,7 +131,7 @@ void Window::createMenuPipe() {
   SDL_FRect pipeRect;
 
   pipeRect.x = 45;
-  pipeRect.y = 200;
+  pipeRect.y = 275;
   pipeRect.w = 5;
   pipeRect.h = 400;
 

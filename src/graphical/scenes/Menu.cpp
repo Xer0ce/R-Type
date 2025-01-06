@@ -12,16 +12,16 @@ Menu::Menu() { _name = "Menu"; }
 Menu::~Menu() {}
 
 void Menu::init() {
-  _window->addText("R-Michou", 50, 50, 500, 50, 100,
+  _window->addText("Cosmic Michou", 50, 50, 500, 50, 100,
                    "../src/graphical/assets/RTypefont.otf",
                    {255, 255, 255, 255});
-  _window->addText("Vendetta", 50, 100, 500, 50, 200,
+  _window->addText("Vendetta", 60, 150, 500, 50, 50,
                    "../src/graphical/assets/RTypefont.otf",
                    {255, 255, 255, 255});
-  _window->addButton(70, 100 + 100, 500, 50, "Heberger");
-  _window->addButton(70, 100 + 200, 500, 50, "Rejoindre");
-  _window->addButton(70, 100 + 300, 500, 50, "Parametres");
-  _window->addButton(70, 100 + 400, 500, 50, "Quitter");
+  _window->addButton(70, 200 + 100, 500, 50, "Heberger");
+  _window->addButton(70, 200 + 200, 500, 50, "Rejoindre");
+  _window->addButton(70, 200 + 300, 500, 50, "Parametres");
+  _window->addButton(70, 200 + 400, 500, 50, "Quitter");
 }
 
 sceneType Menu::loop(eventType event) {
@@ -32,7 +32,9 @@ sceneType Menu::loop(eventType event) {
   if (event == MOUSE_CLICK) {
     for (auto &button : _window->getButtons()) {
       if (button.isClicked(mouseX, mouseY)) {
-        std::cout << button.getText() << std::endl;
+        if (button.getText() == "Heberger") {
+          return sceneType::HISTORY;
+        }
       }
     }
   }
