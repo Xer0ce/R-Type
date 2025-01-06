@@ -56,6 +56,10 @@ public:
 
   SDL_Renderer *getRenderer() { return _renderer; }
 
+  void createMenuPipe();
+
+  int getMouseState (float *x, float *y);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;

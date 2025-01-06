@@ -19,25 +19,11 @@ void Menu::init() {
     _window->addButton(70, 100 + 400, 500, 50, "Quitter");
 }
 
-void Menu::drawPipe() {
-    SDL_Renderer *renderer = _window->getRenderer();
-    SDL_FRect pipeRect;
-
-    pipeRect.x = 45;
-    pipeRect.y = 200;
-    pipeRect.w = 5;
-    pipeRect.h = 400;
-
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &pipeRect);
-}
-
 sceneType Menu::loop(eventType event) {
     auto key = _window->catchKey();
     float mouseX, mouseY;
 
-    SDL_GetMouseState(&mouseX, &mouseY);
+    _window->getMouseState(&mouseX, &mouseY);
     if (event == MOUSE_CLICK) {
         for (auto &button : _window->getButtons()) {
             if (button.isClicked(mouseX, mouseY)) {
@@ -51,7 +37,7 @@ sceneType Menu::loop(eventType event) {
     _window->drawBackground();  
     _window->drawText();
     _window->drawButton();
-    drawPipe();
+    _window->createMenuPipe();
 
     if (key == SPACE) {
         std::cout << "switch to history" << std::endl;

@@ -124,3 +124,21 @@ keyType Window::catchKey() {
 }
 
 SDL_Event Window::catchEvent() { return _event; }
+
+void Window::createMenuPipe() {
+    SDL_Renderer *renderer = getRenderer();
+    SDL_FRect pipeRect;
+
+    pipeRect.x = 45;
+    pipeRect.y = 200;
+    pipeRect.w = 5;
+    pipeRect.h = 400;
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &pipeRect);
+}
+
+int Window::getMouseState (float *x, float *y) {
+    return SDL_GetMouseState(x, y);
+}

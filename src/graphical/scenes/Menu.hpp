@@ -15,7 +15,6 @@ public:
   ~Menu();
 
   void init() override;
-  void drawPipe();
 
   sceneType loop(eventType event) override;
 
