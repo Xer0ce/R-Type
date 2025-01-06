@@ -38,6 +38,10 @@ CommandSend::CommandSend() {
                                                   IProtocol *protocol) {
     createPlayer(command, protocol);
   };
+  _commandMap[CommandType::STARTGAME] = [this](Command command,
+                                                  IProtocol *protocol) {
+    startGame(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -229,4 +233,18 @@ void CommandSend::createPlayer(Command command, IProtocol *protocol) {
   }
 
   protocol->sendData(command.id, binaryData);
+}
+
+void CommandSend::startGame(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x09);
+
+  std::string response = "\r\n";
+
+  for (auto &c : response) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendDataToAll(binaryData);
 }

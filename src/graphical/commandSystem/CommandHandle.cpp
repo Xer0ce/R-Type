@@ -28,6 +28,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     createEnemy(buffer, protocol, queue);
   };
+  _commandMap[0x09] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    startGame(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -189,5 +193,13 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.createEnemy.positionX = std::stof(bufferString[1]);
   cmd.createEnemy.positionY = std::stof(bufferString[2]);
 
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::startGame(std::vector<uint8_t> buffer, IClient *protocol,
+                        Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::STARTGAME;
   queue->pushGameQueue(cmd);
 }

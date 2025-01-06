@@ -116,5 +116,15 @@ void CommandSend::createPlayer(Command command, IClient *protocol)
 
 void CommandSend::startGame(Command command, IClient *protocol) 
 {
-  std::cout << "Start game command" << std::endl;
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x05);
+
+  std::string response = "\r\n";
+
+  for (auto &c : response) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendToServer(binaryData);
 }
