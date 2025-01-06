@@ -27,6 +27,7 @@
 #include "scenes/IScene.hpp"
 #include "scenes/Menu.hpp"
 #include "scenes/OneVsOne.hpp"
+#include "scenes/Lobby.hpp"
 #include <iostream>
 #include <map>
 #include <memory>

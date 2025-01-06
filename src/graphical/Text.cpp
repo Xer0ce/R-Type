@@ -19,11 +19,11 @@ Text::Text(const std::string &text, int x, int y, int w, int h,
 }
 
 Text::~Text() {
-  if (_font) {
-    std::cout << "destroying font" << std::endl;
-    TTF_CloseFont(_font);
-    _font = nullptr;
-  }
+  // if (_font) {
+  //   std::cout << "destroying font" << std::endl;
+  //   TTF_CloseFont(_font);
+  //   _font = nullptr;
+  // }
 }
 
 void Text::init() {

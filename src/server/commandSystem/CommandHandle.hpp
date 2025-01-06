@@ -30,6 +30,7 @@ private:
                   Queue *queue);
   void move(std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue);
   void shoot(std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue);
+  void startGame(std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue);
 
   std::map<uint8_t,
            std::function<void(std::vector<uint8_t>, IProtocol *, Queue *)>>

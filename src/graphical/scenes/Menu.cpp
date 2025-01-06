@@ -33,7 +33,8 @@ sceneType Menu::loop(eventType event) {
     for (auto &button : _window->getButtons()) {
       if (button.isClicked(mouseX, mouseY)) {
         if (button.getText() == "Heberger") {
-          return sceneType::HISTORY;
+          //_window->deleteTexts();
+          return sceneType::LOBBY;
         }
       }
     }
@@ -46,9 +47,5 @@ sceneType Menu::loop(eventType event) {
   _window->drawButton();
   _window->createMenuPipe();
 
-  if (key == SPACE) {
-    std::cout << "switch to history" << std::endl;
-    return sceneType::HISTORY;
-  }
   return sceneType::NO_SWITCH;
 }

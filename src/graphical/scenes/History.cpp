@@ -39,6 +39,7 @@ void History::position_system(float deltaTime) {
   auto &draw = _ecs.get_components<Draw>();
   auto &velocities = _ecs.get_components<Velocity>();
   auto &entities = _ecs.get_components<EntityType>();
+  auto &control = _ecs.get_components<Control>();
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (!positions[i].has_value() || !velocities[i].has_value())
@@ -49,6 +50,14 @@ void History::position_system(float deltaTime) {
     positions[i]->y += velocities[i]->y * deltaTime;
     draw[i]->rect.x = positions[i]->x;
     draw[i]->rect.y = positions[i]->y;
+    if (entities[i] == EntityType::Player && control[i].has_value()) {
+      Command command;
+      command.type = CommandType::MOVE;
+      command.move.playerId = i;
+      command.move.positionX = positions[i]->x;
+      command.move.positionY = positions[i]->y;
+      _queue->pushUdpQueue(command);
+    }
   }
 }
 

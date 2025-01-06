@@ -61,6 +61,8 @@ public:
 
   int getMouseState(float *x, float *y);
 
+  void deleteTexts();
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;

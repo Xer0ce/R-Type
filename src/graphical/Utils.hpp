@@ -12,6 +12,7 @@ enum sceneType {
   HISTORY,
   ENDLESS,
   ONE_VS_ONE,
+  LOBBY,
   NO_SWITCH,
 };
 

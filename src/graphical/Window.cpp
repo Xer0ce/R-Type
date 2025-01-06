@@ -143,3 +143,5 @@ void Window::createMenuPipe() {
 int Window::getMouseState(float *x, float *y) {
   return SDL_GetMouseState(x, y);
 }
+
+void Window::deleteTexts() { _texts.clear(); }

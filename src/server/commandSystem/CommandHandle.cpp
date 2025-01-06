@@ -20,6 +20,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) { move(buffer, protocol, queue); };
   _commandMap[0x04] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
                              Queue *queue) { shoot(buffer, protocol, queue); };
+  _commandMap[0x05] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                             Queue *queue) {
+    startGame(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -114,6 +118,7 @@ void CommandHandle::disconnect(std::vector<uint8_t> buffer, IProtocol *protocol,
 void CommandHandle::move(std::vector<uint8_t> buffer, IProtocol *protocol,
                          Queue *queue) {
   Command cmd;
+  std::cout << "Move command receive" << std::endl;
 
   size_t bufferSize = buffer.size();
   uint16_t clientPort = (buffer[bufferSize - 2] << 8) | buffer[bufferSize - 1];
@@ -142,5 +147,12 @@ void CommandHandle::shoot(std::vector<uint8_t> buffer, IProtocol *protocol,
   cmd.shoot.playerId = (int)buffer[1];
   cmd.shoot.positionX = std::stof(bufferString[0]);
   cmd.shoot.positionY = std::stof(bufferString[1]);
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::startGame(std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::STARTGAME;
   queue->pushGameQueue(cmd);
 }
