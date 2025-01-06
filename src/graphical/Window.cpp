@@ -80,9 +80,8 @@ void Window::drawButton() {
 
 void Window::addText(std::string text, int x, int y, int w, int h, int size,
                      std::string fontPath, SDL_Color color) {
-  Text myText = Text(text, x, y, w, h, _renderer, size, fontPath, color);
-  myText.init();
-  _texts.push_back(myText);
+  _texts.emplace_back(text, x, y, w, h, _renderer, size, fontPath, color);
+  _texts.back().init();
 }
 
 void Window::addButton(float x, float y, float w, float h,
