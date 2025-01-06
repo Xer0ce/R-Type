@@ -8,8 +8,8 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
 #include <iostream>
+#include <vector>
 
 class IClient {
 public:
