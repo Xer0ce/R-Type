@@ -71,7 +71,7 @@ void Game::init() {
 }
 
 void Game::game() {
-  auto lastTime = std::chrono::high_resolution_clock::now();
+  std::clock_t start = std::clock();
   bool running = true;
   eventType event = NO_EVENT;
 
@@ -85,11 +85,10 @@ void Game::game() {
   _scenes[_currentScene]->setQueue(_queue.get());
 
   while (event != CLOSE_WINDOW) {
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float deltaTime =
-        std::chrono::duration<float>(currentTime - lastTime).count();
-
-    if (deltaTime > 0.01f) {
+    std::clock_t current = std::clock();
+    double elapsed = (current - start) / (double)CLOCKS_PER_SEC;
+    if (elapsed > 5.0 / 1000.0) {
+      start = std::clock();
       event = _window->updateEvents();
       _window->clear();
       auto switchScene = _scenes[_currentScene]->loop(event);
