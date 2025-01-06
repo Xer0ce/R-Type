@@ -46,18 +46,15 @@ void CommandSend::executeCommandSend(Command command, IClient *protocol) {
   }
 }
 
-void CommandSend::connect(Command command, IClient *protocol) 
-{
+void CommandSend::connect(Command command, IClient *protocol) {
   std::cout << "Connect command" << std::endl;
 }
 
-void CommandSend::disconnect(Command command, IClient *protocol) 
-{
+void CommandSend::disconnect(Command command, IClient *protocol) {
   std::cout << "Disconnect command" << std::endl;
 }
 
-void CommandSend::move(Command command, IClient *protocol) 
-{
+void CommandSend::move(Command command, IClient *protocol) {
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x01);
@@ -79,32 +76,26 @@ void CommandSend::move(Command command, IClient *protocol)
   protocol->sendToServer(binaryData);
 }
 
-void CommandSend::shoot(Command command, IClient *protocol) 
-{
+void CommandSend::shoot(Command command, IClient *protocol) {
   std::cout << "Shoot command" << std::endl;
 }
 
-void CommandSend::map(Command command, IClient *protocol) 
-{
+void CommandSend::map(Command command, IClient *protocol) {
   std::cout << "Map command" << std::endl;
 }
 
-void CommandSend::createEnemy(Command command, IClient *protocol) 
-{
+void CommandSend::createEnemy(Command command, IClient *protocol) {
   std::cout << "Create enemy command" << std::endl;
 }
 
-void CommandSend::killEnemy(Command command, IClient *protocol) 
-{
+void CommandSend::killEnemy(Command command, IClient *protocol) {
   std::cout << "Kill enemy command" << std::endl;
 }
 
-void CommandSend::newPlayer(Command command, IClient *protocol) 
-{
+void CommandSend::newPlayer(Command command, IClient *protocol) {
   std::cout << "New player command" << std::endl;
 }
 
-void CommandSend::createPlayer(Command command, IClient *protocol) 
-{
+void CommandSend::createPlayer(Command command, IClient *protocol) {
   std::cout << "Create player command" << std::endl;
 }

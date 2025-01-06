@@ -30,8 +30,7 @@ private:
   void killEnemy(Command command, Queue *queue, Registry *ecs, Window *window);
   void createEnemy(Command command, Queue *queue, Registry *ecs,
                    Window *window);
-  void enemyMove(Command command, Queue *queue, Registry *ecs,
-                   Window *window);
+  void enemyMove(Command command, Queue *queue, Registry *ecs, Window *window);
 
   std::map<CommandType,
            std::function<void(Command, Queue *, Registry *, Window *)>>

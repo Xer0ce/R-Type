@@ -14,9 +14,7 @@ Lobby::Lobby() {
 
 Lobby::~Lobby() {}
 
-void Lobby::init() {
-  _window->addButton(100, 100, 200, 50, "Start");
-}
+void Lobby::init() { _window->addButton(100, 100, 200, 50, "Start"); }
 
 sceneType Lobby::loop(eventType event) {
   Command command;

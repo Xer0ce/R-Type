@@ -106,8 +106,10 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.repConnect.positionY = std::stoi(bufferString[2]);
 
   std::cout << "Player handle id : " << cmd.repConnect.id << std::endl;
-  std::cout << "Player handle position X : " << cmd.repConnect.positionX << std::endl;
-  std::cout << "Player handle position Y : " << cmd.repConnect.positionY << std::endl;
+  std::cout << "Player handle position X : " << cmd.repConnect.positionX
+            << std::endl;
+  std::cout << "Player handle position Y : " << cmd.repConnect.positionY
+            << std::endl;
 
   queue->pushGameQueue(cmd);
 }
@@ -143,8 +145,7 @@ parseEnemyMoveCommand(const std::vector<uint8_t> &buffer) {
 }
 
 void CommandHandle::enemyMove(std::vector<uint8_t> buffer, IClient *protocol,
-                              Queue *queue) 
-{
+                              Queue *queue) {
   Command cmd;
   std::cout << "Enemy move command receive" << std::endl;
 

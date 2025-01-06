@@ -150,7 +150,8 @@ void CommandHandle::shoot(std::vector<uint8_t> buffer, IProtocol *protocol,
   queue->pushGameQueue(cmd);
 }
 
-void CommandHandle::startGame(std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue) {
+void CommandHandle::startGame(std::vector<uint8_t> buffer, IProtocol *protocol,
+                              Queue *queue) {
   Command cmd;
 
   cmd.type = CommandType::STARTGAME;

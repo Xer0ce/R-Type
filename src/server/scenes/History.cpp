@@ -12,8 +12,8 @@ History::History() { _name = "History"; }
 History::~History() {}
 
 void History::init() {
-  auto enemy1 = create_entity<EntityType::Enemy>(*_ecs, Position(800, 0), Velocity(),
-                                   Health(1), Draw({}, {}, nullptr));
+  auto enemy1 = create_entity<EntityType::Enemy>(
+      *_ecs, Position(800, 0), Velocity(), Health(1), Draw({}, {}, nullptr));
   create_entity<EntityType::Enemy>(*_ecs, Position(800, 100), Velocity(),
                                    Health(1), Draw({}, {}, nullptr));
 }

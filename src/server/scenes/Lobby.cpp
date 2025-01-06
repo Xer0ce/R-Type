@@ -11,8 +11,7 @@ Lobby::Lobby() { _name = "Lobby"; }
 
 Lobby::~Lobby() {}
 
-void Lobby::init() {
-}
+void Lobby::init() {}
 
 sceneType Lobby::loop() {
   Command command;
@@ -25,9 +24,7 @@ sceneType Lobby::loop() {
     _commandGame.executeCommandGame(command, _queue, _ecs);
   }
 
-  
-  // intercepter le signal pour lancer la game 
-
+  // intercepter le signal pour lancer la game
 
   return sceneType::NO_SWITCH;
 }

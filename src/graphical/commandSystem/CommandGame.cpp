@@ -10,7 +10,7 @@
 CommandGame::CommandGame() {
   _commandMap[CommandType::REPCONNECT] = [this](Command command, Queue *queue,
                                                 Registry *ecs, Window *window) {
-    std::cout  << "CommandGame REPCONNECT" << std::endl;
+    std::cout << "CommandGame REPCONNECT" << std::endl;
     connect(command, queue, ecs, window);
   };
   _commandMap[CommandType::DISCONNECT] = [this](Command command, Queue *queue,
@@ -54,8 +54,10 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
 
   std::cout << "connect command game !!!!!!!!!!!!" << std::endl;
   std::cout << "player game id : " << command.repConnect.id << std::endl;
-  std::cout << "player game positionX : " << command.repConnect.positionX << std::endl;
-  std::cout << "player game positionY : " << command.repConnect.positionY << std::endl;
+  std::cout << "player game positionX : " << command.repConnect.positionX
+            << std::endl;
+  std::cout << "player game positionY : " << command.repConnect.positionY
+            << std::endl;
 
   auto player = create_entity<EntityType::Player>(
       *ecs,
@@ -95,8 +97,7 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
 }
 
 void CommandGame::enemyMove(Command command, Queue *queue, Registry *ecs,
-                            Window *window) 
-{
+                            Window *window) {
   std::cout << "enemyMove command Dans le game" << std::endl;
   auto &entities = ecs->get_components<EntityType>();
   auto &positions = ecs->get_components<Position>();
