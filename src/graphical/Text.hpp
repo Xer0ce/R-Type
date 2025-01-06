@@ -14,15 +14,14 @@
 
 class Text {
 public:
-  Text(std::string text, int x, int y, int w, int h,
-       SDL_Renderer *renderer, int size, const std::string &fontPath,
-       SDL_Color color);
+  Text(std::string text, int x, int y, int w, int h, SDL_Renderer *renderer,
+       int size, const std::string &fontPath, SDL_Color color);
   ~Text();
 
   void init();
   void drawText();
   void destroyText();
-  void setColor(SDL_Color color) { _color = color; }
+  void setColor(SDL_Color color);
   std::string getText();
 
 private:

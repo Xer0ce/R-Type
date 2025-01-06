@@ -40,5 +40,4 @@ private:
 
   SDL_Color _normalColor;
   SDL_Color _hoverColor;
-  
 };
