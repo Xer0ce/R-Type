@@ -61,7 +61,6 @@ void Game::init() {
   _tcp->initSocket();
   _udp->initSocket();
 
-  _tcp->sendToServer({0x01, 'S', 'a', 'r', 'k', 'o', 'z', 'y'});
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
 
   std::thread tcpThread([this]() { listen(*_tcp.get()); });

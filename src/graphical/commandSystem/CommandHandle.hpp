@@ -31,7 +31,6 @@ private:
   void shoot(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
   void createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
                    Queue *queue);
-  void enemyMove(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
   void startGame(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
 
   std::map<uint8_t,

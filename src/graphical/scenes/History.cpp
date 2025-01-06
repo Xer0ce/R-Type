@@ -14,6 +14,13 @@ History::History() {
 
 History::~History() {}
 
+void History::init() {
+  Command command;
+  command.type = CommandType::CONNECT;
+  command.connect.Nickname = "Player";
+  _queue->pushTcpQueue(command);
+}
+
 void History::control_system(keyType key) {
   auto &control = _ecs.get_components<Control>();
   auto &velocities = _ecs.get_components<Velocity>();
@@ -53,7 +60,7 @@ void History::position_system(float deltaTime) {
     if (entities[i] == EntityType::Player && control[i].has_value()) {
       Command command;
       command.type = CommandType::MOVE;
-      command.move.playerId = i;
+      command.move.entityId = i;
       command.move.positionX = positions[i]->x;
       command.move.positionY = positions[i]->y;
       _queue->pushUdpQueue(command);

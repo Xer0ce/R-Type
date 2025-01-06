@@ -26,7 +26,6 @@ private:
   void move(Command command, IProtocol *protocol);
   void shoot(Command command, IProtocol *protocol);
   void map(Command command, IProtocol *protocol);
-  void enemyMove(Command command, IProtocol *protocol);
   void createEnemy(Command command, IProtocol *protocol);
   void killEnemy(Command command, IProtocol *protocol);
   void newPlayer(Command command, IProtocol *protocol);

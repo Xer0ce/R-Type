@@ -20,10 +20,6 @@ CommandHandle::CommandHandle() {
                              Queue *queue) { move(buffer, protocol, queue); };
   _commandMap[0x04] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) { shoot(buffer, protocol, queue); };
-  _commandMap[0x05] = [this](std::vector<uint8_t> buffer, IClient *protocol,
-                             Queue *queue) {
-    enemyMove(buffer, protocol, queue);
-  };
   _commandMap[0x06] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) {
     createEnemy(buffer, protocol, queue);
@@ -39,7 +35,6 @@ CommandHandle::~CommandHandle() {}
 void CommandHandle::executeCommandHandle(uint8_t commandType,
                                          std::vector<uint8_t> buffer,
                                          IClient *protocol, Queue *queue) {
-  std::cout << "Execute command handle" << std::endl;
   if (_commandMap.find(commandType) != _commandMap.end()) {
     _commandMap[commandType](buffer, protocol, queue);
   } else {
@@ -99,7 +94,6 @@ parseConnectCommand(const std::vector<uint8_t> &buffer) {
 
 void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
                             Queue *queue) {
-  std::cout << "Connect command handle receive" << std::endl;
   Command cmd;
 
   std::vector<std::string> bufferString = parseConnectCommand(buffer);
@@ -109,12 +103,6 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.repConnect.positionX = std::stoi(bufferString[1]);
   cmd.repConnect.positionY = std::stoi(bufferString[2]);
 
-  std::cout << "Player handle id : " << cmd.repConnect.id << std::endl;
-  std::cout << "Player handle position X : " << cmd.repConnect.positionX
-            << std::endl;
-  std::cout << "Player handle position Y : " << cmd.repConnect.positionY
-            << std::endl;
-
   queue->pushGameQueue(cmd);
 }
 
@@ -123,18 +111,8 @@ void CommandHandle::disconnect(std::vector<uint8_t> buffer, IClient *protocol,
   std::cout << "Disconnect command receive" << std::endl;
 }
 
-void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,
-                         Queue *queue) {
-  std::cout << "Move command receive" << std::endl;
-}
-
-void CommandHandle::shoot(std::vector<uint8_t> buffer, IClient *protocol,
-                          Queue *queue) {
-  std::cout << "Shoot command receive" << std::endl;
-}
-
 std::vector<std::string>
-parseEnemyMoveCommand(const std::vector<uint8_t> &buffer) {
+parseMoveCommand(const std::vector<uint8_t> &buffer) {
   std::vector<std::string> bufferString;
   uint32_t enemyId = *reinterpret_cast<const uint32_t *>(&buffer[1]);
 
@@ -148,23 +126,25 @@ parseEnemyMoveCommand(const std::vector<uint8_t> &buffer) {
   return bufferString;
 }
 
-void CommandHandle::enemyMove(std::vector<uint8_t> buffer, IClient *protocol,
-                              Queue *queue) {
+void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,
+                         Queue *queue) {
   Command cmd;
-  std::cout << "Enemy move command receive" << std::endl;
 
-  cmd.type = CommandType::ENEMYMOVE;
-  std::vector<std::string> bufferString = parseEnemyMoveCommand(buffer);
 
-  cmd.createEnemy.enemyId = std::stoi(bufferString[0]);
-  cmd.createEnemy.positionX = std::stof(bufferString[1]);
-  cmd.createEnemy.positionY = std::stof(bufferString[2]);
+  cmd.type = CommandType::MOVE;
+  std::vector<std::string> bufferString = parseMoveCommand(buffer);
 
-  std::cout << "Enemy id : " << cmd.createEnemy.enemyId << std::endl;
-  std::cout << "Enemy position X : " << cmd.createEnemy.positionX << std::endl;
-  std::cout << "Enemy position Y : " << cmd.createEnemy.positionY << std::endl;
+  cmd.move.entityId = std::stoi(bufferString[0]);
+  cmd.move.positionX = std::stof(bufferString[1]);
+  cmd.move.positionY = std::stof(bufferString[2]);
+  std::cout << "Move command receive de l'entity : " << cmd.move.entityId << std::endl;
 
   queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::shoot(std::vector<uint8_t> buffer, IClient *protocol,
+                          Queue *queue) {
+  std::cout << "Shoot command receive" << std::endl;
 }
 
 std::vector<std::string>
@@ -184,7 +164,6 @@ parseCreateEnemyCommand(const std::vector<uint8_t> &buffer) {
 
 void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
                                 Queue *queue) {
-  std::cout << "Create enemy command receive" << std::endl;
   Command cmd;
 
   std::vector<std::string> bufferString = parseCreateEnemyCommand(buffer);
@@ -193,6 +172,8 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.createEnemy.enemyId = std::stoi(bufferString[0]);
   cmd.createEnemy.positionX = std::stof(bufferString[1]);
   cmd.createEnemy.positionY = std::stof(bufferString[2]);
+
+  std::cout << "Create enemy with id : " << cmd.createEnemy.enemyId << std::endl;
 
   queue->pushGameQueue(cmd);
 }

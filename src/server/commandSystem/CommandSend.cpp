@@ -18,10 +18,6 @@ CommandSend::CommandSend() {
   };
   _commandMap[CommandType::MOVE] =
       [this](Command command, IProtocol *protocol) { move(command, protocol); };
-  _commandMap[CommandType::ENEMYMOVE] = [this](Command command,
-                                               IProtocol *protocol) {
-    enemyMove(command, protocol);
-  };
   _commandMap[CommandType::CREATEENEMY] = [this](Command command,
                                                  IProtocol *protocol) {
     createEnemy(command, protocol);
@@ -90,7 +86,7 @@ void CommandSend::move(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0x03);
 
-  uint32_t playerId = command.move.playerId;
+  uint32_t playerId = command.move.entityId;
   std::string positionX = std::to_string(command.move.positionX);
   std::string positionY = std::to_string(command.move.positionY);
 
@@ -125,27 +121,6 @@ void CommandSend::map(Command command, IProtocol *protocol) {
   // uint32_t playerId = command.move.playerId;
 
   // protocol->sendData(command.id, binaryData);
-}
-
-void CommandSend::enemyMove(Command command, IProtocol *protocol) {
-  std::vector<uint8_t> binaryData;
-
-  binaryData.push_back(0x05);
-
-  uint32_t enemyId = command.enemyMove.enemyId;
-  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&enemyId),
-                    reinterpret_cast<uint8_t *>(&enemyId) + sizeof(enemyId));
-
-  std::string positionX = std::to_string(command.enemyMove.positionX);
-  std::string positionY = std::to_string(command.enemyMove.positionY);
-
-  std::string response = positionX + " " + positionY + "\r\n";
-
-  for (auto &c : response) {
-    binaryData.push_back(static_cast<uint8_t>(c));
-  }
-
-  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::createEnemy(Command command, IProtocol *protocol) {

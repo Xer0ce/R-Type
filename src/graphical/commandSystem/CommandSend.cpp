@@ -8,7 +8,7 @@
 #include "CommandSend.hpp"
 
 CommandSend::CommandSend() {
-  _commandMap[CommandType::REPCONNECT] = [this](Command command,
+  _commandMap[CommandType::CONNECT] = [this](Command command,
                                                 IClient *protocol) {
     connect(command, protocol);
   };
@@ -52,7 +52,19 @@ void CommandSend::executeCommandSend(Command command, IClient *protocol) {
 }
 
 void CommandSend::connect(Command command, IClient *protocol) {
+  std::vector<uint8_t> binaryData;
+
   std::cout << "Connect command" << std::endl;
+
+  binaryData.push_back(0x01);
+
+  std::string playerName = command.connect.Nickname + "\r\n";
+
+  for (auto &c : playerName) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendToServer(binaryData);
 }
 
 void CommandSend::disconnect(Command command, IClient *protocol) {
@@ -62,9 +74,9 @@ void CommandSend::disconnect(Command command, IClient *protocol) {
 void CommandSend::move(Command command, IClient *protocol) {
   std::vector<uint8_t> binaryData;
 
-  binaryData.push_back(0x01);
+  binaryData.push_back(0x03);
 
-  uint32_t id = command.move.playerId;
+  uint32_t id = command.move.entityId;
 
   binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&id),
                     reinterpret_cast<uint8_t *>(&id) + sizeof(id));
