@@ -15,7 +15,7 @@ Button::Button(float x, float y, float w, float h, SDL_Renderer *renderer,
       _text(text, x, y, w, h, renderer, 40,
             "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255}) {
   _text.init();
-            }
+}
 
 Button::~Button() {}
 
