@@ -38,14 +38,16 @@ std::string Game::getCurrentSceneName() {
 
 void Game::listen(IClient &protocol) {
   while (true) {
+    std::cout << "Listen" << std::endl;
     Command command;
     if (protocol.getType() == "TCP") {
+      std::cout << "TCP" << std::endl;
       command = _queue->popTcpQueue();
     } else if (protocol.getType() == "UDP") {
       command = _queue->popUdpQueue();
     }
     if (command.type != EMPTY) {
-      // commandSend.executeCommandSend(command, &protocol);
+      commandSend.executeCommandSend(command, &protocol);
       std::cout << "Execute command send" << std::endl;
     }
 

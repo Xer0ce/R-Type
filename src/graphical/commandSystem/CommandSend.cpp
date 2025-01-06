@@ -34,11 +34,16 @@ CommandSend::CommandSend() {
                                                   IClient *protocol) {
     createPlayer(command, protocol);
   };
+  _commandMap[CommandType::STARTGAME] = [this](Command command,
+                                                  IClient *protocol) {
+    startGame(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
 
 void CommandSend::executeCommandSend(Command command, IClient *protocol) {
+  std::cout << "Execute command send" << std::endl;
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
@@ -107,4 +112,9 @@ void CommandSend::newPlayer(Command command, IClient *protocol)
 void CommandSend::createPlayer(Command command, IClient *protocol) 
 {
   std::cout << "Create player command" << std::endl;
+}
+
+void CommandSend::startGame(Command command, IClient *protocol) 
+{
+  std::cout << "Start game command" << std::endl;
 }

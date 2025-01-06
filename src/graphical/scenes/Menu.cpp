@@ -39,6 +39,11 @@ sceneType Menu::loop(eventType event) {
           _window->deleteButtons();
           return sceneType::LOBBY;
         }
+        if (button.getText() == "Rejoindre") {
+          _window->deleteTexts();
+          _window->deleteButtons();
+          return sceneType::LOBBY;
+        }
       }
     }
   }
