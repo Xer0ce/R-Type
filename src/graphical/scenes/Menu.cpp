@@ -22,6 +22,8 @@ void Menu::init() {
   _window->addButton(70, 200 + 200, 500, 50, "Rejoindre");
   _window->addButton(70, 200 + 300, 500, 50, "Parametres");
   _window->addButton(70, 200 + 400, 500, 50, "Quitter");
+  _window->setBackground(
+      _window->loadTexture("../src/graphical/assets/menu.png"));
 }
 
 sceneType Menu::loop(eventType event) {
@@ -40,8 +42,6 @@ sceneType Menu::loop(eventType event) {
     }
   }
 
-  _window->setBackground(
-      _window->loadTexture("../src/graphical/assets/menu.png"));
   _window->drawBackground();
   _window->drawText();
   _window->drawButton();

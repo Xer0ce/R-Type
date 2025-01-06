@@ -28,15 +28,17 @@ public:
 
   void drawButton();
 
-  std::string getText() { return _text; }
+  std::string getText() { return _text.getText(); }
 
 private:
   SDL_Renderer *_renderer;
   SDL_FRect *_rect;
   float _mouseX;
   float _mouseY;
-  std::string _text;
+  std::string _textButton;
+  Text _text;
 
   SDL_Color _normalColor;
   SDL_Color _hoverColor;
+  
 };
