@@ -14,7 +14,9 @@ public:
   EndLess();
   ~EndLess();
 
-  sceneType loop() override { return sceneType::NO_SWITCH; };
+  void init() override{};
+
+  sceneType loop(eventType event) override { return sceneType::NO_SWITCH; };
 
 private:
 };

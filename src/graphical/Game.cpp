@@ -76,24 +76,27 @@ void Game::init() {
 
 void Game::game() {
   bool running = true;
+  eventType event = NO_EVENT;
 
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
 
   _scenes[_currentScene]->setWindow(_window.get());
   _scenes[_currentScene]->setEcs(_ecs);
+  _scenes[_currentScene]->init();
   _scenes[_currentScene]->setQueue(_queue.get());
 
-  while (running) {
-    running = _window->checkingCloseWindow();
+  while (event != CLOSE_WINDOW) {
+    event = _window->updateEvents();
     _window->clear();
-    auto switchScene = _scenes[_currentScene]->loop();
+    auto switchScene = _scenes[_currentScene]->loop(event);
 
     if (switchScene != sceneType::NO_SWITCH) {
       _currentScene = switchScene;
       _scenes[_currentScene]->setWindow(_window.get());
       _scenes[_currentScene]->setEcs(_ecs);
       _scenes[_currentScene]->setQueue(_queue.get());
+      _scenes[_currentScene]->init();
     }
     _window->render();
   }

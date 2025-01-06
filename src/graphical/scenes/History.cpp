@@ -17,13 +17,8 @@ History::~History() {}
 void History::control_system(keyType key) {
   auto &control = _ecs.get_components<Control>();
   auto &velocities = _ecs.get_components<Velocity>();
-  auto &entities = _ecs.get_components<EntityType>();
 
-  for (std::size_t i = 0; i < entities.size(); ++i) {
-    if (entities[i].has_value() && entities[i].value() == EntityType::Player)
-      continue;
-    if (!control[i].has_value() || !velocities[i].has_value())
-      continue;
+  for (std::size_t i = 0; i < control.size(); ++i) {
     if (key == keyType::UP) {
       velocities[i]->y = -1;
     } else if (key == keyType::RIGHT) {
@@ -57,7 +52,7 @@ void History::position_system(float deltaTime) {
   }
 }
 
-sceneType History::loop() {
+sceneType History::loop(eventType event) {
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
   Command command;

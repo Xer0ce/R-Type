@@ -25,3 +25,5 @@ enum keyType {
   ESCAPE,
   NONE,
 };
+
+enum eventType { MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT };

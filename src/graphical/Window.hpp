@@ -7,11 +7,14 @@
 
 #pragma once
 
+#include "Button.hpp"
+#include "Text.hpp"
 #include "Utils.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <cstddef>
+#include <vector>
 
 class Window {
 public:
@@ -20,7 +23,7 @@ public:
 
   void init();
 
-  bool checkingCloseWindow();
+  eventType updateEvents();
 
   void delay(int time);
   void destroyWindow();
@@ -28,6 +31,17 @@ public:
   SDL_Texture *loadTexture(const char *path);
 
   void draw(SDL_Texture *texture, SDL_Rect rect);
+
+  void drawText();
+
+  void drawButton();
+
+  void addText(std::string text, int x, int y, int w, int h, int size,
+               std::string fontPath, SDL_Color color);
+
+  void addButton(float x, float y, float w, float h, const std::string &text);
+
+  std::vector<Button> getButtons() { return _buttons; }
 
   void render();
 
@@ -39,9 +53,19 @@ public:
 
   keyType catchKey();
 
+  SDL_Event catchEvent();
+
+  SDL_Renderer *getRenderer() { return _renderer; }
+
+  void createMenuPipe();
+
+  int getMouseState(float *x, float *y);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
   SDL_Event _event;
   SDL_Texture *_background;
+  std::vector<Text> _texts;
+  std::vector<Button> _buttons;
 };

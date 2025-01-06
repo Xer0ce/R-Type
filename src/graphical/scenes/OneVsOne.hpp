@@ -14,7 +14,9 @@ public:
   OneVsOne();
   ~OneVsOne();
 
-  sceneType loop() override { return sceneType::NO_SWITCH; };
+  sceneType loop(eventType event) override { return sceneType::NO_SWITCH; };
+
+  void init() override{};
 
 private:
 };

@@ -15,11 +15,13 @@ public:
   History();
   ~History();
 
-  sceneType loop() override;
+  sceneType loop(eventType event) override;
 
   void control_system(keyType key);
 
   void position_system(float deltaTime);
+
+  void init() override{};
 
 private:
   CommandGame commandGame;
