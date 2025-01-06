@@ -85,8 +85,11 @@ void Window::addText(std::string text, int x, int y, int w, int h, int size,
 }
 
 void Window::addButton(float x, float y, float w, float h,
-                       const std::string &text) {
-  Button myButton = Button(x, y, w, h, _renderer, text);
+                       const std::string &text, SDL_Color normalColor,
+                       SDL_Color hoverColor, SDL_Color normalTextColor,
+                       SDL_Color hoverTextColor) {
+  Button myButton = Button(x, y, w, h, _renderer, text, normalColor, hoverColor,
+                           normalTextColor, hoverTextColor);
   myButton.init();
   _buttons.push_back(myButton);
 }
