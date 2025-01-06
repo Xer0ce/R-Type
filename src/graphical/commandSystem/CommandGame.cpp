@@ -27,7 +27,11 @@ CommandGame::CommandGame() {
   _commandMap[CommandType::CREATEENEMY] =
       [this](Command command, Queue *queue, Registry *ecs, Window *window) {
         createEnemy(command, queue, ecs, window);
-      };
+  };
+  _commandMap[CommandType::NEWPLAYER] =
+      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+        newPlayer(command, queue, ecs, window);
+  };
 }
 
 CommandGame::~CommandGame() {}
@@ -91,4 +95,20 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
       Velocity(0, -50), Health(1),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, enemyTexture),
       std::optional<std::size_t>(command.createEnemy.enemyId));
+}
+
+void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
+                              Window *window) {
+  SDL_Texture *playerTexture =
+      window->loadTexture("../src/graphical/assets/michou.png");
+
+  std::cout << "Je cree le player avec l'id " << command.repConnect.id
+            << std::endl;
+  auto player = create_entity<EntityType::Player>(
+      *ecs,
+      Position(command.repConnect.positionX, command.repConnect.positionY),
+      Velocity(), Health(1),
+      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture),
+      std::nullopt,
+      std::optional<std::size_t>(command.repConnect.id));             
 }

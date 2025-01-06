@@ -24,6 +24,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     createEnemy(buffer, protocol, queue);
   };
+  _commandMap[0x08] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    newPlayer(buffer, protocol, queue);
+  };
   _commandMap[0x09] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) {
     startGame(buffer, protocol, queue);
@@ -137,7 +141,6 @@ void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.move.entityId = std::stoi(bufferString[0]);
   cmd.move.positionX = std::stof(bufferString[1]);
   cmd.move.positionY = std::stof(bufferString[2]);
-  std::cout << "Move command receive de l'entity : " << cmd.move.entityId << std::endl;
 
   queue->pushGameQueue(cmd);
 }
@@ -174,6 +177,36 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.createEnemy.positionY = std::stof(bufferString[2]);
 
   std::cout << "Create enemy with id : " << cmd.createEnemy.enemyId << std::endl;
+
+  queue->pushGameQueue(cmd);
+}
+
+std::vector<std::string>
+parseNewPlayerCommand(const std::vector<uint8_t> &buffer) {
+  std::vector<std::string> bufferString;
+  uint32_t id = *reinterpret_cast<const uint32_t *>(&buffer[1]);
+
+  bufferString.push_back(std::to_string(id));
+
+  std::string bufferStr(buffer.begin() + 5, buffer.end() - 1);
+  std::istringstream iss(bufferStr);
+  for (std::string s; iss >> s;) {
+    bufferString.push_back(s);
+  }
+  return bufferString;
+}
+
+void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
+                              Queue *queue) {
+  Command cmd;
+
+  std::vector<std::string> bufferString = parseNewPlayerCommand(buffer);
+
+  cmd.type = CommandType::NEWPLAYER;
+  cmd.newPlayer.id = std::stoi(bufferString[0]);
+  cmd.newPlayer.positionX = std::stof(bufferString[1]);
+  cmd.newPlayer.positionY = std::stof(bufferString[2]);
+  cmd.newPlayer.Nickname = bufferString[3];
 
   queue->pushGameQueue(cmd);
 }
