@@ -9,6 +9,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <iostream>
 
 class IClient {
 public:
