@@ -21,6 +21,7 @@ enum CommandType {
   CREATEENEMY,
   KILLENEMY,
   EMPTY,
+  STARTGAME,
 };
 
 struct killEnemy {
