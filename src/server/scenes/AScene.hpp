@@ -9,12 +9,11 @@
 
 #include "../../ecs/EntitiesGestion.hpp"
 #include "../../ecs/Registry.hpp"
-#include "../../queue/Queue.hpp"
-#include "../Components/Control.hpp"
-#include "../Components/Draw.hpp"
-#include "../Components/Health.hpp"
-#include "../Components/Position.hpp"
-#include "../Components/Velocity.hpp"
+#include "../../graphical/Components/Control.hpp"
+#include "../../graphical/Components/Draw.hpp"
+#include "../../graphical/Components/Health.hpp"
+#include "../../graphical/Components/Position.hpp"
+#include "../../graphical/Components/Velocity.hpp"
 #include "IScene.hpp"
 
 class AScene : public IScene {
@@ -24,15 +23,12 @@ public:
 
   std::string getName() const override;
 
-  void setWindow(Window *window) override;
-
-  void setEcs(Registry ecs) override;
+  void setEcs(Registry *ecs) override;
 
   void setQueue(Queue *queue) override;
 
 protected:
   std::string _name;
-  Window *_window;
-  Registry _ecs;
+  Registry *_ecs;
   Queue *_queue;
 };

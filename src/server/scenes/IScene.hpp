@@ -8,7 +8,8 @@
 #pragma once
 
 #include "../../ecs/Registry.hpp"
-#include "../Window.hpp"
+#include "../../graphical/Utils.hpp"
+#include "../../queue/Queue.hpp"
 #include <iostream>
 
 class IScene {
@@ -18,11 +19,9 @@ public:
 
   virtual std::string getName() const = 0;
 
-  virtual sceneType loop(eventType event) = 0;
+  virtual sceneType loop() = 0;
 
-  virtual void setWindow(Window *window) = 0;
-
-  virtual void setEcs(Registry ecs) = 0;
+  virtual void setEcs(Registry *ecs) = 0;
 
   virtual void setQueue(Queue *queue) = 0;
 

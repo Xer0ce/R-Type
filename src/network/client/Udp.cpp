@@ -34,7 +34,7 @@ void Udp::sendToServer(std::vector<uint8_t> data) {
   }
 }
 
-void Udp::receiveFromServer() {
+bool Udp::receiveFromServer() {
   socklen_t serverSize = sizeof(_server);
   _buffer.resize(4096);
   if (recvfrom(_socket, _buffer.data(), _buffer.size(), 0,
@@ -42,4 +42,8 @@ void Udp::receiveFromServer() {
     std::cerr << "Error: recvfrom failed" << std::endl;
     exit(84);
   }
+  if (_buffer.empty()) {
+    return false;
+  }
+  return true;
 }

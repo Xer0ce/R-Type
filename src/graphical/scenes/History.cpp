@@ -7,15 +7,23 @@
 
 #include "History.hpp"
 
-History::History() { _name = "History"; }
+History::History() {
+  _name = "History";
+  commandGame = CommandGame();
+}
 
 History::~History() {}
 
 void History::control_system(keyType key) {
   auto &control = _ecs.get_components<Control>();
   auto &velocities = _ecs.get_components<Velocity>();
+  auto &entities = _ecs.get_components<EntityType>();
 
-  for (std::size_t i = 0; i < control.size(); ++i) {
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (entities[i].has_value() && entities[i].value() == EntityType::Player)
+      continue;
+    if (!control[i].has_value() || !velocities[i].has_value())
+      continue;
     if (key == keyType::UP) {
       velocities[i]->y = -1;
     } else if (key == keyType::RIGHT) {
@@ -35,8 +43,9 @@ void History::position_system(float deltaTime) {
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
   auto &velocities = _ecs.get_components<Velocity>();
+  auto &entities = _ecs.get_components<EntityType>();
 
-  for (std::size_t i = 0; i < positions.size(); ++i) {
+  for (std::size_t i = 0; i < entities.size(); ++i) {
     if (!positions[i].has_value() || !velocities[i].has_value())
       continue;
     if (velocities[i]->x == 0 && velocities[i]->y == 0)
@@ -51,6 +60,11 @@ void History::position_system(float deltaTime) {
 sceneType History::loop(eventType event) {
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
+  Command command;
+
+  command = _queue->popGameQueue();
+  if (command.type != EMPTY)
+    commandGame.executeCommandGame(command, _queue, &_ecs, _window);
 
   _window->drawBackground();
   keyType key = _window->catchKey();

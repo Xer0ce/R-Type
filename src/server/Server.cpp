@@ -1,28 +1,31 @@
 /*
-** EPITECH PROJECT, 2024
+** EPITECH PROJECT, 2025
 ** R-Type
 ** File description:
 ** Server
 */
 
 #include "Server.hpp"
-#include <iostream>
-#include <thread>
 
-Server::Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
-               std::string udpIp) {
-  _tcp = std::make_unique<Tcp>(tcpPort, tcpIp);
-  _udp = std::make_unique<UDP>(udpPort, udpIp);
+Server::Server() {
+  _scenes[sceneType::ONE_VS_ONE] = std::make_shared<OneVsOne>();
+  _scenes[sceneType::ENDLESS] = std::make_shared<EndLess>();
+  _scenes[sceneType::HISTORY] = std::make_shared<History>();
+  _currentScene = sceneType::HISTORY;
+
+  _tcp = std::make_shared<Tcp>(4243, "0.0.0.0");
+  _udp = std::make_shared<UDP>(4242, "0.0.0.0");
+
+  _ecs = std::make_shared<Registry>();
+
   _queue = std::make_shared<Queue>();
-  _game = std::make_shared<Game>();
-  initCommandMapHandle();
-  initCommandMapSend();
-  initCommandMapGame();
+  commandSend = CommandSend();
+  commandHandle = CommandHandle();
 }
 
 Server::~Server() {}
 
-void Server::listen(std::unique_ptr<IProtocol> &protocol) {
+void Server::listen(IProtocol *protocol) {
   while (true) {
     Command command;
     if (protocol->getType() == "TCP") {
@@ -31,65 +34,66 @@ void Server::listen(std::unique_ptr<IProtocol> &protocol) {
       command = _queue->popUdpQueue();
     }
     if (command.type != EMPTY) {
-      if (_commandsSend.find(command.type) != _commandsSend.end()) {
-        _commandsSend[command.type](command, protocol);
-      } else {
-        std::cout << "Code invalide ! [Send]" << std::endl;
-      }
+      commandSend.executeCommandSend(command, protocol);
     }
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
-      if (_commandsHandle.find(buffer[0]) != _commandsHandle.end()) {
-        _commandsHandle[buffer[0]](buffer, protocol);
-      } else {
-        std::cout << "Code invalide ! [Send]" << std::endl;
+      commandHandle.executeCommandHandle(buffer[0], buffer, protocol,
+                                         _queue.get());
+    }
+  }
+}
+
+void Server::init() {
+  if (!_tcp->initializeSocket())
+    exit(84);
+  if (!_tcp->bindSocket())
+    exit(84);
+
+  if (!_udp->initializeSocket())
+    exit(84);
+  if (!_udp->bindSocket())
+    exit(84);
+
+  std::thread tcpThread([this]() { listen(_tcp.get()); });
+  std::thread udpThread([this]() { listen(_udp.get()); });
+  std::thread gameThread([this]() { game(); });
+
+  tcpThread.join();
+  udpThread.join();
+  gameThread.join();
+}
+
+void Server::game() {
+  auto lastTime = std::chrono::high_resolution_clock::now();
+
+  _scenes[_currentScene]->setEcs(_ecs.get());
+  _scenes[_currentScene]->setQueue(_queue.get());
+  _scenes[_currentScene]->init();
+
+  while (true) {
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float deltaTime =
+        std::chrono::duration<float>(currentTime - lastTime).count();
+    if (deltaTime > 0.01f) {
+      auto switchScene = _scenes[_currentScene]->loop();
+      lastTime = currentTime;
+      if (switchScene != sceneType::NO_SWITCH) {
+        _currentScene = switchScene;
+        _scenes[_currentScene]->setEcs(_ecs.get());
+        _scenes[_currentScene]->setQueue(_queue.get());
+        _scenes[_currentScene]->init();
       }
     }
   }
 }
 
-void Server::world_update(float deltaTime) { _game->loop(deltaTime, _queue); };
-
-void Server::game_loop() {
-  auto lastTime = std::chrono::high_resolution_clock::now();
-
-  _game->load();
-  _game->load_entity(_queue);
-  while (true) {
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float deltaTime =
-        std::chrono::duration<float>(currentTime - lastTime).count();
-    lastTime = currentTime;
-
-    world_update(deltaTime);
-
-    Command command = _queue->popGameQueue();
-    if (command.type == EMPTY) {
-      continue;
-    }
-    if (_commandsGame.find(command.type) != _commandsGame.end()) {
-      _commandsGame[command.type](command);
-    } else {
-      std::cout << "Code invalide ! [Game]" << std::endl;
-    }
-  }
-}
-
-void Server::start() {
-  if (!_tcp->initializeSocket() || !_tcp->bindSocket()) {
-    throw std::runtime_error("Failed to initialize TCP.");
-  }
-
-  if (!_udp->initializeSocket() || !_udp->bindSocket()) {
-    throw std::runtime_error("Failed to initialize UDP.");
-  }
-
-  std::thread tcpThread([this]() { listen(_tcp); });
-  std::thread udpThread([this]() { listen(_udp); });
-  std::thread gameThread([this]() { game_loop(); });
-
-  tcpThread.join();
-  udpThread.join();
-  gameThread.join();
+void Server::load_component() {
+  _ecs->register_component<Position>();
+  _ecs->register_component<Velocity>();
+  _ecs->register_component<Draw>();
+  _ecs->register_component<Health>();
+  _ecs->register_component<EntityType>();
+  _ecs->register_component<Control>();
 }

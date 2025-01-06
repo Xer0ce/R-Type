@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, 2024
+** EPITECH PROJECT, 2025
 ** R-Type
 ** File description:
 ** Server
@@ -7,72 +7,48 @@
 
 #pragma once
 
+#include "../ecs/EntitiesGestion.hpp"
+#include "../ecs/Registry.hpp"
+#include "../graphical/Components/Draw.hpp"
+#include "../graphical/Components/Health.hpp"
+#include "../graphical/Components/Position.hpp"
+#include "../graphical/Components/Velocity.hpp"
+#include "../graphical/Utils.hpp"
 #include "../network/server/tcp/Tcp.hpp"
 #include "../network/server/udp/Udp.hpp"
 #include "../queue/Queue.hpp"
-#include "game/Game.hpp"
+#include "commandSystem/CommandHandle.hpp"
+#include "commandSystem/CommandSend.hpp"
+#include "scenes/EndLess.hpp"
+#include "scenes/History.hpp"
+#include "scenes/OneVsOne.hpp"
 #include <map>
+#include <memory>
 
 class Server {
 public:
-  Server(std::size_t tcpPort, std::string tcpIp, std::size_t udpPort,
-         std::string udpIp);
+  Server();
   ~Server();
 
-  void listen(std::unique_ptr<IProtocol> &protocol);
+  void load_component();
 
-  void start();
+  void init();
 
-  void initCommandMapHandle();
-  void initCommandMapSend();
-  void initCommandMapGame();
+  void listen(IProtocol *protocol);
 
-  void connectCommandHandle(std::vector<uint8_t> buffer,
-                            std::unique_ptr<IProtocol> &protocol);
-  void disconnectCommandHandle(std::vector<uint8_t> buffer,
-                               std::unique_ptr<IProtocol> &protocol);
-  void moveCommandHandle(std::vector<uint8_t> buffer,
-                         std::unique_ptr<IProtocol> &protocol);
-  void shootCommandHandle(std::vector<uint8_t> buffer,
-                          std::unique_ptr<IProtocol> &protocol);
-
-  void connectCommandSend(Command command,
-                          std::unique_ptr<IProtocol> &protocol);
-  void disconnectCommandSend(Command command,
-                             std::unique_ptr<IProtocol> &protocol);
-  void moveCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
-  void shootCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
-  void mapCommandSend(Command command, std::unique_ptr<IProtocol> &protocol);
-  void enemyMoveCommandSend(Command command,
-                            std::unique_ptr<IProtocol> &protocol);
-  void createEnemyCommandSend(Command command,
-                              std::unique_ptr<IProtocol> &protocol);
-  void killEnemyCommandSend(Command command,
-                            std::unique_ptr<IProtocol> &protocol);
-  void newPlayerCommandSend(Command command,
-                            std::unique_ptr<IProtocol> &protocol);
-  void createPlayerCommandSend(Command command,
-                               std::unique_ptr<IProtocol> &protocol);
-
-  void connectCommandGame(Command command);
-  void disconnectCommandGame(Command command);
-  void moveCommandGame(Command command);
-  void killEnemyCommandGame(Command command);
-
-  void game_loop();
-  void world_update(float deltaTime);
+  void game();
 
 private:
-  std::unique_ptr<IProtocol> _tcp;
-  std::unique_ptr<IProtocol> _udp;
-  std::shared_ptr<Game> _game;
-  std::map<uint8_t, std::function<void(std::vector<uint8_t>,
-                                       std::unique_ptr<IProtocol> &)>>
-      _commandsHandle;
-  std::map<CommandType,
-           std::function<void(Command, std::unique_ptr<IProtocol> &)>>
-      _commandsSend;
-  std::map<CommandType, std::function<void(Command)>> _commandsGame;
+  std::map<sceneType, std::shared_ptr<IScene>> _scenes;
+  sceneType _currentScene;
+
+  std::shared_ptr<IProtocol> _tcp;
+  std::shared_ptr<IProtocol> _udp;
+
+  std::shared_ptr<Registry> _ecs;
 
   std::shared_ptr<Queue> _queue;
+
+  CommandHandle commandHandle;
+  CommandSend commandSend;
 };

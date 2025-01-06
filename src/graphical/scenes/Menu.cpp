@@ -45,3 +45,4 @@ sceneType Menu::loop(eventType event) {
     }
     return sceneType::NO_SWITCH;
 }
+

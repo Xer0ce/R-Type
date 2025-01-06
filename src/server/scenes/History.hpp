@@ -15,14 +15,14 @@ public:
   History();
   ~History();
 
-  sceneType loop(eventType event) override;
-
-  void control_system(keyType key);
-
   void position_system(float deltaTime);
 
-  void init() override{};
+  void enemy_system();
+
+  sceneType loop() override;
+
+  void init() override;
 
 private:
-  CommandGame commandGame;
+  CommandGame _commandGame;
 };
