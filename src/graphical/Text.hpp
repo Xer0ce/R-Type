@@ -21,7 +21,7 @@ public:
   void init();
   void drawText();
   void destroyText();
-  void setColor(SDL_Color color) { _color = color; }
+  void setColor(SDL_Color color);
   std::string getText();
 
 private:
