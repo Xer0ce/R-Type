@@ -12,6 +12,7 @@ option(BUILD_SERVER "Build the server executable" ON)
 add_subdirectory(external/SDL3)
 add_subdirectory(external/SDL3_ttf)
 add_subdirectory(external/SDL3_image)
+add_subdirectory(external/json)
 
 if(BUILD_CLIENT)
     file(GLOB SOURCES_CLIENT "src/graphical/*.cpp")

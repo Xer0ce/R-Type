@@ -1,0 +1,23 @@
+{
+    "enemy": [
+    {
+        "type": "Pion",
+        "number": 2,
+        "ia": "Aggressive"
+    },
+    {
+        "type": "Balourd",
+        "number": 20,
+        "ia": "Passive"
+    },
+    {
+        "type": "Zinzolin",
+        "number": 8,
+        "ia": "Balzy"
+    },
+    {
+        "type": "Boss",
+        "number": 1,
+        "ia": "Passive"
+    }]
+}
