@@ -36,10 +36,13 @@ public:
 
   void drawButton();
 
+  void drawButton(const std::string &tag);
+
   void addText(std::string text, int x, int y, int w, int h, int size,
                std::string fontPath, SDL_Color color);
 
   void addButton(float x, float y, float w, float h, const std::string &text,
+                 const std::string &tag = "",
                  SDL_Color normalColor = {0, 0, 0, 0},
                  SDL_Color hoverColor = {255, 255, 255, 255},
                  SDL_Color normalTextColor = {255, 255, 255, 255},
@@ -67,7 +70,7 @@ public:
 
   void deleteTexts();
 
-  void deleteButtons();
+  void deleteButtons(const std::string &tag = "");
 
   void deleteText(std::string text);
 

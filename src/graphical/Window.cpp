@@ -6,7 +6,9 @@
 */
 
 #include "Window.hpp"
+#include <algorithm>
 #include <iostream>
+#include <vector>
 
 Window::Window() {}
 
@@ -83,6 +85,14 @@ void Window::drawButton() {
   }
 }
 
+void Window::drawButton(const std::string &tag) {
+  for (auto &button : _buttons) {
+    if (button.getTag() == tag) {
+      button.drawButton();
+    }
+  }
+}
+
 void Window::addText(std::string text, int x, int y, int w, int h, int size,
                      std::string fontPath, SDL_Color color) {
   _texts.emplace_back(text, x, y, w, h, _renderer, size, fontPath, color);
@@ -90,11 +100,11 @@ void Window::addText(std::string text, int x, int y, int w, int h, int size,
 }
 
 void Window::addButton(float x, float y, float w, float h,
-                       const std::string &text, SDL_Color normalColor,
-                       SDL_Color hoverColor, SDL_Color normalTextColor,
-                       SDL_Color hoverTextColor) {
+                       const std::string &text, const std::string &tag,
+                       SDL_Color normalColor, SDL_Color hoverColor,
+                       SDL_Color normalTextColor, SDL_Color hoverTextColor) {
   Button myButton = Button(x, y, w, h, _renderer, text, normalColor, hoverColor,
-                           normalTextColor, hoverTextColor);
+                           normalTextColor, hoverTextColor, tag);
   myButton.init();
   _buttons.push_back(myButton);
 }
@@ -154,7 +164,17 @@ int Window::getMouseState(float *x, float *y) {
 
 void Window::deleteTexts() { _texts.clear(); }
 
-void Window::deleteButtons() { _buttons.clear(); }
+void Window::deleteButtons(const std::string &tag) {
+  if (tag.empty()) {
+    _buttons.clear();
+  } else {
+    _buttons.erase(std::remove_if(_buttons.begin(), _buttons.end(),
+                                  [&tag](const Button &button) {
+                                    return button.getTag() == tag;
+                                  }),
+                   _buttons.end());
+  }
+}
 
 void Window::deleteText(std::string text) {
   for (auto &t : _texts) {
