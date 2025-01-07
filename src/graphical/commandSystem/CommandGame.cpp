@@ -68,14 +68,16 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs,
                        Window *window) {
   auto &entities = ecs->get_components<EntityType>();
   auto &positions = ecs->get_components<Position>();
+  auto &draw = ecs->get_components<Draw>();
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.move.entityId && positions[i].has_value()) {
       if (entities[i] && entities[i] == EntityType::Player) {
-        std::cout << "Je bouge le player avec l'id " << i << std::endl;
       }
       positions[i]->x = command.move.positionX;
       positions[i]->y = command.move.positionY;
+      draw[i]->rect.x = command.move.positionX;
+      draw[i]->rect.y = command.move.positionY;
     }
   }
 }
