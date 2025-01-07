@@ -50,8 +50,6 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *playerTexture =
       window->loadTexture("../src/graphical/assets/michou.png");
 
-  std::cout << "Je cree le player avec l'id " << command.repConnect.id
-            << std::endl;
   auto player = create_entity<EntityType::Player>(
       *ecs,
       Position(command.repConnect.positionX, command.repConnect.positionY),
@@ -73,6 +71,9 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs,
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.move.entityId && positions[i].has_value()) {
+      if (entities[i] && entities[i] == EntityType::Player) {
+        std::cout << "Je bouge le player avec l'id " << i << std::endl;
+      }
       positions[i]->x = command.move.positionX;
       positions[i]->y = command.move.positionY;
     }
