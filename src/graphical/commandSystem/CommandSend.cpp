@@ -9,7 +9,7 @@
 
 CommandSend::CommandSend() {
   _commandMap[CommandType::CONNECT] = [this](Command command,
-                                                IClient *protocol) {
+                                             IClient *protocol) {
     connect(command, protocol);
   };
   _commandMap[CommandType::SHOOT] = [this](Command command, IClient *protocol) {
@@ -35,7 +35,7 @@ CommandSend::CommandSend() {
     createPlayer(command, protocol);
   };
   _commandMap[CommandType::STARTGAME] = [this](Command command,
-                                                  IClient *protocol) {
+                                               IClient *protocol) {
     startGame(command, protocol);
   };
 }
@@ -117,8 +117,7 @@ void CommandSend::createPlayer(Command command, IClient *protocol) {
   std::cout << "Create player command" << std::endl;
 }
 
-void CommandSend::startGame(Command command, IClient *protocol) 
-{
+void CommandSend::startGame(Command command, IClient *protocol) {
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x05);

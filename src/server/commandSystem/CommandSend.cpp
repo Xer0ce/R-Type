@@ -35,7 +35,7 @@ CommandSend::CommandSend() {
     createPlayer(command, protocol);
   };
   _commandMap[CommandType::STARTGAME] = [this](Command command,
-                                                  IProtocol *protocol) {
+                                               IProtocol *protocol) {
     startGame(command, protocol);
   };
 }
