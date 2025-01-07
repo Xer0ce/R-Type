@@ -81,18 +81,27 @@ void CommandSend::move(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0x03);
 
-  uint32_t playerId = command.move.entityId;
-  std::string positionX = std::to_string(command.move.positionX);
-  std::string positionY = std::to_string(command.move.positionY);
+  binaryData.push_back(static_cast<uint8_t>(command.move.entityId));
 
-  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&playerId),
-                    reinterpret_cast<uint8_t *>(&playerId) + sizeof(playerId));
+  uint8_t *positionXBytes = reinterpret_cast<uint8_t *>(&command.move.positionX);
+  binaryData.insert(binaryData.end(), positionXBytes, positionXBytes + sizeof(float));
 
-  std::string response = positionX + " " + positionY + "\r\n";
+  uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.move.positionY);
+  binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
 
-  for (auto &c : response) {
-    binaryData.push_back(static_cast<uint8_t>(c));
-  }
+
+  // uint32_t playerId = command.move.entityId;
+  // std::string positionX = std::to_string(command.move.positionX);
+  // std::string positionY = std::to_string(command.move.positionY);
+
+  // binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&playerId),
+  //                   reinterpret_cast<uint8_t *>(&playerId) + sizeof(playerId));
+
+  // std::string response = positionX + " " + positionY + "\r\n";
+
+  // for (auto &c : response) {
+  //   binaryData.push_back(static_cast<uint8_t>(c));
+  // }
 
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }

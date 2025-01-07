@@ -71,19 +71,13 @@ void CommandSend::move(Command command, IClient *protocol) {
 
   binaryData.push_back(0x03);
 
-  uint32_t id = command.move.entityId;
+  binaryData.push_back(static_cast<uint8_t>(command.move.entityId));
 
-  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&id),
-                    reinterpret_cast<uint8_t *>(&id) + sizeof(id));
+  uint8_t *positionXBytes = reinterpret_cast<uint8_t *>(&command.move.positionX);
+  binaryData.insert(binaryData.end(), positionXBytes, positionXBytes + sizeof(float));
 
-  std::string positionX = std::to_string(command.move.positionX);
-  std::string positionY = std::to_string(command.move.positionY);
-
-  std::string response = positionX + " " + positionY + "\r\n";
-
-  for (auto &c : response) {
-    binaryData.push_back(static_cast<uint8_t>(c));
-  }
+  uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.move.positionY);
+  binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
 
   protocol->sendToServer(binaryData);
 }

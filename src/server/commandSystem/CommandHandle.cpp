@@ -95,20 +95,30 @@ void CommandHandle::disconnect(std::vector<uint8_t> buffer, IProtocol *protocol,
 void CommandHandle::move(std::vector<uint8_t> buffer, IProtocol *protocol,
                          Queue *queue) {
   Command cmd;
-
   size_t bufferSize = buffer.size();
   uint16_t clientPort = (buffer[bufferSize - 2] << 8) | buffer[bufferSize - 1];
 
-  std::vector<std::string> bufferString =
-      my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
+  int id = static_cast<int>(buffer[1]);
+  float positionX = *reinterpret_cast<float *>(&buffer[2]);
+  float positionY = *reinterpret_cast<float *>(&buffer[6]);
 
   cmd.type = CommandType::MOVE;
-  cmd.move.entityId = (int)buffer[1];
-  cmd.move.positionX = std::stof(bufferString[0]);
-  cmd.move.positionY = std::stof(bufferString[1]);
-  cmd.id = static_cast<int>(clientPort);
-
+  cmd.move.entityId = id;
+  cmd.move.positionX = positionX;
+  cmd.move.positionY = positionY;
+  cmd.id = clientPort;
   queue->pushGameQueue(cmd);
+
+
+  // std::vector<std::string> bufferString =
+  //     my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
+
+  // cmd.type = CommandType::MOVE;
+  // cmd.move.entityId = (int)buffer[1];
+  // cmd.move.positionX = std::stof(bufferString[0]);
+  // cmd.move.positionY = std::stof(bufferString[1]);
+  // cmd.id = static_cast<int>(clientPort);
+
 }
 
 void CommandHandle::shoot(std::vector<uint8_t> buffer, IProtocol *protocol,

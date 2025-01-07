@@ -102,31 +102,16 @@ void CommandHandle::disconnect(std::vector<uint8_t> buffer, IClient *protocol,
   std::cout << "Disconnect command receive" << std::endl;
 }
 
-std::vector<std::string> parseMoveCommand(const std::vector<uint8_t> &buffer) {
-  std::vector<std::string> bufferString;
-  uint32_t enemyId = *reinterpret_cast<const uint32_t *>(&buffer[1]);
-
-  bufferString.push_back(std::to_string(enemyId));
-
-  std::string bufferStr(buffer.begin() + 5, buffer.end() - 1);
-  std::istringstream iss(bufferStr);
-  for (std::string s; iss >> s;) {
-    bufferString.push_back(s);
-  }
-  return bufferString;
-}
-
 void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,
                          Queue *queue) {
   Command cmd;
 
   cmd.type = CommandType::MOVE;
-  std::vector<std::string> bufferString = parseMoveCommand(buffer);
 
-  cmd.move.entityId = std::stoi(bufferString[0]);
-  cmd.move.positionX = std::stof(bufferString[1]);
-  cmd.move.positionY = std::stof(bufferString[2]);
-
+  cmd.move.entityId = static_cast<int>(buffer[1]);
+  cmd.move.positionX = *reinterpret_cast<float *>(&buffer[2]);
+  cmd.move.positionY = *reinterpret_cast<float *>(&buffer[6]);
+  std::cout << "Move command receive : " << cmd.move.entityId << " : " << cmd.move.positionX << " " << cmd.move.positionY << std::endl;
   queue->pushGameQueue(cmd);
 }
 
