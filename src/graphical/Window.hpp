@@ -9,6 +9,7 @@
 
 #include "Button.hpp"
 #include "Text.hpp"
+#include "Dropdown.hpp"
 #include "Utils.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -36,6 +37,8 @@ public:
 
   void drawButton();
 
+  void drawDropdown();
+
   void addText(std::string text, int x, int y, int w, int h, int size,
                std::string fontPath, SDL_Color color);
 
@@ -44,6 +47,11 @@ public:
                  SDL_Color hoverColor = {255, 255, 255, 255},
                  SDL_Color normalTextColor = {255, 255, 255, 255},
                  SDL_Color hoverTextColor = {0, 0, 0, 0});
+
+  void addDropdown(float x, float y, float width, float height,
+                   std::vector<std::string> options);
+
+  const std::vector<std::unique_ptr<Dropdown>>& getDropdowns() const { return _dropdowns; }
 
   std::vector<Button> getButtons() { return _buttons; }
 
@@ -78,4 +86,5 @@ private:
   SDL_Texture *_background;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
+  std::vector<std::unique_ptr<Dropdown>> _dropdowns;
 };

@@ -58,3 +58,9 @@ void Button::init() {
   SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
   SDL_RenderRect(_renderer, _rect);
 }
+
+void Button::setPos(float x, float y) {
+  _rect->x = x;
+  _rect->y = y;
+  _text.setPos(x, y);
+}

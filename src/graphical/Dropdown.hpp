@@ -21,13 +21,19 @@ class Dropdown {
         Dropdown(float x, float y, float width, float height, std::vector<std::string> options, SDL_Renderer *renderer);
         ~Dropdown();
 
+        void init();
+        void draw();
+        void toggleOpen();
+        bool isClicked(float mouseX, float mouseY);
+        bool getIsOpen() { return _isOpen; };
+        void moveButtonToTop();
+
     private:
         float _x, _y, _width, _height;
         bool _isOpen;
         std::string _selectedOption;
 
         SDL_Renderer *_renderer;
-        Button _mainButton;
         std::vector<Button *> _optionButtons;
         std::vector<std::string> _options;
 };

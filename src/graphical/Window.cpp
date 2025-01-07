@@ -78,6 +78,12 @@ void Window::drawButton() {
   }
 }
 
+void Window::drawDropdown() {
+  for (auto &dropdown : _dropdowns) {
+    dropdown->draw();
+  }
+}
+
 void Window::addText(std::string text, int x, int y, int w, int h, int size,
                      std::string fontPath, SDL_Color color) {
   _texts.emplace_back(text, x, y, w, h, _renderer, size, fontPath, color);
@@ -92,6 +98,11 @@ void Window::addButton(float x, float y, float w, float h,
                            normalTextColor, hoverTextColor);
   myButton.init();
   _buttons.push_back(myButton);
+}
+
+void Window::addDropdown(float x, float y, float width, float height, std::vector<std::string> options) {
+    _dropdowns.push_back(std::make_unique<Dropdown>(x, y, width, height, options, _renderer));
+    _dropdowns.back()->init();
 }
 
 void Window::render() { SDL_RenderPresent(_renderer); }

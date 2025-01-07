@@ -33,6 +33,8 @@ public:
 
   std::string getText() { return _text.getText(); }
 
+  void setPos(float x, float y);
+
 private:
   SDL_Renderer *_renderer;
   SDL_FRect *_rect;
