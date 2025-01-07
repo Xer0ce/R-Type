@@ -80,6 +80,11 @@ sceneType Menu::loop(eventType event) {
   auto &position = _ecs.get_components<Position>();
 
   auto button = mouseHandler(mouseX, mouseY, event);
+  if (button == "Heberger") {
+      _window->deleteTexts();
+      _window->deleteButtons();
+      return sceneType::LOBBY;
+  }
   _window->drawBackground();
   _window->drawButton();
   _window->createMenuPipe();
