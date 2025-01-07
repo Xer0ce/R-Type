@@ -5,6 +5,7 @@
 ** CommandHandle
 */
 
+#include <algorithm>
 #include "CommandHandle.hpp"
 
 CommandHandle::CommandHandle() {
