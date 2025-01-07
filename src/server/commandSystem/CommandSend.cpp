@@ -165,7 +165,7 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0x08);
 
-  std::string playerName = command.newPlayer.Nickname + "\r\n";
+  std::string playerName = command.newPlayer.Nickname;
 
   uint32_t id = command.newPlayer.id;
 
@@ -190,22 +190,25 @@ void CommandSend::createPlayer(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0x08);
 
-  std::string playerName = command.createPlayer.Nickname + "\r\n";
+  std::string playerName = command.createPlayer.Nickname;
 
   uint32_t id = command.createPlayer.id;
 
   binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&id),
                     reinterpret_cast<uint8_t *>(&id) + sizeof(id));
 
-  std::string positionX = std::to_string(command.createPlayer.positionX);
-  std::string positionY = std::to_string(command.createPlayer.positionY);
+  // std::string positionX = std::to_string(command.createPlayer.positionX);
+  // std::string positionY = std::to_string(command.createPlayer.positionY);
 
-  std::string response =
-      positionX + " " + positionY + " " + playerName + "\r\n";
+  // std::string response =
+  //     positionX + " " + positionY + " " + playerName + "\r\n";
 
-  for (auto &c : response) {
-    binaryData.push_back(static_cast<uint8_t>(c));
-  }
+  // for (auto &c : response) {
+  //   binaryData.push_back(static_cast<uint8_t>(c));
+  // }
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.positionX));
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.positionY));
 
   protocol->sendData(command.id, binaryData);
 }
