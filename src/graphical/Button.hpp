@@ -17,7 +17,10 @@
 class Button {
 public:
   Button(float x, float y, float w, float h, SDL_Renderer *renderer,
-         const std::string &text);
+         const std::string &text, SDL_Color normalColor = {0, 0, 0, 0},
+         SDL_Color hoverColor = {255, 255, 255, 255},
+         SDL_Color normalTextColor = {255, 255, 255, 255},
+         SDL_Color hoverTextColor = {0, 0, 0, 0});
   ~Button();
 
   bool isMouseOver() const;
@@ -28,15 +31,18 @@ public:
 
   void drawButton();
 
-  std::string getText() { return _text; }
+  std::string getText() { return _text.getText(); }
 
 private:
   SDL_Renderer *_renderer;
   SDL_FRect *_rect;
   float _mouseX;
   float _mouseY;
-  std::string _text;
+  std::string _textButton;
+  Text _text;
 
   SDL_Color _normalColor;
   SDL_Color _hoverColor;
+  SDL_Color _normalTextColor;
+  SDL_Color _hoverTextColor;
 };

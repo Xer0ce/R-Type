@@ -8,10 +8,17 @@
 #include "Button.hpp"
 
 Button::Button(float x, float y, float w, float h, SDL_Renderer *renderer,
-               const std::string &text)
+               const std::string &text, SDL_Color normalColor,
+               SDL_Color hoverColor, SDL_Color normalTextColor,
+               SDL_Color hoverTextColor)
     : _renderer(renderer), _rect(new SDL_FRect{x, y, w, h}),
-      _normalColor({0, 0, 0, 0}), _hoverColor({255, 255, 255, 255}),
-      _text(text) {}
+      _normalColor(normalColor), _hoverColor(hoverColor),
+      _normalTextColor(normalTextColor), _hoverTextColor(hoverTextColor),
+      _textButton(text),
+      _text(text, x, y, w, h, renderer, 40,
+            "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255}) {
+  _text.init();
+}
 
 Button::~Button() {}
 
@@ -29,22 +36,19 @@ void Button::drawButton() {
   SDL_GetMouseState(&_mouseX, &_mouseY);
   SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
 
-  Text text(_text, _rect->x, _rect->y, _rect->w, _rect->h, _renderer, 40,
-            "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
-
   if (isMouseOver()) {
     SDL_SetRenderDrawColor(_renderer, _hoverColor.r, _hoverColor.g,
                            _hoverColor.b, _hoverColor.a);
-    text.setColor({0, 0, 0, 0});
+    _text.setColor(_hoverTextColor);
   } else {
     SDL_SetRenderDrawColor(_renderer, _normalColor.r, _normalColor.g,
                            _normalColor.b, _normalColor.a);
+    _text.setColor(_normalTextColor);
   }
   SDL_RenderFillRect(_renderer, _rect);
   SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 0);
   SDL_RenderRect(_renderer, _rect);
-  text.init();
-  text.drawText();
+  _text.drawText();
 }
 
 void Button::init() {

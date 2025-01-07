@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** R-Type
 ** File description:
-** History
+** Lobby
 */
 
 #pragma once
@@ -10,16 +10,12 @@
 #include "../commandSystem/CommandGame.hpp"
 #include "AScene.hpp"
 
-class History : public AScene {
+class Lobby : public AScene {
 public:
-  History();
-  ~History();
+  Lobby();
+  ~Lobby();
 
   sceneType loop(eventType event) override;
-
-  void control_system(keyType key);
-
-  void position_system(float deltaTime);
 
   void init() override;
 

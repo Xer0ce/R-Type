@@ -18,5 +18,11 @@ public:
 
   sceneType loop(eventType event) override;
 
+  std::string mouseHandler(float mouseX, float mouseY, eventType event);
+
+  void setMenu(std::string selectedButton);
+
 private:
+  std::string _selectedButton;
+  std::string _menuTitle;
 };

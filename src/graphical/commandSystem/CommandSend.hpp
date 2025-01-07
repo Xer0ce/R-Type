@@ -26,11 +26,11 @@ private:
   void move(Command command, IClient *protocol);
   void shoot(Command command, IClient *protocol);
   void map(Command command, IClient *protocol);
-  void enemyMove(Command command, IClient *protocol);
   void createEnemy(Command command, IClient *protocol);
   void killEnemy(Command command, IClient *protocol);
   void newPlayer(Command command, IClient *protocol);
   void createPlayer(Command command, IClient *protocol);
+  void startGame(Command command, IClient *protocol);
 
   std::map<CommandType, std::function<void(Command, IClient *)>> _commandMap;
 };

@@ -40,8 +40,8 @@ void Queue::popUdpQueueEnemy(int id) {
 
     bool shouldKeep = true;
     switch (command.type) {
-    case ENEMYMOVE:
-      if (command.enemyMove.enemyId == id) {
+    case MOVE:
+      if (command.move.entityId == id) {
         shouldKeep = false;
       }
       break;

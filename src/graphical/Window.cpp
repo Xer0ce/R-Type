@@ -22,8 +22,13 @@ void Window::init() {
     std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
     exit(84);
   }
+  SDL_DisplayID displayID = SDL_GetPrimaryDisplay();
+  const SDL_DisplayMode *currentMode = SDL_GetCurrentDisplayMode(displayID);
 
-  _window = SDL_CreateWindow("R-Type", 1920, 1080, 0);
+  int windowWidth = static_cast<int>(currentMode->w * 0.9);
+  int windowHeight = static_cast<int>(currentMode->h * 0.8);
+
+  _window = SDL_CreateWindow("R-Type", windowWidth, windowHeight, 0);
   if (!_window) {
     std::cerr << "Erreur lors de la création de la fenêtre : " << SDL_GetError()
               << std::endl;
@@ -80,14 +85,16 @@ void Window::drawButton() {
 
 void Window::addText(std::string text, int x, int y, int w, int h, int size,
                      std::string fontPath, SDL_Color color) {
-  Text myText = Text(text, x, y, w, h, _renderer, size, fontPath, color);
-  myText.init();
-  _texts.push_back(myText);
+  _texts.emplace_back(text, x, y, w, h, _renderer, size, fontPath, color);
+  _texts.back().init();
 }
 
 void Window::addButton(float x, float y, float w, float h,
-                       const std::string &text) {
-  Button myButton = Button(x, y, w, h, _renderer, text);
+                       const std::string &text, SDL_Color normalColor,
+                       SDL_Color hoverColor, SDL_Color normalTextColor,
+                       SDL_Color hoverTextColor) {
+  Button myButton = Button(x, y, w, h, _renderer, text, normalColor, hoverColor,
+                           normalTextColor, hoverTextColor);
   myButton.init();
   _buttons.push_back(myButton);
 }
@@ -132,7 +139,7 @@ void Window::createMenuPipe() {
   SDL_FRect pipeRect;
 
   pipeRect.x = 45;
-  pipeRect.y = 200;
+  pipeRect.y = 275;
   pipeRect.w = 5;
   pipeRect.h = 400;
 
@@ -143,4 +150,16 @@ void Window::createMenuPipe() {
 
 int Window::getMouseState(float *x, float *y) {
   return SDL_GetMouseState(x, y);
+}
+
+void Window::deleteTexts() { _texts.clear(); }
+
+void Window::deleteButtons() { _buttons.clear(); }
+
+void Window::deleteText(std::string text) {
+  for (auto &t : _texts) {
+    if (t.getText() == text) {
+      t.destroyText();
+    }
+  }
 }

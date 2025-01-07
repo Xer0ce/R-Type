@@ -11,7 +11,8 @@ Server::Server() {
   _scenes[sceneType::ONE_VS_ONE] = std::make_shared<OneVsOne>();
   _scenes[sceneType::ENDLESS] = std::make_shared<EndLess>();
   _scenes[sceneType::HISTORY] = std::make_shared<History>();
-  _currentScene = sceneType::HISTORY;
+  _scenes[sceneType::LOBBY] = std::make_shared<Lobby>();
+  _currentScene = sceneType::LOBBY;
 
   _tcp = std::make_shared<Tcp>(4243, "0.0.0.0");
   _udp = std::make_shared<UDP>(4242, "0.0.0.0");

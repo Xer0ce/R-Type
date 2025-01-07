@@ -6,6 +6,7 @@
 */
 
 #include "CommandHandle.hpp"
+#include <algorithm>
 
 CommandHandle::CommandHandle() {
   _commandMap[0x01] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
@@ -20,6 +21,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) { move(buffer, protocol, queue); };
   _commandMap[0x04] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
                              Queue *queue) { shoot(buffer, protocol, queue); };
+  _commandMap[0x05] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                             Queue *queue) {
+    startGame(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -27,7 +32,6 @@ CommandHandle::~CommandHandle() {}
 void CommandHandle::executeCommandHandle(uint8_t commandType,
                                          std::vector<uint8_t> buffer,
                                          IProtocol *protocol, Queue *queue) {
-  std::cout << "Execute command handle" << std::endl;
   if (_commandMap.find(commandType) != _commandMap.end()) {
     _commandMap[commandType](buffer, protocol, queue);
   } else {
@@ -86,6 +90,7 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IProtocol *protocol,
                             Queue *queue) {
   Command cmd;
 
+  std::cout << "Connect command" << std::endl;
   if (buffer.size() < 5) {
     handleWrongCommand("Connect");
     return;
@@ -122,7 +127,7 @@ void CommandHandle::move(std::vector<uint8_t> buffer, IProtocol *protocol,
       my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
 
   cmd.type = CommandType::MOVE;
-  cmd.move.playerId = (int)buffer[1];
+  cmd.move.entityId = (int)buffer[1];
   cmd.move.positionX = std::stof(bufferString[0]);
   cmd.move.positionY = std::stof(bufferString[1]);
   cmd.id = static_cast<int>(clientPort);
@@ -143,4 +148,14 @@ void CommandHandle::shoot(std::vector<uint8_t> buffer, IProtocol *protocol,
   cmd.shoot.positionX = std::stof(bufferString[0]);
   cmd.shoot.positionY = std::stof(bufferString[1]);
   queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::startGame(std::vector<uint8_t> buffer, IProtocol *protocol,
+                              Queue *queue) {
+  Command cmd;
+
+  std::cout << "Start game command receive" << std::endl;
+  cmd.type = CommandType::STARTGAME;
+  queue->pushGameQueue(cmd);
+  queue->pushTcpQueue(cmd);
 }

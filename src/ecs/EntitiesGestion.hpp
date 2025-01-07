@@ -9,11 +9,7 @@
 #include "Entities.hpp"
 #include "Registry.hpp"
 
-enum class EntityType {
-  Player,
-  Enemy,
-  Projectile,
-};
+enum class EntityType { Player, Enemy, Projectile, Menu };
 
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
                               Health health, Draw draw,

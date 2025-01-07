@@ -25,6 +25,7 @@
 #include "scenes/EndLess.hpp"
 #include "scenes/History.hpp"
 #include "scenes/IScene.hpp"
+#include "scenes/Lobby.hpp"
 #include "scenes/Menu.hpp"
 #include "scenes/OneVsOne.hpp"
 #include <iostream>
