@@ -47,8 +47,8 @@ void Menu::setMenu(std::string selectedButton) {
   if (_selectedButton == "Heberger") {
     _menuTitle = "Crée une partie";
     _window->addButton(730, 200 + 500, 830, 50, "Valider", "window",
-                       {37, 37, 37, 70}, {37, 37, 37, 200}, {255, 255, 255, 255},
-                       {255, 255, 255, 255});
+                       {37, 37, 37, 70}, {37, 37, 37, 200},
+                       {255, 255, 255, 255}, {255, 255, 255, 255});
   }
   if (_selectedButton == "Rejoindre") {
     _window->deleteButtons("window");
