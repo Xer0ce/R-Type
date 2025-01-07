@@ -1,5 +1,6 @@
 /*
 ** EPITECH PROJECT, 2025
+
 ** R-Type
 ** File description:
 ** History
@@ -81,7 +82,6 @@ sceneType History::loop(eventType event) {
   keyType key = _window->catchKey();
 
   if (key == keyType::ESCAPE) {
-    std::cout << "switch to menu" << std::endl;
     return sceneType::MENU;
   }
 

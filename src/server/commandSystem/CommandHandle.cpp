@@ -74,40 +74,16 @@ std::vector<std::string> my_strToWordArray(const std::string &str,
   return resultVec;
 }
 
-std::vector<std::string>
-parseConnectCommand(const std::vector<uint8_t> &buffer) {
-  std::vector<std::string> bufferString;
-  std::string bufferStr(buffer.begin(), buffer.end() - 1);
-
-  std::istringstream iss(bufferStr);
-  for (std::string s; iss >> s;) {
-    bufferString.push_back(s);
-  }
-  return bufferString;
-}
-
 void CommandHandle::connect(std::vector<uint8_t> buffer, IProtocol *protocol,
                             Queue *queue) {
   Command cmd;
 
-  std::cout << "Connect command" << std::endl;
-  if (buffer.size() < 5) {
-    handleWrongCommand("Connect");
-    return;
-  }
+  int playloadSize = static_cast<int>(buffer[1] - 1);
 
-  uint8_t messageType = buffer[0];
-  uint16_t nameLength = (buffer[1] << 8) | buffer[2];
-  std::string playerName = std::string(buffer.begin(), buffer.end());
-
-  int clientSocketId = static_cast<int>(buffer.back());
-
+  std::string nickname(buffer.begin() + 2, buffer.begin() + 2 + playloadSize);
   cmd.type = CommandType::CONNECT;
-  cmd.connect.Nickname = playerName;
-  cmd.id = clientSocketId;
-
-  std::cout << "Player Name : " << cmd.connect.Nickname << std::endl;
-
+  cmd.connect.Nickname = nickname;
+  cmd.id = static_cast<int>(buffer.back());
   queue->pushGameQueue(cmd);
 }
 

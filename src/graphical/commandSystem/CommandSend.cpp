@@ -54,16 +54,11 @@ void CommandSend::executeCommandSend(Command command, IClient *protocol) {
 void CommandSend::connect(Command command, IClient *protocol) {
   std::vector<uint8_t> binaryData;
 
-  std::cout << "Connect command" << std::endl;
-
   binaryData.push_back(0x01);
-
+  binaryData.push_back(static_cast<uint8_t>(command.connect.Nickname.size()));
   std::string playerName = command.connect.Nickname + "\r\n";
-
-  for (auto &c : playerName) {
+  for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
-  }
-
   protocol->sendToServer(binaryData);
 }
 
