@@ -22,8 +22,13 @@ void Window::init() {
     std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
     exit(84);
   }
+  SDL_DisplayID displayID = SDL_GetPrimaryDisplay();
+  const SDL_DisplayMode *currentMode = SDL_GetCurrentDisplayMode(displayID);
 
-  _window = SDL_CreateWindow("R-Type", 1920, 1080, 0);
+  int windowWidth = static_cast<int>(currentMode->w * 0.9);
+  int windowHeight = static_cast<int>(currentMode->h * 0.8);
+
+  _window = SDL_CreateWindow("R-Type", windowWidth, windowHeight, 0);
   if (!_window) {
     std::cerr << "Erreur lors de la création de la fenêtre : " << SDL_GetError()
               << std::endl;

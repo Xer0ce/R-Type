@@ -31,7 +31,6 @@ CommandHandle::~CommandHandle() {}
 void CommandHandle::executeCommandHandle(uint8_t commandType,
                                          std::vector<uint8_t> buffer,
                                          IProtocol *protocol, Queue *queue) {
-  std::cout << "Execute command handle" << std::endl;
   if (_commandMap.find(commandType) != _commandMap.end()) {
     _commandMap[commandType](buffer, protocol, queue);
   } else {
@@ -90,6 +89,7 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IProtocol *protocol,
                             Queue *queue) {
   Command cmd;
 
+  std::cout << "Connect command" << std::endl;
   if (buffer.size() < 5) {
     handleWrongCommand("Connect");
     return;
@@ -118,7 +118,6 @@ void CommandHandle::disconnect(std::vector<uint8_t> buffer, IProtocol *protocol,
 void CommandHandle::move(std::vector<uint8_t> buffer, IProtocol *protocol,
                          Queue *queue) {
   Command cmd;
-  std::cout << "Move command receive" << std::endl;
 
   size_t bufferSize = buffer.size();
   uint16_t clientPort = (buffer[bufferSize - 2] << 8) | buffer[bufferSize - 1];
@@ -127,7 +126,7 @@ void CommandHandle::move(std::vector<uint8_t> buffer, IProtocol *protocol,
       my_strToWordArray(std::string(buffer.begin() + 2, buffer.end()), ' ');
 
   cmd.type = CommandType::MOVE;
-  cmd.move.playerId = (int)buffer[1];
+  cmd.move.entityId = (int)buffer[1];
   cmd.move.positionX = std::stof(bufferString[0]);
   cmd.move.positionY = std::stof(bufferString[1]);
   cmd.id = static_cast<int>(clientPort);
@@ -154,6 +153,8 @@ void CommandHandle::startGame(std::vector<uint8_t> buffer, IProtocol *protocol,
                               Queue *queue) {
   Command cmd;
 
+  std::cout << "Start game command receive" << std::endl;
   cmd.type = CommandType::STARTGAME;
   queue->pushGameQueue(cmd);
+  queue->pushTcpQueue(cmd);
 }

@@ -30,7 +30,6 @@ CommandGame::~CommandGame() {}
 
 void CommandGame::executeCommandGame(Command command, Queue *queue,
                                      Registry *ecs) {
-  std::cout << "Execute command game" << std::endl;
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, queue, ecs);
   } else {
@@ -108,7 +107,7 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs) {
     if (entityType[i].has_value() && positions[i].has_value() &&
         velocities[i].has_value()) {
       if (entityType[i] && entityType[i] == EntityType::Player) {
-        if (command.move.playerId == i) {
+        if (command.move.entityId == i) {
           positions[i]->x = command.move.positionX;
           positions[i]->y = command.move.positionY;
 

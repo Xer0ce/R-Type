@@ -10,6 +10,7 @@
 Tcp::Tcp(std::string ip, int port) {
   _ip = ip;
   _port = port;
+  _type = "TCP";
 }
 
 Tcp::~Tcp() {}
@@ -40,12 +41,33 @@ void Tcp::sendToServer(std::vector<uint8_t> data) {
 }
 
 bool Tcp::receiveFromServer() {
-  char buffer[1024] = {0};
-  int valread = read(_socket, buffer, 1024);
-  if (valread == 0) {
-    std::cerr << "Error: connection closed" << std::endl;
+  fd_set readfds;
+  struct timeval timeout;
+
+  FD_ZERO(&readfds);
+  FD_SET(_socket, &readfds);
+
+  timeout.tv_sec = 0;
+  timeout.tv_usec = 100;
+
+  int activity = select(_socket + 1, &readfds, NULL, NULL, &timeout);
+
+  if (activity < 0) {
+    return false;
+  } else if (activity == 0) {
     return false;
   }
-  _buffer = std::vector<uint8_t>(buffer, buffer + valread);
-  return true;
+
+  if (FD_ISSET(_socket, &readfds)) {
+    char buffer[1024] = {0};
+    int valread = read(_socket, buffer, 1024);
+    if (valread == 0) {
+      std::cerr << "Error: connection closed" << std::endl;
+      return false;
+    }
+    _buffer = std::vector<uint8_t>(buffer, buffer + valread);
+    return true;
+  }
+
+  return false;
 }

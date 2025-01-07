@@ -8,7 +8,7 @@
 #include "CommandSend.hpp"
 
 CommandSend::CommandSend() {
-  _commandMap[CommandType::REPCONNECT] = [this](Command command,
+  _commandMap[CommandType::CONNECT] = [this](Command command,
                                                 IClient *protocol) {
     connect(command, protocol);
   };
@@ -34,20 +34,37 @@ CommandSend::CommandSend() {
                                                   IClient *protocol) {
     createPlayer(command, protocol);
   };
+  _commandMap[CommandType::STARTGAME] = [this](Command command,
+                                                  IClient *protocol) {
+    startGame(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
 
 void CommandSend::executeCommandSend(Command command, IClient *protocol) {
+  // std::cout << "Execute command send" << std::endl;
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
-    std::cout << "Invalid command type! [Send]" << std::endl;
+    // std::cout << "Invalid command type! [Send]" << std::endl;
   }
 }
 
 void CommandSend::connect(Command command, IClient *protocol) {
+  std::vector<uint8_t> binaryData;
+
   std::cout << "Connect command" << std::endl;
+
+  binaryData.push_back(0x01);
+
+  std::string playerName = command.connect.Nickname + "\r\n";
+
+  for (auto &c : playerName) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendToServer(binaryData);
 }
 
 void CommandSend::disconnect(Command command, IClient *protocol) {
@@ -57,9 +74,9 @@ void CommandSend::disconnect(Command command, IClient *protocol) {
 void CommandSend::move(Command command, IClient *protocol) {
   std::vector<uint8_t> binaryData;
 
-  binaryData.push_back(0x01);
+  binaryData.push_back(0x03);
 
-  uint32_t id = command.move.playerId;
+  uint32_t id = command.move.entityId;
 
   binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&id),
                     reinterpret_cast<uint8_t *>(&id) + sizeof(id));
@@ -98,4 +115,19 @@ void CommandSend::newPlayer(Command command, IClient *protocol) {
 
 void CommandSend::createPlayer(Command command, IClient *protocol) {
   std::cout << "Create player command" << std::endl;
+}
+
+void CommandSend::startGame(Command command, IClient *protocol) 
+{
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x05);
+
+  std::string response = "\r\n";
+
+  for (auto &c : response) {
+    binaryData.push_back(static_cast<uint8_t>(c));
+  }
+
+  protocol->sendToServer(binaryData);
 }
