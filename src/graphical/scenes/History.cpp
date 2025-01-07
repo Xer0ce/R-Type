@@ -14,19 +14,26 @@ History::History() {
 
 History::~History() {}
 
+void History::init() {
+  Command command;
+  command.type = CommandType::CONNECT;
+  command.connect.Nickname = "Player";
+  _queue->pushTcpQueue(command);
+}
+
 void History::control_system(keyType key) {
   auto &control = _ecs.get_components<Control>();
   auto &velocities = _ecs.get_components<Velocity>();
 
   for (std::size_t i = 0; i < control.size(); ++i) {
     if (key == keyType::UP) {
-      velocities[i]->y = -1;
+      velocities[i]->y = -10;
     } else if (key == keyType::RIGHT) {
-      velocities[i]->x = 1;
+      velocities[i]->x = 10;
     } else if (key == keyType::DOWN) {
-      velocities[i]->y = 1;
+      velocities[i]->y = 10;
     } else if (key == keyType::LEFT) {
-      velocities[i]->x = -1;
+      velocities[i]->x = -10;
     } else if (key == keyType::NONE) {
       velocities[i]->x = 0;
       velocities[i]->y = 0;
@@ -53,7 +60,7 @@ void History::position_system(float deltaTime) {
     if (entities[i] == EntityType::Player && control[i].has_value()) {
       Command command;
       command.type = CommandType::MOVE;
-      command.move.playerId = i;
+      command.move.entityId = i;
       command.move.positionX = positions[i]->x;
       command.move.positionY = positions[i]->y;
       _queue->pushUdpQueue(command);

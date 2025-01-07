@@ -17,7 +17,6 @@ enum CommandType {
   MOVE,
   SHOOT,
   REPCONNECT,
-  ENEMYMOVE,
   CREATEENEMY,
   KILLENEMY,
   EMPTY,
@@ -29,12 +28,6 @@ struct killEnemy {
 };
 
 struct createEnemy {
-  float positionX;
-  float positionY;
-  int enemyId;
-};
-
-struct enemyMove {
   float positionX;
   float positionY;
   int enemyId;
@@ -62,7 +55,7 @@ struct NewPlayer {
 };
 
 struct Move {
-  std::size_t playerId;
+  std::size_t entityId;
   float positionX;
   float positionY;
 };
@@ -86,7 +79,6 @@ struct Command {
   struct Move move;
   struct Shoot shoot;
   struct repConnect repConnect;
-  struct enemyMove enemyMove;
   struct createEnemy createEnemy;
   struct killEnemy killEnemy;
   struct NewPlayer newPlayer;

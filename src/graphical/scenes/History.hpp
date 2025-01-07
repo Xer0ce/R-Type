@@ -21,7 +21,7 @@ public:
 
   void position_system(float deltaTime);
 
-  void init() override{};
+  void init() override;
 
 private:
   CommandGame commandGame;

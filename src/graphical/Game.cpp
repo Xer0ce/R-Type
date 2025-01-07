@@ -45,8 +45,7 @@ void Game::listen(IClient &protocol) {
       command = _queue->popUdpQueue();
     }
     if (command.type != EMPTY) {
-      // commandSend.executeCommandSend(command, &protocol);
-      std::cout << "Execute command send" << std::endl;
+      commandSend.executeCommandSend(command, &protocol);
     }
 
     if (protocol.receiveFromServer()) {
@@ -62,7 +61,6 @@ void Game::init() {
   _tcp->initSocket();
   _udp->initSocket();
 
-  _tcp->sendToServer({0x01, 'S', 'a', 'r', 'k', 'o', 'z', 'y'});
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
 
   std::thread tcpThread([this]() { listen(*_tcp.get()); });
@@ -73,6 +71,7 @@ void Game::init() {
 }
 
 void Game::game() {
+  std::clock_t start = std::clock();
   bool running = true;
   eventType event = NO_EVENT;
 
@@ -86,21 +85,25 @@ void Game::game() {
   _scenes[_currentScene]->setQueue(_queue.get());
 
   while (event != CLOSE_WINDOW) {
-    event = _window->updateEvents();
-    _window->clear();
-    auto switchScene = _scenes[_currentScene]->loop(event);
+    std::clock_t current = std::clock();
+    double elapsed = (current - start) / (double)CLOCKS_PER_SEC;
+    if (elapsed > 5.0 / 1000.0) {
+      start = std::clock();
+      event = _window->updateEvents();
+      _window->clear();
+      auto switchScene = _scenes[_currentScene]->loop(event);
 
-    if (switchScene != sceneType::NO_SWITCH) {
-      if (switchScene != MENU) {
-        init();
+      if (switchScene != sceneType::NO_SWITCH) {
+        if (switchScene != MENU)
+          init();
+        _currentScene = switchScene;
+        _scenes[_currentScene]->setWindow(_window.get());
+        _scenes[_currentScene]->setEcs(_ecs);
+        _scenes[_currentScene]->setQueue(_queue.get());
+        _scenes[_currentScene]->init();
       }
-      _currentScene = switchScene;
-      _scenes[_currentScene]->setWindow(_window.get());
-      _scenes[_currentScene]->setEcs(_ecs);
-      _scenes[_currentScene]->setQueue(_queue.get());
-      _scenes[_currentScene]->init();
+      _window->render();
     }
-    _window->render();
   }
   _window->destroyWindow();
   exit(0);
