@@ -81,9 +81,9 @@ sceneType Menu::loop(eventType event) {
 
   auto button = mouseHandler(mouseX, mouseY, event);
   if (button == "Heberger") {
-      _window->deleteTexts();
-      _window->deleteButtons();
-      return sceneType::LOBBY;
+    _window->deleteTexts();
+    _window->deleteButtons();
+    return sceneType::LOBBY;
   }
   _window->drawBackground();
   _window->drawButton();
