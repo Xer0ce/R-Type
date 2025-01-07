@@ -6,6 +6,7 @@
 */
 
 #include "CommandHandle.hpp"
+#include <algorithm>
 
 CommandHandle::CommandHandle() {
   _commandMap[0x01] = [this](std::vector<uint8_t> buffer, IClient *protocol,
