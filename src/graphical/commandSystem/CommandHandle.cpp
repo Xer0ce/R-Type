@@ -82,34 +82,18 @@ std::vector<std::string> my_strToWordArray(const std::string &str,
   return resultVec;
 }
 
-std::vector<std::string>
-parseConnectCommand(const std::vector<uint8_t> &buffer) {
-  std::vector<std::string> bufferString;
-
-  bufferString.push_back(std::to_string(buffer[1]));
-
-  std::string bufferStr(buffer.begin() + 5, buffer.end() - 1);
-  std::istringstream iss(bufferStr);
-  for (std::string s; iss >> s;) {
-    bufferString.push_back(s);
-  }
-  return bufferString;
-}
-
 void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
                             Queue *queue) {
   Command cmd;
 
-  std::vector<std::string> bufferString = parseConnectCommand(buffer);
+  int id = static_cast<int>(buffer[1]);
+  float positionX = *reinterpret_cast<float *>(&buffer[2]);
+  float positionY = *reinterpret_cast<float *>(&buffer[6]);
 
   cmd.type = CommandType::REPCONNECT;
-  cmd.repConnect.id = std::stoi(bufferString[0]);
-  cmd.repConnect.positionX = std::stoi(bufferString[1]);
-  cmd.repConnect.positionY = std::stoi(bufferString[2]);
-
-  std::cout << "CREATE PLAYER : ID : "
-            << std::string(buffer.begin(), buffer.end()) << std::endl;
-
+  cmd.repConnect.id = id;
+  cmd.repConnect.positionX = positionX;
+  cmd.repConnect.positionY = positionY;
   queue->pushGameQueue(cmd);
 }
 

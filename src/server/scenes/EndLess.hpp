@@ -14,7 +14,7 @@ public:
   EndLess();
   ~EndLess();
 
-  sceneType loop() override { return sceneType::NO_SWITCH; };
+  sceneType loop(float deltaTime) override { return sceneType::NO_SWITCH; };
 
   void init() override{};
 

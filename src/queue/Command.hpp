@@ -36,7 +36,7 @@ struct createEnemy {
 struct repConnect {
   float positionX;
   float positionY;
-  std::size_t id;
+  int id;
 };
 
 struct Connect {
@@ -44,24 +44,24 @@ struct Connect {
 };
 
 struct Disconnect {
-  std::size_t playerId;
+  int playerId;
 };
 
 struct NewPlayer {
   float positionX;
   float positionY;
-  std::size_t id;
+  int id;
   std::string Nickname;
 };
 
 struct Move {
-  std::size_t entityId;
+  int entityId;
   float positionX;
   float positionY;
 };
 
 struct Shoot {
-  std::size_t playerId;
+  int playerId;
   float positionX;
   float positionY;
 };
@@ -69,7 +69,7 @@ struct Shoot {
 struct CreatePlayer {
   float positionX;
   float positionY;
-  std::size_t id;
+  int id;
   std::string Nickname;
 };
 

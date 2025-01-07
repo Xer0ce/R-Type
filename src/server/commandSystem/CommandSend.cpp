@@ -51,25 +51,20 @@ void CommandSend::executeCommandSend(Command command, IProtocol *protocol) {
 }
 
 void CommandSend::connect(Command command, IProtocol *protocol) {
-  std::vector<uint8_t> binaryData;
-  binaryData.push_back(0x01);
+    std::vector<uint8_t> binaryData;
+    binaryData.push_back(0x01);
 
-  uint32_t id = command.repConnect.id;
+    binaryData.push_back(static_cast<uint8_t>(command.repConnect.id));
 
-  binaryData.insert(binaryData.end(), reinterpret_cast<uint8_t *>(&id),
-                    reinterpret_cast<uint8_t *>(&id) + sizeof(id));
+    uint8_t *positionXBytes = reinterpret_cast<uint8_t *>(&command.repConnect.positionX);
+    binaryData.insert(binaryData.end(), positionXBytes, positionXBytes + sizeof(float));
 
-  std::string positionX = std::to_string(command.repConnect.positionX);
-  std::string positionY = std::to_string(command.repConnect.positionY);
+    uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.repConnect.positionY);
+    binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
 
-  std::string response = positionX + " " + positionY + "\r\n";
-
-  for (auto &c : response) {
-    binaryData.push_back(static_cast<uint8_t>(c));
-  }
-
-  protocol->sendData(command.id, binaryData);
+    protocol->sendData(command.id, binaryData);
 }
+
 
 void CommandSend::disconnect(Command command, IProtocol *protocol) {
   std::cout << "Disconnect command" << std::endl;

@@ -19,7 +19,7 @@ public:
 
   virtual std::string getName() const = 0;
 
-  virtual sceneType loop() = 0;
+  virtual sceneType loop(float deltaTime) = 0;
 
   virtual void setEcs(Registry *ecs) = 0;
 

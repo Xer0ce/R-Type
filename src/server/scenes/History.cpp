@@ -52,14 +52,16 @@ void History::enemy_system() {
   }
 }
 
-sceneType History::loop() {
+sceneType History::loop(float deltaTime) {
   Command command;
 
   command = _queue->popGameQueue();
   if (command.type != EMPTY)
     _commandGame.executeCommandGame(command, _queue, _ecs);
 
-  enemy_system();
-  position_system(1);
+  if (deltaTime > 0.01f) {
+    enemy_system();
+    position_system(1);
+  }
   return sceneType::NO_SWITCH;
 }

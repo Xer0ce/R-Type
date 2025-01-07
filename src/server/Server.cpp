@@ -77,15 +77,14 @@ void Server::game() {
     auto currentTime = std::chrono::high_resolution_clock::now();
     float deltaTime =
         std::chrono::duration<float>(currentTime - lastTime).count();
-    if (deltaTime > 0.01f) {
-      auto switchScene = _scenes[_currentScene]->loop();
+    auto switchScene = _scenes[_currentScene]->loop(deltaTime);
+    if (deltaTime > 0.01f)
       lastTime = currentTime;
-      if (switchScene != sceneType::NO_SWITCH) {
-        _currentScene = switchScene;
-        _scenes[_currentScene]->setEcs(_ecs.get());
-        _scenes[_currentScene]->setQueue(_queue.get());
-        _scenes[_currentScene]->init();
-      }
+    if (switchScene != sceneType::NO_SWITCH) {
+      _currentScene = switchScene;
+      _scenes[_currentScene]->setEcs(_ecs.get());
+      _scenes[_currentScene]->setQueue(_queue.get());
+      _scenes[_currentScene]->init();
     }
   }
 }
