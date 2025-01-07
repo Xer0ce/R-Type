@@ -115,9 +115,11 @@ void Window::addButton(float x, float y, float w, float h,
   _buttons.push_back(myButton);
 }
 
-void Window::addDropdown(float x, float y, float width, float height, std::vector<std::string> options, std::string tag) {
-    _dropdowns.push_back(std::make_unique<Dropdown>(x, y, width, height, options, _renderer, tag));
-    _dropdowns.back()->init();
+void Window::addDropdown(float x, float y, float width, float height,
+                         std::vector<std::string> options, std::string tag) {
+  _dropdowns.push_back(
+      std::make_unique<Dropdown>(x, y, width, height, options, _renderer, tag));
+  _dropdowns.back()->init();
 }
 
 void Window::render() { SDL_RenderPresent(_renderer); }
