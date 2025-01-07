@@ -35,6 +35,8 @@ public:
 
   void setPos(float x, float y);
 
+  SDL_FRect *getRect() { return _rect; }
+
 private:
   SDL_Renderer *_renderer;
   SDL_FRect *_rect;

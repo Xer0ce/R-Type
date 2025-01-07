@@ -32,6 +32,7 @@ class Dropdown {
         float _x, _y, _width, _height;
         bool _isOpen;
         std::string _selectedOption;
+        std::string _formerOption;
 
         SDL_Renderer *_renderer;
         std::vector<Button *> _optionButtons;

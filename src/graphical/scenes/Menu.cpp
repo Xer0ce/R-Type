@@ -25,7 +25,7 @@ void Menu::init() {
   _window->addButton(70, 200 + 200, 500, 50, "Rejoindre");
   _window->addButton(70, 200 + 300, 500, 50, "Parametres");
   _window->addButton(70, 200 + 400, 500, 50, "Quitter");
-  _window->addDropdown(70, 200 + 500, 500, 50, {"Option 1", "Option 2"});
+  _window->addDropdown(1000, 300, 500, 50, {"Option 1", "Option 2", "Option 3", "Option 4"});
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/menu.png"));
   auto entitie = _ecs.spawn_entity();
@@ -73,8 +73,7 @@ std::string Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
           dropdown->toggleOpen();
           return "";
       }
-}
-
+    }
   }
   return "";
 }
