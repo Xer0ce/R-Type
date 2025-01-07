@@ -60,6 +60,9 @@ public:
       _removal_functions[typeid(Component)] = [this](entity_t const &e) {
         remove_component<Component>(e);
       };
+      _resize_functions[typeid(Component)] = [this](entity_t const &e) {
+        resize_component<Component>(e);
+      };
       return std::any_cast<SparseArray<Component> &>(
           _components_arrays[std::type_index(typeid(Component))]);
     } else {
@@ -119,6 +122,9 @@ public:
   typename SparseArray<Component>::reference_type
   add_component(entity_t const &to, Component &&c) {
     SparseArray<Component> &a_component = get_components<Component>();
+    for (auto &elem : _resize_functions) {
+      elem.second(to);
+    }
     return a_component.insert_at(to, std::forward<Component>(c));
   };
 
@@ -135,6 +141,9 @@ public:
   typename SparseArray<Component>::reference_type
   emplace_component(entity_t const &to, Params &&...p) {
     SparseArray<Component> &a_component = get_components<Component>();
+    for (auto &elem : _resize_functions) {
+      elem.second(to);
+    }
     return a_component.emplace_at(to, std::forward<Params>(p)...);
     ;
   };
@@ -148,6 +157,17 @@ public:
   template <typename Component> void remove_component(entity_t const &from) {
     auto &components = get_components<Component>();
     components.erase(from);
+  };
+
+  /**
+   * @brief Resize a component from an entity size.
+   *
+   * @tparam Component The type of the component to resize.
+   * @param from The entity from which the component will be resize.
+   */
+  template <typename Component> void resize_component(entity_t const &to) {
+    auto &components = get_components<Component>();
+    components.resize(to);
   };
   ///@}
 
@@ -163,6 +183,38 @@ public:
   entity_t spawn_entity() {
     Entities new_entity(0);
 
+    if (!_available_entities.empty()) {
+      std::size_t id = _available_entities.back();
+      _available_entities.pop_back();
+      _entities[id] = Entities(id);
+      new_entity = _entities[id];
+    } else {
+      std::size_t id = _entities.size();
+      _entities.push_back(Entities(id));
+      new_entity = _entities.back();
+    }
+    return new_entity;
+  };
+
+  /**
+   * @brief Creates a new entity with a precize id.
+   *
+   * Reuses an available entity ID if possible or generates a new one if the id
+   * in parameters is already atrivute.
+   *
+   * @param value The entity to destroy
+   * @return The newly created entity.
+   */
+  entity_t spawn_entity(std::size_t id) {
+    Entities new_entity(id);
+    auto it =
+        std::find_if(_entities.begin(), _entities.end(),
+                     [&id](const Entities &entity) { return entity == id; });
+
+    if (it == _entities.end()) {
+      _entities.push_back(new_entity);
+      return new_entity;
+    }
     if (!_available_entities.empty()) {
       std::size_t id = _available_entities.back();
       _available_entities.pop_back();
@@ -252,6 +304,14 @@ private:
   std::unordered_map<std::type_index, std::function<void(entity_t const &e)>>
       _removal_functions;
 
+  /**
+   * @brief Map of component types to their resize functions.
+   *
+   * These functions handle the resize of a specific component type from an
+   * entity size.
+   */
+  std::unordered_map<std::type_index, std::function<void(entity_t const &e)>>
+      _resize_functions;
   /**
    * @brief List of all active entities.
    */

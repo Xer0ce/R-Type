@@ -9,28 +9,32 @@
 #include "Entities.hpp"
 #include "Registry.hpp"
 
-enum class EntityType {
-  Player,
-  Enemy,
-  Projectile,
-};
+enum class EntityType { Player, Enemy, Projectile, Menu };
 
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
-                              Health health, Draw draw);
+                              Health health, Draw draw,
+                              std::optional<Control> control = std::nullopt,
+                              std::optional<std::size_t> id = std::nullopt);
 
-Entities create_enemy_entity(Registry &r);
+Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
+                             Health health, Draw draw,
+                             std::optional<std::size_t> id = std::nullopt);
 
-Entities create_projectile_entity(Registry &r);
+Entities create_projectile_entity(Registry &r, Position position,
+                                  Velocity velocity, Draw draw,
+                                  std::optional<std::size_t> id = std::nullopt);
 
 template <EntityType T, typename... Args>
 Entities create_entity(Registry &r, Args &&...args) {
-  switch (T) {
-  case EntityType::Player:
+
+  if constexpr (T == EntityType::Player) {
     return create_player_entity(r, std::forward<Args>(args)...);
-  case EntityType::Enemy:
-    return create_enemy_entity(r);
-  case EntityType::Projectile:
-    return create_projectile_entity(r);
+  }
+  if constexpr (T == EntityType::Enemy) {
+    return create_enemy_entity(r, std::forward<Args>(args)...);
+  }
+  if constexpr (T == EntityType::Projectile) {
+    return create_projectile_entity(r, std::forward<Args>(args)...);
   }
 }
 

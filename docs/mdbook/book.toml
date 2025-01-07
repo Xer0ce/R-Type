@@ -1,0 +1,7 @@
+[book]
+authors = ["Antonin Campi, Félix Schrynemaekers, Pierre Bourgery, Albéric Flour de Saegher and Louis Huguet"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Documentation R-Michou"
+build-dir = "book"
