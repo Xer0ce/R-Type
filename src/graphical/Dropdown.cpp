@@ -7,7 +7,8 @@
 
 #include "Dropdown.hpp"
 
-Dropdown::Dropdown(float x, float y, float width, float height, std::vector<std::string> options, SDL_Renderer *renderer)
+Dropdown::Dropdown(float x, float y, float width, float height, std::vector<std::string> options, SDL_Renderer *renderer, std::string tag)
+    : _x(x), _y(y), _width(width), _height(height), _renderer(renderer), _tag(tag)
 {
     _isOpen = false;
     _optionButtons.push_back(new Button(x, y, width, height, renderer, options[0]));

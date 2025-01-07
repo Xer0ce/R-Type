@@ -18,7 +18,7 @@
 
 class Dropdown {
     public:
-        Dropdown(float x, float y, float width, float height, std::vector<std::string> options, SDL_Renderer *renderer);
+        Dropdown(float x, float y, float width, float height, std::vector<std::string> options, SDL_Renderer *renderer, std::string tag);
         ~Dropdown();
 
         void init();
@@ -33,6 +33,7 @@ class Dropdown {
         bool _isOpen;
         std::string _selectedOption;
         std::string _formerOption;
+        std::string _tag;
 
         SDL_Renderer *_renderer;
         std::vector<Button *> _optionButtons;
