@@ -27,10 +27,10 @@ CommandGame::CommandGame() {
   _commandMap[CommandType::CREATEENEMY] =
       [this](Command command, Queue *queue, Registry *ecs, Window *window) {
         createEnemy(command, queue, ecs, window);
-  };
-  _commandMap[CommandType::NEWPLAYER] =
-      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
-        newPlayer(command, queue, ecs, window);
+      };
+  _commandMap[CommandType::NEWPLAYER] = [this](Command command, Queue *queue,
+                                               Registry *ecs, Window *window) {
+    newPlayer(command, queue, ecs, window);
   };
 }
 
@@ -99,7 +99,7 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
-                              Window *window) {
+                            Window *window) {
   SDL_Texture *playerTexture =
       window->loadTexture("../src/graphical/assets/michou.png");
 
@@ -109,7 +109,6 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
       *ecs,
       Position(command.repConnect.positionX, command.repConnect.positionY),
       Velocity(), Health(1),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture),
-      std::nullopt,
-      std::optional<std::size_t>(command.repConnect.id));             
+      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture), std::nullopt,
+      std::optional<std::size_t>(command.repConnect.id));
 }

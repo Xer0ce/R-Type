@@ -115,8 +115,7 @@ void CommandHandle::disconnect(std::vector<uint8_t> buffer, IClient *protocol,
   std::cout << "Disconnect command receive" << std::endl;
 }
 
-std::vector<std::string>
-parseMoveCommand(const std::vector<uint8_t> &buffer) {
+std::vector<std::string> parseMoveCommand(const std::vector<uint8_t> &buffer) {
   std::vector<std::string> bufferString;
   uint32_t enemyId = *reinterpret_cast<const uint32_t *>(&buffer[1]);
 
@@ -133,7 +132,6 @@ parseMoveCommand(const std::vector<uint8_t> &buffer) {
 void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,
                          Queue *queue) {
   Command cmd;
-
 
   cmd.type = CommandType::MOVE;
   std::vector<std::string> bufferString = parseMoveCommand(buffer);
@@ -176,7 +174,8 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.createEnemy.positionX = std::stof(bufferString[1]);
   cmd.createEnemy.positionY = std::stof(bufferString[2]);
 
-  std::cout << "Create enemy with id : " << cmd.createEnemy.enemyId << std::endl;
+  std::cout << "Create enemy with id : " << cmd.createEnemy.enemyId
+            << std::endl;
 
   queue->pushGameQueue(cmd);
 }
@@ -212,7 +211,7 @@ void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
 }
 
 void CommandHandle::startGame(std::vector<uint8_t> buffer, IClient *protocol,
-                        Queue *queue) {
+                              Queue *queue) {
   Command cmd;
 
   cmd.type = CommandType::STARTGAME;
