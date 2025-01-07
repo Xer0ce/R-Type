@@ -79,10 +79,12 @@ sceneType History::loop(eventType event) {
 
   _window->drawBackground();
   keyType key = _window->catchKey();
+
   if (key == keyType::ESCAPE) {
     std::cout << "switch to menu" << std::endl;
     return sceneType::MENU;
   }
+
   control_system(key);
   position_system(0.05f);
 

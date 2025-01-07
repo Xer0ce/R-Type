@@ -85,9 +85,8 @@ std::vector<std::string> my_strToWordArray(const std::string &str,
 std::vector<std::string>
 parseConnectCommand(const std::vector<uint8_t> &buffer) {
   std::vector<std::string> bufferString;
-  uint32_t id = *reinterpret_cast<const uint32_t *>(&buffer[1]);
 
-  bufferString.push_back(std::to_string(id));
+  bufferString.push_back(std::to_string(buffer[1]));
 
   std::string bufferStr(buffer.begin() + 5, buffer.end() - 1);
   std::istringstream iss(bufferStr);
@@ -107,6 +106,9 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.repConnect.id = std::stoi(bufferString[0]);
   cmd.repConnect.positionX = std::stoi(bufferString[1]);
   cmd.repConnect.positionY = std::stoi(bufferString[2]);
+
+  std::cout << "CREATE PLAYER : ID : "
+            << std::string(buffer.begin(), buffer.end()) << std::endl;
 
   queue->pushGameQueue(cmd);
 }

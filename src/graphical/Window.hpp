@@ -37,19 +37,22 @@ public:
 
   void drawButton();
 
-  void drawDropdown();
+  void drawButton(const std::string &tag);
+
+   void drawDropdown();
 
   void addText(std::string text, int x, int y, int w, int h, int size,
                std::string fontPath, SDL_Color color);
 
   void addButton(float x, float y, float w, float h, const std::string &text,
+                 const std::string &tag = "",
                  SDL_Color normalColor = {0, 0, 0, 0},
                  SDL_Color hoverColor = {255, 255, 255, 255},
                  SDL_Color normalTextColor = {255, 255, 255, 255},
                  SDL_Color hoverTextColor = {0, 0, 0, 0});
 
   void addDropdown(float x, float y, float width, float height,
-                   std::vector<std::string> options);
+                   std::vector<std::string> options, std::string tag);
 
   const std::vector<std::unique_ptr<Dropdown>>& getDropdowns() const { return _dropdowns; }
 
@@ -75,7 +78,7 @@ public:
 
   void deleteTexts();
 
-  void deleteButtons();
+  void deleteButtons(const std::string &tag = "");
 
   void deleteText(std::string text);
 

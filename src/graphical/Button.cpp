@@ -10,11 +10,11 @@
 Button::Button(float x, float y, float w, float h, SDL_Renderer *renderer,
                const std::string &text, SDL_Color normalColor,
                SDL_Color hoverColor, SDL_Color normalTextColor,
-               SDL_Color hoverTextColor)
+               SDL_Color hoverTextColor, const std::string &tag)
     : _renderer(renderer), _rect(new SDL_FRect{x, y, w, h}),
       _normalColor(normalColor), _hoverColor(hoverColor),
       _normalTextColor(normalTextColor), _hoverTextColor(hoverTextColor),
-      _textButton(text),
+      _textButton(text), _tag(tag),
       _text(text, x, y, w, h, renderer, 40,
             "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255}) {
   _text.init();

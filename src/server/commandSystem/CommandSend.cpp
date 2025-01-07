@@ -165,7 +165,7 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0x08);
 
-  std::string playerName = command.newPlayer.Nickname + "\r\n";
+  std::string playerName = command.newPlayer.Nickname;
 
   uint32_t id = command.newPlayer.id;
 
@@ -190,7 +190,7 @@ void CommandSend::createPlayer(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0x08);
 
-  std::string playerName = command.createPlayer.Nickname + "\r\n";
+  std::string playerName = command.createPlayer.Nickname;
 
   uint32_t id = command.createPlayer.id;
 

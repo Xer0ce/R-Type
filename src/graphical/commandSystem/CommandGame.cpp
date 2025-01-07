@@ -105,12 +105,11 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *playerTexture =
       window->loadTexture("../src/graphical/assets/michou.png");
 
-  std::cout << "Je cree le player avec l'id " << command.repConnect.id
+  std::cout << "Je cree le player avec l'id " << command.newPlayer.id
             << std::endl;
   auto player = create_entity<EntityType::Player>(
-      *ecs,
-      Position(command.repConnect.positionX, command.repConnect.positionY),
+      *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
       Velocity(), Health(1),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture), std::nullopt,
-      std::optional<std::size_t>(command.repConnect.id));
+      std::optional<std::size_t>(command.newPlayer.id));
 }

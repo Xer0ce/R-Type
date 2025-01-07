@@ -21,11 +21,11 @@ void Menu::init() {
   _window->addText("Vendetta", 60, 150, 500, 50, 50,
                    "../src/graphical/assets/RTypefont.otf",
                    {255, 255, 255, 255});
-  _window->addButton(70, 200 + 100, 500, 50, "Heberger");
-  _window->addButton(70, 200 + 200, 500, 50, "Rejoindre");
-  _window->addButton(70, 200 + 300, 500, 50, "Parametres");
-  _window->addButton(70, 200 + 400, 500, 50, "Quitter");
-  _window->addDropdown(1000, 300, 500, 50, {"Option 1", "Option 2", "Option 3", "Option 4"});
+  _window->addButton(70, 200 + 100, 500, 50, "Heberger", "menu");
+  _window->addButton(70, 200 + 200, 500, 50, "Rejoindre", "menu");
+  _window->addButton(70, 200 + 300, 500, 50, "Parametres", "menu");
+  _window->addButton(70, 200 + 400, 500, 50, "Quitter", "menu");
+  _window->addDropdown(1000, 500, 500, 50, {"test1", "test2", "test3"}, "window");
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/menu.png"));
   auto entitie = _ecs.spawn_entity();
@@ -47,8 +47,12 @@ void Menu::setMenu(std::string selectedButton) {
   _window->deleteText(_menuTitle);
   if (_selectedButton == "Heberger") {
     _menuTitle = "Crée une partie";
+    _window->addButton(730, 200 + 500, 830, 50, "Valider", "window",
+                       {37, 37, 37, 70}, {37, 37, 37, 200},
+                       {255, 255, 255, 255}, {255, 255, 255, 255});
   }
   if (_selectedButton == "Rejoindre") {
+    _window->deleteButtons("window");
     _menuTitle = "Rejoindre une partie";
   }
   if (_selectedButton == "Parametres") {
@@ -87,14 +91,13 @@ sceneType Menu::loop(eventType event) {
   auto &position = _ecs.get_components<Position>();
 
   auto button = mouseHandler(mouseX, mouseY, event);
-  if (button == "Heberger") {
-    _window->deleteTexts();
-    _window->deleteButtons();
-    return sceneType::LOBBY;
-  }
+  // if (button == "Heberger") {
+  //   _window->deleteTexts();
+  //   _window->deleteButtons();
+  //   return sceneType::LOBBY;
+  // }
   _window->drawBackground();
-  _window->drawButton();
-  _window->drawDropdown();
+  _window->drawButton("menu");
   _window->createMenuPipe();
 
   if (_selectedButton != "") {
@@ -105,6 +108,8 @@ sceneType Menu::loop(eventType event) {
     }
   }
   _window->drawText();
+  _window->drawButton("window");
+  _window->drawDropdown();
 
   if (button == "Quitter") {
     _window->deleteTexts();
