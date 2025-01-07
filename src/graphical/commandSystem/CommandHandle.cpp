@@ -107,7 +107,8 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.repConnect.positionX = std::stoi(bufferString[1]);
   cmd.repConnect.positionY = std::stoi(bufferString[2]);
 
-  std::cout << "CREATE PLAYER : ID : " << std::string(buffer.begin(), buffer.end()) << std::endl;
+  std::cout << "CREATE PLAYER : ID : "
+            << std::string(buffer.begin(), buffer.end()) << std::endl;
 
   queue->pushGameQueue(cmd);
 }
