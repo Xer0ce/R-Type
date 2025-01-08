@@ -32,7 +32,6 @@ void Udp::initSocket() {
   FD_SET(_socket, &_readfds);
 
   _serverSize = sizeof(_server);
-
 }
 
 void Udp::sendToServer(std::vector<uint8_t> data) {
