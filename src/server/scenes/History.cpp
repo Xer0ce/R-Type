@@ -28,6 +28,7 @@ void History::collision_system() {
               position[i]->x + 50 > position[j]->x &&
               position[i]->y < position[j]->y + 50 &&
               position[i]->y + 50 > position[j]->y) {
+            std::cout << "HIT" << std::endl;
             _ecs->kill_entity(Entities(j));
             _ecs->kill_entity(Entities(i));
             Command cmd;
@@ -35,7 +36,7 @@ void History::collision_system() {
             cmd.type = CommandType::HIT;
             cmd.hit.entityHit = j;
             cmd.hit.bulletId = i;
-            cmd.hit.damage = 1;
+            cmd.hit.damage = 100;
             _queue->pushGameQueue(cmd);
           }
         }
@@ -93,6 +94,7 @@ History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   if (now > deltaTime) {
     enemy_system();
     position_system(1);
+    collision_system();
   }
   return sceneType::NO_SWITCH;
 }
