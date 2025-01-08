@@ -20,16 +20,12 @@ CommandGame::CommandGame() {
                                           Registry *ecs) {
     move(command, queue, ecs);
   };
-  _commandMap[CommandType::KILLENEMY] = [this](Command command, Queue *queue,
-                                               Registry *ecs) {
-    killEnemy(command, queue, ecs);
-  };
   _commandMap[CommandType::SHOOT] = [this](Command command, Queue *queue,
-                                               Registry *ecs) {
+                                           Registry *ecs) {
     shoot(command, queue, ecs);
   };
   _commandMap[CommandType::HIT] = [this](Command command, Queue *queue,
-                                               Registry *ecs) {
+                                         Registry *ecs) {
     hit(command, queue, ecs);
   };
 }
@@ -56,6 +52,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   newCommand.repConnect.id = player;
   newCommand.repConnect.positionX = 400;
   newCommand.repConnect.positionY = 100;
+  newCommand.repConnect.Nickname = command.connect.Nickname;
   newCommand.id = command.id;
   std::cout << "cree le player avec id: " << player << std::endl;
   queue->pushTcpQueue(newCommand);
@@ -77,6 +74,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && entityPosition[i].has_value()) {
       if (entityType[i] && entityType[i] == EntityType::Enemy) {
+        std::cout << "Create enemy pour 1 client" << std::endl;
         Command newCommandEnemy;
         newCommandEnemy.type = CommandType::CREATEENEMY;
         newCommandEnemy.createEnemy.positionX = entityPosition[i]->x;
@@ -87,7 +85,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
       }
       if (entityType[i] && entityType[i] == EntityType::Player) {
         if (i != player) {
-          std::cout << "Create enemy pour 1 client" << std::endl;
+          std::cout << "Create player pour 1 client" << std::endl;
           Command newCommandPlayer;
           newCommandPlayer.type = CommandType::CREATEPLAYER;
           newCommandPlayer.createPlayer.Nickname = command.connect.Nickname;
@@ -125,40 +123,11 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs) {
   }
 }
 
-void CommandGame::killEnemy(Command command, Queue *queue, Registry *ecs) {
-  auto &positions = ecs->get_components<Position>();
-  auto &velocities = ecs->get_components<Velocity>();
-  auto &entityType = ecs->get_components<EntityType>();
-
-  for (std::size_t i = 0; i < entityType.size(); ++i) {
-    if (entityType[i].has_value() && positions[i].has_value()) {
-      if (entityType[i] && entityType[i] == EntityType::Enemy) {
-        if (command.shoot.positionX < positions[i]->x + 50 &&
-            command.shoot.positionX + 50 > positions[i]->x &&
-            command.shoot.positionY < positions[i]->y + 50 &&
-            command.shoot.positionX + 50 > positions[i]->y) {
-
-          ecs->kill_entity(Entities(i));
-
-          if (!positions[i].has_value()) {
-            std::cout << "Position supprimée : " << i << std::endl;
-          }
-
-          Command newCommand;
-          newCommand.type = CommandType::KILLENEMY;
-          newCommand.killEnemy.enemyId = i;
-          newCommand.id = -10;
-          queue->pushTcpQueue(newCommand);
-        }
-      }
-    }
-  }
-}
-
 void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
 
   auto bullet = create_entity<EntityType::Projectile>(
-    *ecs, Position(command.shoot.positionX, command.shoot.positionY), Velocity(50, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+      *ecs, Position(command.shoot.positionX, command.shoot.positionY),
+      Velocity(50, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
 
   queue->pushTcpQueue(command);
 }
@@ -173,6 +142,9 @@ void CommandGame::hit(Command command, Queue *queue, Registry *ecs) {
     health[command.hit.entityHit]->hp -= command.hit.damage;
     if (health[command.hit.entityHit]->hp <= 0) {
       ecs->kill_entity(Entities(command.hit.entityHit));
+      cmd.type = CommandType::KILLENTITY;
+      cmd.killEntity.entityId = command.hit.entityHit;
+      queue->pushTcpQueue(cmd);
     }
   }
 }

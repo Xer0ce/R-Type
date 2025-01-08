@@ -25,6 +25,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     createEnemy(buffer, protocol, queue);
   };
+  _commandMap[0x07] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    killEntity(buffer, protocol, queue);
+  };
   _commandMap[0x08] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) {
     newPlayer(buffer, protocol, queue);
@@ -51,18 +55,20 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
                             Queue *queue) {
   Command cmd;
 
+
   int id = static_cast<int>(buffer[1]);
   float positionX = *reinterpret_cast<float *>(&buffer[2]);
   float positionY = *reinterpret_cast<float *>(&buffer[6]);
+  int playloadSize = static_cast<int>(buffer[10]);
+
+  std::string nickname(buffer.begin() + 11, buffer.begin() + 11 + playloadSize);
 
   cmd.type = CommandType::REPCONNECT;
   cmd.repConnect.id = id;
   cmd.repConnect.positionX = positionX;
   cmd.repConnect.positionY = positionY;
+  cmd.repConnect.Nickname = nickname;
 
-  std::cout << "Connect command receive" << std::endl;
-  std::cout << "Position X: " << positionX << std::endl;
-  std::cout << "Position Y: " << positionY << std::endl;
   queue->pushGameQueue(cmd);
 }
 
@@ -100,7 +106,7 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
   Command cmd;
 
   cmd.type = CommandType::CREATEENEMY;
-  
+
   cmd.createEnemy.enemyId = static_cast<int>(buffer[1]);
   cmd.createEnemy.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.createEnemy.positionY = *reinterpret_cast<float *>(&buffer[6]);
@@ -112,14 +118,13 @@ void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
                               Queue *queue) {
   Command cmd;
 
-  int playloadSize = static_cast<int>(buffer[1] - 1);
-
-  std::string nickname(buffer[7], buffer[7] + playloadSize);
 
   cmd.type = CommandType::NEWPLAYER;
   cmd.newPlayer.id = static_cast<int>(buffer[1]);
   cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[6]);
+  int playloadSize = static_cast<int>(buffer[10]);
+  std::string nickname(buffer.begin() + 11, buffer.begin() + 11 + playloadSize);
   cmd.newPlayer.Nickname = nickname;
 
   queue->pushGameQueue(cmd);
@@ -130,5 +135,14 @@ void CommandHandle::startGame(std::vector<uint8_t> buffer, IClient *protocol,
   Command cmd;
 
   cmd.type = CommandType::STARTGAME;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::killEntity(std::vector<uint8_t> buffer, IClient *protocol,
+                               Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::KILLENTITY;
+  cmd.killEntity.entityId = static_cast<int>(buffer[1]);
   queue->pushGameQueue(cmd);
 }

@@ -50,8 +50,8 @@ void Queue::popUdpQueueEnemy(int id) {
         shouldKeep = false;
       }
       break;
-    case KILLENEMY:
-      if (command.killEnemy.enemyId == id) {
+    case KILLENTITY:
+      if (command.killEntity.entityId == id) {
         shouldKeep = false;
       }
       break;

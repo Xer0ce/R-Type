@@ -25,10 +25,6 @@ CommandSend::CommandSend() {
                                                  IClient *protocol) {
     createEnemy(command, protocol);
   };
-  _commandMap[CommandType::KILLENEMY] = [this](Command command,
-                                               IClient *protocol) {
-    killEnemy(command, protocol);
-  };
   _commandMap[CommandType::NEWPLAYER] = [this](Command command,
                                                IClient *protocol) {
     newPlayer(command, protocol);
@@ -50,7 +46,7 @@ void CommandSend::executeCommandSend(Command command, IClient *protocol) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
-    // std::cout << "Invalid command type! [Send]" << std::endl;
+    std::cout << "Invalid command type! [Send]" << std::endl;
   }
 }
 
@@ -60,6 +56,7 @@ void CommandSend::connect(Command command, IClient *protocol) {
   binaryData.push_back(0x01);
   binaryData.push_back(static_cast<uint8_t>(command.connect.Nickname.size()));
   std::string playerName = command.connect.Nickname;
+
   for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
 
@@ -79,11 +76,15 @@ void CommandSend::move(Command command, IClient *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.move.entityId));
 
-  uint8_t *positionXBytes = reinterpret_cast<uint8_t *>(&command.move.positionX);
-  binaryData.insert(binaryData.end(), positionXBytes, positionXBytes + sizeof(float));
+  uint8_t *positionXBytes =
+      reinterpret_cast<uint8_t *>(&command.move.positionX);
+  binaryData.insert(binaryData.end(), positionXBytes,
+                    positionXBytes + sizeof(float));
 
-  uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.move.positionY);
-  binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
+  uint8_t *positionYBytes =
+      reinterpret_cast<uint8_t *>(&command.move.positionY);
+  binaryData.insert(binaryData.end(), positionYBytes,
+                    positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
 
@@ -97,11 +98,15 @@ void CommandSend::shoot(Command command, IClient *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.shoot.playerId));
 
-  uint8_t *positionXBytes = reinterpret_cast<uint8_t *>(&command.shoot.positionX);
-  binaryData.insert(binaryData.end(), positionXBytes, positionXBytes + sizeof(float));
+  uint8_t *positionXBytes =
+      reinterpret_cast<uint8_t *>(&command.shoot.positionX);
+  binaryData.insert(binaryData.end(), positionXBytes,
+                    positionXBytes + sizeof(float));
 
-  uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.shoot.positionY);
-  binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
+  uint8_t *positionYBytes =
+      reinterpret_cast<uint8_t *>(&command.shoot.positionY);
+  binaryData.insert(binaryData.end(), positionYBytes,
+                    positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
 
@@ -114,10 +119,6 @@ void CommandSend::hit(Command command, IClient *protocol) {
 
 void CommandSend::createEnemy(Command command, IClient *protocol) {
   std::cout << "Create enemy command" << std::endl;
-}
-
-void CommandSend::killEnemy(Command command, IClient *protocol) {
-  std::cout << "Kill enemy command" << std::endl;
 }
 
 void CommandSend::newPlayer(Command command, IClient *protocol) {

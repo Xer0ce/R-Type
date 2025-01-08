@@ -66,3 +66,8 @@ void Text::setColor(SDL_Color color) {
 }
 
 std::string Text::getText() { return _text; }
+
+void Text::setPos(int x, int y) {
+  _rect.x = x;
+  _rect.y = y;
+}
