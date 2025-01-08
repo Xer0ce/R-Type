@@ -16,7 +16,9 @@ public:
 
   void init() override;
 
-  sceneType loop(eventType event, std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
+  sceneType
+  loop(eventType event,
+       std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
   std::string mouseHandler(float mouseX, float mouseY, eventType event);
 

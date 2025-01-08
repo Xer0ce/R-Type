@@ -67,7 +67,8 @@ void Server::init() {
 }
 
 void Server::game() {
-  std::chrono::time_point<std::chrono::steady_clock> next = std::chrono::steady_clock::now() + std::chrono::milliseconds(10);
+  std::chrono::time_point<std::chrono::steady_clock> next =
+      std::chrono::steady_clock::now() + std::chrono::milliseconds(10);
 
   _scenes[_currentScene]->setEcs(_ecs.get());
   _scenes[_currentScene]->setQueue(_queue.get());

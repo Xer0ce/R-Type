@@ -83,7 +83,9 @@ std::string Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
   return "";
 }
 
-sceneType Menu::loop(eventType event, std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
+sceneType
+Menu::loop(eventType event,
+           std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   auto key = _window->catchKey();
   float mouseX, mouseY;
 

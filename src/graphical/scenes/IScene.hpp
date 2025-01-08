@@ -18,7 +18,9 @@ public:
 
   virtual std::string getName() const = 0;
 
-  virtual sceneType loop(eventType event, std::chrono::time_point<std::chrono::steady_clock> deltaTime) = 0;
+  virtual sceneType
+  loop(eventType event,
+       std::chrono::time_point<std::chrono::steady_clock> deltaTime) = 0;
 
   virtual void setWindow(Window *window) = 0;
 

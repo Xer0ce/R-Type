@@ -91,7 +91,8 @@ void Game::init() {
 }
 
 void Game::game() {
-  std::chrono::time_point<std::chrono::steady_clock> next = std::chrono::steady_clock::now() + std::chrono::milliseconds(100);
+  std::chrono::time_point<std::chrono::steady_clock> next =
+      std::chrono::steady_clock::now() + std::chrono::milliseconds(100);
   bool running = true;
   eventType event = NO_EVENT;
 
@@ -105,7 +106,8 @@ void Game::game() {
   _scenes[_currentScene]->setQueue(_queue.get());
 
   while (event != CLOSE_WINDOW) {
-    std::chrono::time_point<std::chrono::steady_clock> now = std::chrono::steady_clock::now();
+    std::chrono::time_point<std::chrono::steady_clock> now =
+        std::chrono::steady_clock::now();
     event = _window->updateEvents();
     _window->clear();
     auto switchScene = _scenes[_currentScene]->loop(event, next);

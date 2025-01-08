@@ -14,7 +14,11 @@ public:
   OneVsOne();
   ~OneVsOne();
 
-  sceneType loop(eventType event, std::chrono::time_point<std::chrono::steady_clock> deltaTime) override { return sceneType::NO_SWITCH; };
+  sceneType
+  loop(eventType event,
+       std::chrono::time_point<std::chrono::steady_clock> deltaTime) override {
+    return sceneType::NO_SWITCH;
+  };
 
   void init() override{};
 
