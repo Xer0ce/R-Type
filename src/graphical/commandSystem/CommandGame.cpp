@@ -54,15 +54,14 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *playerTexture =
       window->loadTexture("../src/graphical/assets/michou.png");
 
-  std::cout << "Je cree le player avec l'id " << command.repConnect.id
+  std::cout << "CONTROLABLE Je cree le player avec l'id " << command.repConnect.id
             << std::endl;
-  std::cout << "Position X: " << command.repConnect.positionX << std::endl;
-  std::cout << "Position Y: " << command.repConnect.positionY << std::endl;
+
   auto player = create_entity<EntityType::Player>(
       *ecs,
       Position(command.repConnect.positionX, command.repConnect.positionY),
       Velocity(), Health(1),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture),
+      Draw({0, 255, 0, 255}, {(int)command.repConnect.positionX, (int)command.repConnect.positionY, 50, 50}, playerTexture),
       std::optional<Control>(Control()),
       std::optional<std::size_t>(command.repConnect.id));
 }
@@ -119,12 +118,12 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *playerTexture =
       window->loadTexture("../src/graphical/assets/michou.png");
 
-  std::cout << "Je cree le player avec l'id " << command.newPlayer.id
+  std::cout << "PAS CONTROLABLE Je cree le player avec l'id " << command.newPlayer.id
             << std::endl;
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
       Velocity(), Health(1),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture), std::nullopt,
+      Draw({0, 255, 0, 255}, {(int)command.newPlayer.positionX, (int)command.newPlayer.positionY, 50, 50}, playerTexture), std::nullopt,
       std::optional<std::size_t>(command.newPlayer.id));
 }
 

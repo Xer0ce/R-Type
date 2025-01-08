@@ -73,6 +73,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && entityPosition[i].has_value()) {
       if (entityType[i] && entityType[i] == EntityType::Enemy) {
+        std::cout << "Create enemy pour 1 client" << std::endl;
         Command newCommandEnemy;
         newCommandEnemy.type = CommandType::CREATEENEMY;
         newCommandEnemy.createEnemy.positionX = entityPosition[i]->x;
@@ -83,7 +84,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
       }
       if (entityType[i] && entityType[i] == EntityType::Player) {
         if (i != player) {
-          std::cout << "Create enemy pour 1 client" << std::endl;
+          std::cout << "Create player pour 1 client" << std::endl;
           Command newCommandPlayer;
           newCommandPlayer.type = CommandType::CREATEPLAYER;
           newCommandPlayer.createPlayer.Nickname = command.connect.Nickname;
@@ -91,6 +92,8 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
           newCommandPlayer.createPlayer.positionX = entityPosition[i]->x;
           newCommandPlayer.createPlayer.positionY = entityPosition[i]->y;
           newCommandPlayer.id = command.id;
+          queue->pushTcpQueue(newCommandPlayer);
+          queue->pushTcpQueue(newCommandPlayer);
           queue->pushTcpQueue(newCommandPlayer);
         }
       }

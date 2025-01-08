@@ -49,7 +49,6 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IProtocol *protocol,
   cmd.type = CommandType::CONNECT;
   cmd.connect.Nickname = nickname;
   cmd.id = static_cast<int>(buffer.back());
-  //Command connect fonctionne bien 
   std::cout << "Nickname: " << nickname << std::endl;
   queue->pushGameQueue(cmd);
 }

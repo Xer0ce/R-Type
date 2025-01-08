@@ -64,9 +64,6 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.repConnect.positionX = positionX;
   cmd.repConnect.positionY = positionY;
 
-  std::cout << "Connect command receive" << std::endl;
-  std::cout << "Position X: " << positionX << std::endl;
-  std::cout << "Position Y: " << positionY << std::endl;
   queue->pushGameQueue(cmd);
 }
 
@@ -125,7 +122,7 @@ void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[6]);
   cmd.newPlayer.Nickname = nickname;
-
+  std::cout << "NEW PLAYER" << std::endl;
   queue->pushGameQueue(cmd);
 }
 

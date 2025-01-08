@@ -46,7 +46,7 @@ void CommandSend::executeCommandSend(Command command, IClient *protocol) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
-    // std::cout << "Invalid command type! [Send]" << std::endl;
+    std::cout << "Invalid command type! [Send]" << std::endl;
   }
 }
 
@@ -56,6 +56,7 @@ void CommandSend::connect(Command command, IClient *protocol) {
   binaryData.push_back(0x01);
   binaryData.push_back(static_cast<uint8_t>(command.connect.Nickname.size()));
   std::string playerName = command.connect.Nickname;
+
   for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
 
