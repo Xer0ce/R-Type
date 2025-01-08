@@ -91,7 +91,8 @@ void Game::init() {
 }
 
 void Game::game() {
-  std::clock_t start = std::clock();
+  std::chrono::time_point<std::chrono::steady_clock> next =
+      std::chrono::steady_clock::now() + std::chrono::milliseconds(100);
   bool running = true;
   eventType event = NO_EVENT;
 
@@ -105,25 +106,23 @@ void Game::game() {
   _scenes[_currentScene]->setQueue(_queue.get());
 
   while (event != CLOSE_WINDOW) {
-    std::clock_t current = std::clock();
-    double elapsed = (current - start) / (double)CLOCKS_PER_SEC;
-    if (elapsed > 5.0 / 1000.0) {
-      start = std::clock();
-      event = _window->updateEvents();
-      _window->clear();
-      auto switchScene = _scenes[_currentScene]->loop(event);
-
-      if (switchScene != sceneType::NO_SWITCH) {
-        if (switchScene != MENU)
-          init();
-        _currentScene = switchScene;
-        _scenes[_currentScene]->setWindow(_window.get());
-        _scenes[_currentScene]->setEcs(_ecs);
-        _scenes[_currentScene]->setQueue(_queue.get());
-        _scenes[_currentScene]->init();
-      }
-      _window->render();
+    std::chrono::time_point<std::chrono::steady_clock> now =
+        std::chrono::steady_clock::now();
+    event = _window->updateEvents();
+    _window->clear();
+    auto switchScene = _scenes[_currentScene]->loop(event, next);
+    if (now > next)
+      next += std::chrono::milliseconds(25);
+    if (switchScene != sceneType::NO_SWITCH) {
+      if (switchScene != MENU)
+        init();
+      _currentScene = switchScene;
+      _scenes[_currentScene]->setWindow(_window.get());
+      _scenes[_currentScene]->setEcs(_ecs);
+      _scenes[_currentScene]->setQueue(_queue.get());
+      _scenes[_currentScene]->init();
     }
+    _window->render();
   }
   _window->destroyWindow();
   exit(0);

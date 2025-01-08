@@ -16,7 +16,9 @@ Lobby::~Lobby() {}
 
 void Lobby::init() { _window->addButton(100, 100, 200, 50, "Start"); }
 
-sceneType Lobby::loop(eventType event) {
+sceneType
+Lobby::loop(eventType event,
+            std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   Command command;
   auto key = _window->catchKey();
   float mouseX, mouseY;
