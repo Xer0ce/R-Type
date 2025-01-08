@@ -62,6 +62,8 @@ void CommandSend::connect(Command command, IProtocol *protocol) {
     uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.repConnect.positionY);
     binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
 
+    binaryData.push_back(0xFF);
+
     protocol->sendData(command.id, binaryData);
 }
 
@@ -89,17 +91,27 @@ void CommandSend::move(Command command, IProtocol *protocol) {
   uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.move.positionY);
   binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
 
+  binaryData.push_back(0xFF);
+
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 
 void CommandSend::shoot(Command command, IProtocol *protocol) {
-  std::cout << "Shoot command" << std::endl;
-  std::string response;
+  std::vector<uint8_t> binaryData;
 
-  response =
-      "Shoot OK"; // ici faut faire la commande shoot si le mec a le droit tiré
+  binaryData.push_back(0x04);
 
-  // protocol->sendData(response);
+  binaryData.push_back(static_cast<uint8_t>(command.shoot.playerId));
+
+  uint8_t *positionXBytes = reinterpret_cast<uint8_t *>(&command.shoot.positionX);
+  binaryData.insert(binaryData.end(), positionXBytes, positionXBytes + sizeof(float));
+
+  uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.shoot.positionY);
+  binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::map(Command command, IProtocol *protocol) {
@@ -126,6 +138,8 @@ void CommandSend::createEnemy(Command command, IProtocol *protocol) {
   uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.createEnemy.positionY);
   binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
 
+  binaryData.push_back(0xFF);
+
   protocol->sendData(command.id, binaryData);
 }
 
@@ -135,6 +149,8 @@ void CommandSend::killEnemy(Command command, IProtocol *protocol) {
   binaryData.push_back(0x07);
 
   binaryData.push_back(static_cast<uint8_t>(command.killEnemy.enemyId));
+
+  binaryData.push_back(0xFF);
 
   protocol->sendDataToAll(binaryData);
 }
@@ -156,6 +172,8 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
   std::string playerName = command.newPlayer.Nickname;
   for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
+  
+  binaryData.push_back(0xFF);
 
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
@@ -180,6 +198,8 @@ void CommandSend::createPlayer(Command command, IProtocol *protocol) {
   for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
 
+  binaryData.push_back(0xFF);
+
   protocol->sendData(command.id, binaryData);
 }
 
@@ -188,11 +208,7 @@ void CommandSend::startGame(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0x09);
 
-  std::string response = "\r\n";
-
-  for (auto &c : response) {
-    binaryData.push_back(static_cast<uint8_t>(c));
-  }
+  binaryData.push_back(0xFF);
 
   protocol->sendDataToAll(binaryData);
 }

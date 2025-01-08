@@ -16,6 +16,35 @@ void History::init() {
       *_ecs, Position(800, 0), Velocity(), Health(1), Draw({}, {}, nullptr));
 }
 
+void History::collision_system()
+{
+  auto &position = _ecs->get_components<Position>();
+  auto &entityType = _ecs->get_components<EntityType>();
+
+  for (std::size_t i = 0; i < position.size(); i++) {
+    if (entityType[i] == EntityType::Projectile) {
+      for (std::size_t j = 0; j < position.size(); j++) {
+        if (entityType[j] == EntityType::Enemy) {
+          if (position[i]->x < position[j]->x + 50 &&
+              position[i]->x + 50 > position[j]->x &&
+              position[i]->y < position[j]->y + 50 &&
+              position[i]->y + 50 > position[j]->y) {
+            _ecs->kill_entity(Entities(j));
+            _ecs->kill_entity(Entities(i));
+            Command cmd;
+
+            cmd.type = CommandType::HIT;
+            cmd.hit.entityHit = j;
+            cmd.hit.bulletId = i;
+            cmd.hit.damage = 1;
+            _queue->pushGameQueue(cmd);
+          }
+        }
+      }
+    }
+  }
+}
+
 void History::position_system(float deltaTime) {
   auto &velocity = _ecs->get_components<Velocity>();
   auto &position = _ecs->get_components<Position>();

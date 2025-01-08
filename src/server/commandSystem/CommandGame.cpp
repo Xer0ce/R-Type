@@ -24,6 +24,14 @@ CommandGame::CommandGame() {
                                                Registry *ecs) {
     killEnemy(command, queue, ecs);
   };
+  _commandMap[CommandType::SHOOT] = [this](Command command, Queue *queue,
+                                               Registry *ecs) {
+    shoot(command, queue, ecs);
+  };
+  _commandMap[CommandType::HIT] = [this](Command command, Queue *queue,
+                                               Registry *ecs) {
+    hit(command, queue, ecs);
+  };
 }
 
 CommandGame::~CommandGame() {}
@@ -143,6 +151,28 @@ void CommandGame::killEnemy(Command command, Queue *queue, Registry *ecs) {
           queue->pushTcpQueue(newCommand);
         }
       }
+    }
+  }
+}
+
+void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
+
+  auto bullet = create_entity<EntityType::Projectile>(
+    *ecs, Position(command.shoot.positionX, command.shoot.positionY), Velocity(50, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+
+  queue->pushTcpQueue(command);
+}
+
+void CommandGame::hit(Command command, Queue *queue, Registry *ecs) {
+  auto &health = ecs->get_components<Health>();
+  auto &entityType = ecs->get_components<EntityType>();
+  Command cmd;
+
+  if (entityType[command.hit.entityHit].has_value() &&
+      health[command.hit.entityHit].has_value()) {
+    health[command.hit.entityHit]->hp -= command.hit.damage;
+    if (health[command.hit.entityHit]->hp <= 0) {
+      ecs->kill_entity(Entities(command.hit.entityHit));
     }
   }
 }
