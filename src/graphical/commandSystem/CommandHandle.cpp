@@ -25,6 +25,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     createEnemy(buffer, protocol, queue);
   };
+  _commandMap[0x07] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    killEntity(buffer, protocol, queue);
+  };
   _commandMap[0x08] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) {
     newPlayer(buffer, protocol, queue);
@@ -130,5 +134,14 @@ void CommandHandle::startGame(std::vector<uint8_t> buffer, IClient *protocol,
   Command cmd;
 
   cmd.type = CommandType::STARTGAME;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::killEntity(std::vector<uint8_t> buffer, IClient *protocol,
+                               Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::KILLENTITY;
+  cmd.killEntity.entityId = static_cast<int>(buffer[1]);
   queue->pushGameQueue(cmd);
 }

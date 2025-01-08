@@ -25,10 +25,6 @@ CommandSend::CommandSend() {
                                                  IClient *protocol) {
     createEnemy(command, protocol);
   };
-  _commandMap[CommandType::KILLENEMY] = [this](Command command,
-                                               IClient *protocol) {
-    killEnemy(command, protocol);
-  };
   _commandMap[CommandType::NEWPLAYER] = [this](Command command,
                                                IClient *protocol) {
     newPlayer(command, protocol);
@@ -114,10 +110,6 @@ void CommandSend::hit(Command command, IClient *protocol) {
 
 void CommandSend::createEnemy(Command command, IClient *protocol) {
   std::cout << "Create enemy command" << std::endl;
-}
-
-void CommandSend::killEnemy(Command command, IClient *protocol) {
-  std::cout << "Kill enemy command" << std::endl;
 }
 
 void CommandSend::newPlayer(Command command, IClient *protocol) {

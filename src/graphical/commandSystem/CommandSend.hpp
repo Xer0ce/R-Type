@@ -27,7 +27,6 @@ private:
   void shoot(Command command, IClient *protocol);
   void hit(Command command, IClient *protocol);
   void createEnemy(Command command, IClient *protocol);
-  void killEnemy(Command command, IClient *protocol);
   void newPlayer(Command command, IClient *protocol);
   void createPlayer(Command command, IClient *protocol);
   void startGame(Command command, IClient *protocol);
