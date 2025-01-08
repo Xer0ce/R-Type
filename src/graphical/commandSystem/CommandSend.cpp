@@ -56,7 +56,7 @@ void CommandSend::connect(Command command, IClient *protocol) {
 
   binaryData.push_back(0x01);
   binaryData.push_back(static_cast<uint8_t>(command.connect.Nickname.size()));
-  std::string playerName = command.connect.Nickname + "\r\n";
+  std::string playerName = command.connect.Nickname;
   for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
   protocol->sendToServer(binaryData);
@@ -111,11 +111,7 @@ void CommandSend::startGame(Command command, IClient *protocol) {
 
   binaryData.push_back(0x05);
 
-  std::string response = "\r\n";
-
-  for (auto &c : response) {
-    binaryData.push_back(static_cast<uint8_t>(c));
-  }
+  binaryData.push_back(0xFF);
 
   protocol->sendToServer(binaryData);
 }
