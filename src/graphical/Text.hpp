@@ -23,6 +23,7 @@ public:
   void destroyText();
   void setColor(SDL_Color color);
   std::string getText();
+  void setPos(int x, int y);
 
 private:
   std::string _text;
