@@ -27,7 +27,7 @@ private:
   void connect(Command command, Queue *queue, Registry *ecs, Window *window);
   void disconnect(Command command, Queue *queue, Registry *ecs, Window *window);
   void move(Command command, Queue *queue, Registry *ecs, Window *window);
-  void killEnemy(Command command, Queue *queue, Registry *ecs, Window *window);
+  void killEntity(Command command, Queue *queue, Registry *ecs, Window *window);
   void createEnemy(Command command, Queue *queue, Registry *ecs,
                    Window *window);
   void newPlayer(Command command, Queue *queue, Registry *ecs, Window *window);

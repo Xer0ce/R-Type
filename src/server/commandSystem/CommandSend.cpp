@@ -22,9 +22,9 @@ CommandSend::CommandSend() {
                                                  IProtocol *protocol) {
     createEnemy(command, protocol);
   };
-  _commandMap[CommandType::KILLENEMY] = [this](Command command,
+  _commandMap[CommandType::KILLENTITY] = [this](Command command,
                                                IProtocol *protocol) {
-    killEnemy(command, protocol);
+    killEntity(command, protocol);
   };
   _commandMap[CommandType::NEWPLAYER] = [this](Command command,
                                                IProtocol *protocol) {
@@ -114,17 +114,6 @@ void CommandSend::shoot(Command command, IProtocol *protocol) {
   protocol->sendDataToAll(binaryData);
 }
 
-void CommandSend::map(Command command, IProtocol *protocol) {
-  std::cout << "Map command" << std::endl;
-  // std::vector<uint8_t> binaryData;
-
-  // binaryData.push_back(0x04);
-
-  // uint32_t playerId = command.move.playerId;
-
-  // protocol->sendData(command.id, binaryData);
-}
-
 void CommandSend::createEnemy(Command command, IProtocol *protocol) {
   std::vector<uint8_t> binaryData;
 
@@ -143,12 +132,12 @@ void CommandSend::createEnemy(Command command, IProtocol *protocol) {
   protocol->sendData(command.id, binaryData);
 }
 
-void CommandSend::killEnemy(Command command, IProtocol *protocol) {
+void CommandSend::killEntity(Command command, IProtocol *protocol) {
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x07);
 
-  binaryData.push_back(static_cast<uint8_t>(command.killEnemy.enemyId));
+  binaryData.push_back(static_cast<uint8_t>(command.killEntity.entityId));
 
   binaryData.push_back(0xFF);
 

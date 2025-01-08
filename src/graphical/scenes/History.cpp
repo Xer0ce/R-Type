@@ -43,6 +43,7 @@ void History::shoot_system(std::size_t id) {
 void History::control_system(keyType key) {
   auto &control = _ecs.get_components<Control>();
   auto &velocities = _ecs.get_components<Velocity>();
+  auto &entities = _ecs.get_components<EntityType>();
 
   for (std::size_t i = 0; i < control.size(); ++i) {
     if (control[i].has_value()) {

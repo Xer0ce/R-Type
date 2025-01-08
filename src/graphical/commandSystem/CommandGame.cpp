@@ -20,9 +20,9 @@ CommandGame::CommandGame() {
                                           Registry *ecs, Window *window) {
     move(command, queue, ecs, window);
   };
-  _commandMap[CommandType::KILLENEMY] = [this](Command command, Queue *queue,
+  _commandMap[CommandType::KILLENTITY] = [this](Command command, Queue *queue,
                                                Registry *ecs, Window *window) {
-    killEnemy(command, queue, ecs, window);
+    killEntity(command, queue, ecs, window);
   };
   _commandMap[CommandType::CREATEENEMY] =
       [this](Command command, Queue *queue, Registry *ecs, Window *window) {
@@ -54,10 +54,9 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *playerTexture =
       window->loadTexture("../src/graphical/assets/michou.png");
 
-  std::cout << "Je cree le player avec l'id " << command.repConnect.id
+  std::cout << "CONTROLABLE Je cree le player avec l'id " << command.repConnect.id
             << std::endl;
-  std::cout << "Position X: " << command.repConnect.positionX << std::endl;
-  std::cout << "Position Y: " << command.repConnect.positionY << std::endl;
+
   auto player = create_entity<EntityType::Player>(
       *ecs,
       Position(command.repConnect.positionX, command.repConnect.positionY),
@@ -90,9 +89,15 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs,
   }
 }
 
-void CommandGame::killEnemy(Command command, Queue *queue, Registry *ecs,
+void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
                             Window *window) {
-  std::cout << "killEnemy command" << std::endl;
+  auto &entities = ecs->get_components<EntityType>();
+
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (i == command.killEntity.entityId) {
+      ecs->kill_entity(Entities(i));
+    }
+  }
 }
 
 void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
@@ -113,7 +118,7 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *playerTexture =
       window->loadTexture("../src/graphical/assets/michou.png");
 
-  std::cout << "Je cree le player avec l'id " << command.newPlayer.id
+  std::cout << "PAS CONTROLABLE Je cree le player avec l'id " << command.newPlayer.id
             << std::endl;
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
