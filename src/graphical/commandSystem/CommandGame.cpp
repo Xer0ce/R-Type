@@ -98,6 +98,15 @@ void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.killEntity.entityId) {
+      if (entities[i] && entities[i] == EntityType::Player) {
+        std::cout << "Player is dead" << std::endl;
+      }
+      if (entities[i] && entities[i] == EntityType::Enemy) {
+        std::cout << "Enemy is dead" << std::endl;
+      }
+      if (entities[i] && entities[i] == EntityType::Projectile) {
+        std::cout << "Projectile is dead" << std::endl;
+      }
       ecs->kill_entity(Entities(i));
     }
   }

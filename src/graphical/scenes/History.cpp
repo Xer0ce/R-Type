@@ -105,13 +105,14 @@ sceneType History::loop(eventType event) {
 
   _window->drawBackground();
   keyType key = _window->catchKey();
+  keyType keyOnce = _window->catchKeyOnce();
 
   if (key == keyType::ESCAPE) {
     return sceneType::MENU;
   }
 
   control_system(key);
-  shoot_system(key);
+  shoot_system(keyOnce);
   position_system(0.05f);
 
   for (std::size_t i = 0; i < draw.size(); ++i) {

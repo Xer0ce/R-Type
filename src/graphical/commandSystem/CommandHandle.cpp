@@ -142,7 +142,11 @@ void CommandHandle::killEntity(std::vector<uint8_t> buffer, IClient *protocol,
                                Queue *queue) {
   Command cmd;
 
+  std::cout << "Kill entity command receive" << std::endl;
+
   cmd.type = CommandType::KILLENTITY;
   cmd.killEntity.entityId = static_cast<int>(buffer[1]);
+
+  std::cout << "Entity id: " << cmd.killEntity.entityId << std::endl;
   queue->pushGameQueue(cmd);
 }
