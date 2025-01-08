@@ -16,6 +16,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <cstddef>
 #include <vector>
+#include <memory>
 
 class Window {
 public:
