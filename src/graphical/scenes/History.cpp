@@ -24,24 +24,23 @@ void History::init() {
 
 void History::shoot_system(keyType key) {
   auto &control = _ecs.get_components<Control>();
-  auto &velocities = _ecs.get_components<Velocity>();
-  auto &entities = _ecs.get_components<EntityType>();
   auto &positions = _ecs.get_components<Position>();
+  auto &entities = _ecs.get_components<EntityType>();
   Command command;
 
-  for (std::size_t i = 0; i < entities.size(); ++i) {
-    if (entities[i] != EntityType::Player || !control[i].has_value())
-      continue;
-    if (key == keyType::SPACE) {
-      float positionX = positions[i]->x;
-      float positionY = positions[i]->y;
+  for (std::size_t i = 0; i < control.size(); ++i) {
+    if (control[i].has_value() && positions[i].has_value()) {
+      if (key == keyType::SPACE && entities[i] == EntityType::Player) {
+        float positionX = positions[i]->x;
+        float positionY = positions[i]->y;
 
-      command.type = CommandType::SHOOT;
-      command.shoot.playerId = i;
-      command.shoot.positionX = positionX;
-      command.shoot.positionY = positionY;
+        command.type = CommandType::SHOOT;
+        command.shoot.playerId = i;
+        command.shoot.positionX = positionX;
+        command.shoot.positionY = positionY;
 
-      _queue->pushTcpQueue(command);
+        _queue->pushTcpQueue(command);
+      }
     }
   }
 }
@@ -49,22 +48,21 @@ void History::shoot_system(keyType key) {
 void History::control_system(keyType key) {
   auto &control = _ecs.get_components<Control>();
   auto &velocities = _ecs.get_components<Velocity>();
-  auto &entities = _ecs.get_components<EntityType>();
 
-  for (std::size_t i = 0; i < entities.size(); ++i) {
-    if (entities[i] != EntityType::Player || !control[i].has_value())
-      continue;
-    if (key == keyType::UP) {
-      velocities[i]->y = -10;
-    } else if (key == keyType::RIGHT) {
-      velocities[i]->x = 10;
-    } else if (key == keyType::DOWN) {
-      velocities[i]->y = 10;
-    } else if (key == keyType::LEFT) {
-      velocities[i]->x = -10;
-    } else if (key == keyType::NONE) {
-      velocities[i]->x = 0;
-      velocities[i]->y = 0;
+  for (int i = 0; i < control.size(); ++i) {
+    if (control[i].has_value() && velocities[i].has_value()) {
+      if (key == keyType::UP) {
+        velocities[i]->y = -10;
+      } else if (key == keyType::RIGHT) {
+        velocities[i]->x = 10;
+      } else if (key == keyType::DOWN) {
+        velocities[i]->y = 10;
+      } else if (key == keyType::LEFT) {
+        velocities[i]->x = -10;
+      } else if (key == keyType::NONE) {
+        velocities[i]->x = 0;
+        velocities[i]->y = 0;
+      }
     }
   }
 }

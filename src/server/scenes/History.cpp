@@ -80,14 +80,17 @@ void History::enemy_system() {
   }
 }
 
-sceneType History::loop(float deltaTime) {
+sceneType
+History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   Command command;
+  std::chrono::time_point<std::chrono::steady_clock> now =
+      std::chrono::steady_clock::now();
 
   command = _queue->popGameQueue();
   if (command.type != EMPTY)
     _commandGame.executeCommandGame(command, _queue, _ecs);
 
-  if (deltaTime > 0.01f) {
+  if (now > deltaTime) {
     enemy_system();
     position_system(1);
   }
