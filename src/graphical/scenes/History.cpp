@@ -45,19 +45,21 @@ void History::control_system(keyType key) {
   auto &velocities = _ecs.get_components<Velocity>();
 
   for (std::size_t i = 0; i < control.size(); ++i) {
-    if (key == keyType::UP) {
-      velocities[i]->y = -10;
-    } else if (key == keyType::RIGHT) {
-      velocities[i]->x = 10;
-    } else if (key == keyType::DOWN) {
-      velocities[i]->y = 10;
-    } else if (key == keyType::LEFT) {
-      velocities[i]->x = -10;
-    } else if (key == keyType::SPACE) {
-      shoot_system(i);
-    } else if (key == keyType::NONE) {
-      velocities[i]->x = 0;
-      velocities[i]->y = 0;
+    if (control[i].has_value()) {
+      if (key == keyType::UP) {
+        velocities[i]->y = -10;
+      } else if (key == keyType::RIGHT) {
+        velocities[i]->x = 10;
+      } else if (key == keyType::DOWN) {
+        velocities[i]->y = 10;
+      } else if (key == keyType::LEFT) {
+        velocities[i]->x = -10;
+      } else if (key == keyType::SPACE) {
+        shoot_system(i);
+      } else if (key == keyType::NONE) {
+        velocities[i]->x = 0;
+        velocities[i]->y = 0;
+      }
     }
   }
 }
