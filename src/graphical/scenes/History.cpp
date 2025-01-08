@@ -92,6 +92,7 @@ void History::position_system(float deltaTime) {
 sceneType History::loop(eventType event) {
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
+  auto &nicknames = _ecs.get_components<Nickname>();
   Command command;
 
   command = _queue->popGameQueue();

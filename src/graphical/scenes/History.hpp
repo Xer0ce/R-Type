@@ -9,6 +9,7 @@
 
 #include "../commandSystem/CommandGame.hpp"
 #include "AScene.hpp"
+#include "Text.hpp"
 
 class History : public AScene {
 public:

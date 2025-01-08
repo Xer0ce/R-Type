@@ -59,12 +59,13 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
   std::cout << "Position X: " << command.repConnect.positionX << std::endl;
   std::cout << "Position Y: " << command.repConnect.positionY << std::endl;
   auto player = create_entity<EntityType::Player>(
-      *ecs,
-      Position(command.repConnect.positionX, command.repConnect.positionY),
-      Velocity(), Health(1),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture),
-      std::optional<Control>(Control()),
-      std::optional<std::size_t>(command.repConnect.id));
+    *ecs,
+    Position(command.repConnect.positionX, command.repConnect.positionY),
+    Velocity(), Health(1),
+    Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture),
+    Nickname{"Player1"},
+    std::optional<Control>(Control()),
+    std::optional<std::size_t>(command.repConnect.id));
 }
 
 void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs,
@@ -116,10 +117,13 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
   std::cout << "Je cree le player avec l'id " << command.newPlayer.id
             << std::endl;
   auto player = create_entity<EntityType::Player>(
-      *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
-      Velocity(), Health(1),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture), std::nullopt,
-      std::optional<std::size_t>(command.newPlayer.id));
+    *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
+    Velocity(), Health(1),
+    Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture),
+    Nickname{"Player"},
+    std::nullopt,
+    std::optional<std::size_t>(command.newPlayer.id));
+
 }
 
 void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
