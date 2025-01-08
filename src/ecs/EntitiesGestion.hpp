@@ -14,7 +14,7 @@ enum class EntityType { Player, Enemy, Projectile, Menu };
 
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
                               Health health, Draw draw,
-                              std::optional<Nickname> nickname = std::nullopt,
+                              Nickname nickname,
                               std::optional<Control> control = std::nullopt,
                               std::optional<std::size_t> id = std::nullopt);
 
