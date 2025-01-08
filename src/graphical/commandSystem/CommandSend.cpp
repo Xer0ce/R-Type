@@ -76,11 +76,15 @@ void CommandSend::move(Command command, IClient *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.move.entityId));
 
-  uint8_t *positionXBytes = reinterpret_cast<uint8_t *>(&command.move.positionX);
-  binaryData.insert(binaryData.end(), positionXBytes, positionXBytes + sizeof(float));
+  uint8_t *positionXBytes =
+      reinterpret_cast<uint8_t *>(&command.move.positionX);
+  binaryData.insert(binaryData.end(), positionXBytes,
+                    positionXBytes + sizeof(float));
 
-  uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.move.positionY);
-  binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
+  uint8_t *positionYBytes =
+      reinterpret_cast<uint8_t *>(&command.move.positionY);
+  binaryData.insert(binaryData.end(), positionYBytes,
+                    positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
 
@@ -94,11 +98,15 @@ void CommandSend::shoot(Command command, IClient *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.shoot.playerId));
 
-  uint8_t *positionXBytes = reinterpret_cast<uint8_t *>(&command.shoot.positionX);
-  binaryData.insert(binaryData.end(), positionXBytes, positionXBytes + sizeof(float));
+  uint8_t *positionXBytes =
+      reinterpret_cast<uint8_t *>(&command.shoot.positionX);
+  binaryData.insert(binaryData.end(), positionXBytes,
+                    positionXBytes + sizeof(float));
 
-  uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.shoot.positionY);
-  binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
+  uint8_t *positionYBytes =
+      reinterpret_cast<uint8_t *>(&command.shoot.positionY);
+  binaryData.insert(binaryData.end(), positionYBytes,
+                    positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
 
