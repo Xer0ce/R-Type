@@ -55,7 +55,6 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
                             Queue *queue) {
   Command cmd;
 
-
   int id = static_cast<int>(buffer[1]);
   float positionX = *reinterpret_cast<float *>(&buffer[2]);
   float positionY = *reinterpret_cast<float *>(&buffer[6]);
@@ -117,7 +116,6 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
 void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
                               Queue *queue) {
   Command cmd;
-
 
   cmd.type = CommandType::NEWPLAYER;
   cmd.newPlayer.id = static_cast<int>(buffer[1]);

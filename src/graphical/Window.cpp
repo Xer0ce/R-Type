@@ -141,12 +141,9 @@ keyType Window::catchKeyOnce() {
   const bool *keyState = SDL_GetKeyboardState(NULL);
 
   std::vector<std::pair<SDL_Scancode, keyType>> keys = {
-      {SDL_SCANCODE_UP, UP},
-      {SDL_SCANCODE_RIGHT, RIGHT},
-      {SDL_SCANCODE_DOWN, DOWN},
-      {SDL_SCANCODE_LEFT, LEFT},
-      {SDL_SCANCODE_ESCAPE, ESCAPE},
-      {SDL_SCANCODE_SPACE, SPACE}};
+      {SDL_SCANCODE_UP, UP},         {SDL_SCANCODE_RIGHT, RIGHT},
+      {SDL_SCANCODE_DOWN, DOWN},     {SDL_SCANCODE_LEFT, LEFT},
+      {SDL_SCANCODE_ESCAPE, ESCAPE}, {SDL_SCANCODE_SPACE, SPACE}};
 
   for (const auto &key : keys) {
     SDL_Scancode scancode = key.first;
@@ -164,8 +161,6 @@ keyType Window::catchKeyOnce() {
 
   return NONE;
 }
-
-
 
 keyType Window::catchKey() {
   const bool *keyState = SDL_GetKeyboardState(NULL);
