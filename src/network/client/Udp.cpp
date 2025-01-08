@@ -11,6 +11,8 @@ Udp::Udp(std::string ip, int port) {
   _ip = ip;
   _port = port;
   _type = "UDP";
+  _timeout.tv_sec = 0;
+  _timeout.tv_usec = 1000;
 }
 
 Udp::~Udp() {}
@@ -25,6 +27,12 @@ void Udp::initSocket() {
   _server.sin_family = AF_INET;
   _server.sin_port = htons(_port);
   _server.sin_addr.s_addr = inet_addr(_ip.c_str());
+
+  FD_ZERO(&_readfds);
+  FD_SET(_socket, &_readfds);
+
+  _serverSize = sizeof(_server);
+
 }
 
 void Udp::sendToServer(std::vector<uint8_t> data) {
@@ -36,15 +44,29 @@ void Udp::sendToServer(std::vector<uint8_t> data) {
 }
 
 bool Udp::receiveFromServer() {
-  socklen_t serverSize = sizeof(_server);
+  FD_ZERO(&_readfds);
+  FD_SET(_socket, &_readfds);
+
+  _timeout.tv_sec = 0;
+  _timeout.tv_usec = 1000;
+
+  int result = select(_socket + 1, &_readfds, NULL, NULL, &_timeout);
+  if (result == -1) {
+    std::cerr << "Error: select failed" << std::endl;
+    exit(84);
+  } else if (result == 0) {
+    return false;
+  }
+
   _buffer.resize(4096);
-  if (recvfrom(_socket, _buffer.data(), _buffer.size(), 0,
-               (struct sockaddr *)&_server, &serverSize) == -1) {
+
+  int bytesReceived = recvfrom(_socket, _buffer.data(), _buffer.size(), 0,
+                               (struct sockaddr *)&_server, &_serverSize);
+
+  if (bytesReceived == -1) {
     std::cerr << "Error: recvfrom failed" << std::endl;
     exit(84);
   }
-  if (_buffer.empty()) {
-    return false;
-  }
+
   return true;
 }
