@@ -16,6 +16,7 @@ enum CommandType {
   CREATEPLAYER,
   MOVE,
   SHOOT,
+  HIT,
   REPCONNECT,
   CREATEENEMY,
   KILLENEMY,
@@ -66,6 +67,14 @@ struct Shoot {
   float positionY;
 };
 
+struct Hit {
+  int entityHit;
+  int bulletId;
+  int damage;
+  float positionX;
+  float positionY;
+};
+
 struct CreatePlayer {
   float positionX;
   float positionY;
@@ -78,6 +87,7 @@ struct Command {
   struct Connect connect;
   struct Move move;
   struct Shoot shoot;
+  struct Hit hit;
   struct repConnect repConnect;
   struct createEnemy createEnemy;
   struct killEnemy killEnemy;

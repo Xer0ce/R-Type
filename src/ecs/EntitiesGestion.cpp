@@ -32,7 +32,7 @@ Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
 Entities create_projectile_entity(Registry &r, Position position,
                                   Velocity velocity, Draw draw,
                                   std::optional<std::size_t> id) {
-  auto entity = r.spawn_entity();
+  auto entity = id.has_value() ? r.spawn_entity(id.value()) : r.spawn_entity();
   r.add_component<EntityType>(entity, EntityType::Projectile);
   r.add_component<Position>(entity, std::move(position));
   r.add_component<Velocity>(entity, std::move(velocity));
