@@ -21,4 +21,9 @@ public:
   void initSocket() override;
   void sendToServer(std::vector<uint8_t> data) override;
   bool receiveFromServer() override;
+
+private:
+  struct timeval _timeout;
+  fd_set _readfds;
+  socklen_t _serverSize;
 };
