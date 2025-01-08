@@ -52,6 +52,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   newCommand.repConnect.id = player;
   newCommand.repConnect.positionX = 400;
   newCommand.repConnect.positionY = 100;
+  newCommand.repConnect.Nickname = command.connect.Nickname;
   newCommand.id = command.id;
   std::cout << "cree le player avec id: " << player << std::endl;
   queue->pushTcpQueue(newCommand);

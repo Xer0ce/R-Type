@@ -34,6 +34,7 @@ struct repConnect {
   float positionX;
   float positionY;
   int id;
+  std::string Nickname;
 };
 
 struct Connect {

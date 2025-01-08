@@ -55,14 +55,19 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
                             Queue *queue) {
   Command cmd;
 
+
   int id = static_cast<int>(buffer[1]);
   float positionX = *reinterpret_cast<float *>(&buffer[2]);
   float positionY = *reinterpret_cast<float *>(&buffer[6]);
+  int playloadSize = static_cast<int>(buffer[10]);
+
+  std::string nickname(buffer.begin() + 11, buffer.begin() + 11 + playloadSize);
 
   cmd.type = CommandType::REPCONNECT;
   cmd.repConnect.id = id;
   cmd.repConnect.positionX = positionX;
   cmd.repConnect.positionY = positionY;
+  cmd.repConnect.Nickname = nickname;
 
   queue->pushGameQueue(cmd);
 }
@@ -113,16 +118,15 @@ void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
                               Queue *queue) {
   Command cmd;
 
-  int playloadSize = static_cast<int>(buffer[1] - 1);
-
-  std::string nickname(buffer[7], buffer[7] + playloadSize);
 
   cmd.type = CommandType::NEWPLAYER;
   cmd.newPlayer.id = static_cast<int>(buffer[1]);
   cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[6]);
+  int playloadSize = static_cast<int>(buffer[10]);
+  std::string nickname(buffer.begin() + 11, buffer.begin() + 11 + playloadSize);
   cmd.newPlayer.Nickname = nickname;
-  std::cout << "NEW PLAYER" << std::endl;
+
   queue->pushGameQueue(cmd);
 }
 
