@@ -66,6 +66,15 @@ void CommandSend::connect(Command command, IProtocol *protocol) {
   binaryData.insert(binaryData.end(), positionYBytes,
                     positionYBytes + sizeof(float));
 
+  binaryData.push_back(
+      static_cast<uint8_t>(command.repConnect.Nickname.size()));
+  std::string playerName = command.repConnect.Nickname;
+  for (auto &c : playerName)
+    binaryData.push_back(static_cast<uint8_t>(c));
+
+  std::cout << "Nickname command send : " << command.repConnect.Nickname
+            << std::endl;
+
   binaryData.push_back(0xFF);
 
   protocol->sendData(command.id, binaryData);
@@ -176,6 +185,8 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
   binaryData.insert(binaryData.end(), positionYBytes,
                     positionYBytes + sizeof(float));
 
+  std::cout << "Nickname command send : " << command.newPlayer.Nickname
+            << std::endl;
   binaryData.push_back(static_cast<uint8_t>(command.newPlayer.Nickname.size()));
   std::string playerName = command.newPlayer.Nickname;
   for (auto &c : playerName)

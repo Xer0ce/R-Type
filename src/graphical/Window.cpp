@@ -139,6 +139,32 @@ void Window::drawBackground() {
   SDL_RenderTexture(_renderer, _background, nullptr, nullptr);
 }
 
+keyType Window::catchKeyOnce() {
+  static std::vector<bool> prevKeyState(512, false);
+  const bool *keyState = SDL_GetKeyboardState(NULL);
+
+  std::vector<std::pair<SDL_Scancode, keyType>> keys = {
+      {SDL_SCANCODE_UP, UP},         {SDL_SCANCODE_RIGHT, RIGHT},
+      {SDL_SCANCODE_DOWN, DOWN},     {SDL_SCANCODE_LEFT, LEFT},
+      {SDL_SCANCODE_ESCAPE, ESCAPE}, {SDL_SCANCODE_SPACE, SPACE}};
+
+  for (const auto &key : keys) {
+    SDL_Scancode scancode = key.first;
+    keyType action = key.second;
+
+    if (keyState[scancode] && !prevKeyState[scancode]) {
+      prevKeyState[scancode] = true;
+      return action;
+    }
+
+    if (!keyState[scancode]) {
+      prevKeyState[scancode] = false;
+    }
+  }
+
+  return NONE;
+}
+
 keyType Window::catchKey() {
   const bool *keyState = SDL_GetKeyboardState(NULL);
 

@@ -111,6 +111,7 @@ History::loop(eventType event,
 
   _window->drawBackground();
   keyType key = _window->catchKey();
+  keyType keyOnce = _window->catchKeyOnce();
 
   if (key == keyType::ESCAPE) {
     return sceneType::MENU;
