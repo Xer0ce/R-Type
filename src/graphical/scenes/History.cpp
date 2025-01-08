@@ -22,22 +22,28 @@ void History::init() {
   _queue->pushTcpQueue(command);
 }
 
-void History::shoot_system(std::size_t id) {
+void History::shoot_system(keyType key) {
+  auto &control = _ecs.get_components<Control>();
+  auto &velocities = _ecs.get_components<Velocity>();
   auto &entities = _ecs.get_components<EntityType>();
   auto &positions = _ecs.get_components<Position>();
   Command command;
 
-  std::cout << "Je shoot Shoot et envoie la commande " << std::endl;
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (entities[i] != EntityType::Player || !control[i].has_value())
+      continue;
+    if (key == keyType::SPACE) {
+      float positionX = positions[i]->x;
+      float positionY = positions[i]->y;
 
-  float positionX = positions[id]->x;
-  float positionY = positions[id]->y;
+      command.type = CommandType::SHOOT;
+      command.shoot.playerId = i;
+      command.shoot.positionX = positionX;
+      command.shoot.positionY = positionY;
 
-  command.type = CommandType::SHOOT;
-  command.shoot.playerId = id;
-  command.shoot.positionX = positionX;
-  command.shoot.positionY = positionY;
-
-  _queue->pushTcpQueue(command);
+      _queue->pushTcpQueue(command);
+    }
+  }
 }
 
 void History::control_system(keyType key) {
@@ -56,8 +62,6 @@ void History::control_system(keyType key) {
       velocities[i]->y = 10;
     } else if (key == keyType::LEFT) {
       velocities[i]->x = -10;
-    } else if (key == keyType::SPACE) {
-      shoot_system(i);
     } else if (key == keyType::NONE) {
       velocities[i]->x = 0;
       velocities[i]->y = 0;
@@ -109,6 +113,7 @@ sceneType History::loop(eventType event) {
   }
 
   control_system(key);
+  shoot_system(key);
   position_system(0.05f);
 
   for (std::size_t i = 0; i < draw.size(); ++i) {
