@@ -15,6 +15,9 @@ CommandSend::CommandSend() {
   _commandMap[CommandType::SHOOT] = [this](Command command, IClient *protocol) {
     shoot(command, protocol);
   };
+  _commandMap[CommandType::HIT] = [this](Command command, IClient *protocol) {
+    hit(command, protocol);
+  };
   _commandMap[CommandType::MOVE] = [this](Command command, IClient *protocol) {
     move(command, protocol);
   };
@@ -59,6 +62,9 @@ void CommandSend::connect(Command command, IClient *protocol) {
   std::string playerName = command.connect.Nickname;
   for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
+
+  binaryData.push_back(0xFF);
+
   protocol->sendToServer(binaryData);
 }
 
@@ -79,15 +85,31 @@ void CommandSend::move(Command command, IClient *protocol) {
   uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.move.positionY);
   binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
 
+  binaryData.push_back(0xFF);
+
   protocol->sendToServer(binaryData);
 }
 
 void CommandSend::shoot(Command command, IClient *protocol) {
-  std::cout << "Shoot command" << std::endl;
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x04);
+
+  binaryData.push_back(static_cast<uint8_t>(command.shoot.playerId));
+
+  uint8_t *positionXBytes = reinterpret_cast<uint8_t *>(&command.shoot.positionX);
+  binaryData.insert(binaryData.end(), positionXBytes, positionXBytes + sizeof(float));
+
+  uint8_t *positionYBytes = reinterpret_cast<uint8_t *>(&command.shoot.positionY);
+  binaryData.insert(binaryData.end(), positionYBytes, positionYBytes + sizeof(float));
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendToServer(binaryData);
 }
 
-void CommandSend::map(Command command, IClient *protocol) {
-  std::cout << "Map command" << std::endl;
+void CommandSend::hit(Command command, IClient *protocol) {
+  std::cout << "Hit command" << std::endl;
 }
 
 void CommandSend::createEnemy(Command command, IClient *protocol) {

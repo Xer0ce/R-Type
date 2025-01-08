@@ -32,6 +32,10 @@ CommandGame::CommandGame() {
                                                Registry *ecs, Window *window) {
     newPlayer(command, queue, ecs, window);
   };
+  _commandMap[CommandType::SHOOT] = [this](Command command, Queue *queue,
+                                               Registry *ecs, Window *window) {
+    shoot(command, queue, ecs, window);
+  };
 }
 
 CommandGame::~CommandGame() {}
@@ -50,6 +54,10 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *playerTexture =
       window->loadTexture("../src/graphical/assets/michou.png");
 
+  std::cout << "Je cree le player avec l'id " << command.repConnect.id
+            << std::endl;
+  std::cout << "Position X: " << command.repConnect.positionX << std::endl;
+  std::cout << "Position Y: " << command.repConnect.positionY << std::endl;
   auto player = create_entity<EntityType::Player>(
       *ecs,
       Position(command.repConnect.positionX, command.repConnect.positionY),
@@ -112,4 +120,15 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
       Velocity(), Health(1),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, playerTexture), std::nullopt,
       std::optional<std::size_t>(command.newPlayer.id));
+}
+
+void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
+                            Window *window) {
+  SDL_Texture *bulletTexture =
+      window->loadTexture("../src/graphical/assets/bullet.png");
+  
+  auto bullet = create_entity<EntityType::Projectile>(
+      *ecs, Position(command.shoot.positionX, command.shoot.positionY),
+      Velocity(50, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}, bulletTexture),
+      std::optional<std::size_t>(command.shoot.playerId));
 }

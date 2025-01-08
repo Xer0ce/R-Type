@@ -22,6 +22,24 @@ void History::init() {
   _queue->pushTcpQueue(command);
 }
 
+void History::shoot_system(std::size_t id) {
+  auto &entities = _ecs.get_components<EntityType>();
+  auto &positions = _ecs.get_components<Position>();
+  Command command;
+
+  std::cout << "Je shoot Shoot et envoie la commande " << std::endl;
+
+  float positionX = positions[id]->x;
+  float positionY = positions[id]->y;
+
+  command.type = CommandType::SHOOT;
+  command.shoot.playerId = id;
+  command.shoot.positionX = positionX;
+  command.shoot.positionY = positionY;
+
+  _queue->pushTcpQueue(command);
+}
+
 void History::control_system(keyType key) {
   auto &control = _ecs.get_components<Control>();
   auto &velocities = _ecs.get_components<Velocity>();
@@ -35,6 +53,8 @@ void History::control_system(keyType key) {
       velocities[i]->y = 10;
     } else if (key == keyType::LEFT) {
       velocities[i]->x = -10;
+    } else if (key == keyType::SPACE) {
+      shoot_system(i);
     } else if (key == keyType::NONE) {
       velocities[i]->x = 0;
       velocities[i]->y = 0;

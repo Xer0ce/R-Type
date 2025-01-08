@@ -59,6 +59,10 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.repConnect.id = id;
   cmd.repConnect.positionX = positionX;
   cmd.repConnect.positionY = positionY;
+
+  std::cout << "Connect command receive" << std::endl;
+  std::cout << "Position X: " << positionX << std::endl;
+  std::cout << "Position Y: " << positionY << std::endl;
   queue->pushGameQueue(cmd);
 }
 
@@ -81,7 +85,14 @@ void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,
 
 void CommandHandle::shoot(std::vector<uint8_t> buffer, IClient *protocol,
                           Queue *queue) {
-  std::cout << "Shoot command receive" << std::endl;
+  Command cmd;
+
+  cmd.type = CommandType::SHOOT;
+  cmd.shoot.playerId = static_cast<int>(buffer[1]);
+  cmd.shoot.positionX = *reinterpret_cast<float *>(&buffer[2]);
+  cmd.shoot.positionY = *reinterpret_cast<float *>(&buffer[6]);
+
+  queue->pushGameQueue(cmd);
 }
 
 void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
@@ -93,9 +104,6 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.createEnemy.enemyId = static_cast<int>(buffer[1]);
   cmd.createEnemy.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.createEnemy.positionY = *reinterpret_cast<float *>(&buffer[6]);
-
-  std::cout << "Create enemy with id : " << cmd.createEnemy.enemyId
-            << std::endl;
 
   queue->pushGameQueue(cmd);
 }
@@ -113,9 +121,6 @@ void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[6]);
   cmd.newPlayer.Nickname = nickname;
-
-  std::cout << "New player with id : " << cmd.newPlayer.id << " and nickname : "
-            << cmd.newPlayer.Nickname << std::endl;
 
   queue->pushGameQueue(cmd);
 }

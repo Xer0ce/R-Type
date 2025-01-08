@@ -21,6 +21,8 @@ public:
 
   void position_system(float deltaTime);
 
+  void shoot_system(std::size_t id);
+
   void init() override;
 
 private:
