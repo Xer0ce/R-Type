@@ -80,9 +80,11 @@ void History::enemy_system() {
   }
 }
 
-sceneType History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
+sceneType
+History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   Command command;
-  std::chrono::time_point<std::chrono::steady_clock> now = std::chrono::steady_clock::now();
+  std::chrono::time_point<std::chrono::steady_clock> now =
+      std::chrono::steady_clock::now();
 
   command = _queue->popGameQueue();
   if (command.type != EMPTY)

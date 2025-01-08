@@ -13,7 +13,8 @@ Lobby::~Lobby() {}
 
 void Lobby::init() {}
 
-sceneType Lobby::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
+sceneType
+Lobby::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   Command command;
 
   command = _queue->popGameQueue();

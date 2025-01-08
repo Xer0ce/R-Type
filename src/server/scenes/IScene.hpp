@@ -19,7 +19,8 @@ public:
 
   virtual std::string getName() const = 0;
 
-  virtual sceneType loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) = 0;
+  virtual sceneType
+  loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) = 0;
 
   virtual void setEcs(Registry *ecs) = 0;
 
