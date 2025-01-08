@@ -189,6 +189,8 @@ void CommandSend::createPlayer(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0xFF);
 
+  std::cout << "PAS CONTROLABLE je créé un player" << std::endl;
+
   protocol->sendData(command.id, binaryData);
 }
 

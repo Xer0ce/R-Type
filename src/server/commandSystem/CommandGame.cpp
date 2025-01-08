@@ -93,8 +93,6 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
           newCommandPlayer.createPlayer.positionY = entityPosition[i]->y;
           newCommandPlayer.id = command.id;
           queue->pushTcpQueue(newCommandPlayer);
-          queue->pushTcpQueue(newCommandPlayer);
-          queue->pushTcpQueue(newCommandPlayer);
         }
       }
     }
