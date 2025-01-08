@@ -1,5 +1,6 @@
 /*
 ** EPITECH PROJECT, 2025
+
 ** R-Type
 ** File description:
 ** History
@@ -21,11 +22,38 @@ void History::init() {
   _queue->pushTcpQueue(command);
 }
 
+void History::shoot_system(keyType key) {
+  auto &control = _ecs.get_components<Control>();
+  auto &velocities = _ecs.get_components<Velocity>();
+  auto &entities = _ecs.get_components<EntityType>();
+  auto &positions = _ecs.get_components<Position>();
+  Command command;
+
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (entities[i] != EntityType::Player || !control[i].has_value())
+      continue;
+    if (key == keyType::SPACE) {
+      float positionX = positions[i]->x;
+      float positionY = positions[i]->y;
+
+      command.type = CommandType::SHOOT;
+      command.shoot.playerId = i;
+      command.shoot.positionX = positionX;
+      command.shoot.positionY = positionY;
+
+      _queue->pushTcpQueue(command);
+    }
+  }
+}
+
 void History::control_system(keyType key) {
   auto &control = _ecs.get_components<Control>();
   auto &velocities = _ecs.get_components<Velocity>();
+  auto &entities = _ecs.get_components<EntityType>();
 
-  for (std::size_t i = 0; i < control.size(); ++i) {
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (entities[i] != EntityType::Player || !control[i].has_value())
+      continue;
     if (key == keyType::UP) {
       velocities[i]->y = -10;
     } else if (key == keyType::RIGHT) {
@@ -81,11 +109,11 @@ sceneType History::loop(eventType event) {
   keyType key = _window->catchKey();
 
   if (key == keyType::ESCAPE) {
-    std::cout << "switch to menu" << std::endl;
     return sceneType::MENU;
   }
 
   control_system(key);
+  shoot_system(key);
   position_system(0.05f);
 
   for (std::size_t i = 0; i < draw.size(); ++i) {

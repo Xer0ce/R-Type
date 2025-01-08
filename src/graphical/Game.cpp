@@ -36,6 +36,21 @@ std::string Game::getCurrentSceneName() {
   return _scenes[_currentScene]->getName();
 }
 
+std::vector<std::vector<uint8_t>> divideBuffer(std::vector<uint8_t> buffer) {
+  std::vector<std::vector<uint8_t>> dividedBuffer;
+  std::vector<uint8_t> tempBuffer;
+
+  for (size_t i = 0; i < buffer.size(); i++) {
+    if (buffer[i] == 0xFF) {
+      dividedBuffer.push_back(tempBuffer);
+      tempBuffer.clear();
+    } else {
+      tempBuffer.push_back(buffer[i]);
+    }
+  }
+  return dividedBuffer;
+}
+
 void Game::listen(IClient &protocol) {
   while (true) {
     Command command;
@@ -49,10 +64,15 @@ void Game::listen(IClient &protocol) {
     }
 
     if (protocol.receiveFromServer()) {
-      std::vector<uint8_t> buffer = protocol.getBuffer();
+      std::vector<std::vector<uint8_t>> buffer =
+          divideBuffer(protocol.getBuffer());
 
-      commandHandle.executeCommandHandle(buffer[0], buffer, &protocol,
-                                         _queue.get());
+      for (size_t i = 0; i < buffer.size(); i++) {
+        if (buffer[i].size() == 0)
+          continue;
+        commandHandle.executeCommandHandle(buffer[i][0], buffer[i], &protocol,
+                                           _queue.get());
+      }
     }
   }
 }

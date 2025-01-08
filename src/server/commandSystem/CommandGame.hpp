@@ -25,7 +25,8 @@ private:
   void connect(Command command, Queue *queue, Registry *ecs);
   void disconnect(Command command, Queue *queue, Registry *ecs);
   void move(Command command, Queue *queue, Registry *ecs);
-  void killEnemy(Command command, Queue *queue, Registry *ecs);
+  void shoot(Command command, Queue *queue, Registry *ecs);
+  void hit(Command command, Queue *queue, Registry *ecs);
 
   std::map<CommandType, std::function<void(Command, Queue *, Registry *)>>
       _commandMap;

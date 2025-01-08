@@ -15,7 +15,7 @@ public:
   Lobby();
   ~Lobby();
 
-  sceneType loop() override;
+  sceneType loop(float deltaTime) override;
 
   void init() override;
 

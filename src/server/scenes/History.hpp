@@ -19,7 +19,9 @@ public:
 
   void enemy_system();
 
-  sceneType loop() override;
+  void collision_system();
+
+  sceneType loop(float deltaTime) override;
 
   void init() override;
 

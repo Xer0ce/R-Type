@@ -13,7 +13,7 @@ Lobby::~Lobby() {}
 
 void Lobby::init() {}
 
-sceneType Lobby::loop() {
+sceneType Lobby::loop(float deltaTime) {
   Command command;
 
   command = _queue->popGameQueue();

@@ -16,15 +16,12 @@ enum CommandType {
   CREATEPLAYER,
   MOVE,
   SHOOT,
+  HIT,
+  KILLENTITY,
   REPCONNECT,
   CREATEENEMY,
-  KILLENEMY,
   EMPTY,
   STARTGAME,
-};
-
-struct killEnemy {
-  int enemyId;
 };
 
 struct createEnemy {
@@ -36,7 +33,7 @@ struct createEnemy {
 struct repConnect {
   float positionX;
   float positionY;
-  std::size_t id;
+  int id;
 };
 
 struct Connect {
@@ -44,32 +41,44 @@ struct Connect {
 };
 
 struct Disconnect {
-  std::size_t playerId;
+  int playerId;
 };
 
 struct NewPlayer {
   float positionX;
   float positionY;
-  std::size_t id;
+  int id;
   std::string Nickname;
 };
 
 struct Move {
-  std::size_t entityId;
+  int entityId;
   float positionX;
   float positionY;
 };
 
 struct Shoot {
-  std::size_t playerId;
+  int playerId;
   float positionX;
   float positionY;
+};
+
+struct Hit {
+  int entityHit;
+  int bulletId;
+  int damage;
+  float positionX;
+  float positionY;
+};
+
+struct killEntity {
+  int entityId;
 };
 
 struct CreatePlayer {
   float positionX;
   float positionY;
-  std::size_t id;
+  int id;
   std::string Nickname;
 };
 
@@ -78,9 +87,10 @@ struct Command {
   struct Connect connect;
   struct Move move;
   struct Shoot shoot;
+  struct Hit hit;
+  struct killEntity killEntity;
   struct repConnect repConnect;
   struct createEnemy createEnemy;
-  struct killEnemy killEnemy;
   struct NewPlayer newPlayer;
   struct CreatePlayer createPlayer;
   int id;
