@@ -16,8 +16,7 @@ void History::init() {
       *_ecs, Position(800, 0), Velocity(), Health(1), Draw({}, {}, nullptr));
 }
 
-void History::collision_system()
-{
+void History::collision_system() {
   auto &position = _ecs->get_components<Position>();
   auto &entityType = _ecs->get_components<EntityType>();
 

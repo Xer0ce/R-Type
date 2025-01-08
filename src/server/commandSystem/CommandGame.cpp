@@ -21,11 +21,11 @@ CommandGame::CommandGame() {
     move(command, queue, ecs);
   };
   _commandMap[CommandType::SHOOT] = [this](Command command, Queue *queue,
-                                               Registry *ecs) {
+                                           Registry *ecs) {
     shoot(command, queue, ecs);
   };
   _commandMap[CommandType::HIT] = [this](Command command, Queue *queue,
-                                               Registry *ecs) {
+                                         Registry *ecs) {
     hit(command, queue, ecs);
   };
 }
@@ -125,7 +125,8 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs) {
 void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
 
   auto bullet = create_entity<EntityType::Projectile>(
-    *ecs, Position(command.shoot.positionX, command.shoot.positionY), Velocity(50, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+      *ecs, Position(command.shoot.positionX, command.shoot.positionY),
+      Velocity(50, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
 
   queue->pushTcpQueue(command);
 }
