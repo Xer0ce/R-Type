@@ -67,7 +67,7 @@ void Server::init() {
 }
 
 void Server::game() {
-  std::chrono::time_point<std::chrono::steady_clock> next = std::chrono::steady_clock::now() + std::chrono::milliseconds(100);
+  std::chrono::time_point<std::chrono::steady_clock> next = std::chrono::steady_clock::now() + std::chrono::milliseconds(10);
 
   _scenes[_currentScene]->setEcs(_ecs.get());
   _scenes[_currentScene]->setQueue(_queue.get());
@@ -78,7 +78,7 @@ void Server::game() {
     auto switchScene = _scenes[_currentScene]->loop(next);
 
     if (now > next)
-      next += std::chrono::milliseconds(100);
+      next += std::chrono::milliseconds(10);
     if (switchScene != sceneType::NO_SWITCH) {
       _currentScene = switchScene;
       _scenes[_currentScene]->setEcs(_ecs.get());

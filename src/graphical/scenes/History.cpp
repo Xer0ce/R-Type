@@ -54,13 +54,13 @@ void History::control_system(keyType key) {
     if (control[i].has_value() && velocities[i].has_value() &&
         entities[i] == EntityType::Player) {
       if (key == keyType::UP) {
-        velocities[i]->y = -10;
+        velocities[i]->y = -5;
       } else if (key == keyType::RIGHT) {
-        velocities[i]->x = 10;
+        velocities[i]->x = 5;
       } else if (key == keyType::DOWN) {
-        velocities[i]->y = 10;
+        velocities[i]->y = 5;
       } else if (key == keyType::LEFT) {
-        velocities[i]->x = -10;
+        velocities[i]->x = -5;
       } else if (key == keyType::NONE) {
         velocities[i]->x = 0;
         velocities[i]->y = 0;
@@ -96,10 +96,11 @@ void History::position_system(float deltaTime) {
   }
 }
 
-sceneType History::loop(eventType event) {
+sceneType History::loop(eventType event, std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
   Command command;
+  std::chrono::time_point<std::chrono::steady_clock> now = std::chrono::steady_clock::now();
 
   command = _queue->popGameQueue();
   if (command.type != EMPTY)
@@ -112,10 +113,11 @@ sceneType History::loop(eventType event) {
     return sceneType::MENU;
   }
 
-  control_system(key);
-  shoot_system(key);
-  position_system(0.05f);
-
+  if (now > deltaTime) {
+    control_system(key);
+    shoot_system(key);
+    position_system(1);
+  }
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
