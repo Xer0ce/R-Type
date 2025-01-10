@@ -2,13 +2,9 @@
 #define ENTITIESGESTION_HPP
 
 #include <random>
-#include "../graphical/Components/Control.hpp"
-#include "../graphical/Components/Draw.hpp"
-#include "../graphical/Components/Health.hpp"
-#include "../graphical/Components/Position.hpp"
-#include "../graphical/Components/Velocity.hpp"
-#include "Entities.hpp"
-#include "Registry.hpp"
+#include "../Components/Components.hpp"
+#include "../../ecs/Entities.hpp"
+#include "../../ecs/Registry.hpp"
 
 enum class EntityType { Player, Enemy, Projectile, Menu };
 enum class EnemyType { Pion, Balourd, Zinzolin, Boss, BigBoss};
@@ -21,7 +17,7 @@ Entities create_player_entity(Registry &r, Position position, Velocity velocity,
 
 Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
                              Health health, Draw draw,
-                             std::optional<std::size_t> id = std::nullopt, AiType type = AiType::Aggressive);
+                              AiType type = AiType::Aggressive, std::optional<std::size_t> id = std::nullopt);
 
 Entities create_projectile_entity(Registry &r, Position position,
                                   Velocity velocity, Draw draw,
@@ -44,13 +40,14 @@ Entities create_entity(Registry &r, Args &&...args) {
 template <EnemyType T>
 Entities create_enemy(Registry &r, AiType type) {
   static constexpr int y_min = -300;
-  static constexpr int y_max = -300;
+  static constexpr int y_max = 300;
 
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_int_distribution<> distrib(y_min, y_max);
 
   int random_y = distrib(gen);
+  std::cout << random_y << std::endl;
 
   if constexpr (T == EnemyType::Pion) {
     return create_entity<EntityType::Enemy>(r, Position(800, random_y), Velocity(), Health(30), Draw({}, {}, nullptr), type);

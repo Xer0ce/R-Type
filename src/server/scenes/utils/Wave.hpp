@@ -10,16 +10,22 @@
 
 #include <iostream>
 #include <memory>
-#include "../../ecs/Registry.hpp"
+#include "../../../ecs/Registry.hpp"
+#include "nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 class Wave {
   public:
-    Wave(std::shared_ptr<Registry> ecs) : _ecs(ecs) {};
-    ~Wave();
-    void start();
+    Wave(Registry *ecs) : _ecs(ecs) {};
+    Wave() {};
+    ~Wave() {};
+    void start() {};
     void load(std::string path);
+    void load_enemy(const json& enemy);
+    void factory_call(const json& enemy);
   private:
-    std::shared_ptr<Registry> _ecs;
+    Registry *_ecs;
 };
 
 

@@ -26,7 +26,7 @@ sceneType Lobby::loop(eventType event) {
     if (command.type == CommandType::STARTGAME) {
       _window->deleteTexts();
       _window->deleteButtons();
-      return sceneType::HISTORY;
+      return sceneType::ENDLESS;
     }
     commandGame.executeCommandGame(command, _queue, &_ecs, _window);
   }

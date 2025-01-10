@@ -19,7 +19,7 @@ sceneType Lobby::loop() {
   command = _queue->popGameQueue();
   if (command.type != EMPTY) {
     if (command.type == CommandType::STARTGAME) {
-      return sceneType::HISTORY;
+      return sceneType::ENDLESS;
     }
     _commandGame.executeCommandGame(command, _queue, _ecs);
   }

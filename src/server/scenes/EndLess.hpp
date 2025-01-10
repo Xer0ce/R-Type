@@ -8,15 +8,22 @@
 #pragma once
 
 #include "AScene.hpp"
+#include "utils/Wave.hpp"
+#include "../commandSystem/CommandGame.hpp"
+#include "../../game/systems/enemy/EnemySystems.hpp"
 
 class EndLess : public AScene {
 public:
   EndLess();
   ~EndLess();
 
-  sceneType loop() override { return sceneType::NO_SWITCH; };
+  void position_system(float deltaTime);
 
-  void init() override{};
+  sceneType loop() override;
+
+  void init() override;
 
 private:
+   Wave _wave;
+   CommandGame _commandGame;
 };
