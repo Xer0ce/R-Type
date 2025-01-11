@@ -20,6 +20,8 @@ void History::init() {
   command.type = CommandType::CONNECT;
   command.connect.Nickname = "Player";
   _queue->pushTcpQueue(command);
+  _window->setBackground(
+      _window->loadTexture("../src/graphical/assets/level1.png"));
 }
 
 void History::shoot_system(keyType key) {
@@ -109,7 +111,7 @@ History::loop(eventType event,
   if (command.type != EMPTY)
     commandGame.executeCommandGame(command, _queue, &_ecs, _window);
 
-  _window->drawBackground();
+  _window->drawBackground(true);
   keyType key = _window->catchKey();
   keyType keyOnce = _window->catchKeyOnce();
 
