@@ -95,6 +95,6 @@ private:
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
-  int _bgOffset = 0;
-  float _bgScrollSpeed = 1.0f;
+  float _bgOffset = 0;
+  float _bgScrollSpeed = 5.0f;
 };

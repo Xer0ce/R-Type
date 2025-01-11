@@ -137,40 +137,35 @@ void Window::setBackground(SDL_Texture *texture) { _background = texture; }
 
 void Window::drawBackground(bool isScrolling, float deltaTime)
 {
+    float bgWidth = 0.f;
+    float bgHeight = 0.f;
+
+    if (!_background)
+        return;
     if (!isScrolling) {
         SDL_RenderTexture(_renderer, _background, nullptr, nullptr);
         return;
     }
-    if (!_background)
-        return;
 
-    float bgWidth = 0;
-    float bgHeight = 0;
     SDL_GetTextureSize(_background, &bgWidth, &bgHeight);
-
-    _bgOffset -= static_cast<int>(_bgScrollSpeed);
-    if (_bgOffset <= -bgWidth) {
-        _bgOffset = 0;
-    }
-
+    _bgOffset -= _bgScrollSpeed * deltaTime;
+    if (_bgOffset <= -bgWidth)
+        _bgOffset = 0.f;
     SDL_FRect destRect1 = {
-        static_cast<float>(_bgOffset),
+        _bgOffset,
         0.f,
-        static_cast<float>(bgWidth),
-        static_cast<float>(bgHeight)
+        bgWidth,
+        bgHeight
     };
-
-    SDL_FRect destRect2 = {
-        static_cast<float>(_bgOffset + bgWidth),
-        0.f,
-        static_cast<float>(bgWidth),
-        static_cast<float>(bgHeight)
-    };
-
     SDL_RenderTexture(_renderer, _background, nullptr, &destRect1);
+    SDL_FRect destRect2 = {
+        _bgOffset + bgWidth,
+        0.f,
+        bgWidth,
+        bgHeight
+    };
     SDL_RenderTexture(_renderer, _background, nullptr, &destRect2);
 }
-
 
 keyType Window::catchKeyOnce() {
   static std::vector<bool> prevKeyState(512, false);

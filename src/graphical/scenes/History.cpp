@@ -111,7 +111,8 @@ History::loop(eventType event,
   if (command.type != EMPTY)
     commandGame.executeCommandGame(command, _queue, &_ecs, _window);
 
-  _window->drawBackground(true);
+  float dt = std::chrono::duration<float>(deltaTime - now).count();
+  _window->drawBackground(true, dt);
   keyType key = _window->catchKey();
   keyType keyOnce = _window->catchKeyOnce();
 
