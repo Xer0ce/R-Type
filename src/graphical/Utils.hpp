@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <iostream>
+
 enum sceneType {
   MENU,
   HISTORY,
@@ -28,3 +30,9 @@ enum keyType {
 };
 
 enum eventType { MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT };
+
+struct ChoosingParams {
+  std::string ip;
+  std::size_t spaceshipId;
+  std::size_t bulletId;
+};

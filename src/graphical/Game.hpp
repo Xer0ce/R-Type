@@ -54,7 +54,7 @@ public:
 
   void listen(IClient &protocol);
 
-  void init(std::string nickname);
+  void init(std::string nickname, ChoosingParams *params);
   void game(std::string nickname);
 
 private:

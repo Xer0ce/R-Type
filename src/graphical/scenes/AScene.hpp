@@ -31,9 +31,12 @@ public:
 
   void setQueue(Queue *queue) override;
 
+  void setChoosingParams(ChoosingParams *params) override;
+
 protected:
   std::string _name;
   Window *_window;
   Registry _ecs;
   Queue *_queue;
+  ChoosingParams *_params;
 };

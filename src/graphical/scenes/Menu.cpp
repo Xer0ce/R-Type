@@ -97,6 +97,9 @@ Menu::loop(eventType event,
   if (button == "Heberger") {
     _window->deleteTexts();
     _window->deleteButtons();
+    _params->ip = "127.0.0.1";
+    _params->spaceshipId = 667;
+    _params->bulletId = 999;
     return sceneType::LOBBY;
   }
 

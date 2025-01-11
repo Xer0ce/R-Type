@@ -77,7 +77,7 @@ void Game::listen(IClient &protocol) {
   }
 }
 
-void Game::init(std::string nickname) {
+void Game::init(std::string nickname, ChoosingParams *params) {
   _tcp->initSocket();
   _udp->initSocket();
 
@@ -88,6 +88,10 @@ void Game::init(std::string nickname) {
     connectLobby.push_back(nickname[i]);
   }
 
+  std::cout << "[PARAMS]" << params->ip << std::endl;
+  std::cout << "[PARAMS]" << params->spaceshipId << std::endl;
+  std::cout << "[PARAMS]" << params->bulletId << std::endl;
+
   _tcp->sendToServer(connectLobby);
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
 
@@ -96,6 +100,7 @@ void Game::init(std::string nickname) {
 
   tcpThread.detach();
   udpThread.detach();
+  delete params;
 }
 
 void Game::game(std::string nickname) {
@@ -103,6 +108,7 @@ void Game::game(std::string nickname) {
       std::chrono::steady_clock::now() + std::chrono::milliseconds(100);
   bool running = true;
   eventType event = NO_EVENT;
+  ChoosingParams *params = new ChoosingParams();
 
   _window->init();
   _window->setBackground(
@@ -112,6 +118,7 @@ void Game::game(std::string nickname) {
   _scenes[_currentScene]->setEcs(_ecs);
   _scenes[_currentScene]->init();
   _scenes[_currentScene]->setQueue(_queue.get());
+  _scenes[_currentScene]->setChoosingParams(params);
 
   while (event != CLOSE_WINDOW) {
     std::chrono::time_point<std::chrono::steady_clock> now =
@@ -122,8 +129,9 @@ void Game::game(std::string nickname) {
     if (now > next)
       next += std::chrono::milliseconds(25);
     if (switchScene != sceneType::NO_SWITCH) {
-      if (switchScene == LOBBY)
-        init(nickname);
+      if (switchScene == LOBBY) {
+        init(nickname, params);
+      }
       _currentScene = switchScene;
       _scenes[_currentScene]->setWindow(_window.get());
       _scenes[_currentScene]->setEcs(_ecs);
