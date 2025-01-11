@@ -37,6 +37,8 @@ struct repConnect {
   float positionX;
   float positionY;
   int id;
+  int spaceshipId;
+  int shootId;
   std::string Nickname;
 };
 
@@ -88,6 +90,8 @@ struct CreatePlayer {
 
 struct ConnectLobby {
   std::string Nickname;
+  int spaceshipId;
+  int shootId;
 };
 
 struct getUsersLobby {
