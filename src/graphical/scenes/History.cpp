@@ -111,6 +111,7 @@ History::loop(eventType event,
     commandGame.executeCommandGame(command, _queue, &_ecs, _window);
 
   _window->drawBackground();
+  _window->drawText();
   keyType key = _window->catchKey();
   keyType keyOnce = _window->catchKeyOnce();
 
@@ -126,6 +127,10 @@ History::loop(eventType event,
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
+    if (nicknames[i].has_value()) {
+      _window->setTextPos(nicknames[i]->nickname, positions[i]->x,
+                          positions[i]->y - 30);
+    }
     _window->draw(draw[i]->texture, draw[i]->rect);
   }
   return sceneType::NO_SWITCH;

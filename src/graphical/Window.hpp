@@ -89,6 +89,8 @@ public:
 
   int getNumberText() { return _texts.size(); }
 
+  void setTextPos(std::string text, int x, int y);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;

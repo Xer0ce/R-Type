@@ -72,6 +72,8 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
       Nickname(command.repConnect.Nickname),
       std::optional<Control>(Control()),
       std::optional<std::size_t>(command.repConnect.id));
+      window->addText(command.repConnect.Nickname, command.repConnect.positionX, command.repConnect.positionY, 50, 50, 20,
+                    "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
 }
 
 void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs,
