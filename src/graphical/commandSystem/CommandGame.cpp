@@ -60,6 +60,9 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
 
   std::cout << "CONTROLABLE Je cree le player avec l'id "
             << command.repConnect.id << std::endl;
+  std::cout << "Nickname: " << command.repConnect.Nickname << std::endl;
+  std::cout << "SpaceshipID : " << command.repConnect.spaceshipId << std::endl;
+  std::cout << "ShootID : " << command.repConnect.shootId << std::endl;
 
   auto player = create_entity<EntityType::Player>(
       *ecs,
@@ -70,6 +73,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
             (int)command.repConnect.positionY, 50, 50},
            playerTexture),
       Nickname(command.repConnect.Nickname),
+      Property(command.repConnect.spaceshipId, command.repConnect.shootId, 0),
       std::optional<Control>(Control()),
       std::optional<std::size_t>(command.repConnect.id));
       window->addText(command.repConnect.Nickname, command.repConnect.positionX, command.repConnect.positionY, 50, 50, 20,
@@ -147,6 +151,7 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
             50, 50},
            playerTexture),
       Nickname(command.newPlayer.Nickname),
+      Property(0, 0, 0),
       std::nullopt, std::optional<std::size_t>(command.newPlayer.id));
 }
 

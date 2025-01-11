@@ -110,9 +110,14 @@ void CommandHandle::connectLobby(std::vector<uint8_t> buffer, IProtocol *protoco
   Command cmd;
 
   cmd.type = CommandType::CONNECTLOBBY;
-  int playloadSize = static_cast<int>(buffer[1]);
-  cmd.connectLobby.Nickname = std::string(buffer.begin() + 2, buffer.begin() + 2 + playloadSize);
+
+  int spaceshipId = static_cast<int>(buffer[1]);
+
+  int shootId = static_cast<int>(buffer[2]);
+  int playloadSize = static_cast<int>(buffer[3]);
+  cmd.connectLobby.spaceshipId = spaceshipId;
+  cmd.connectLobby.shootId = shootId;
+  cmd.connectLobby.Nickname = std::string(buffer.begin() + 4, buffer.begin() + 4 + playloadSize);
   cmd.id = static_cast<int>(buffer.back());
-  std::cout << "CONNECT LOBBY" << std::endl;
   queue->pushGameQueue(cmd);
 }

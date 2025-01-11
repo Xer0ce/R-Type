@@ -19,6 +19,7 @@ void Lobby::init() { _window->addButton(100, 100, 200, 50, "Start"); }
 sceneType
 Lobby::loop(eventType event,
             std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
+  auto &entityType = _ecs.get_components<EntityType>();
   Command command;
   auto key = _window->catchKey();
   float mouseX, mouseY;
@@ -28,6 +29,13 @@ Lobby::loop(eventType event,
     if (command.type == CommandType::STARTGAME) {
       _window->deleteTexts();
       _window->deleteButtons();
+      for (std::size_t i = 0; i < entityType.size(); ++i) {
+        if (entityType[i].has_value()) {
+          if (entityType[i] && entityType[i] == EntityType::Player) {
+            _ecs.kill_entity(Entities(i));
+          }
+        }
+      }
       return sceneType::HISTORY;
     }
     commandGame.executeCommandGame(command, _queue, &_ecs, _window);

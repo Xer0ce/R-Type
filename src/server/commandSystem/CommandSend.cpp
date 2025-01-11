@@ -64,6 +64,10 @@ void CommandSend::connect(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.repConnect.id));
 
+  binaryData.push_back(static_cast<uint8_t>(command.repConnect.spaceshipId));
+
+  binaryData.push_back(static_cast<uint8_t>(command.repConnect.shootId));
+
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.repConnect.positionX);
   binaryData.insert(binaryData.end(), positionXBytes,

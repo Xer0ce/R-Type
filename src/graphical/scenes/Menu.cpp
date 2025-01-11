@@ -98,8 +98,8 @@ Menu::loop(eventType event,
     _window->deleteTexts();
     _window->deleteButtons();
     _params->ip = "127.0.0.1";
-    _params->spaceshipId = 667;
-    _params->bulletId = 999;
+    _params->spaceshipId = 1;
+    _params->bulletId = 1;
     return sceneType::LOBBY;
   }
 

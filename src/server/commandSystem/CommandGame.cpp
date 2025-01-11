@@ -46,63 +46,72 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
 }
 
 void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
+  auto &entityType = ecs->get_components<EntityType>();
+  auto &nicknames = ecs->get_components<Nickname>();
+  auto &property = ecs->get_components<Property>();
+  auto &position = ecs->get_components<Position>();
   Command newCommand;
 
-  auto player = create_entity<EntityType::Player>(
-      *ecs, Position(400, 100), Velocity(), Health(),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}), Nickname(command.connect.Nickname));
-  std::cout << "caca" << std::endl;
-
-  newCommand.type = CommandType::REPCONNECT;
-  newCommand.repConnect.id = player;
-  newCommand.repConnect.positionX = 400;
-  newCommand.repConnect.positionY = 100;
-  newCommand.repConnect.Nickname = command.connect.Nickname;
-  newCommand.id = command.id;
-  std::cout << "cree le player avec id: " << player << std::endl;
-  queue->pushTcpQueue(newCommand);
-
-  Command newCommandPlayer;
-
-  newCommandPlayer.type = CommandType::NEWPLAYER;
-  newCommandPlayer.newPlayer.Nickname = command.connect.Nickname;
-  newCommandPlayer.newPlayer.id = player;
-  newCommandPlayer.newPlayer.positionX = 400;
-  newCommandPlayer.newPlayer.positionY = 100;
-  newCommandPlayer.id = command.id;
-
-  queue->pushTcpQueue(newCommandPlayer);
-
-  auto &entityType = ecs->get_components<EntityType>();
-  auto &entityPosition = ecs->get_components<Position>();
-
   for (std::size_t i = 0; i < entityType.size(); ++i) {
-    if (entityType[i].has_value() && entityPosition[i].has_value()) {
-      if (entityType[i] && entityType[i] == EntityType::Enemy) {
-        std::cout << "Create enemy pour 1 client" << std::endl;
-        Command newCommandEnemy;
-        newCommandEnemy.type = CommandType::CREATEENEMY;
-        newCommandEnemy.createEnemy.positionX = entityPosition[i]->x;
-        newCommandEnemy.createEnemy.positionY = entityPosition[i]->y;
-        newCommandEnemy.createEnemy.enemyId = i;
-        newCommandEnemy.id = command.id;
-        queue->pushTcpQueue(newCommandEnemy);
-      }
-      if (entityType[i] && entityType[i] == EntityType::Player) {
-        if (i != player) {
-          std::cout << "Create player pour 1 client" << std::endl;
-          Command newCommandPlayer;
-          newCommandPlayer.type = CommandType::CREATEPLAYER;
-          newCommandPlayer.createPlayer.Nickname = command.connect.Nickname;
-          newCommandPlayer.createPlayer.id = i;
-          newCommandPlayer.createPlayer.positionX = entityPosition[i]->x;
-          newCommandPlayer.createPlayer.positionY = entityPosition[i]->y;
-          newCommandPlayer.id = command.id;
-          queue->pushTcpQueue(newCommandPlayer);
-        }
+    if (entityType[i].has_value()) {
+      if (entityType[i] && entityType[i] == EntityType::Player && command.id == property[i]->sockedId) {
+        std::cout << "Player trouvé" << std::endl;
+        std::cout << "Player nickname: " << nicknames[i]->nickname << std::endl;
+        newCommand.type = CommandType::REPCONNECT;
+        newCommand.repConnect.id = i;
+        newCommand.repConnect.positionX = 400;
+        newCommand.repConnect.positionY = 100;
+        newCommand.repConnect.spaceshipId = property[i]->spaceshipId;
+        newCommand.repConnect.shootId = property[i]->shootId;
+        newCommand.repConnect.Nickname = nicknames[i]->nickname;
+        newCommand.id = property[i]->sockedId;
+
+        queue->pushTcpQueue(newCommand);
       }
     }
   }
+
+  // Command newCommandPlayer;
+
+  // newCommandPlayer.type = CommandType::NEWPLAYER;
+  // newCommandPlayer.newPlayer.Nickname = command.connect.Nickname;
+  // newCommandPlayer.newPlayer.id = player;
+  // newCommandPlayer.newPlayer.positionX = 400;
+  // newCommandPlayer.newPlayer.positionY = 100;
+  // newCommandPlayer.id = command.id;
+
+  // queue->pushTcpQueue(newCommandPlayer);
+
+  // auto &entityType = ecs->get_components<EntityType>();
+  // auto &entityPosition = ecs->get_components<Position>();
+
+  // for (std::size_t i = 0; i < entityType.size(); ++i) {
+  //   if (entityType[i].has_value() && entityPosition[i].has_value()) {
+  //     if (entityType[i] && entityType[i] == EntityType::Enemy) {
+  //       std::cout << "Create enemy pour 1 client" << std::endl;
+  //       Command newCommandEnemy;
+  //       newCommandEnemy.type = CommandType::CREATEENEMY;
+  //       newCommandEnemy.createEnemy.positionX = entityPosition[i]->x;
+  //       newCommandEnemy.createEnemy.positionY = entityPosition[i]->y;
+  //       newCommandEnemy.createEnemy.enemyId = i;
+  //       newCommandEnemy.id = command.id;
+  //       queue->pushTcpQueue(newCommandEnemy);
+  //     }
+  //     if (entityType[i] && entityType[i] == EntityType::Player) {
+  //       if (i != player) {
+  //         std::cout << "Create player pour 1 client" << std::endl;
+  //         Command newCommandPlayer;
+  //         newCommandPlayer.type = CommandType::CREATEPLAYER;
+  //         newCommandPlayer.createPlayer.Nickname = command.connect.Nickname;
+  //         newCommandPlayer.createPlayer.id = i;
+  //         newCommandPlayer.createPlayer.positionX = entityPosition[i]->x;
+  //         newCommandPlayer.createPlayer.positionY = entityPosition[i]->y;
+  //         newCommandPlayer.id = command.id;
+  //         queue->pushTcpQueue(newCommandPlayer);
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs) {
@@ -157,9 +166,7 @@ void CommandGame::connectLobby(Command command, Queue *queue, Registry *ecs) {
 
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(0, 0), Velocity(), Health(),
-      Draw({0, 0, 0, 0}, {0, 0, 0, 0}), Nickname(command.connectLobby.Nickname));
-
-  std::cout << "CONNECT LOBBY GAME" << std::endl;
+      Draw({0, 0, 0, 0}, {0, 0, 0, 0}), Nickname(command.connectLobby.Nickname), Property(command.connectLobby.spaceshipId, command.connectLobby.shootId, command.id));
 
   Command newCmd;
   newCmd.type = CommandType::NEWPLAYERLOBBY;

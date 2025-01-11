@@ -19,8 +19,7 @@ Game::Game() {
 
   _window = std::make_shared<Window>();
 
-  _tcp = std::make_shared<Tcp>("127.0.0.1", 4243);
-  _udp = std::make_shared<Udp>("127.0.0.1", 4242);
+
 
   _queue = std::make_shared<Queue>();
 
@@ -78,11 +77,20 @@ void Game::listen(IClient &protocol) {
 }
 
 void Game::init(std::string nickname, ChoosingParams *params) {
+  _tcp = std::make_shared<Tcp>(params->ip, 4243);
+  _udp = std::make_shared<Udp>(params->ip, 4242);
+
   _tcp->initSocket();
   _udp->initSocket();
 
   std::vector <uint8_t> connectLobby;
   connectLobby.push_back(0x06);
+
+  std::cout << "[PARAMS]" << params->spaceshipId << std::endl;
+  connectLobby.push_back(static_cast<uint8_t>(params->spaceshipId));
+  
+  connectLobby.push_back(static_cast<uint8_t>(params->bulletId));
+
   connectLobby.push_back(static_cast<uint8_t>(nickname.size()));
   for (size_t i = 0; i < nickname.size(); i++) {
     connectLobby.push_back(nickname[i]);
