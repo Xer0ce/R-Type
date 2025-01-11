@@ -7,12 +7,12 @@
 
 #include "Game.hpp"
 
-int main(void) {
+int main(int ac, char **av) {
   Game game;
 
   std::cout << "Current scene: " << game.getCurrentSceneName() << std::endl;
 
   game.load_component();
-  game.game();
+  game.game(std::string(av[1]));
   return 0;
 }

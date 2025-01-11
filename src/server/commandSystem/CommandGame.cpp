@@ -28,6 +28,10 @@ CommandGame::CommandGame() {
                                          Registry *ecs) {
     hit(command, queue, ecs);
   };
+  _commandMap[CommandType::CONNECTLOBBY] = [this](Command command, Queue *queue,
+                                                 Registry *ecs) {
+    connectLobby(command, queue, ecs);
+  };
 }
 
 CommandGame::~CommandGame() {}
@@ -144,5 +148,35 @@ void CommandGame::hit(Command command, Queue *queue, Registry *ecs) {
     cmd.type = CommandType::KILLENTITY;
     cmd.killEntity.entityId = command.hit.entityHit;
     queue->pushTcpQueue(cmd);
+  }
+}
+
+void CommandGame::connectLobby(Command command, Queue *queue, Registry *ecs) {
+  auto &entityType = ecs->get_components<EntityType>();
+  auto &nicknames = ecs->get_components<Nickname>();
+
+  auto player = create_entity<EntityType::Player>(
+      *ecs, Position(0, 0), Velocity(), Health(),
+      Draw({0, 0, 0, 0}, {0, 0, 0, 0}), Nickname(command.connectLobby.Nickname));
+
+  std::cout << "CONNECT LOBBY GAME" << std::endl;
+
+  Command newCmd;
+  newCmd.type = CommandType::NEWPLAYERLOBBY;
+  newCmd.newPlayerLobby.id = player;
+  newCmd.newPlayerLobby.Nickname = command.connectLobby.Nickname;
+  newCmd.id = command.id;
+  queue->pushTcpQueue(newCmd);
+
+  for (std::size_t i = 0; i < entityType.size(); ++i) {
+    if (entityType[i].has_value() && entityType[i] == EntityType::Player) {
+      if (i != player) {
+        newCmd.type = CommandType::GETUSERSLOBBY;
+        newCmd.getUsersLobby.Nickname = nicknames[i]->nickname;
+        newCmd.getUsersLobby.id = i;
+        newCmd.id = command.id;
+        queue->pushTcpQueue(newCmd);
+      }
+    }
   }
 }

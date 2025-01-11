@@ -77,10 +77,18 @@ void Game::listen(IClient &protocol) {
   }
 }
 
-void Game::init() {
+void Game::init(std::string nickname) {
   _tcp->initSocket();
   _udp->initSocket();
 
+  std::vector <uint8_t> connectLobby;
+  connectLobby.push_back(0x06);
+  connectLobby.push_back(static_cast<uint8_t>(nickname.size()));
+  for (size_t i = 0; i < nickname.size(); i++) {
+    connectLobby.push_back(nickname[i]);
+  }
+
+  _tcp->sendToServer(connectLobby);
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
 
   std::thread tcpThread([this]() { listen(*_tcp.get()); });
@@ -90,7 +98,7 @@ void Game::init() {
   udpThread.detach();
 }
 
-void Game::game() {
+void Game::game(std::string nickname) {
   std::chrono::time_point<std::chrono::steady_clock> next =
       std::chrono::steady_clock::now() + std::chrono::milliseconds(100);
   bool running = true;
@@ -114,8 +122,8 @@ void Game::game() {
     if (now > next)
       next += std::chrono::milliseconds(25);
     if (switchScene != sceneType::NO_SWITCH) {
-      if (switchScene != MENU)
-        init();
+      if (switchScene == LOBBY)
+        init(nickname);
       _currentScene = switchScene;
       _scenes[_currentScene]->setWindow(_window.get());
       _scenes[_currentScene]->setEcs(_ecs);

@@ -49,5 +49,6 @@ Lobby::loop(eventType event,
 
   _window->drawBackground();
   _window->drawButton();
+  _window->drawText();
   return sceneType::NO_SWITCH;
 }

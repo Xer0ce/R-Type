@@ -25,6 +25,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     startGame(buffer, protocol, queue);
   };
+  _commandMap[0x06] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                             Queue *queue) {
+    connectLobby(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -99,4 +103,16 @@ void CommandHandle::startGame(std::vector<uint8_t> buffer, IProtocol *protocol,
   cmd.type = CommandType::STARTGAME;
   queue->pushGameQueue(cmd);
   queue->pushTcpQueue(cmd);
+}
+
+void CommandHandle::connectLobby(std::vector<uint8_t> buffer, IProtocol *protocol,
+                                 Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::CONNECTLOBBY;
+  int playloadSize = static_cast<int>(buffer[1]);
+  cmd.connectLobby.Nickname = std::string(buffer.begin() + 2, buffer.begin() + 2 + playloadSize);
+  cmd.id = static_cast<int>(buffer.back());
+  std::cout << "CONNECT LOBBY" << std::endl;
+  queue->pushGameQueue(cmd);
 }

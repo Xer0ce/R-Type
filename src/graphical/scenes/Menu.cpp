@@ -99,6 +99,7 @@ Menu::loop(eventType event,
     _window->deleteButtons();
     return sceneType::LOBBY;
   }
+
   _window->drawBackground();
   _window->drawButton("menu");
   _window->createMenuPipe();

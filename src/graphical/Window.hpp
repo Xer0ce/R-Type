@@ -87,6 +87,8 @@ public:
 
   void deleteText(std::string text);
 
+  int getNumberText() { return _texts.size(); }
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;

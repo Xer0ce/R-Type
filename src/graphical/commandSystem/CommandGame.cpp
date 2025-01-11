@@ -36,6 +36,10 @@ CommandGame::CommandGame() {
                                            Registry *ecs, Window *window) {
     shoot(command, queue, ecs, window);
   };
+  _commandMap[CommandType::GETUSERSLOBBY] = [this](Command command, Queue *queue,
+                                                  Registry *ecs, Window *window) {
+    getUsersLobby(command, queue, ecs, window);
+  };
 }
 
 CommandGame::~CommandGame() {}
@@ -154,4 +158,13 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
       Velocity(50, 0),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, bulletTexture),
       std::optional<std::size_t>(command.shoot.playerId));
+}
+
+void CommandGame::getUsersLobby(Command command, Queue *queue, Registry *ecs,
+                                Window *window) {
+    int x = 500;
+    int y = window->getNumberText() * 100;
+
+    window->addText(command.getUsersLobby.Nickname, x, y, 500, 50, 37,
+                   "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
 }
