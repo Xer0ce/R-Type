@@ -101,6 +101,7 @@ History::loop(eventType event,
               std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
+  auto &nicknames = _ecs.get_components<Nickname>();
   Command command;
   std::chrono::time_point<std::chrono::steady_clock> now =
       std::chrono::steady_clock::now();

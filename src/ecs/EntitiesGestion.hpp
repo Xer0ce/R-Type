@@ -6,6 +6,7 @@
 #include "../graphical/Components/Health.hpp"
 #include "../graphical/Components/Position.hpp"
 #include "../graphical/Components/Velocity.hpp"
+#include "../graphical/Components/Nickname.hpp"
 #include "Entities.hpp"
 #include "Registry.hpp"
 
@@ -13,6 +14,7 @@ enum class EntityType { Player, Enemy, Projectile, Menu };
 
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
                               Health health, Draw draw,
+                              Nickname nickname,
                               std::optional<Control> control = std::nullopt,
                               std::optional<std::size_t> id = std::nullopt);
 

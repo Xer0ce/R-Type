@@ -65,6 +65,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
            {(int)command.repConnect.positionX,
             (int)command.repConnect.positionY, 50, 50},
            playerTexture),
+      Nickname(command.repConnect.Nickname),
       std::optional<Control>(Control()),
       std::optional<std::size_t>(command.repConnect.id));
 }
@@ -139,6 +140,7 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
            {(int)command.newPlayer.positionX, (int)command.newPlayer.positionY,
             50, 50},
            playerTexture),
+      Nickname(command.newPlayer.Nickname),
       std::nullopt, std::optional<std::size_t>(command.newPlayer.id));
 }
 
