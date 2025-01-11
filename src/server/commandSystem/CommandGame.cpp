@@ -138,14 +138,11 @@ void CommandGame::hit(Command command, Queue *queue, Registry *ecs) {
   auto &entityType = ecs->get_components<EntityType>();
   Command cmd;
 
-  if (entityType[command.hit.entityHit].has_value() &&
-      health[command.hit.entityHit].has_value()) {
-    health[command.hit.entityHit]->hp -= command.hit.damage;
-    if (health[command.hit.entityHit]->hp <= 0) {
-      ecs->kill_entity(Entities(command.hit.entityHit));
-      cmd.type = CommandType::KILLENTITY;
-      cmd.killEntity.entityId = command.hit.entityHit;
-      queue->pushTcpQueue(cmd);
-    }
+  health[command.hit.entityHit]->hp -= command.hit.damage;
+  if (health[command.hit.entityHit]->hp <= 0) {
+    ecs->kill_entity(Entities(command.hit.entityHit));
+    cmd.type = CommandType::KILLENTITY;
+    cmd.killEntity.entityId = command.hit.entityHit;
+    queue->pushTcpQueue(cmd);
   }
 }

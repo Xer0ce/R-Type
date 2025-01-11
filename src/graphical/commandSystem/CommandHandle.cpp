@@ -55,7 +55,6 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
                             Queue *queue) {
   Command cmd;
 
-
   int id = static_cast<int>(buffer[1]);
   float positionX = *reinterpret_cast<float *>(&buffer[2]);
   float positionY = *reinterpret_cast<float *>(&buffer[6]);
@@ -118,7 +117,6 @@ void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
                               Queue *queue) {
   Command cmd;
 
-
   cmd.type = CommandType::NEWPLAYER;
   cmd.newPlayer.id = static_cast<int>(buffer[1]);
   cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[2]);
@@ -142,7 +140,11 @@ void CommandHandle::killEntity(std::vector<uint8_t> buffer, IClient *protocol,
                                Queue *queue) {
   Command cmd;
 
+  std::cout << "Kill entity command receive" << std::endl;
+
   cmd.type = CommandType::KILLENTITY;
   cmd.killEntity.entityId = static_cast<int>(buffer[1]);
+
+  std::cout << "Entity id: " << cmd.killEntity.entityId << std::endl;
   queue->pushGameQueue(cmd);
 }

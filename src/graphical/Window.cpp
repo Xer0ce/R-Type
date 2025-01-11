@@ -27,8 +27,11 @@ void Window::init() {
   SDL_DisplayID displayID = SDL_GetPrimaryDisplay();
   const SDL_DisplayMode *currentMode = SDL_GetCurrentDisplayMode(displayID);
 
-  int windowWidth = static_cast<int>(currentMode->w * 0.9);
-  int windowHeight = static_cast<int>(currentMode->h * 0.8);
+  // int windowWidth = static_cast<int>(currentMode->w * 0.9);
+  // int windowHeight = static_cast<int>(currentMode->h * 0.8);
+
+  int windowWidth = 1200;
+  int windowHeight = 800;
 
   _window = SDL_CreateWindow("R-Type", windowWidth, windowHeight, 0);
   if (!_window) {
@@ -134,6 +137,32 @@ void Window::setBackground(SDL_Texture *texture) { _background = texture; }
 
 void Window::drawBackground() {
   SDL_RenderTexture(_renderer, _background, nullptr, nullptr);
+}
+
+keyType Window::catchKeyOnce() {
+  static std::vector<bool> prevKeyState(512, false);
+  const bool *keyState = SDL_GetKeyboardState(NULL);
+
+  std::vector<std::pair<SDL_Scancode, keyType>> keys = {
+      {SDL_SCANCODE_UP, UP},         {SDL_SCANCODE_RIGHT, RIGHT},
+      {SDL_SCANCODE_DOWN, DOWN},     {SDL_SCANCODE_LEFT, LEFT},
+      {SDL_SCANCODE_ESCAPE, ESCAPE}, {SDL_SCANCODE_SPACE, SPACE}};
+
+  for (const auto &key : keys) {
+    SDL_Scancode scancode = key.first;
+    keyType action = key.second;
+
+    if (keyState[scancode] && !prevKeyState[scancode]) {
+      prevKeyState[scancode] = true;
+      return action;
+    }
+
+    if (!keyState[scancode]) {
+      prevKeyState[scancode] = false;
+    }
+  }
+
+  return NONE;
 }
 
 keyType Window::catchKey() {

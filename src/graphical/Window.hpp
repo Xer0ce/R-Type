@@ -71,6 +71,8 @@ public:
 
   keyType catchKey();
 
+  keyType catchKeyOnce();
+
   SDL_Event catchEvent();
 
   SDL_Renderer *getRenderer() { return _renderer; }

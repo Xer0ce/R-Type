@@ -15,7 +15,9 @@ public:
   History();
   ~History();
 
-  sceneType loop(eventType event) override;
+  sceneType
+  loop(eventType event,
+       std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
   void control_system(keyType key);
 
