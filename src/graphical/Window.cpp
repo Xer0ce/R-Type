@@ -196,3 +196,11 @@ void Window::deleteText(std::string text) {
     }
   }
 }
+
+void Window::setTextPos(std::string text, int x, int y) {
+  for (auto &t : _texts) {
+    if (t.getText() == text) {
+      t.setPos(x, y);
+    }
+  }
+}

@@ -85,6 +85,8 @@ public:
 
   void deleteText(std::string text);
 
+  void setTextPos(std::string text, int x, int y);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
