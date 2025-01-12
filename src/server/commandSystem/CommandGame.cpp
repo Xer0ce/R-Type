@@ -55,8 +55,6 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value()) {
       if (entityType[i] && entityType[i] == EntityType::Player && command.id == property[i]->sockedId) {
-        std::cout << "Player trouvé" << std::endl;
-        std::cout << "Player nickname: " << nicknames[i]->nickname << std::endl;
         newCommand.type = CommandType::REPCONNECT;
         newCommand.repConnect.id = i;
         newCommand.repConnect.positionX = 400;
