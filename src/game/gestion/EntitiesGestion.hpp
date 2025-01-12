@@ -50,19 +50,19 @@ Entities create_enemy(Registry &r, AiType type) {
   std::cout << random_y << std::endl;
 
   if constexpr (T == EnemyType::Pion) {
-    return create_entity<EntityType::Enemy>(r, Position(800, random_y), Velocity(), Health(30), Draw({}, {}, nullptr), type);
+    return create_entity<EntityType::Enemy>(r, Position(800, 0), Velocity(), Health(30), Draw({}, {}, nullptr), type);
   }
   if constexpr (T == EnemyType::Balourd) {
-    return create_entity<EntityType::Enemy>(r, Position(800, random_y), Velocity(), Health(50), Draw({}, {}, nullptr), type);
+    return create_entity<EntityType::Enemy>(r, Position(800, 15), Velocity(), Health(50), Draw({}, {}, nullptr), type);
   }
   if constexpr (T == EnemyType::Zinzolin) {
-    return create_entity<EntityType::Enemy>(r, Position(800, random_y), Velocity(), Health(25), Draw({}, {}, nullptr), type);
+    return create_entity<EntityType::Enemy>(r, Position(800, 30), Velocity(), Health(25), Draw({}, {}, nullptr), type);
   }
   if constexpr (T == EnemyType::Boss) {
-    return create_entity<EntityType::Enemy>(r, Position(800, random_y), Velocity(), Health(100), Draw({}, {}, nullptr), type);
+    return create_entity<EntityType::Enemy>(r, Position(800, 45), Velocity(), Health(100), Draw({}, {}, nullptr), type);
   }
   if constexpr (T == EnemyType::BigBoss) {
-    return create_entity<EntityType::Enemy>(r, Position(800, 0), Velocity(), Health(300), Draw({}, {}, nullptr), type);
+    return create_entity<EntityType::Enemy>(r, Position(800, 60), Velocity(), Health(300), Draw({}, {}, nullptr), type);
   }
 }
 

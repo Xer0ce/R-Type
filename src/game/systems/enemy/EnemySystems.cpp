@@ -24,12 +24,8 @@ void call_enemy_ai(Registry *ecs, AiType type) {
 }
 
 void enemy_system(Registry *ecs) {
-    auto &entityType = ecs->get_components<EntityType>();
-    auto &aiType = ecs->get_components<AiType>();
-
-    for (std::size_t i = 0; i < entityType.size(); i++) {
-        if (entityType[i] == EntityType::Enemy) {
-            call_enemy_ai(ecs, aiType[i].value());
-        }
-    }
+    call_enemy_ai(ecs, AiType::Aggressive);
+    call_enemy_ai(ecs, AiType::Passive);
+    call_enemy_ai(ecs, AiType::Balzy);
+    call_enemy_ai(ecs, AiType::Boss);
 }

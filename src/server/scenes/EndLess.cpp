@@ -27,6 +27,16 @@ void EndLess::position_system(float deltaTime) {
   for (std::size_t i = 0; i < position.size(); i++) {
     position[i]->x += velocity[i]->x * deltaTime;
     position[i]->y += velocity[i]->y * deltaTime;
+
+    if (entityType[i] == EntityType::Enemy) {
+      std::cout << "SEND MOUVE : " << i << std::endl;
+      Command command;
+      command.type = CommandType::MOVE;
+      command.move.positionX = position[i]->x;
+      command.move.positionY = position[i]->y;
+      command.move.entityId = i;
+      _queue->pushUdpQueue(command);
+    }
   }
 }
 
