@@ -25,6 +25,7 @@ enum CommandType {
   CONNECTLOBBY,
   GETUSERSLOBBY,
   NEWPLAYERLOBBY,
+  COOLDOWN,
 };
 
 struct createEnemy {
@@ -104,6 +105,10 @@ struct newPlayerLobby {
   std::size_t id;
 };
 
+struct cooldown {
+  int time;
+};
+
 struct Command {
   CommandType type;
   struct Connect connect;
@@ -118,5 +123,6 @@ struct Command {
   struct ConnectLobby connectLobby;
   struct getUsersLobby getUsersLobby;
   struct newPlayerLobby newPlayerLobby;
+  struct cooldown cooldown;
   int id;
 };

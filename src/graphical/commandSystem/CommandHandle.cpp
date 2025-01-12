@@ -45,6 +45,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     newPlayerLobby(buffer, protocol, queue);
   };
+  _commandMap[0x12] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    cooldown(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -184,5 +188,13 @@ void CommandHandle::newPlayerLobby(std::vector<uint8_t> buffer, IClient *protoco
   int playloadSize = static_cast<int>(buffer[2]);
   std::string nickname(buffer.begin() + 3, buffer.begin() + 3 + playloadSize);
   cmd.getUsersLobby.Nickname = nickname;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::cooldown(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::COOLDOWN;
+  cmd.cooldown.time = static_cast<int>(buffer[1]);
   queue->pushGameQueue(cmd);
 }

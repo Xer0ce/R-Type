@@ -46,6 +46,10 @@ CommandSend::CommandSend() {
                                                   IProtocol *protocol) {
     newPlayerLobby(command, protocol);
   };
+  _commandMap[CommandType::COOLDOWN] = [this](Command command,
+                                               IProtocol *protocol) {
+    cooldown(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -165,7 +169,7 @@ void CommandSend::createEnemy(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0xFF);
 
-  protocol->sendData(command.id, binaryData);
+  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::killEntity(Command command, IProtocol *protocol) {
@@ -294,6 +298,18 @@ void CommandSend::newPlayerLobby(Command command, IProtocol *protocol) {
   binaryData.push_back(0xFF);
 
   std::cout << "New player lobby command send" << std::endl;
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::cooldown(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x12);
+
+  binaryData.push_back(static_cast<uint8_t>(command.cooldown.time));
+
+  binaryData.push_back(0xFF);
 
   protocol->sendDataToAll(binaryData);
 }

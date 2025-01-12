@@ -123,9 +123,12 @@ History::loop(eventType event,
   }
 
   if (now > deltaTime) {
-    control_system(key);
-    shoot_system(key);
-    position_system(1);
+    if (_window->getAllowToInteract()) {
+      _window->deleteText("0");
+      control_system(key);
+      shoot_system(key);
+      position_system(1);
+    }
   }
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())

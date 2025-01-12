@@ -40,6 +40,10 @@ CommandGame::CommandGame() {
                                                   Registry *ecs, Window *window) {
     getUsersLobby(command, queue, ecs, window);
   };
+  _commandMap[CommandType::COOLDOWN] = [this](Command command, Queue *queue,
+                                            Registry *ecs, Window *window) {
+    cooldown(command, queue, ecs, window);
+  };
 }
 
 CommandGame::~CommandGame() {}
@@ -184,4 +188,14 @@ void CommandGame::getUsersLobby(Command command, Queue *queue, Registry *ecs,
 
     window->addText(command.getUsersLobby.Nickname, x, y, 500, 50, 37,
                    "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
+}
+
+void CommandGame::cooldown(Command command, Queue *queue, Registry *ecs,
+                           Window *window) {
+  window->deleteText(std::to_string(command.cooldown.time + 1));
+  window->addText(std::to_string(command.cooldown.time), 550, 350, 200, 200, 200,
+                  "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
+  if (command.cooldown.time == 0) {
+    window->setAllowToInteract(true);
+  }
 }
