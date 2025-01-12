@@ -14,7 +14,10 @@ Lobby::Lobby() {
 
 Lobby::~Lobby() {}
 
-void Lobby::init() { _window->addButton(100, 100, 200, 50, "Start"); }
+void Lobby::init() { 
+  _window->addButton(700, 500, 150, 35, "Start"); 
+  _window->setBackground(_window->loadTexture("../src/graphical/assets/lobby.png"));
+}
 
 sceneType
 Lobby::loop(eventType event,

@@ -169,8 +169,10 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
 
 void CommandGame::getUsersLobby(Command command, Queue *queue, Registry *ecs,
                                 Window *window) {
-    int x = 500;
-    int y = window->getNumberText() * 100;
+    int x = 550;
+    int y = 250;
+    
+    y += window->getNumberText() * 60;
 
     window->addText(command.getUsersLobby.Nickname, x, y, 500, 50, 37,
                    "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});

@@ -16,10 +16,12 @@ History::History() {
 History::~History() {}
 
 void History::init() {
+  _window->setBackground(_window->loadTexture("../src/graphical/assets/level1.png"));
   Command command;
   command.type = CommandType::CONNECT;
   command.connect.Nickname = "Player";
   _queue->pushTcpQueue(command);
+
 }
 
 void History::shoot_system(keyType key) {
