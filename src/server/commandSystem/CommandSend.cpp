@@ -38,6 +38,18 @@ CommandSend::CommandSend() {
                                                IProtocol *protocol) {
     startGame(command, protocol);
   };
+  _commandMap[CommandType::GETUSERSLOBBY] = [this](Command command,
+                                                   IProtocol *protocol) {
+    getUsersLobby(command, protocol);
+  };
+  _commandMap[CommandType::NEWPLAYERLOBBY] = [this](Command command,
+                                                    IProtocol *protocol) {
+    newPlayerLobby(command, protocol);
+  };
+  _commandMap[CommandType::COOLDOWN] = [this](Command command,
+                                              IProtocol *protocol) {
+    cooldown(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -55,6 +67,10 @@ void CommandSend::connect(Command command, IProtocol *protocol) {
   binaryData.push_back(0x01);
 
   binaryData.push_back(static_cast<uint8_t>(command.repConnect.id));
+
+  binaryData.push_back(static_cast<uint8_t>(command.repConnect.spaceshipId));
+
+  binaryData.push_back(static_cast<uint8_t>(command.repConnect.shootId));
 
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.repConnect.positionX);
@@ -153,7 +169,7 @@ void CommandSend::createEnemy(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0xFF);
 
-  protocol->sendData(command.id, binaryData);
+  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::killEntity(Command command, IProtocol *protocol) {
@@ -233,6 +249,65 @@ void CommandSend::startGame(Command command, IProtocol *protocol) {
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x09);
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::getUsersLobby(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x10);
+
+  binaryData.push_back(static_cast<uint8_t>(command.getUsersLobby.id));
+
+  std::string playerName = command.getUsersLobby.Nickname;
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.getUsersLobby.Nickname.size()));
+
+  for (auto &c : playerName)
+    binaryData.push_back(static_cast<uint8_t>(c));
+
+  binaryData.push_back(0xFF);
+
+  std::cout << "Get users lobby command send" << std::endl;
+
+  protocol->sendData(command.id, binaryData);
+}
+
+void CommandSend::newPlayerLobby(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x11);
+
+  binaryData.push_back(static_cast<uint8_t>(command.newPlayerLobby.id));
+
+  std::string playerName = command.newPlayerLobby.Nickname;
+
+  std::cout << "Nickname command send : " << command.newPlayerLobby.Nickname
+            << std::endl;
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.newPlayerLobby.Nickname.size()));
+
+  for (auto &c : playerName)
+    binaryData.push_back(static_cast<uint8_t>(c));
+
+  binaryData.push_back(0xFF);
+
+  std::cout << "New player lobby command send" << std::endl;
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::cooldown(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x12);
+
+  binaryData.push_back(static_cast<uint8_t>(command.cooldown.time));
 
   binaryData.push_back(0xFF);
 
