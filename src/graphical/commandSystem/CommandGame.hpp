@@ -32,6 +32,9 @@ private:
                    Window *window);
   void newPlayer(Command command, Queue *queue, Registry *ecs, Window *window);
   void shoot(Command command, Queue *queue, Registry *ecs, Window *window);
+  void getUsersLobby(Command command, Queue *queue, Registry *ecs,
+                     Window *window);
+  void cooldown(Command command, Queue *queue, Registry *ecs, Window *window);
 
   std::map<CommandType,
            std::function<void(Command, Queue *, Registry *, Window *)>>

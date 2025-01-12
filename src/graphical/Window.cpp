@@ -10,7 +10,7 @@
 #include <iostream>
 #include <vector>
 
-Window::Window() {}
+Window::Window() { _allowToInteract = false; }
 
 Window::~Window() {}
 
@@ -222,6 +222,14 @@ void Window::deleteText(std::string text) {
   for (auto &t : _texts) {
     if (t.getText() == text) {
       t.destroyText();
+    }
+  }
+}
+
+void Window::setTextPos(std::string text, int x, int y) {
+  for (auto &t : _texts) {
+    if (t.getText() == text) {
+      t.setPos(x, y);
     }
   }
 }

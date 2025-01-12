@@ -18,3 +18,5 @@ void AScene::setWindow(Window *window) { _window = window; }
 void AScene::setEcs(Registry ecs) { _ecs = ecs; }
 
 void AScene::setQueue(Queue *queue) { _queue = queue; }
+
+void AScene::setChoosingParams(ChoosingParams *params) { _params = params; }

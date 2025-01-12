@@ -15,6 +15,7 @@
 #include "../Components/Health.hpp"
 #include "../Components/Position.hpp"
 #include "../Components/Velocity.hpp"
+#include "../Components/Nickname.hpp"
 #include "IScene.hpp"
 
 class AScene : public IScene {
@@ -30,9 +31,12 @@ public:
 
   void setQueue(Queue *queue) override;
 
+  void setChoosingParams(ChoosingParams *params) override;
+
 protected:
   std::string _name;
   Window *_window;
   Registry _ecs;
   Queue *_queue;
+  ChoosingParams *_params;
 };

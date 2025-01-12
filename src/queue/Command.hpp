@@ -22,6 +22,10 @@ enum CommandType {
   CREATEENEMY,
   EMPTY,
   STARTGAME,
+  CONNECTLOBBY,
+  GETUSERSLOBBY,
+  NEWPLAYERLOBBY,
+  COOLDOWN,
 };
 
 struct createEnemy {
@@ -34,6 +38,8 @@ struct repConnect {
   float positionX;
   float positionY;
   int id;
+  int spaceshipId;
+  int shootId;
   std::string Nickname;
 };
 
@@ -83,6 +89,26 @@ struct CreatePlayer {
   std::string Nickname;
 };
 
+struct ConnectLobby {
+  std::string Nickname;
+  int spaceshipId;
+  int shootId;
+};
+
+struct getUsersLobby {
+  std::string Nickname;
+  std::size_t id;
+};
+
+struct newPlayerLobby {
+  std::string Nickname;
+  std::size_t id;
+};
+
+struct cooldown {
+  int time;
+};
+
 struct Command {
   CommandType type;
   struct Connect connect;
@@ -94,5 +120,9 @@ struct Command {
   struct createEnemy createEnemy;
   struct NewPlayer newPlayer;
   struct CreatePlayer createPlayer;
+  struct ConnectLobby connectLobby;
+  struct getUsersLobby getUsersLobby;
+  struct newPlayerLobby newPlayerLobby;
+  struct cooldown cooldown;
   int id;
 };
