@@ -104,6 +104,7 @@ History::loop(eventType event,
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
   auto &nicknames = _ecs.get_components<Nickname>();
+  auto &entities = _ecs.get_components<EntityType>();
   Command command;
   std::chrono::time_point<std::chrono::steady_clock> now =
       std::chrono::steady_clock::now();
@@ -129,7 +130,7 @@ History::loop(eventType event,
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
-    if (nicknames[i].has_value()) {
+    if (entities[i] == EntityType::Player) {
       _window->setTextPos(nicknames[i]->nickname, positions[i]->x,
                           positions[i]->y - 30);
     }

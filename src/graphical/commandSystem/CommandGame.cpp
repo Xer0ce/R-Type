@@ -128,12 +128,18 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *enemyTexture =
       window->loadTexture("../src/graphical/assets/enemy.png");
 
+  std::cout << "[GamecommandGRAPHIC] Enemy id : " << command.createEnemy.enemyId << std::endl;
+  std::cout << "[GamecommandGRAPHIC]Enemy positionX : " << command.createEnemy.positionX
+            << std::endl;
+  std::cout << "[GamecommandGRAPHIC]Enemy positionY : " << command.createEnemy.positionY << std::endl;
+
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
       Velocity(0, -50), Health(1),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, enemyTexture),
       std::optional<std::size_t>(command.createEnemy.enemyId));
+  std::cout << "Enemy created" << std::endl;
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
@@ -153,6 +159,8 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
       Nickname(command.newPlayer.Nickname),
       Property(0, 0, 0),
       std::nullopt, std::optional<std::size_t>(command.newPlayer.id));
+      window->addText(command.newPlayer.Nickname, command.newPlayer.positionX, command.newPlayer.positionY, 50, 50, 20,
+                    "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
 }
 
 void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,

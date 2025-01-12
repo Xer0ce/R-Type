@@ -122,6 +122,10 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.createEnemy.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.createEnemy.positionY = *reinterpret_cast<float *>(&buffer[6]);
 
+  std::cout << "Enemy id: " << cmd.createEnemy.enemyId << std::endl;
+  std::cout << "Enemy positionX: " << cmd.createEnemy.positionX << std::endl;
+  std::cout << "Enemy positionY: " << cmd.createEnemy.positionY << std::endl;
+
   queue->pushGameQueue(cmd);
 }
 
