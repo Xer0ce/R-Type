@@ -169,7 +169,8 @@ void CommandHandle::killEntity(std::vector<uint8_t> buffer, IClient *protocol,
   queue->pushGameQueue(cmd);
 }
 
-void CommandHandle::getUsersLobby(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) {
+void CommandHandle::getUsersLobby(std::vector<uint8_t> buffer,
+                                  IClient *protocol, Queue *queue) {
   Command cmd;
 
   cmd.type = CommandType::GETUSERSLOBBY;
@@ -180,7 +181,8 @@ void CommandHandle::getUsersLobby(std::vector<uint8_t> buffer, IClient *protocol
   queue->pushGameQueue(cmd);
 }
 
-void CommandHandle::newPlayerLobby(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) {
+void CommandHandle::newPlayerLobby(std::vector<uint8_t> buffer,
+                                   IClient *protocol, Queue *queue) {
   Command cmd;
 
   cmd.type = CommandType::GETUSERSLOBBY;
@@ -191,7 +193,8 @@ void CommandHandle::newPlayerLobby(std::vector<uint8_t> buffer, IClient *protoco
   queue->pushGameQueue(cmd);
 }
 
-void CommandHandle::cooldown(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue) {
+void CommandHandle::cooldown(std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
   Command cmd;
 
   cmd.type = CommandType::COOLDOWN;

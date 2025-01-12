@@ -19,8 +19,6 @@ Game::Game() {
 
   _window = std::make_shared<Window>();
 
-
-
   _queue = std::make_shared<Queue>();
 
   commandSend = CommandSend();
@@ -83,12 +81,12 @@ void Game::init(std::string nickname, ChoosingParams *params) {
   _tcp->initSocket();
   _udp->initSocket();
 
-  std::vector <uint8_t> connectLobby;
+  std::vector<uint8_t> connectLobby;
   connectLobby.push_back(0x06);
 
   std::cout << "[PARAMS]" << params->spaceshipId << std::endl;
   connectLobby.push_back(static_cast<uint8_t>(params->spaceshipId));
-  
+
   connectLobby.push_back(static_cast<uint8_t>(params->bulletId));
 
   connectLobby.push_back(static_cast<uint8_t>(nickname.size()));

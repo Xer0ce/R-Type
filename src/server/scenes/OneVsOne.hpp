@@ -19,7 +19,7 @@ public:
     return sceneType::NO_SWITCH;
   };
 
-  void init() override{};
+  void init() override {};
 
 private:
 };

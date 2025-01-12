@@ -9,7 +9,7 @@
 #include <iostream>
 
 struct Nickname {
-    std::string nickname;
+  std::string nickname;
 
-    Nickname(std::string nickname = "Player") : nickname(nickname) {};
+  Nickname(std::string nickname = "Player") : nickname(nickname){};
 };

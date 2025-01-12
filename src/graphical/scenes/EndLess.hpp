@@ -14,7 +14,7 @@ public:
   EndLess();
   ~EndLess();
 
-  void init() override{};
+  void init() override {};
 
   sceneType
   loop(eventType event,

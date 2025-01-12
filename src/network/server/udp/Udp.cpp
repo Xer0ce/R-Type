@@ -32,7 +32,8 @@ bool UDP::initializeSocket() {
     return false;
   }
 
-  if (setsockopt(_socket, SOL_SOCKET, SO_RCVTIMEO, &_timeout, sizeof(_timeout)) < 0) {
+  if (setsockopt(_socket, SOL_SOCKET, SO_RCVTIMEO, &_timeout,
+                 sizeof(_timeout)) < 0) {
     throw std::runtime_error("Failed to set socket timeout.");
     return false;
   }

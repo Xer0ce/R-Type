@@ -12,6 +12,6 @@ struct Property {
   int shootId;
   int sockedId;
 
-  Property(int spaceshipId = 0, int shootId = 0, int sockedId = 0) : spaceshipId(spaceshipId), shootId(shootId), sockedId(sockedId) {}
+  Property(int spaceshipId = 0, int shootId = 0, int sockedId = 0)
+      : spaceshipId(spaceshipId), shootId(shootId), sockedId(sockedId) {}
 };
-

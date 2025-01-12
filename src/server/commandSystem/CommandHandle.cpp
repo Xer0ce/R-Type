@@ -105,8 +105,8 @@ void CommandHandle::startGame(std::vector<uint8_t> buffer, IProtocol *protocol,
   queue->pushTcpQueue(cmd);
 }
 
-void CommandHandle::connectLobby(std::vector<uint8_t> buffer, IProtocol *protocol,
-                                 Queue *queue) {
+void CommandHandle::connectLobby(std::vector<uint8_t> buffer,
+                                 IProtocol *protocol, Queue *queue) {
   Command cmd;
 
   cmd.type = CommandType::CONNECTLOBBY;
@@ -117,7 +117,8 @@ void CommandHandle::connectLobby(std::vector<uint8_t> buffer, IProtocol *protoco
   int playloadSize = static_cast<int>(buffer[3]);
   cmd.connectLobby.spaceshipId = spaceshipId;
   cmd.connectLobby.shootId = shootId;
-  cmd.connectLobby.Nickname = std::string(buffer.begin() + 4, buffer.begin() + 4 + playloadSize);
+  cmd.connectLobby.Nickname =
+      std::string(buffer.begin() + 4, buffer.begin() + 4 + playloadSize);
   cmd.id = static_cast<int>(buffer.back());
   queue->pushGameQueue(cmd);
 }

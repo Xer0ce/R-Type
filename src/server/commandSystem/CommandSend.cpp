@@ -39,15 +39,15 @@ CommandSend::CommandSend() {
     startGame(command, protocol);
   };
   _commandMap[CommandType::GETUSERSLOBBY] = [this](Command command,
-                                                  IProtocol *protocol) {
+                                                   IProtocol *protocol) {
     getUsersLobby(command, protocol);
   };
   _commandMap[CommandType::NEWPLAYERLOBBY] = [this](Command command,
-                                                  IProtocol *protocol) {
+                                                    IProtocol *protocol) {
     newPlayerLobby(command, protocol);
   };
   _commandMap[CommandType::COOLDOWN] = [this](Command command,
-                                               IProtocol *protocol) {
+                                              IProtocol *protocol) {
     cooldown(command, protocol);
   };
 }

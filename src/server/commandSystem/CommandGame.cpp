@@ -29,7 +29,7 @@ CommandGame::CommandGame() {
     hit(command, queue, ecs);
   };
   _commandMap[CommandType::CONNECTLOBBY] = [this](Command command, Queue *queue,
-                                                 Registry *ecs) {
+                                                  Registry *ecs) {
     connectLobby(command, queue, ecs);
   };
 }
@@ -56,7 +56,8 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value()) {
-      if (entityType[i] && entityType[i] == EntityType::Player && command.id == property[i]->sockedId) {
+      if (entityType[i] && entityType[i] == EntityType::Player &&
+          command.id == property[i]->sockedId) {
         commandRepConnect.type = CommandType::REPCONNECT;
         commandRepConnect.repConnect.id = i;
         commandRepConnect.repConnect.positionX = position[i]->x;
@@ -151,7 +152,9 @@ void CommandGame::connectLobby(Command command, Queue *queue, Registry *ecs) {
 
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(0, 0), Velocity(), Health(),
-      Draw({0, 0, 0, 0}, {0, 0, 0, 0}), Nickname(command.connectLobby.Nickname), Property(command.connectLobby.spaceshipId, command.connectLobby.shootId, command.id));
+      Draw({0, 0, 0, 0}, {0, 0, 0, 0}), Nickname(command.connectLobby.Nickname),
+      Property(command.connectLobby.spaceshipId, command.connectLobby.shootId,
+               command.id));
 
   Command newCmd;
   newCmd.type = CommandType::NEWPLAYERLOBBY;
