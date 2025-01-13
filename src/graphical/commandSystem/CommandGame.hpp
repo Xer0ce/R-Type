@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../../ecs/EntitiesGestion.hpp"
+#include "../../game/gestion/EntitiesGestion.hpp"
 #include "../../ecs/Registry.hpp"
 #include "../../queue/Command.hpp"
 #include "../../queue/Queue.hpp"

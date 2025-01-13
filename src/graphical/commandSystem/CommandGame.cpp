@@ -146,6 +146,7 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
       Velocity(0, -50), Health(1),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, enemyTexture),
+      AiType::Aggressive,
       std::optional<std::size_t>(command.createEnemy.enemyId));
   std::cout << "Enemy created" << std::endl;
 }
