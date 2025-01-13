@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include "../game/gestion/EntitiesGestion.hpp"
 #include "../ecs/Registry.hpp"
+#include "../game/Components/Components.hpp"
+#include "../game/gestion/EntitiesGestion.hpp"
 #include "../network/client/IClient.hpp"
 #include "../network/client/Tcp.hpp"
 #include "../network/client/Udp.hpp"
 #include "../queue/Queue.hpp"
-#include "../game/Components/Components.hpp"
 #include "Utils.hpp"
 #include "Window.hpp"
 #include "commandSystem/CommandHandle.hpp"

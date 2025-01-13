@@ -8,8 +8,8 @@
 #pragma once
 
 #include "../../ecs/Registry.hpp"
-#include "../../game/gestion/EntitiesGestion.hpp"
 #include "../../game/Components/Components.hpp"
+#include "../../game/gestion/EntitiesGestion.hpp"
 #include "IScene.hpp"
 
 class AScene : public IScene {

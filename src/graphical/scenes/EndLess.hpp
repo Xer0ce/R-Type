@@ -7,20 +7,19 @@
 
 #pragma once
 
-#include "AScene.hpp"
 #include "../commandSystem/CommandGame.hpp"
+#include "AScene.hpp"
 
 class EndLess : public AScene {
 public:
   EndLess();
   ~EndLess();
 
-  void init() override ;
+  void init() override;
 
   void control_system(keyType key);
 
   void position_system(float deltaTime);
-
 
   sceneType
   loop(eventType event,

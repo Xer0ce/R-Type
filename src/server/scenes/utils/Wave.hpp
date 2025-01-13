@@ -8,26 +8,25 @@
 #ifndef WAVE_HPP
 #define WAVE_HPP
 
-#include <iostream>
-#include <memory>
 #include "../../../ecs/Registry.hpp"
 #include "nlohmann/json.hpp"
+#include <iostream>
+#include <memory>
 
 using json = nlohmann::json;
 
 class Wave {
-  public:
-    Wave(Registry *ecs) : _ecs(ecs) {};
-    Wave() {};
-    ~Wave() {};
-    void start() {};
-    void load(std::string path);
-    void load_enemy(const json& enemy);
-    void factory_call(const json& enemy);
-  private:
-    Registry *_ecs;
+public:
+  Wave(Registry *ecs) : _ecs(ecs){};
+  Wave(){};
+  ~Wave(){};
+  void start() {};
+  void load(std::string path);
+  void load_enemy(const json &enemy);
+  void factory_call(const json &enemy);
+
+private:
+  Registry *_ecs;
 };
 
-
-
-#endif //WAVE_HPP
+#endif // WAVE_HPP

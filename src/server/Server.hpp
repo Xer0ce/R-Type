@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "../game/gestion/EntitiesGestion.hpp"
 #include "../ecs/Registry.hpp"
 #include "../game/Components/Components.hpp"
+#include "../game/gestion/EntitiesGestion.hpp"
 #include "../graphical/Utils.hpp"
 #include "../network/server/tcp/Tcp.hpp"
 #include "../network/server/udp/Udp.hpp"

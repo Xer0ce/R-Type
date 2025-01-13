@@ -11,9 +11,9 @@
 #include "Control.hpp"
 #include "Draw.hpp"
 #include "Health.hpp"
-#include "Position.hpp"
-#include "Velocity.hpp"
 #include "Nickname.hpp"
+#include "Position.hpp"
 #include "Property.hpp"
+#include "Velocity.hpp"
 
-#endif //COMPONENTS_HPP
+#endif // COMPONENTS_HPP

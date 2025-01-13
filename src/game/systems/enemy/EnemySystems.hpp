@@ -6,10 +6,10 @@
 */
 #ifndef ENEMYSYTEMS_HPP
 #define ENEMYSYTEMS_HPP
-#include <map>
 #include "../../../ecs/Registry.hpp"
 #include "../../Components/Components.hpp"
 #include "../../gestion/EntitiesGestion.hpp"
+#include <map>
 
 void aggresive_ai(Registry *ecs);
 void balzy_ai(Registry *ecs);
@@ -19,6 +19,4 @@ void passive_ai(Registry *ecs);
 void call_enemy_ai(Registry *ecs, AiType type);
 void enemy_system(Registry *ecs);
 
-
-
-#endif //ENEMYSYTEMS_HPP
+#endif // ENEMYSYTEMS_HPP

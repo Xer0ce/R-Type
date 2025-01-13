@@ -7,9 +7,7 @@
 
 #include "EndLess.hpp"
 
-EndLess::EndLess() {
-  _name = "EndLess";
-}
+EndLess::EndLess() { _name = "EndLess"; }
 
 EndLess::~EndLess() {}
 
@@ -39,7 +37,8 @@ void EndLess::position_system(float deltaTime) {
   }
 }
 
-sceneType EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
+sceneType
+EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   Command command;
   std::chrono::time_point<std::chrono::steady_clock> now =
       std::chrono::steady_clock::now();

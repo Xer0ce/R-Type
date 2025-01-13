@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "../../game/gestion/EntitiesGestion.hpp"
 #include "../../ecs/Registry.hpp"
-#include "../../queue/Queue.hpp"
 #include "../../game/Components/Components.hpp"
+#include "../../game/gestion/EntitiesGestion.hpp"
+#include "../../queue/Queue.hpp"
 #include "IScene.hpp"
 
 class AScene : public IScene {
