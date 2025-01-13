@@ -7,7 +7,9 @@
 
 #include "GlobalSystem.hpp"
 
-void position_system_net(float deltaTime, Registry *ecs, Queue *queue, std::chrono::time_point<std::chrono::steady_clock> _next) {
+void position_system_net(
+    float deltaTime, Registry *ecs, Queue *queue,
+    std::chrono::time_point<std::chrono::steady_clock> _next) {
   auto &velocity = ecs->get_components<Velocity>();
   auto &position = ecs->get_components<Position>();
   auto &entityType = ecs->get_components<EntityType>();

@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include "utils/Wave.hpp"
 #include "../../ecs/Registry.hpp"
 #include "../../game/Components/Components.hpp"
 #include "../../game/gestion/EntitiesGestion.hpp"
 #include "../../game/systems/enemy/EnemySystems.hpp"
 #include "../../game/systems/global/GlobalSystem.hpp"
 #include "IScene.hpp"
+#include "utils/Wave.hpp"
 
 class AScene : public IScene {
 public:
