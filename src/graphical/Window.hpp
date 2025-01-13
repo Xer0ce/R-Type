@@ -92,7 +92,13 @@ public:
 
   void deleteText(std::string text);
 
+  int getNumberText() { return _texts.size(); }
+
   void setTextPos(std::string text, int x, int y);
+
+  void setAllowToInteract(bool allow) { _allowToInteract = allow; }
+
+  bool getAllowToInteract() { return _allowToInteract; }
 
 private:
   SDL_Window *_window;
@@ -102,6 +108,7 @@ private:
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
+  bool _allowToInteract;
   std::vector<LifeBar> _lifeBars;
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;

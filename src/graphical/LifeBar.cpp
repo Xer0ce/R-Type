@@ -32,11 +32,10 @@ void LifeBar::init()
 void LifeBar::drawLifeBar(int x, int y, int hp)
 {
     _life.x = x;
-    _life.y = y - 15;
+    _life.y = y - 11;
     _barBackground.x = x;
-    _barBackground.y = y - 15;
+    _barBackground.y = y - 11;
     _life.w = hp / 2;
-    std::cout << "hp: " << hp << std::endl; 
     if (_life.w < 0)
         _life.w = 0;
     SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);

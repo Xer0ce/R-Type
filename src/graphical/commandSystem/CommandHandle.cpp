@@ -37,6 +37,18 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     startGame(buffer, protocol, queue);
   };
+  _commandMap[0x10] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    getUsersLobby(buffer, protocol, queue);
+  };
+  _commandMap[0x11] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    newPlayerLobby(buffer, protocol, queue);
+  };
+  _commandMap[0x12] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    cooldown(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -56,14 +68,18 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
   Command cmd;
 
   int id = static_cast<int>(buffer[1]);
-  float positionX = *reinterpret_cast<float *>(&buffer[2]);
-  float positionY = *reinterpret_cast<float *>(&buffer[6]);
-  int playloadSize = static_cast<int>(buffer[10]);
+  int spaceshipId = static_cast<int>(buffer[2]);
+  int shootId = static_cast<int>(buffer[3]);
+  float positionX = *reinterpret_cast<float *>(&buffer[4]);
+  float positionY = *reinterpret_cast<float *>(&buffer[8]);
+  int playloadSize = static_cast<int>(buffer[12]);
 
-  std::string nickname(buffer.begin() + 11, buffer.begin() + 11 + playloadSize);
+  std::string nickname(buffer.begin() + 13, buffer.begin() + 13 + playloadSize);
 
   cmd.type = CommandType::REPCONNECT;
   cmd.repConnect.id = id;
+  cmd.repConnect.spaceshipId = spaceshipId;
+  cmd.repConnect.shootId = shootId;
   cmd.repConnect.positionX = positionX;
   cmd.repConnect.positionY = positionY;
   cmd.repConnect.Nickname = nickname;
@@ -110,6 +126,10 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.createEnemy.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.createEnemy.positionY = *reinterpret_cast<float *>(&buffer[6]);
 
+  std::cout << "Enemy id: " << cmd.createEnemy.enemyId << std::endl;
+  std::cout << "Enemy positionX: " << cmd.createEnemy.positionX << std::endl;
+  std::cout << "Enemy positionY: " << cmd.createEnemy.positionY << std::endl;
+
   queue->pushGameQueue(cmd);
 }
 
@@ -146,5 +166,38 @@ void CommandHandle::killEntity(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.killEntity.entityId = static_cast<int>(buffer[1]);
 
   std::cout << "Entity id: " << cmd.killEntity.entityId << std::endl;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::getUsersLobby(std::vector<uint8_t> buffer,
+                                  IClient *protocol, Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::GETUSERSLOBBY;
+  cmd.getUsersLobby.id = static_cast<int>(buffer[1]);
+  int playloadSize = static_cast<int>(buffer[2]);
+  std::string nickname(buffer.begin() + 3, buffer.begin() + 3 + playloadSize);
+  cmd.getUsersLobby.Nickname = nickname;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::newPlayerLobby(std::vector<uint8_t> buffer,
+                                   IClient *protocol, Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::GETUSERSLOBBY;
+  cmd.getUsersLobby.id = static_cast<int>(buffer[1]);
+  int playloadSize = static_cast<int>(buffer[2]);
+  std::string nickname(buffer.begin() + 3, buffer.begin() + 3 + playloadSize);
+  cmd.getUsersLobby.Nickname = nickname;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::cooldown(std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::COOLDOWN;
+  cmd.cooldown.time = static_cast<int>(buffer[1]);
   queue->pushGameQueue(cmd);
 }

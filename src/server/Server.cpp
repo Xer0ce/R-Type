@@ -82,6 +82,7 @@ void Server::game() {
     if (now > next)
       next += std::chrono::milliseconds(10);
     if (switchScene != sceneType::NO_SWITCH) {
+
       _currentScene = switchScene;
       _scenes[_currentScene]->setEcs(_ecs.get());
       _scenes[_currentScene]->setQueue(_queue.get());
@@ -98,4 +99,5 @@ void Server::load_component() {
   _ecs->register_component<EntityType>();
   _ecs->register_component<Control>();
   _ecs->register_component<Nickname>();
+  _ecs->register_component<Property>();
 }

@@ -10,7 +10,7 @@
 #include <iostream>
 #include <vector>
 
-Window::Window() {}
+Window::Window() { _allowToInteract = false; }
 
 Window::~Window() {}
 

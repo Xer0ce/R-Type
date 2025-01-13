@@ -44,4 +44,5 @@ protected:
   std::mutex _messageMutex;
   std::string _type;
   std::vector<uint8_t> _buffer;
+  timeval _timeout;
 };

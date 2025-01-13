@@ -16,6 +16,8 @@ History::History() {
 History::~History() {}
 
 void History::init() {
+  _window->setBackground(
+      _window->loadTexture("../src/graphical/assets/level1.png"));
   Command command;
   command.type = CommandType::CONNECT;
   command.connect.Nickname = "Player";
@@ -105,6 +107,7 @@ History::loop(eventType event,
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
   auto &nicknames = _ecs.get_components<Nickname>();
+  auto &entities = _ecs.get_components<EntityType>();
   auto &controls = _ecs.get_components<Control>();
   auto &healths = _ecs.get_components<Health>();
   Command command;
@@ -133,14 +136,17 @@ History::loop(eventType event,
   }
 
   if (now > deltaTime) {
-    control_system(key);
-    shoot_system(key);
-    position_system(1);
+    if (_window->getAllowToInteract()) {
+      _window->deleteText("0");
+      control_system(key);
+      shoot_system(key);
+      position_system(1);
+    }
   }
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
-    if (nicknames[i].has_value()) {
+    if (entities[i] == EntityType::Player) {
       _window->setTextPos(nicknames[i]->nickname, positions[i]->x,
                           positions[i]->y - 30);
     }

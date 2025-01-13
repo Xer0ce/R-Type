@@ -7,14 +7,16 @@
 
 #include "History.hpp"
 
-History::History() { _name = "History"; }
+History::History() {
+  _name = "History";
+  _startCooldown = true;
+  _firstRound = true;
+  _coolDown = 4;
+}
 
 History::~History() {}
 
-void History::init() {
-  auto enemy1 = create_entity<EntityType::Enemy>(
-      *_ecs, Position(800, 0), Velocity(), Health(1), Draw({}, {}, nullptr));
-}
+void History::init() {}
 
 void History::collision_system() {
   auto &position = _ecs->get_components<Position>();
@@ -43,6 +45,7 @@ void History::collision_system() {
       }
     }
   }
+  _next = std::chrono::steady_clock::now() + std::chrono::seconds(1);
 }
 
 void History::position_system(float deltaTime) {
@@ -91,10 +94,38 @@ History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   if (command.type != EMPTY)
     _commandGame.executeCommandGame(command, _queue, _ecs);
 
-  if (now > deltaTime) {
-    enemy_system();
-    position_system(1);
-    collision_system();
+  if (_startCooldown && now > _next) {
+    _next = std::chrono::steady_clock::now() + std::chrono::seconds(1);
+    if (_coolDown <= 3) {
+      Command cmd;
+      cmd.type = CommandType::COOLDOWN;
+      cmd.cooldown.time = _coolDown;
+      _queue->pushTcpQueue(cmd);
+    }
+    if (_coolDown == 0)
+      _startCooldown = false;
+    _coolDown--;
+  }
+
+  if (!_startCooldown) {
+    if (_firstRound) {
+      _firstRound = false;
+      std::cout << "First round" << std::endl;
+      auto enemy1 =
+          create_entity<EntityType::Enemy>(*_ecs, Position(800, 0), Velocity(),
+                                           Health(1), Draw({}, {}, nullptr));
+      Command command;
+      command.type = CommandType::CREATEENEMY;
+      command.createEnemy.enemyId = enemy1;
+      command.createEnemy.positionX = 800;
+      command.createEnemy.positionY = 0;
+      _queue->pushTcpQueue(command);
+    }
+    if (now > deltaTime) {
+      enemy_system();
+      position_system(1);
+      collision_system();
+    }
   }
   return sceneType::NO_SWITCH;
 }
