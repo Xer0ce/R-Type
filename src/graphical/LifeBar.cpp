@@ -10,10 +10,6 @@
 LifeBar::LifeBar(SDL_Renderer *renderer, int x, int y)
     : _renderer(renderer)
 {
-    _life.x = x;
-    _life.y = y - 10;
-    _barBackground.x = x;
-    _barBackground.y = y - 10;
 }
 
 LifeBar::~LifeBar()
@@ -31,9 +27,9 @@ void LifeBar::init()
 
 void LifeBar::drawLifeBar(int x, int y, int hp)
 {
-    _life.x = x;
+    _life.x = x + 5;
     _life.y = y - 11;
-    _barBackground.x = x;
+    _barBackground.x = x + 5;
     _barBackground.y = y - 11;
     _life.w = hp / 2;
     if (_life.w < 0)

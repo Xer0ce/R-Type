@@ -125,7 +125,7 @@ History::loop(eventType event,
   for (std::size_t i = 0; i < controls.size(); ++i) {
     if (controls[i].has_value() && positions[i].has_value()) {
         _window->drawLifeBar(positions[i]->x, positions[i]->y, healths[i]->hp);
-        if (key == keyType::DOWN) {
+        if (key == keyType::UP) {
           healths[i]->hp -= 10;
         }
       }
