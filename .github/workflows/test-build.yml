@@ -15,6 +15,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install freetype
+        run: sudo apt-get install libfreetype6-dev
+
       - name: Build with CMake
         run: |
           mkdir build

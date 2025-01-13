@@ -80,7 +80,7 @@ void Server::game() {
     auto switchScene = _scenes[_currentScene]->loop(next);
 
     if (now > next)
-      next += std::chrono::milliseconds(10);
+      next += std::chrono::milliseconds(25);
     if (switchScene != sceneType::NO_SWITCH) {
 
       _currentScene = switchScene;
@@ -98,6 +98,7 @@ void Server::load_component() {
   _ecs->register_component<Health>();
   _ecs->register_component<EntityType>();
   _ecs->register_component<Control>();
+  _ecs->register_component<AiType>();
   _ecs->register_component<Nickname>();
   _ecs->register_component<Property>();
 }

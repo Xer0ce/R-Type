@@ -15,12 +15,6 @@ public:
   History();
   ~History();
 
-  void position_system(float deltaTime);
-
-  void enemy_system();
-
-  void collision_system();
-
   sceneType
   loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 

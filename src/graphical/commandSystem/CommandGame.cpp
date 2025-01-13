@@ -80,6 +80,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
       Property(command.repConnect.spaceshipId, command.repConnect.shootId, 0),
       std::optional<Control>(Control()),
       std::optional<std::size_t>(command.repConnect.id));
+
   window->addText(command.repConnect.Nickname, command.repConnect.positionX,
                   command.repConnect.positionY, 50, 50, 20,
                   "../src/graphical/assets/RTypefont.otf",
@@ -99,8 +100,6 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs,
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.move.entityId && positions[i].has_value()) {
-      if (entities[i] && entities[i] == EntityType::Player) {
-      }
       positions[i]->x = command.move.positionX;
       positions[i]->y = command.move.positionY;
       draw[i]->rect.x = command.move.positionX;
@@ -122,9 +121,10 @@ void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
         std::cout << "Enemy is dead" << std::endl;
       }
       if (entities[i] && entities[i] == EntityType::Projectile) {
-        std::cout << "Projectile is dead" << std::endl;
+        std::cout << "Projectile is dead" << command.killEntity.entityId
+                  << std::endl;
       }
-      ecs->kill_entity(Entities(i));
+      ecs->kill_entity(Entities(command.killEntity.entityId));
     }
   }
 }
@@ -144,8 +144,9 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
-      Velocity(0, -50), Health(1),
+      Velocity(0, 0), Health(1),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, enemyTexture),
+      AiType::Aggressive,
       std::optional<std::size_t>(command.createEnemy.enemyId));
   std::cout << "Enemy created" << std::endl;
 }
@@ -179,7 +180,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
 
   auto bullet = create_entity<EntityType::Projectile>(
       *ecs, Position(command.shoot.positionX, command.shoot.positionY),
-      Velocity(50, 0),
+      Velocity(10, 0),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, bulletTexture),
       std::optional<std::size_t>(command.shoot.playerId));
 }
