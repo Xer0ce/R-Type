@@ -2,7 +2,7 @@
     "enemies": [
     {
         "type": "Pion",
-        "number": 2,
+        "number": 1,
         "ia": "Aggressive"
     },
     {
@@ -12,7 +12,7 @@
     },
     {
         "type": "Zinzolin",
-        "number": 2,
+        "number": 1,
         "ia": "Aggressive"
     },
     {
