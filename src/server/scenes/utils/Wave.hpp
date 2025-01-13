@@ -9,8 +9,8 @@
 #define WAVE_HPP
 
 #include "../../../ecs/Registry.hpp"
-#include "nlohmann/json.hpp"
 #include "../../../queue/Queue.hpp"
+#include "nlohmann/json.hpp"
 #include <iostream>
 #include <memory>
 

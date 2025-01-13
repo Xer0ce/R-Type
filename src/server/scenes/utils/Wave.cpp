@@ -26,14 +26,22 @@ void Wave::factory_call(const json &enemy, Queue &queue) {
   }
 
   std::map<std::string, std::function<Entities()>> type_map = {
-      {"Pion", [&]() { return create_enemy<EnemyType::Pion>(*_ecs, it_ai->second); }},
+      {"Pion",
+       [&]() { return create_enemy<EnemyType::Pion>(*_ecs, it_ai->second); }},
       {"Balourd",
-       [&]() { return create_enemy<EnemyType::Balourd>(*_ecs, it_ai->second); }},
+       [&]() {
+         return create_enemy<EnemyType::Balourd>(*_ecs, it_ai->second);
+       }},
       {"Zinzolin",
-       [&]() { return create_enemy<EnemyType::Zinzolin>(*_ecs, it_ai->second); }},
-      {"Boss", [&]() { return create_enemy<EnemyType::Boss>(*_ecs, it_ai->second); }},
+       [&]() {
+         return create_enemy<EnemyType::Zinzolin>(*_ecs, it_ai->second);
+       }},
+      {"Boss",
+       [&]() { return create_enemy<EnemyType::Boss>(*_ecs, it_ai->second); }},
       {"BigBoss",
-       [&]() { return create_enemy<EnemyType::BigBoss>(*_ecs, it_ai->second); }},
+       [&]() {
+         return create_enemy<EnemyType::BigBoss>(*_ecs, it_ai->second);
+       }},
   };
 
   for (int i = 0; i < enemy["number"]; i++) {
