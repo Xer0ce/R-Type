@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../commandSystem/CommandGame.hpp"
+#include "../../game/systems/enemy/EnemySystems.hpp"
 #include "AScene.hpp"
 
 class History : public AScene {

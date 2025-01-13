@@ -24,8 +24,5 @@ Lobby::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
     }
     _commandGame.executeCommandGame(command, _queue, _ecs);
   }
-
-  // intercepter le signal pour lancer la game
-
   return sceneType::NO_SWITCH;
 }

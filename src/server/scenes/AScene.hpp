@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "utils/Wave.hpp"
 #include "../../ecs/Registry.hpp"
 #include "../../game/Components/Components.hpp"
 #include "../../game/gestion/EntitiesGestion.hpp"
@@ -29,4 +30,6 @@ protected:
   std::string _name;
   Registry *_ecs;
   Queue *_queue;
+  Wave _wave;
+  std::chrono::time_point<std::chrono::steady_clock> _nextCorrectPosition;
 };

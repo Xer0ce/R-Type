@@ -10,7 +10,6 @@
 #include "../../game/systems/enemy/EnemySystems.hpp"
 #include "../commandSystem/CommandGame.hpp"
 #include "AScene.hpp"
-#include "utils/Wave.hpp"
 
 class EndLess : public AScene {
 public:
@@ -23,7 +22,6 @@ public:
   void init() override;
 
 private:
-  Wave _wave;
   CommandGame _commandGame;
   bool _startCooldown;
   int _coolDown;

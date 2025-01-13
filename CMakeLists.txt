@@ -24,9 +24,10 @@ if(BUILD_CLIENT)
 
     file(GLOB SOURCES_ECS "src/ecs/*.cpp")
     file(GLOB SOURCES_GAME_GESTION "src/game/gestion/*.cpp")
+    file(GLOB SOURCES_GAME_SYSTEMS "src/game/systems/enemy/*.cpp")
     file(GLOB SOURCES_GAME_SYSTEMS_GLOBAL "src/game/systems/global/*.cpp")
 
-    add_executable(r-type_client ${SOURCES_CLIENT} ${SOURCES_CLIENT_COMMAND} ${SOURCES_ECS} ${SOURCES_CLIENT_SCENES} ${SOURCES_GAME_GESTION} ${SOURCES_CLIENT_NETWORK} ${SOURCES_QUEUE} ${SOURCES_GAME_SYSTEMS_GLOBAL})
+    add_executable(r-type_client ${SOURCES_GAME_SYSTEMS} ${SOURCES_CLIENT} ${SOURCES_CLIENT_COMMAND} ${SOURCES_ECS} ${SOURCES_CLIENT_SCENES} ${SOURCES_GAME_GESTION} ${SOURCES_CLIENT_NETWORK} ${SOURCES_QUEUE} ${SOURCES_GAME_SYSTEMS_GLOBAL})
     target_include_directories(r-type_client PRIVATE include/graphical)
 
     target_link_libraries(r-type_client PRIVATE SDL3::SDL3)

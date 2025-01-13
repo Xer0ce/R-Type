@@ -49,8 +49,11 @@ EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
     }
     if (now > deltaTime) {
       enemy_system(_ecs);
-      position_system_net(1, _ecs, _queue);
+      position_system_net(1, _ecs, _queue, _nextCorrectPosition);
       collision_system(_ecs, _queue);
+      if (now > _nextCorrectPosition)
+        _nextCorrectPosition =
+            std::chrono::steady_clock::now() + std::chrono::milliseconds(500);
     }
   }
   return sceneType::NO_SWITCH;
