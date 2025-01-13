@@ -11,7 +11,8 @@ enum class EnemyType { Pion, Balourd, Zinzolin, Boss, BigBoss};
 enum class AiType { Aggressive, Passive, Balzy, Boss };
 
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
-                              Health health, Draw draw,
+                              Health health, Draw draw, Nickname nickname,
+                              Property property,
                               std::optional<Control> control = std::nullopt,
                               std::optional<std::size_t> id = std::nullopt);
 

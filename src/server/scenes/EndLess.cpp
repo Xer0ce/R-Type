@@ -29,7 +29,6 @@ void EndLess::position_system(float deltaTime) {
     position[i]->y += velocity[i]->y * deltaTime;
 
     if (entityType[i] == EntityType::Enemy) {
-      std::cout << "SEND MOUVE : " << i << std::endl;
       Command command;
       command.type = CommandType::MOVE;
       command.move.positionX = position[i]->x;
@@ -40,14 +39,37 @@ void EndLess::position_system(float deltaTime) {
   }
 }
 
-sceneType EndLess::loop() {
+sceneType EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   Command command;
+  std::chrono::time_point<std::chrono::steady_clock> now =
+      std::chrono::steady_clock::now();
 
   command = _queue->popGameQueue();
   if (command.type != EMPTY)
     _commandGame.executeCommandGame(command, _queue, _ecs);
 
-  enemy_system(_ecs);
-  position_system(1);
+  if (_startCooldown && now > _next) {
+    _next = std::chrono::steady_clock::now() + std::chrono::seconds(1);
+    if (_coolDown <= 3) {
+      Command cmd;
+      cmd.type = CommandType::COOLDOWN;
+      cmd.cooldown.time = _coolDown;
+      _queue->pushTcpQueue(cmd);
+    }
+    if (_coolDown == 0)
+      _startCooldown = false;
+    _coolDown--;
+  }
+
+  if (!_startCooldown) {
+    if (_firstRound) {
+      _firstRound = false;
+      std::cout << "First round" << std::endl;
+    }
+    if (now > deltaTime) {
+      enemy_system(_ecs);
+      position_system(1);
+    }
+  }
   return sceneType::NO_SWITCH;
 }
