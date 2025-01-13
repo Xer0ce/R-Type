@@ -173,17 +173,17 @@ bool Tcp::sendDataToAllExceptOne(std::size_t socketId,
 }
 
 void Tcp::closeSocket() {
-    for (int clientSocket : _clientSockets) {
-        shutdown(clientSocket, SHUT_RDWR);
-        close(clientSocket);
-    }
-    _clientSockets.clear();
+  for (int clientSocket : _clientSockets) {
+    shutdown(clientSocket, SHUT_RDWR);
+    close(clientSocket);
+  }
+  _clientSockets.clear();
 
-    if (_socket >= 0) {
-        shutdown(_socket, SHUT_RDWR);
-        close(_socket);
-        _socket = -1;
-    }
+  if (_socket >= 0) {
+    shutdown(_socket, SHUT_RDWR);
+    close(_socket);
+    _socket = -1;
+  }
 }
 
 std::vector<uint8_t> &Tcp::getBuffer() {
