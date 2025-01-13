@@ -104,6 +104,7 @@ History::loop(eventType event,
               std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
+  auto &nicknames = _ecs.get_components<Nickname>();
   auto &controls = _ecs.get_components<Control>();
   auto &healths = _ecs.get_components<Health>();
   Command command;
@@ -115,6 +116,7 @@ History::loop(eventType event,
     commandGame.executeCommandGame(command, _queue, &_ecs, _window);
 
   _window->drawBackground(true, std::chrono::duration<float>(deltaTime - now).count());
+  _window->drawText();
   keyType key = _window->catchKey();
   keyType keyOnce = _window->catchKeyOnce();
   for (std::size_t i = 0; i < controls.size(); ++i) {
@@ -138,6 +140,10 @@ History::loop(eventType event,
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
+    if (nicknames[i].has_value()) {
+      _window->setTextPos(nicknames[i]->nickname, positions[i]->x,
+                          positions[i]->y - 30);
+    }
     _window->draw(draw[i]->texture, draw[i]->rect);
   }
   return sceneType::NO_SWITCH;

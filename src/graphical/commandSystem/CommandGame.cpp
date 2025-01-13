@@ -65,8 +65,11 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
            {(int)command.repConnect.positionX,
             (int)command.repConnect.positionY, 50, 50},
            playerTexture),
+      Nickname(command.repConnect.Nickname),
       std::optional<Control>(Control()),
       std::optional<std::size_t>(command.repConnect.id));
+      window->addText(command.repConnect.Nickname, command.repConnect.positionX, command.repConnect.positionY, 50, 50, 20,
+                    "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
 }
 
 void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs,
@@ -139,6 +142,7 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
            {(int)command.newPlayer.positionX, (int)command.newPlayer.positionY,
             50, 50},
            playerTexture),
+      Nickname(command.newPlayer.Nickname),
       std::nullopt, std::optional<std::size_t>(command.newPlayer.id));
 }
 

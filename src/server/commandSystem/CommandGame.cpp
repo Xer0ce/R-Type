@@ -46,7 +46,8 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
 
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(400, 100), Velocity(), Health(),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+      Draw({0, 255, 0, 255}, {100, 150, 50, 50}), Nickname(command.connect.Nickname));
+  std::cout << "caca" << std::endl;
 
   newCommand.type = CommandType::REPCONNECT;
   newCommand.repConnect.id = player;

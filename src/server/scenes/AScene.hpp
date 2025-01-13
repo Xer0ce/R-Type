@@ -14,6 +14,7 @@
 #include "../../graphical/Components/Health.hpp"
 #include "../../graphical/Components/Position.hpp"
 #include "../../graphical/Components/Velocity.hpp"
+#include "../../graphical/Components/Nickname.hpp"
 #include "IScene.hpp"
 
 class AScene : public IScene {
