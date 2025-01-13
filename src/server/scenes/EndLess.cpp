@@ -7,8 +7,7 @@
 
 #include "EndLess.hpp"
 
-EndLess::EndLess()
-{
+EndLess::EndLess() {
   _name = "EndLess";
   _startCooldown = true;
   _firstRound = true;
@@ -17,10 +16,7 @@ EndLess::EndLess()
 
 EndLess::~EndLess() {}
 
-void EndLess::init() {
-  _wave = Wave(_ecs);
-
-}
+void EndLess::init() { _wave = Wave(_ecs); }
 
 void EndLess::position_system(float deltaTime) {
   auto &velocity = _ecs->get_components<Velocity>();
