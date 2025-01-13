@@ -57,7 +57,7 @@ History::loop(eventType event,
       control_system(key, *_ecs);
       shoot_system(key, *_ecs, _queue, _nextBullet);
       if (now >= _nextBullet) {
-        _nextBullet = now + std::chrono::milliseconds(50);
+        _nextBullet = now + std::chrono::milliseconds(150);
       }
       position_system_graphic(1, *_ecs, _queue);
     }

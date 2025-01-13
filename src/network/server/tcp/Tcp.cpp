@@ -15,7 +15,7 @@ Tcp::Tcp(std::size_t port, std::string ip) {
   _ip = ip;
   _type = "TCP";
   _timeout.tv_sec = 0;
-  _timeout.tv_usec = 1000;
+  _timeout.tv_usec = 10000;
 }
 
 Tcp::~Tcp() { closeSocket(); }
@@ -84,7 +84,7 @@ bool Tcp::listenSocket(int backlog) {
   }
 
   _timeout.tv_sec = 0;
-  _timeout.tv_usec = 1000;
+  _timeout.tv_usec = 10000;
 
   if (FD_ISSET(_socket, &tempFds)) {
     sockaddr_in clientAddr;
@@ -173,15 +173,17 @@ bool Tcp::sendDataToAllExceptOne(std::size_t socketId,
 }
 
 void Tcp::closeSocket() {
-  for (int clientSocket : _clientSockets) {
-    close(clientSocket);
-  }
-  _clientSockets.clear();
+    for (int clientSocket : _clientSockets) {
+        shutdown(clientSocket, SHUT_RDWR);
+        close(clientSocket);
+    }
+    _clientSockets.clear();
 
-  if (_socket >= 0) {
-    close(_socket);
-    _socket = -1;
-  }
+    if (_socket >= 0) {
+        shutdown(_socket, SHUT_RDWR);
+        close(_socket);
+        _socket = -1;
+    }
 }
 
 std::vector<uint8_t> &Tcp::getBuffer() {
