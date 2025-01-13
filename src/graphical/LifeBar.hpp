@@ -15,7 +15,7 @@
 
 class LifeBar {
     public:
-        LifeBar(SDL_Renderer *renderer, int x, int y);
+        LifeBar(SDL_Renderer *renderer);
         ~LifeBar();
 
     void init();

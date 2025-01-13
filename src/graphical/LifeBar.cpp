@@ -7,7 +7,7 @@
 
 #include "LifeBar.hpp"
 
-LifeBar::LifeBar(SDL_Renderer *renderer, int x, int y)
+LifeBar::LifeBar(SDL_Renderer *renderer)
     : _renderer(renderer)
 {
 }

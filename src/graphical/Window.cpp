@@ -168,7 +168,7 @@ void Window::drawBackground(bool isScrolling, float deltaTime)
 }
 
 void Window::initLifeBar() {
-  LifeBar lifeBar = LifeBar(_renderer, 10, 10);
+  LifeBar lifeBar = LifeBar(_renderer);
   lifeBar.init();
   _lifeBars.push_back(lifeBar);
 }
