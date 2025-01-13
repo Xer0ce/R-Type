@@ -22,11 +22,11 @@ void EndLess::position_system(float deltaTime) {
   auto &position = _ecs->get_components<Position>();
   auto &entityType = _ecs->get_components<EntityType>();
 
-  for (std::size_t i = 0; i < position.size(); i++) {
-    position[i]->x += velocity[i]->x * deltaTime;
-    position[i]->y += velocity[i]->y * deltaTime;
+  for (std::size_t i = 0; i < entityType.size(); i++) {
 
     if (entityType[i] == EntityType::Enemy) {
+      position[i]->x += velocity[i]->x * deltaTime;
+      position[i]->y += velocity[i]->y * deltaTime;
       Command command;
       command.type = CommandType::MOVE;
       command.move.positionX = position[i]->x;
