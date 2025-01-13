@@ -15,7 +15,7 @@
 
 void position_system_net(float deltaTime, Registry *ecs, Queue *queue);
 void position_system_graphic(float deltaTime, Registry &ecs, Queue *queue);
-void control_system(keyType key, Registry &ecs);
-void shoot_system(keyType key, Registry &_ecs, Queue *_queue,
+void control_system(std::vector<keyType> keys, Registry &ecs);
+void shoot_system(std::vector<keyType> keys, Registry &_ecs, Queue *_queue,
                   std::chrono::time_point<std::chrono::steady_clock> next);
 void collision_system(Registry *ecs, Queue *queue);

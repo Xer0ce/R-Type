@@ -7,7 +7,7 @@
 
 #include "GlobalSystem.hpp"
 
-void shoot_system(keyType key, Registry &_ecs, Queue *_queue,
+void shoot_system(std::vector<keyType> keys, Registry &_ecs, Queue *_queue,
                   std::chrono::time_point<std::chrono::steady_clock> next) {
   auto &control = _ecs.get_components<Control>();
   auto &positions = _ecs.get_components<Position>();
@@ -21,15 +21,17 @@ void shoot_system(keyType key, Registry &_ecs, Queue *_queue,
 
   for (std::size_t i = 0; i < control.size(); ++i) {
     if (control[i].has_value() && positions[i].has_value()) {
-      if (key == keyType::SPACE && entities[i] == EntityType::Player) {
-        float positionX = positions[i]->x;
-        float positionY = positions[i]->y;
+      for (auto &key : keys) {
+        if (key == keyType::SPACE && entities[i] == EntityType::Player) {
+          float positionX = positions[i]->x;
+          float positionY = positions[i]->y;
 
-        command.type = CommandType::SHOOT;
-        command.shoot.playerId = i;
-        command.shoot.positionX = positionX;
-        command.shoot.positionY = positionY;
-        _queue->pushTcpQueue(command);
+          command.type = CommandType::SHOOT;
+          command.shoot.playerId = i;
+          command.shoot.positionX = positionX;
+          command.shoot.positionY = positionY;
+          _queue->pushTcpQueue(command);
+        }
       }
     }
   }

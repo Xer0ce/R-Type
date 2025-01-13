@@ -69,7 +69,9 @@ public:
 
   void drawBackground();
 
-  keyType catchKey();
+  std::vector<keyType> catchKey();
+
+  std::vector<keyType> catchMovementKey();
 
   keyType catchKeyOnce();
 
