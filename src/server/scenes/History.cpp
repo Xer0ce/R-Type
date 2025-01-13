@@ -112,8 +112,7 @@ History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
       _firstRound = false;
       std::cout << "First round" << std::endl;
       auto enemy1 =
-          create_entity<EntityType::Enemy>(*_ecs, Position(800, 0), Velocity(),
-                                           Health(1), Draw({}, {}, nullptr));
+          create_enemy<EnemyType::Pion>(*_ecs, AiType::Aggressive);
       Command command;
       command.type = CommandType::CREATEENEMY;
       command.createEnemy.enemyId = enemy1;

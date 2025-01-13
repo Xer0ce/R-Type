@@ -1,6 +1,9 @@
-//
-// Created by basenjii on 10/01/25.
-//
+/*
+** EPITECH PROJECT, 2025
+** RType
+** File description:
+** Components
+*/
 
 #ifndef COMPONENTS_HPP
 #define COMPONENTS_HPP
@@ -10,5 +13,7 @@
 #include "Health.hpp"
 #include "Position.hpp"
 #include "Velocity.hpp"
+#include "Nickname.hpp"
+#include "Property.hpp"
 
 #endif //COMPONENTS_HPP

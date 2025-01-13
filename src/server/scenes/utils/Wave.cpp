@@ -34,7 +34,6 @@ void Wave::factory_call(const json& enemy) {
     for (int i = 0; i < enemy["number"]; i++) {
       auto it = type_map.find(enemy["type"]);
       if (it != type_map.end()) {
-        std::cout << "LE CACA EST CUIT" << std::endl;
           it->second();
       } else {
           std::cout << "Unknown enemy type: " << enemy["type"] << std::endl;
