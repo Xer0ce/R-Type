@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../commandSystem/CommandGame.hpp"
 #include "AScene.hpp"
 
 class EndLess : public AScene {
@@ -14,9 +15,13 @@ public:
   EndLess();
   ~EndLess();
 
-  void init() override{};
+  void init() override;
 
-  sceneType loop(eventType event) override { return sceneType::NO_SWITCH; };
+  sceneType
+  loop(eventType event,
+       std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
 private:
+  CommandGame commandGame;
+  std::chrono::time_point<std::chrono::steady_clock> _nextBullet;
 };

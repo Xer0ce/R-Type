@@ -15,7 +15,7 @@ Tcp::Tcp(std::size_t port, std::string ip) {
   _ip = ip;
   _type = "TCP";
   _timeout.tv_sec = 0;
-  _timeout.tv_usec = 1;
+  _timeout.tv_usec = 10000;
 }
 
 Tcp::~Tcp() { closeSocket(); }
@@ -35,10 +35,6 @@ bool Tcp::initializeSocket() {
   int flags = fcntl(_socket, F_GETFL, 0);
   if (flags < 0) {
     perror("Failed to get socket flags");
-    return false;
-  }
-  if (fcntl(_socket, F_SETFL, flags | O_NONBLOCK) < 0) {
-    perror("Failed to set socket to non-blocking mode");
     return false;
   }
 
@@ -86,6 +82,9 @@ bool Tcp::listenSocket(int backlog) {
     perror("Select failed");
     return false;
   }
+
+  _timeout.tv_sec = 0;
+  _timeout.tv_usec = 10000;
 
   if (FD_ISSET(_socket, &tempFds)) {
     sockaddr_in clientAddr;
@@ -175,11 +174,13 @@ bool Tcp::sendDataToAllExceptOne(std::size_t socketId,
 
 void Tcp::closeSocket() {
   for (int clientSocket : _clientSockets) {
+    shutdown(clientSocket, SHUT_RDWR);
     close(clientSocket);
   }
   _clientSockets.clear();
 
   if (_socket >= 0) {
+    shutdown(_socket, SHUT_RDWR);
     close(_socket);
     _socket = -1;
   }

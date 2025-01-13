@@ -15,7 +15,9 @@ public:
   Lobby();
   ~Lobby();
 
-  sceneType loop(eventType event) override;
+  sceneType
+  loop(eventType event,
+       std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
   void init() override;
 

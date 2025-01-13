@@ -7,14 +7,11 @@
 
 #pragma once
 
-#include "../../ecs/EntitiesGestion.hpp"
 #include "../../ecs/Registry.hpp"
+#include "../../game/Components/Components.hpp"
+#include "../../game/gestion/EntitiesGestion.hpp"
+#include "../../game/systems/global/GlobalSystem.hpp"
 #include "../../queue/Queue.hpp"
-#include "../Components/Control.hpp"
-#include "../Components/Draw.hpp"
-#include "../Components/Health.hpp"
-#include "../Components/Position.hpp"
-#include "../Components/Velocity.hpp"
 #include "IScene.hpp"
 
 class AScene : public IScene {
@@ -26,13 +23,16 @@ public:
 
   void setWindow(Window *window) override;
 
-  void setEcs(Registry ecs) override;
+  void setEcs(Registry *ecs) override;
 
   void setQueue(Queue *queue) override;
+
+  void setChoosingParams(ChoosingParams *params) override;
 
 protected:
   std::string _name;
   Window *_window;
-  Registry _ecs;
+  Registry *_ecs;
   Queue *_queue;
+  ChoosingParams *_params;
 };

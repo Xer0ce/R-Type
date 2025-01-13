@@ -19,6 +19,8 @@ UDP::UDP(std::size_t port, std::string ip) {
   _port = port;
   _ip = ip;
   _type = "UDP";
+  _timeout.tv_sec = 0;
+  _timeout.tv_usec = 10000;
 }
 
 UDP::~UDP() { closeSocket(); }
@@ -30,13 +32,15 @@ bool UDP::initializeSocket() {
     return false;
   }
 
+  if (setsockopt(_socket, SOL_SOCKET, SO_RCVTIMEO, &_timeout,
+                 sizeof(_timeout)) < 0) {
+    throw std::runtime_error("Failed to set socket timeout.");
+    return false;
+  }
+
   int flags = fcntl(_socket, F_GETFL, 0);
   if (flags == -1) {
     throw std::runtime_error("Failed to get socket flags.");
-    return false;
-  }
-  if (fcntl(_socket, F_SETFL, flags | O_NONBLOCK) == -1) {
-    throw std::runtime_error("Failed to set socket to non-blocking mode.");
     return false;
   }
 
@@ -140,6 +144,7 @@ bool UDP::listenSocket(int backlog) {
 
 void UDP::closeSocket() {
   if (_socket >= 0) {
+    shutdown(_socket, SHUT_RDWR);
     close(_socket);
     _socket = -1;
     std::cout << "[DEBUG] UDP socket closed." << std::endl;

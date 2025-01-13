@@ -67,26 +67,28 @@ void Server::init() {
 }
 
 void Server::game() {
-  auto lastTime = std::chrono::high_resolution_clock::now();
+  std::chrono::time_point<std::chrono::steady_clock> next =
+      std::chrono::steady_clock::now() + std::chrono::milliseconds(10);
 
   _scenes[_currentScene]->setEcs(_ecs.get());
   _scenes[_currentScene]->setQueue(_queue.get());
   _scenes[_currentScene]->init();
 
   while (true) {
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float deltaTime =
-        std::chrono::duration<float>(currentTime - lastTime).count();
-    if (deltaTime > 0.01f) {
-      auto switchScene = _scenes[_currentScene]->loop();
-      lastTime = currentTime;
-      if (switchScene != sceneType::NO_SWITCH) {
-        _currentScene = switchScene;
-        _scenes[_currentScene]->setEcs(_ecs.get());
-        _scenes[_currentScene]->setQueue(_queue.get());
-        _scenes[_currentScene]->init();
-      }
+    std::chrono::time_point<std::chrono::steady_clock> now =
+        std::chrono::steady_clock::now();
+    auto switchScene = _scenes[_currentScene]->loop(next);
+
+    if (now > next)
+      next += std::chrono::milliseconds(25);
+    if (switchScene != sceneType::NO_SWITCH) {
+
+      _currentScene = switchScene;
+      _scenes[_currentScene]->setEcs(_ecs.get());
+      _scenes[_currentScene]->setQueue(_queue.get());
+      _scenes[_currentScene]->init();
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 }
 
@@ -97,4 +99,7 @@ void Server::load_component() {
   _ecs->register_component<Health>();
   _ecs->register_component<EntityType>();
   _ecs->register_component<Control>();
+  _ecs->register_component<AiType>();
+  _ecs->register_component<Nickname>();
+  _ecs->register_component<Property>();
 }

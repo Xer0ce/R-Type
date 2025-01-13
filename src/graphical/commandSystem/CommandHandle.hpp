@@ -29,10 +29,16 @@ private:
   void disconnect(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
   void move(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
   void shoot(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
+  void killEntity(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
   void createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
                    Queue *queue);
   void newPlayer(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
   void startGame(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
+  void getUsersLobby(std::vector<uint8_t> buffer, IClient *protocol,
+                     Queue *queue);
+  void newPlayerLobby(std::vector<uint8_t> buffer, IClient *protocol,
+                      Queue *queue);
+  void cooldown(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
 
   std::map<uint8_t,
            std::function<void(std::vector<uint8_t>, IClient *, Queue *)>>

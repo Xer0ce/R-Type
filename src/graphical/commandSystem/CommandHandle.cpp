@@ -25,6 +25,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     createEnemy(buffer, protocol, queue);
   };
+  _commandMap[0x07] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    killEntity(buffer, protocol, queue);
+  };
   _commandMap[0x08] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) {
     newPlayer(buffer, protocol, queue);
@@ -32,6 +36,18 @@ CommandHandle::CommandHandle() {
   _commandMap[0x09] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) {
     startGame(buffer, protocol, queue);
+  };
+  _commandMap[0x10] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    getUsersLobby(buffer, protocol, queue);
+  };
+  _commandMap[0x11] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    newPlayerLobby(buffer, protocol, queue);
+  };
+  _commandMap[0x12] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    cooldown(buffer, protocol, queue);
   };
 }
 
@@ -47,68 +63,26 @@ void CommandHandle::executeCommandHandle(uint8_t commandType,
   }
 }
 
-void handleWrongCommand(std::string typeCommand) {
-  std::string response;
-
-  if (!typeCommand.empty()) {
-    response = "Bad Command : " + typeCommand;
-  }
-  // faire plustard une reponse en uint8 car pour l'instant c'est en std::string
-
-  // protocol->sendData(response);
-}
-
-void cleanString(std::string &str) {
-  str.erase(std::remove_if(str.begin(), str.end(),
-                           [](unsigned char c) {
-                             return !std::isdigit(c) && c != '.' && c != '-';
-                           }),
-            str.end());
-}
-
-std::vector<std::string> my_strToWordArray(const std::string &str,
-                                           char delimiter) {
-  std::vector<std::string> resultVec;
-  std::stringstream ss(str);
-  std::string token;
-
-  while (getline(ss, token, delimiter)) {
-    if (!token.empty()) {
-      cleanString(token);
-      resultVec.push_back(token);
-    }
-  }
-
-  return resultVec;
-}
-
-std::vector<std::string>
-parseConnectCommand(const std::vector<uint8_t> &buffer) {
-  std::vector<std::string> bufferString;
-
-  bufferString.push_back(std::to_string(buffer[1]));
-
-  std::string bufferStr(buffer.begin() + 5, buffer.end() - 1);
-  std::istringstream iss(bufferStr);
-  for (std::string s; iss >> s;) {
-    bufferString.push_back(s);
-  }
-  return bufferString;
-}
-
 void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
                             Queue *queue) {
   Command cmd;
 
-  std::vector<std::string> bufferString = parseConnectCommand(buffer);
+  int id = static_cast<int>(buffer[1]);
+  int spaceshipId = static_cast<int>(buffer[2]);
+  int shootId = static_cast<int>(buffer[3]);
+  float positionX = *reinterpret_cast<float *>(&buffer[4]);
+  float positionY = *reinterpret_cast<float *>(&buffer[8]);
+  int playloadSize = static_cast<int>(buffer[12]);
+
+  std::string nickname(buffer.begin() + 13, buffer.begin() + 13 + playloadSize);
 
   cmd.type = CommandType::REPCONNECT;
-  cmd.repConnect.id = std::stoi(bufferString[0]);
-  cmd.repConnect.positionX = std::stoi(bufferString[1]);
-  cmd.repConnect.positionY = std::stoi(bufferString[2]);
-
-  std::cout << "CREATE PLAYER : ID : "
-            << std::string(buffer.begin(), buffer.end()) << std::endl;
+  cmd.repConnect.id = id;
+  cmd.repConnect.spaceshipId = spaceshipId;
+  cmd.repConnect.shootId = shootId;
+  cmd.repConnect.positionX = positionX;
+  cmd.repConnect.positionY = positionY;
+  cmd.repConnect.Nickname = nickname;
 
   queue->pushGameQueue(cmd);
 }
@@ -118,97 +92,58 @@ void CommandHandle::disconnect(std::vector<uint8_t> buffer, IClient *protocol,
   std::cout << "Disconnect command receive" << std::endl;
 }
 
-std::vector<std::string> parseMoveCommand(const std::vector<uint8_t> &buffer) {
-  std::vector<std::string> bufferString;
-  uint32_t enemyId = *reinterpret_cast<const uint32_t *>(&buffer[1]);
-
-  bufferString.push_back(std::to_string(enemyId));
-
-  std::string bufferStr(buffer.begin() + 5, buffer.end() - 1);
-  std::istringstream iss(bufferStr);
-  for (std::string s; iss >> s;) {
-    bufferString.push_back(s);
-  }
-  return bufferString;
-}
-
 void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,
                          Queue *queue) {
   Command cmd;
 
   cmd.type = CommandType::MOVE;
-  std::vector<std::string> bufferString = parseMoveCommand(buffer);
 
-  cmd.move.entityId = std::stoi(bufferString[0]);
-  cmd.move.positionX = std::stof(bufferString[1]);
-  cmd.move.positionY = std::stof(bufferString[2]);
-
+  cmd.move.entityId = static_cast<int>(buffer[1]);
+  cmd.move.positionX = *reinterpret_cast<float *>(&buffer[2]);
+  cmd.move.positionY = *reinterpret_cast<float *>(&buffer[6]);
   queue->pushGameQueue(cmd);
 }
 
 void CommandHandle::shoot(std::vector<uint8_t> buffer, IClient *protocol,
                           Queue *queue) {
-  std::cout << "Shoot command receive" << std::endl;
-}
+  Command cmd;
 
-std::vector<std::string>
-parseCreateEnemyCommand(const std::vector<uint8_t> &buffer) {
-  std::vector<std::string> bufferString;
-  uint32_t enemyId = *reinterpret_cast<const uint32_t *>(&buffer[1]);
+  cmd.type = CommandType::SHOOT;
+  cmd.shoot.playerId = static_cast<int>(buffer[1]);
+  cmd.shoot.positionX = *reinterpret_cast<float *>(&buffer[2]);
+  cmd.shoot.positionY = *reinterpret_cast<float *>(&buffer[6]);
 
-  bufferString.push_back(std::to_string(enemyId));
-
-  std::string bufferStr(buffer.begin() + 5, buffer.end() - 1);
-  std::istringstream iss(bufferStr);
-  for (std::string s; iss >> s;) {
-    bufferString.push_back(s);
-  }
-  return bufferString;
+  queue->pushGameQueue(cmd);
 }
 
 void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
                                 Queue *queue) {
   Command cmd;
 
-  std::vector<std::string> bufferString = parseCreateEnemyCommand(buffer);
-
   cmd.type = CommandType::CREATEENEMY;
-  cmd.createEnemy.enemyId = std::stoi(bufferString[0]);
-  cmd.createEnemy.positionX = std::stof(bufferString[1]);
-  cmd.createEnemy.positionY = std::stof(bufferString[2]);
 
-  std::cout << "Create enemy with id : " << cmd.createEnemy.enemyId
-            << std::endl;
+  cmd.createEnemy.enemyId = static_cast<int>(buffer[1]);
+  cmd.createEnemy.positionX = *reinterpret_cast<float *>(&buffer[2]);
+  cmd.createEnemy.positionY = *reinterpret_cast<float *>(&buffer[6]);
+
+  std::cout << "Enemy id: " << cmd.createEnemy.enemyId << std::endl;
+  std::cout << "Enemy positionX: " << cmd.createEnemy.positionX << std::endl;
+  std::cout << "Enemy positionY: " << cmd.createEnemy.positionY << std::endl;
 
   queue->pushGameQueue(cmd);
-}
-
-std::vector<std::string>
-parseNewPlayerCommand(const std::vector<uint8_t> &buffer) {
-  std::vector<std::string> bufferString;
-  uint32_t id = *reinterpret_cast<const uint32_t *>(&buffer[1]);
-
-  bufferString.push_back(std::to_string(id));
-
-  std::string bufferStr(buffer.begin() + 5, buffer.end() - 1);
-  std::istringstream iss(bufferStr);
-  for (std::string s; iss >> s;) {
-    bufferString.push_back(s);
-  }
-  return bufferString;
 }
 
 void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
                               Queue *queue) {
   Command cmd;
 
-  std::vector<std::string> bufferString = parseNewPlayerCommand(buffer);
-
   cmd.type = CommandType::NEWPLAYER;
-  cmd.newPlayer.id = std::stoi(bufferString[0]);
-  cmd.newPlayer.positionX = std::stof(bufferString[1]);
-  cmd.newPlayer.positionY = std::stof(bufferString[2]);
-  cmd.newPlayer.Nickname = bufferString[3];
+  cmd.newPlayer.id = static_cast<int>(buffer[1]);
+  cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[2]);
+  cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[6]);
+  int playloadSize = static_cast<int>(buffer[10]);
+  std::string nickname(buffer.begin() + 11, buffer.begin() + 11 + playloadSize);
+  cmd.newPlayer.Nickname = nickname;
 
   queue->pushGameQueue(cmd);
 }
@@ -218,5 +153,51 @@ void CommandHandle::startGame(std::vector<uint8_t> buffer, IClient *protocol,
   Command cmd;
 
   cmd.type = CommandType::STARTGAME;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::killEntity(std::vector<uint8_t> buffer, IClient *protocol,
+                               Queue *queue) {
+  Command cmd;
+
+  std::cout << "Kill entity command receive" << std::endl;
+
+  cmd.type = CommandType::KILLENTITY;
+  cmd.killEntity.entityId = static_cast<int>(buffer[1]);
+
+  std::cout << "Entity id: " << cmd.killEntity.entityId << std::endl;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::getUsersLobby(std::vector<uint8_t> buffer,
+                                  IClient *protocol, Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::GETUSERSLOBBY;
+  cmd.getUsersLobby.id = static_cast<int>(buffer[1]);
+  int playloadSize = static_cast<int>(buffer[2]);
+  std::string nickname(buffer.begin() + 3, buffer.begin() + 3 + playloadSize);
+  cmd.getUsersLobby.Nickname = nickname;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::newPlayerLobby(std::vector<uint8_t> buffer,
+                                   IClient *protocol, Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::GETUSERSLOBBY;
+  cmd.getUsersLobby.id = static_cast<int>(buffer[1]);
+  int playloadSize = static_cast<int>(buffer[2]);
+  std::string nickname(buffer.begin() + 3, buffer.begin() + 3 + playloadSize);
+  cmd.getUsersLobby.Nickname = nickname;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::cooldown(std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::COOLDOWN;
+  cmd.cooldown.time = static_cast<int>(buffer[1]);
   queue->pushGameQueue(cmd);
 }
