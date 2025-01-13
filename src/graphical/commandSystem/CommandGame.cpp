@@ -99,8 +99,6 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs,
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.move.entityId && positions[i].has_value()) {
-      if (entities[i] && entities[i] == EntityType::Player) {
-      }
       positions[i]->x = command.move.positionX;
       positions[i]->y = command.move.positionY;
       draw[i]->rect.x = command.move.positionX;
@@ -144,7 +142,7 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
-      Velocity(0, -50), Health(1),
+      Velocity(0, 0), Health(1),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, enemyTexture),
       AiType::Aggressive,
       std::optional<std::size_t>(command.createEnemy.enemyId));

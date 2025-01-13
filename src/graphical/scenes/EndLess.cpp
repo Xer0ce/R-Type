@@ -15,10 +15,13 @@ EndLess::EndLess() {
 EndLess::~EndLess() {}
 
 void EndLess::init() {
+  _window->setBackground(
+      _window->loadTexture("../src/graphical/assets/level1.png"));
   Command command;
   command.type = CommandType::CONNECT;
   command.connect.Nickname = "Player";
   _queue->pushTcpQueue(command);
+  _window->setAllowToInteract(true);
 }
 
 void EndLess::control_system(keyType key) {
@@ -50,8 +53,6 @@ void EndLess::position_system(float deltaTime) {
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (!positions[i].has_value() || !velocities[i].has_value())
-      continue;
-    if (velocities[i]->x == 0 && velocities[i]->y == 0)
       continue;
     positions[i]->x += velocities[i]->x * deltaTime;
     positions[i]->y += velocities[i]->y * deltaTime;
