@@ -21,6 +21,8 @@ Game::Game() {
 
   _queue = std::make_shared<Queue>();
 
+  _ecs = std::make_shared<Registry>();
+
   commandSend = CommandSend();
   commandHandle = CommandHandle();
 }
@@ -121,7 +123,7 @@ void Game::game(std::string nickname) {
       _window->loadTexture("../src/graphical/assets/level1.png"));
 
   _scenes[_currentScene]->setWindow(_window.get());
-  _scenes[_currentScene]->setEcs(_ecs);
+  _scenes[_currentScene]->setEcs(_ecs.get());
   _scenes[_currentScene]->init();
   _scenes[_currentScene]->setQueue(_queue.get());
   _scenes[_currentScene]->setChoosingParams(params);
@@ -140,7 +142,7 @@ void Game::game(std::string nickname) {
       }
       _currentScene = switchScene;
       _scenes[_currentScene]->setWindow(_window.get());
-      _scenes[_currentScene]->setEcs(_ecs);
+      _scenes[_currentScene]->setEcs(_ecs.get());
       _scenes[_currentScene]->setQueue(_queue.get());
       _scenes[_currentScene]->init();
     }

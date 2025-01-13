@@ -34,15 +34,15 @@ public:
   ~Game();
 
   void load_component() {
-    _ecs.register_component<Position>();
-    _ecs.register_component<Velocity>();
-    _ecs.register_component<Draw>();
-    _ecs.register_component<Health>();
-    _ecs.register_component<Control>();
-    _ecs.register_component<EntityType>();
-    _ecs.register_component<AiType>();
-    _ecs.register_component<Nickname>();
-    _ecs.register_component<Property>();
+    _ecs->register_component<Position>();
+    _ecs->register_component<Velocity>();
+    _ecs->register_component<Draw>();
+    _ecs->register_component<Health>();
+    _ecs->register_component<Control>();
+    _ecs->register_component<EntityType>();
+    _ecs->register_component<AiType>();
+    _ecs->register_component<Nickname>();
+    _ecs->register_component<Property>();
   };
 
   void loadScene(sceneType sceneName);
@@ -63,8 +63,9 @@ private:
   std::shared_ptr<IClient> _udp;
 
   std::shared_ptr<Queue> _queue;
+  std::shared_ptr<Registry> _ecs;
+
   CommandHandle commandHandle;
   CommandSend commandSend;
 
-  Registry _ecs;
 };

@@ -29,13 +29,13 @@ void Menu::init() {
                        "window");
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/menu.png"));
-  auto entitie = _ecs.spawn_entity();
-  _ecs.add_component<Position>(entitie, Position(700, 300));
-  _ecs.add_component<Draw>(
+  auto entitie = _ecs->spawn_entity();
+  _ecs->add_component<Position>(entitie, Position(700, 300));
+  _ecs->add_component<Draw>(
       entitie,
       Draw({255, 255, 255, 255}, {700, 300, 887, 484},
            _window->loadTexture("../src/graphical/assets/CreateParty.svg")));
-  _ecs.add_component<EntityType>(entitie, EntityType::Menu);
+  _ecs->add_component<EntityType>(entitie, EntityType::Menu);
 }
 
 void Menu::setMenu(std::string selectedButton) {
@@ -89,9 +89,9 @@ Menu::loop(eventType event,
   auto key = _window->catchKey();
   float mouseX, mouseY;
 
-  auto &entityType = _ecs.get_components<EntityType>();
-  auto &draw = _ecs.get_components<Draw>();
-  auto &position = _ecs.get_components<Position>();
+  auto &entityType = _ecs->get_components<EntityType>();
+  auto &draw = _ecs->get_components<Draw>();
+  auto &position = _ecs->get_components<Position>();
 
   auto button = mouseHandler(mouseX, mouseY, event);
   if (button == "Heberger") {

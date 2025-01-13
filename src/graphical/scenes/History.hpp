@@ -23,4 +23,5 @@ public:
 
 private:
   CommandGame commandGame;
+  std::chrono::time_point<std::chrono::steady_clock> _nextBullet;
 };

@@ -129,6 +129,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
       *ecs, Position(command.shoot.positionX, command.shoot.positionY),
       Velocity(10, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
 
+  command.shoot.playerId = bullet;
   queue->pushTcpQueue(command);
 }
 

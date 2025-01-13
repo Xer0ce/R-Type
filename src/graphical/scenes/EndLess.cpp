@@ -10,6 +10,7 @@
 EndLess::EndLess() {
   _name = "Endless";
   commandGame = CommandGame();
+  _nextBullet = std::chrono::steady_clock::now() + std::chrono::seconds(1);
 }
 
 EndLess::~EndLess() {}
@@ -26,17 +27,17 @@ void EndLess::init() {
 sceneType
 EndLess::loop(eventType event,
               std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
-  auto &positions = _ecs.get_components<Position>();
-  auto &draw = _ecs.get_components<Draw>();
-  auto &nicknames = _ecs.get_components<Nickname>();
-  auto &entities = _ecs.get_components<EntityType>();
+  auto &positions = _ecs->get_components<Position>();
+  auto &draw = _ecs->get_components<Draw>();
+  auto &nicknames = _ecs->get_components<Nickname>();
+  auto &entities = _ecs->get_components<EntityType>();
   Command command;
   std::chrono::time_point<std::chrono::steady_clock> now =
       std::chrono::steady_clock::now();
 
   command = _queue->popGameQueue();
   if (command.type != EMPTY)
-    commandGame.executeCommandGame(command, _queue, &_ecs, _window);
+    commandGame.executeCommandGame(command, _queue, _ecs, _window);
 
   _window->drawBackground();
   _window->drawText();
@@ -49,11 +50,15 @@ EndLess::loop(eventType event,
 
   if (now > deltaTime) {
     if (_window->getAllowToInteract()) {
+      std::chrono::time_point<std::chrono::steady_clock> now =
+          std::chrono::steady_clock::now();
       _window->deleteText("0");
-      control_system(key, _ecs);
-      shoot_system(key, _ecs, _queue);
-      position_system_graphic(1, _ecs, _queue);
-      collision_system(&_ecs, _queue);
+      control_system(key, *_ecs);
+      shoot_system(key, *_ecs, _queue, _nextBullet);
+      if (now >= _nextBullet) {
+        _nextBullet = now + std::chrono::milliseconds(50);
+      }
+      position_system_graphic(1, *_ecs, _queue);
     }
   }
   for (std::size_t i = 0; i < draw.size(); ++i) {

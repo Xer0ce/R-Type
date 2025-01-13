@@ -23,7 +23,7 @@ public:
 
   void setWindow(Window *window) override;
 
-  void setEcs(Registry ecs) override;
+  void setEcs(Registry *ecs) override;
 
   void setQueue(Queue *queue) override;
 
@@ -32,7 +32,7 @@ public:
 protected:
   std::string _name;
   Window *_window;
-  Registry _ecs;
+  Registry *_ecs;
   Queue *_queue;
   ChoosingParams *_params;
 };
