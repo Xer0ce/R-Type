@@ -88,6 +88,7 @@ void Server::game() {
       _scenes[_currentScene]->setQueue(_queue.get());
       _scenes[_currentScene]->init();
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 }
 

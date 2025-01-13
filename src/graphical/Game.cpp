@@ -147,6 +147,7 @@ void Game::game(std::string nickname) {
       _scenes[_currentScene]->init();
     }
     _window->render();
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
   _window->destroyWindow();
   exit(0);
