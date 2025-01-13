@@ -21,7 +21,6 @@ void EndLess::init() {
   command.type = CommandType::CONNECT;
   command.connect.Nickname = "Player";
   _queue->pushTcpQueue(command);
-  _window->setAllowToInteract(true);
 }
 
 void EndLess::control_system(keyType key) {

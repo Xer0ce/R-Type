@@ -7,14 +7,19 @@
 
 #include "EndLess.hpp"
 
-EndLess::EndLess() { _name = "EndLess"; }
+EndLess::EndLess()
+{
+  _name = "EndLess";
+  _startCooldown = true;
+  _firstRound = true;
+  _coolDown = 4;
+}
 
 EndLess::~EndLess() {}
 
 void EndLess::init() {
   _wave = Wave(_ecs);
-  std::string path = "../src/game/config/endless/wave_type_1.json";
-  _wave.load(path);
+
 }
 
 void EndLess::position_system(float deltaTime) {
@@ -63,7 +68,8 @@ EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   if (!_startCooldown) {
     if (_firstRound) {
       _firstRound = false;
-      std::cout << "First round" << std::endl;
+      std::string path = "../src/game/config/endless/wave_type_1.json";
+      _wave.load(path, *_queue);
     }
     if (now > deltaTime) {
       enemy_system(_ecs);
