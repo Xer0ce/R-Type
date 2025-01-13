@@ -10,6 +10,8 @@
 #include "../../ecs/Registry.hpp"
 #include "../../game/Components/Components.hpp"
 #include "../../game/gestion/EntitiesGestion.hpp"
+#include "../../game/systems/global/GlobalSystem.hpp"
+#include "../../game/systems/enemy/EnemySystems.hpp"
 #include "IScene.hpp"
 
 class AScene : public IScene {

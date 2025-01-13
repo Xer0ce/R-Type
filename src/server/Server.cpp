@@ -80,7 +80,7 @@ void Server::game() {
     auto switchScene = _scenes[_currentScene]->loop(next);
 
     if (now > next)
-      next += std::chrono::milliseconds(10);
+      next += std::chrono::milliseconds(25);
     if (switchScene != sceneType::NO_SWITCH) {
 
       _currentScene = switchScene;

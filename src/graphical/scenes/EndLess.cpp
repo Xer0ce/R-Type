@@ -23,55 +23,6 @@ void EndLess::init() {
   _queue->pushTcpQueue(command);
 }
 
-void EndLess::control_system(keyType key) {
-  auto &control = _ecs.get_components<Control>();
-  auto &velocities = _ecs.get_components<Velocity>();
-
-  for (std::size_t i = 0; i < control.size(); ++i) {
-    if (!control[i].has_value())
-      continue;
-    if (key == keyType::UP) {
-      velocities[i]->y = -10;
-    } else if (key == keyType::RIGHT) {
-      velocities[i]->x = 10;
-    } else if (key == keyType::DOWN) {
-      velocities[i]->y = 10;
-    } else if (key == keyType::LEFT) {
-      velocities[i]->x = -10;
-    } else if (key == keyType::NONE) {
-      velocities[i]->x = 0;
-      velocities[i]->y = 0;
-    }
-  }
-}
-
-void EndLess::position_system(float deltaTime) {
-  auto &positions = _ecs.get_components<Position>();
-  auto &draw = _ecs.get_components<Draw>();
-  auto &velocities = _ecs.get_components<Velocity>();
-  auto &entities = _ecs.get_components<EntityType>();
-  auto &control = _ecs.get_components<Control>();
-
-  for (std::size_t i = 0; i < entities.size(); ++i) {
-    if (!positions[i].has_value() || !velocities[i].has_value())
-      continue;
-    if (velocities[i]->x == 0 && velocities[i]->y == 0)
-      continue;
-    positions[i]->x += velocities[i]->x * deltaTime;
-    positions[i]->y += velocities[i]->y * deltaTime;
-    draw[i]->rect.x = positions[i]->x;
-    draw[i]->rect.y = positions[i]->y;
-    if (entities[i] == EntityType::Player && control[i].has_value()) {
-      Command command;
-      command.type = CommandType::MOVE;
-      command.move.entityId = i;
-      command.move.positionX = positions[i]->x;
-      command.move.positionY = positions[i]->y;
-      _queue->pushUdpQueue(command);
-    }
-  }
-}
-
 sceneType
 EndLess::loop(eventType event,
               std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
@@ -99,8 +50,10 @@ EndLess::loop(eventType event,
   if (now > deltaTime) {
     if (_window->getAllowToInteract()) {
       _window->deleteText("0");
-      control_system(key);
-      position_system(1);
+      control_system(key, _ecs);
+      shoot_system(key, _ecs, _queue);
+      position_system_graphic(1, _ecs, _queue);
+      collision_system(&_ecs, _queue);
     }
   }
   for (std::size_t i = 0; i < draw.size(); ++i) {

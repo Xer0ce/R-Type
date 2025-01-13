@@ -18,26 +18,6 @@ EndLess::~EndLess() {}
 
 void EndLess::init() { _wave = Wave(_ecs); }
 
-void EndLess::position_system(float deltaTime) {
-  auto &velocity = _ecs->get_components<Velocity>();
-  auto &position = _ecs->get_components<Position>();
-  auto &entityType = _ecs->get_components<EntityType>();
-
-  for (std::size_t i = 0; i < entityType.size(); i++) {
-
-    if (entityType[i] == EntityType::Enemy) {
-      position[i]->x += velocity[i]->x * deltaTime;
-      position[i]->y += velocity[i]->y * deltaTime;
-      Command command;
-      command.type = CommandType::MOVE;
-      command.move.positionX = position[i]->x;
-      command.move.positionY = position[i]->y;
-      command.move.entityId = i;
-      _queue->pushUdpQueue(command);
-    }
-  }
-}
-
 sceneType
 EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   Command command;
@@ -69,7 +49,8 @@ EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
     }
     if (now > deltaTime) {
       enemy_system(_ecs);
-      position_system(1);
+      position_system_net(1, _ecs, _queue);
+      collision_system(_ecs, _queue);
     }
   }
   return sceneType::NO_SWITCH;
