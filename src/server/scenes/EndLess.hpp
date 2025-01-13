@@ -19,7 +19,10 @@ public:
 
   void position_system(float deltaTime);
 
-  sceneType loop() override;
+  sceneType
+  loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) override {
+    return sceneType::NO_SWITCH;
+  };
 
   void init() override;
 

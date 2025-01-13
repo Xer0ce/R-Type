@@ -19,10 +19,17 @@ public:
 
   void enemy_system();
 
-  sceneType loop() override;
+  void collision_system();
+
+  sceneType
+  loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
   void init() override;
 
 private:
   CommandGame _commandGame;
+  bool _startCooldown;
+  int _coolDown;
+  bool _firstRound;
+  std::chrono::time_point<std::chrono::steady_clock> _next;
 };

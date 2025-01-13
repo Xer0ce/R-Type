@@ -66,3 +66,19 @@ void Text::setColor(SDL_Color color) {
 }
 
 std::string Text::getText() { return _text; }
+
+void Text::setPos(int x, int y) {
+  if (_rect.x == x && _rect.y == y) {
+    return;
+  }
+  _rect.x = x;
+  _rect.y = y;
+  if (_texture) {
+    SDL_DestroyTexture(_texture);
+    _texture = nullptr;
+  }
+  SDL_Surface *surface =
+      TTF_RenderText_Blended(_font, (_text).c_str(), (_text).length(), _color);
+  _texture = SDL_CreateTextureFromSurface(_renderer, surface);
+  SDL_DestroySurface(surface);
+}

@@ -27,10 +27,14 @@ private:
   void connect(Command command, Queue *queue, Registry *ecs, Window *window);
   void disconnect(Command command, Queue *queue, Registry *ecs, Window *window);
   void move(Command command, Queue *queue, Registry *ecs, Window *window);
-  void killEnemy(Command command, Queue *queue, Registry *ecs, Window *window);
+  void killEntity(Command command, Queue *queue, Registry *ecs, Window *window);
   void createEnemy(Command command, Queue *queue, Registry *ecs,
                    Window *window);
   void newPlayer(Command command, Queue *queue, Registry *ecs, Window *window);
+  void shoot(Command command, Queue *queue, Registry *ecs, Window *window);
+  void getUsersLobby(Command command, Queue *queue, Registry *ecs,
+                     Window *window);
+  void cooldown(Command command, Queue *queue, Registry *ecs, Window *window);
 
   std::map<CommandType,
            std::function<void(Command, Queue *, Registry *, Window *)>>
