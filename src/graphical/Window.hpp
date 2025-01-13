@@ -11,6 +11,7 @@
 #include "Dropdown.hpp"
 #include "Text.hpp"
 #include "Utils.hpp"
+#include "LifeBar.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -69,6 +70,10 @@ public:
 
   void drawBackground(bool isScrolling = false, float deltaTime = 0.0f);
 
+  void initLifeBar();
+
+  void drawLifeBar(int x, int y, int hp);
+
   keyType catchKey();
 
   keyType catchKeyOnce();
@@ -95,6 +100,7 @@ private:
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
+  std::vector<LifeBar> _lifeBars;
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;
 };

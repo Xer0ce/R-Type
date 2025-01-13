@@ -167,6 +167,18 @@ void Window::drawBackground(bool isScrolling, float deltaTime)
     SDL_RenderTexture(_renderer, _background, nullptr, &destRect2);
 }
 
+void Window::initLifeBar() {
+  LifeBar lifeBar = LifeBar(_renderer, 10, 10);
+  lifeBar.init();
+  _lifeBars.push_back(lifeBar);
+}
+
+void Window::drawLifeBar(int x, int y, int hp) {
+  for (auto &lifeBar : _lifeBars) {
+    lifeBar.drawLifeBar(x, y, hp);
+  }
+}
+
 keyType Window::catchKeyOnce() {
   static std::vector<bool> prevKeyState(512, false);
   const bool *keyState = SDL_GetKeyboardState(NULL);

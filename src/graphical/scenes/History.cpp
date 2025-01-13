@@ -22,6 +22,7 @@ void History::init() {
   _queue->pushTcpQueue(command);
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
+  _window->initLifeBar();
 }
 
 void History::shoot_system(keyType key) {
@@ -103,6 +104,8 @@ History::loop(eventType event,
               std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   auto &positions = _ecs.get_components<Position>();
   auto &draw = _ecs.get_components<Draw>();
+  auto &controls = _ecs.get_components<Control>();
+  auto &healths = _ecs.get_components<Health>();
   Command command;
   std::chrono::time_point<std::chrono::steady_clock> now =
       std::chrono::steady_clock::now();
@@ -114,6 +117,14 @@ History::loop(eventType event,
   _window->drawBackground(true, std::chrono::duration<float>(deltaTime - now).count());
   keyType key = _window->catchKey();
   keyType keyOnce = _window->catchKeyOnce();
+  for (std::size_t i = 0; i < controls.size(); ++i) {
+    if (controls[i].has_value() && positions[i].has_value()) {
+        _window->drawLifeBar(positions[i]->x, positions[i]->y, healths[i]->hp);
+        if (key == keyType::DOWN) {
+          healths[i]->hp -= 10;
+        }
+      }
+  }
 
   if (key == keyType::ESCAPE) {
     return sceneType::MENU;
