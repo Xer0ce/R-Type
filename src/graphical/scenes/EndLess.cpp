@@ -28,6 +28,8 @@ void EndLess::control_system(keyType key) {
   auto &velocities = _ecs.get_components<Velocity>();
 
   for (std::size_t i = 0; i < control.size(); ++i) {
+    if (!control[i].has_value())
+      continue;
     if (key == keyType::UP) {
       velocities[i]->y = -10;
     } else if (key == keyType::RIGHT) {
@@ -52,6 +54,8 @@ void EndLess::position_system(float deltaTime) {
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (!positions[i].has_value() || !velocities[i].has_value())
+      continue;
+    if (velocities[i]->x == 0 && velocities[i]->y == 0)
       continue;
     positions[i]->x += velocities[i]->x * deltaTime;
     positions[i]->y += velocities[i]->y * deltaTime;

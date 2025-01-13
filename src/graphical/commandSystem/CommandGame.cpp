@@ -80,6 +80,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
       Property(command.repConnect.spaceshipId, command.repConnect.shootId, 0),
       std::optional<Control>(Control()),
       std::optional<std::size_t>(command.repConnect.id));
+
   window->addText(command.repConnect.Nickname, command.repConnect.positionX,
                   command.repConnect.positionY, 50, 50, 20,
                   "../src/graphical/assets/RTypefont.otf",
