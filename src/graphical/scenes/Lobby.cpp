@@ -40,7 +40,7 @@ Lobby::loop(eventType event,
           }
         }
       }
-      return sceneType::HISTORY;
+      return sceneType::ENDLESS;
     }
     commandGame.executeCommandGame(command, _queue, &_ecs, _window);
   }

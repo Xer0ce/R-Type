@@ -7,19 +7,13 @@
 
 #pragma once
 
-#include "../ecs/EntitiesGestion.hpp"
 #include "../ecs/Registry.hpp"
+#include "../game/Components/Components.hpp"
+#include "../game/gestion/EntitiesGestion.hpp"
 #include "../network/client/IClient.hpp"
 #include "../network/client/Tcp.hpp"
 #include "../network/client/Udp.hpp"
 #include "../queue/Queue.hpp"
-#include "Components/Control.hpp"
-#include "Components/Draw.hpp"
-#include "Components/Health.hpp"
-#include "Components/Nickname.hpp"
-#include "Components/Position.hpp"
-#include "Components/Property.hpp"
-#include "Components/Velocity.hpp"
 #include "Utils.hpp"
 #include "Window.hpp"
 #include "commandSystem/CommandHandle.hpp"
@@ -46,6 +40,7 @@ public:
     _ecs.register_component<Health>();
     _ecs.register_component<Control>();
     _ecs.register_component<EntityType>();
+    _ecs.register_component<AiType>();
     _ecs.register_component<Nickname>();
     _ecs.register_component<Property>();
   };
