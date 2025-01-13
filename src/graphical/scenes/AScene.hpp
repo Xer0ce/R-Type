@@ -10,8 +10,8 @@
 #include "../../ecs/Registry.hpp"
 #include "../../game/Components/Components.hpp"
 #include "../../game/gestion/EntitiesGestion.hpp"
-#include "../../queue/Queue.hpp"
 #include "../../game/systems/global/GlobalSystem.hpp"
+#include "../../queue/Queue.hpp"
 #include "IScene.hpp"
 
 class AScene : public IScene {
