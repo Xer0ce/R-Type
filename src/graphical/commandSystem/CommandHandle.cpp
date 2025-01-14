@@ -111,8 +111,9 @@ void CommandHandle::shoot(std::vector<uint8_t> buffer, IClient *protocol,
 
   cmd.type = CommandType::SHOOT;
   cmd.shoot.playerId = static_cast<int>(buffer[1]);
-  cmd.shoot.positionX = *reinterpret_cast<float *>(&buffer[2]);
-  cmd.shoot.positionY = *reinterpret_cast<float *>(&buffer[6]);
+  cmd.shoot.bulletId = static_cast<int>(buffer[2]);
+  cmd.shoot.positionX = *reinterpret_cast<float *>(&buffer[3]);
+  cmd.shoot.positionY = *reinterpret_cast<float *>(&buffer[7]);
 
   queue->pushGameQueue(cmd);
 }
