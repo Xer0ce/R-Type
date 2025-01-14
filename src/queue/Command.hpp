@@ -26,6 +26,8 @@ enum CommandType {
   GETUSERSLOBBY,
   NEWPLAYERLOBBY,
   COOLDOWN,
+  WAVE,
+  NEXTWAVE,
 };
 
 struct createEnemy {
@@ -111,6 +113,11 @@ struct cooldown {
   int time;
 };
 
+struct wave {
+  int wave;
+  int time;
+};
+
 struct Command {
   CommandType type;
   struct Connect connect;
@@ -126,5 +133,6 @@ struct Command {
   struct getUsersLobby getUsersLobby;
   struct newPlayerLobby newPlayerLobby;
   struct cooldown cooldown;
+  struct wave wave;
   int id;
 };

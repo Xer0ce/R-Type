@@ -49,6 +49,8 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     cooldown(buffer, protocol, queue);
   };
+  _commandMap[0x13] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) { wave(buffer, protocol, queue); };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -101,7 +103,6 @@ void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.move.entityId = static_cast<int>(buffer[1]);
   cmd.move.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.move.positionY = *reinterpret_cast<float *>(&buffer[6]);
-  std::cout << "[CORRECT MOVE] Entity id: " << cmd.move.entityId << std::endl;
   queue->pushGameQueue(cmd);
 }
 
@@ -202,5 +203,15 @@ void CommandHandle::cooldown(std::vector<uint8_t> buffer, IClient *protocol,
 
   cmd.type = CommandType::COOLDOWN;
   cmd.cooldown.time = static_cast<int>(buffer[1]);
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::wave(std::vector<uint8_t> buffer, IClient *protocol,
+                         Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::WAVE;
+  cmd.wave.wave = static_cast<int>(buffer[1]);
+  cmd.wave.time = static_cast<int>(buffer[2]);
   queue->pushGameQueue(cmd);
 }

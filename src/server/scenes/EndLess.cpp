@@ -6,6 +6,7 @@
 */
 
 #include "EndLess.hpp"
+#include <bits/this_thread_sleep.h>
 
 static const std::string classicPath = "../src/game/config/endless/classic/";
 static const std::string miniBossPath = "../src/game/config/endless/mini_boss/";
@@ -62,6 +63,8 @@ void EndLess::loadClassic() {
   static std::mt19937 gen(rd());
   std::uniform_int_distribution<> dis(0, 9);
   int random = dis(gen);
+
+  _wave.load(classicWave[random], *_queue);
 };
 
 void EndLess::loadMiniBoss() {
@@ -84,16 +87,37 @@ void EndLess::loadBoss() {
 
 void EndLess::waveGestion() {
   if (waveIsClear()) {
-    _waveNumber++;
-    int lastDigit = _waveNumber % 10;
-
-    if (lastDigit == 5) {
-      loadMiniBoss();
-    } else if (lastDigit == 0) {
-      loadBoss();
-    } else {
-      loadClassic();
+    Command cmd;
+    auto &entities = _ecs->get_components<EntityType>();
+    cmd.type = CommandType::WAVE;
+    cmd.wave.wave = _waveNumber;
+    cmd.wave.time = 3;
+    _queue->pushTcpQueue(cmd);
+    for (int i = 0; i < entities.size(); i++) {
+      if (entities[i] == EntityType::Projectile) {
+        _ecs->kill_entity(static_cast<Entities>(i));
+      }
+      if (entities[i] == EntityType::Enemy) {
+        _ecs->kill_entity(static_cast<Entities>(i));
+      }
     }
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    cmd.type = CommandType::WAVE;
+    cmd.wave.wave = _waveNumber;
+    cmd.wave.time = 3;
+    _queue->pushTcpQueue(cmd);
+    _waveNumber++;
+    _wave.load(classicWave[0], *_queue);
+
+    //int lastDigit = _waveNumber % 10;
+//
+    //if (lastDigit == 5) {
+    //  loadMiniBoss();
+    //} else if (lastDigit == 0) {
+    //  loadBoss();
+    //} else {
+    //  loadClassic();
+    //}
   }
 }
 
