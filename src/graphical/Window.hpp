@@ -11,6 +11,7 @@
 #include "Dropdown.hpp"
 #include "Text.hpp"
 #include "Utils.hpp"
+#include "Sound.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -105,5 +106,6 @@ private:
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
+  std::vector<Sound> _sounds;
   bool _allowToInteract;
 };

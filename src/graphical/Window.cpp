@@ -20,6 +20,21 @@ void Window::init() {
     exit(84);
   }
 
+  if (!SDL_Init(SDL_INIT_AUDIO)) {
+    std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
+
+  if (Mix_Init(MIX_INIT_MP3) == 0) {
+    std::cerr << "Mix_Init Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
+
+  if (!Mix_OpenAudio(0, NULL)) {
+    std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
+
   if (!TTF_Init()) {
     std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
     exit(84);
@@ -48,12 +63,15 @@ void Window::init() {
     destroyWindow();
     exit(84);
   }
+  _sounds.push_back(Sound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND));
 }
 
 void Window::destroyWindow() {
   SDL_DestroyWindow(_window);
+  Mix_CloseAudio();
   TTF_Quit();
   SDL_Quit();
+  Mix_Quit();
 }
 
 void Window::delay(int time) { SDL_Delay(time); }
@@ -171,8 +189,10 @@ std::vector<keyType> Window::catchKey() {
 
   if (keyState[SDL_SCANCODE_ESCAPE])
     keys.push_back(ESCAPE);
-  if (keyState[SDL_SCANCODE_SPACE])
+  if (keyState[SDL_SCANCODE_SPACE]) {
+    _sounds[0].playSound();
     keys.push_back(SPACE);
+  }
   if (keys.empty())
     keys.push_back(NONE);
   return keys;

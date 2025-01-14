@@ -36,3 +36,7 @@ struct ChoosingParams {
   int spaceshipId;
   int bulletId;
 };
+
+enum soundType {
+  BULLET_SOUND,
+};
