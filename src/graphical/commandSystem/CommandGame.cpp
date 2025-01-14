@@ -69,8 +69,6 @@ const std::size_t velocityShoot[] = {
     40,
 };
 
-
-
 void CommandGame::executeCommandGame(Command command, Queue *queue,
                                      Registry *ecs, Window *window) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
