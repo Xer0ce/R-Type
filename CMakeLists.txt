@@ -62,7 +62,7 @@ if(BUILD_SERVER)
     target_link_libraries(r-type_server PRIVATE SDL3::SDL3)
     target_link_libraries(r-type_server PRIVATE SDL3_ttf::SDL3_ttf)
     target_link_libraries(r-type_server PRIVATE SDL3_image::SDL3_image)
-    target_link_libraries(r-type_client PRIVATE SDL3_mixer::SDL3_mixer)
+    target_link_libraries(r-type_server PRIVATE SDL3_mixer::SDL3_mixer)
     target_link_libraries(r-type_server PRIVATE nlohmann_json)
 
     target_compile_definitions(r-type_server PRIVATE $<$<CONFIG:Debug>:DEBUG>)

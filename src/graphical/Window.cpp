@@ -63,7 +63,8 @@ void Window::init() {
     destroyWindow();
     exit(84);
   }
-  _sounds.push_back(Sound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND));
+
+  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND);
 }
 
 void Window::destroyWindow() {
@@ -189,10 +190,8 @@ std::vector<keyType> Window::catchKey() {
 
   if (keyState[SDL_SCANCODE_ESCAPE])
     keys.push_back(ESCAPE);
-  if (keyState[SDL_SCANCODE_SPACE]) {
-    _sounds[0].playSound();
+  if (keyState[SDL_SCANCODE_SPACE])
     keys.push_back(SPACE);
-  }
   if (keys.empty())
     keys.push_back(NONE);
   return keys;
@@ -264,4 +263,16 @@ void Window::setTextPos(std::string text, int x, int y) {
       t.setPos(x, y);
     }
   }
+}
+
+void Window::playSound(soundType type) {
+  for (auto &sound : _sounds) {
+    if (sound->getSoundType() == type) {
+      sound->playSound();
+    }
+  }
+}
+
+void Window::addSound(std::string soundPath, soundType type) {
+  _sounds.push_back(std::make_unique<Sound>(soundPath, type));
 }

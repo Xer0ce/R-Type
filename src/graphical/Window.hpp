@@ -9,9 +9,9 @@
 
 #include "Button.hpp"
 #include "Dropdown.hpp"
+#include "Sound.hpp"
 #include "Text.hpp"
 #include "Utils.hpp"
-#include "Sound.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -98,6 +98,10 @@ public:
 
   bool getAllowToInteract() { return _allowToInteract; }
 
+  void playSound(soundType type);
+
+  void addSound(std::string soundPath, soundType type);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -106,6 +110,6 @@ private:
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
-  std::vector<Sound> _sounds;
+  std::vector<std::unique_ptr<Sound>> _sounds;
   bool _allowToInteract;
 };
