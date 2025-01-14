@@ -19,6 +19,8 @@ public:
   sceneType
   loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
+  bool waveIsClear();
+  void waveGestion();
   void init() override;
 
 private:
