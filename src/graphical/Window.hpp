@@ -98,6 +98,10 @@ public:
 
   bool getAllowToInteract() { return _allowToInteract; }
 
+  void playSound(soundType type);
+
+  void addSound(std::string soundPath, soundType type);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -106,6 +110,6 @@ private:
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
-  std::vector<Sound> _sounds;
+  std::vector<std::unique_ptr<Sound>> _sounds;
   bool _allowToInteract;
 };
