@@ -57,17 +57,46 @@ bool EndLess::waveIsClear() {
   return true;
 }
 
-void EndLess::waveGestion() {
+void EndLess::loadClassic() {
   static std::random_device rd;
   static std::mt19937 gen(rd());
   std::uniform_int_distribution<> dis(0, 9);
   int random = dis(gen);
+};
 
+void EndLess::loadMiniBoss() {
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(0, 2);
+  int random = dis(gen);
+
+  _wave.load(miniBossWave[random], *_queue);
+};
+
+void EndLess::loadBoss() {
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(0, 1);
+  int random = dis(gen);
+
+  _wave.load(bossWave[random], *_queue);
+};
+
+void EndLess::waveGestion() {
   if (waveIsClear()) {
-    std::cout << "load " << random << " wave" << std::endl;
-    _wave.load(classicWave[random], *_queue);
+    _waveNumber++;
+    int lastDigit = _waveNumber % 10;
+
+    if (lastDigit == 5) {
+      loadMiniBoss();
+    } else if (lastDigit == 0) {
+      loadBoss();
+    } else {
+      loadClassic();
+    }
   }
 }
+
 
 sceneType
 EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {

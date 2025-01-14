@@ -21,6 +21,9 @@ public:
 
   bool waveIsClear();
   void waveGestion();
+  void loadClassic();
+  void loadMiniBoss();
+  void loadBoss();
   void init() override;
 
 private:
@@ -29,4 +32,5 @@ private:
   int _coolDown;
   bool _firstRound;
   std::chrono::time_point<std::chrono::steady_clock> _next;
+  int _waveNumber = 1;
 };
