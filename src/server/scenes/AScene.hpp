@@ -13,6 +13,7 @@
 #include "../../game/systems/enemy/EnemySystems.hpp"
 #include "../../game/systems/global/GlobalSystem.hpp"
 #include "IScene.hpp"
+#include "utils/Wave.hpp"
 
 class AScene : public IScene {
 public:
@@ -29,4 +30,6 @@ protected:
   std::string _name;
   Registry *_ecs;
   Queue *_queue;
+  Wave _wave;
+  std::chrono::time_point<std::chrono::steady_clock> _nextCorrectPosition;
 };

@@ -7,17 +7,17 @@
     },
     {
         "type": "Balourd",
-        "number": 0,
+        "number": 1,
         "ia": "Aggressive"
     },
     {
         "type": "Zinzolin",
-        "number": 0,
+        "number": 1,
         "ia": "Aggressive"
     },
     {
         "type": "Boss",
-        "number": 0,
+        "number": 1,
         "ia": "Aggressive"
     }]
 }

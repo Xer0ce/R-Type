@@ -88,9 +88,6 @@ void CommandSend::connect(Command command, IProtocol *protocol) {
   for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
 
-  std::cout << "Nickname command send : " << command.repConnect.Nickname
-            << std::endl;
-
   binaryData.push_back(0xFF);
 
   protocol->sendData(command.id, binaryData);
@@ -134,6 +131,8 @@ void CommandSend::shoot(Command command, IProtocol *protocol) {
   binaryData.push_back(0x04);
 
   binaryData.push_back(static_cast<uint8_t>(command.shoot.playerId));
+
+  binaryData.push_back(static_cast<uint8_t>(command.shoot.bulletId));
 
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.shoot.positionX);
@@ -191,6 +190,10 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.newPlayer.id));
 
+  binaryData.push_back(static_cast<uint8_t>(command.newPlayer.spaceshipId));
+
+  binaryData.push_back(static_cast<uint8_t>(command.newPlayer.shootId));
+
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.newPlayer.positionX);
   binaryData.insert(binaryData.end(), positionXBytes,
@@ -201,8 +204,6 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
   binaryData.insert(binaryData.end(), positionYBytes,
                     positionYBytes + sizeof(float));
 
-  std::cout << "Nickname command send : " << command.newPlayer.Nickname
-            << std::endl;
   binaryData.push_back(static_cast<uint8_t>(command.newPlayer.Nickname.size()));
   std::string playerName = command.newPlayer.Nickname;
   for (auto &c : playerName)
@@ -240,8 +241,6 @@ void CommandSend::createPlayer(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0xFF);
 
-  std::cout << "PAS CONTROLABLE je créé un player" << std::endl;
-
   protocol->sendData(command.id, binaryData);
 }
 
@@ -272,8 +271,6 @@ void CommandSend::getUsersLobby(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0xFF);
 
-  std::cout << "Get users lobby command send" << std::endl;
-
   protocol->sendData(command.id, binaryData);
 }
 
@@ -286,9 +283,6 @@ void CommandSend::newPlayerLobby(Command command, IProtocol *protocol) {
 
   std::string playerName = command.newPlayerLobby.Nickname;
 
-  std::cout << "Nickname command send : " << command.newPlayerLobby.Nickname
-            << std::endl;
-
   binaryData.push_back(
       static_cast<uint8_t>(command.newPlayerLobby.Nickname.size()));
 
@@ -296,8 +290,6 @@ void CommandSend::newPlayerLobby(Command command, IProtocol *protocol) {
     binaryData.push_back(static_cast<uint8_t>(c));
 
   binaryData.push_back(0xFF);
-
-  std::cout << "New player lobby command send" << std::endl;
 
   protocol->sendDataToAll(binaryData);
 }

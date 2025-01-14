@@ -27,6 +27,12 @@ bool Tcp::initializeSocket() {
     return false;
   }
 
+  int opt = 1;
+  if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+    perror("Failed to set SO_REUSEADDR");
+    return false;
+  }
+
   if (_port <= 0 || _ip.empty()) {
     std::cerr << "Invalid port or IP address." << std::endl;
     return false;

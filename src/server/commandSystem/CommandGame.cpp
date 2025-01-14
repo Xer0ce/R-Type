@@ -36,6 +36,13 @@ CommandGame::CommandGame() {
 
 CommandGame::~CommandGame() {}
 
+const std::size_t velocityShoot[] = {
+    10,
+    20,
+    30,
+    40,
+};
+
 void CommandGame::executeCommandGame(Command command, Queue *queue,
                                      Registry *ecs) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
@@ -74,10 +81,10 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
         commandNewPlayer.newPlayer.id = i;
         commandNewPlayer.newPlayer.positionX = position[i]->x;
         commandNewPlayer.newPlayer.positionY = position[i]->y;
+        commandNewPlayer.newPlayer.spaceshipId = property[i]->spaceshipId;
+        commandNewPlayer.newPlayer.shootId = property[i]->shootId;
         commandNewPlayer.id = property[i]->sockedId;
 
-        std::cout << "Jenvoie le new player --------><>>>>" << std::endl;
-        std::cout << "Player cree avec l'id : " << i << std::endl;
         queue->pushTcpQueue(commandNewPlayer);
       }
     }
@@ -86,14 +93,12 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && position[i].has_value()) {
       if (entityType[i] && entityType[i] == EntityType::Enemy) {
-        std::cout << "Create enemy pour 1 client" << std::endl;
         Command newCommandEnemy;
         newCommandEnemy.type = CommandType::CREATEENEMY;
         newCommandEnemy.createEnemy.positionX = position[i]->x;
         newCommandEnemy.createEnemy.positionY = position[i]->y;
         newCommandEnemy.createEnemy.enemyId = i;
         newCommandEnemy.id = command.id;
-        std::cout << "Enemy id : " << i << std::endl;
         queue->pushTcpQueue(newCommandEnemy);
       }
     }
@@ -125,11 +130,29 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs) {
 
 void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
 
+  auto &entityType = ecs->get_components<EntityType>();
+  auto &properties = ecs->get_components<Property>();
+  int shootId = -1;
+
+  for (std::size_t i = 0; i < entityType.size(); ++i) {
+    if (entityType[i].has_value()) {
+      if (entityType[i] && entityType[i] == EntityType::Player) {
+        if (i == command.shoot.playerId) {
+          if (properties[i].has_value()) {
+            shootId = properties[i]->shootId;
+          }
+        }
+      }
+    }
+  }
+
+  std::size_t velocity = velocityShoot[shootId];
+
   auto bullet = create_entity<EntityType::Projectile>(
       *ecs, Position(command.shoot.positionX, command.shoot.positionY),
-      Velocity(10, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+      Velocity(velocity, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
 
-  command.shoot.playerId = bullet;
+  command.shoot.bulletId = bullet;
   queue->pushTcpQueue(command);
 }
 

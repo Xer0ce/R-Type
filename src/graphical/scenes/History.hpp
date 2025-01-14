@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../../game/systems/enemy/EnemySystems.hpp"
 #include "../commandSystem/CommandGame.hpp"
 #include "AScene.hpp"
 

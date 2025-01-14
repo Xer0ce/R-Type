@@ -110,8 +110,9 @@ void CommandHandle::shoot(std::vector<uint8_t> buffer, IClient *protocol,
 
   cmd.type = CommandType::SHOOT;
   cmd.shoot.playerId = static_cast<int>(buffer[1]);
-  cmd.shoot.positionX = *reinterpret_cast<float *>(&buffer[2]);
-  cmd.shoot.positionY = *reinterpret_cast<float *>(&buffer[6]);
+  cmd.shoot.bulletId = static_cast<int>(buffer[2]);
+  cmd.shoot.positionX = *reinterpret_cast<float *>(&buffer[3]);
+  cmd.shoot.positionY = *reinterpret_cast<float *>(&buffer[7]);
 
   queue->pushGameQueue(cmd);
 }
@@ -126,10 +127,6 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.createEnemy.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.createEnemy.positionY = *reinterpret_cast<float *>(&buffer[6]);
 
-  std::cout << "Enemy id: " << cmd.createEnemy.enemyId << std::endl;
-  std::cout << "Enemy positionX: " << cmd.createEnemy.positionX << std::endl;
-  std::cout << "Enemy positionY: " << cmd.createEnemy.positionY << std::endl;
-
   queue->pushGameQueue(cmd);
 }
 
@@ -139,10 +136,12 @@ void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
 
   cmd.type = CommandType::NEWPLAYER;
   cmd.newPlayer.id = static_cast<int>(buffer[1]);
-  cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[2]);
-  cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[6]);
-  int playloadSize = static_cast<int>(buffer[10]);
-  std::string nickname(buffer.begin() + 11, buffer.begin() + 11 + playloadSize);
+  cmd.newPlayer.spaceshipId = static_cast<int>(buffer[2]);
+  cmd.newPlayer.shootId = static_cast<int>(buffer[3]);
+  cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[4]);
+  cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[8]);
+  int playloadSize = static_cast<int>(buffer[12]);
+  std::string nickname(buffer.begin() + 13, buffer.begin() + 13 + playloadSize);
   cmd.newPlayer.Nickname = nickname;
 
   queue->pushGameQueue(cmd);
@@ -160,12 +159,9 @@ void CommandHandle::killEntity(std::vector<uint8_t> buffer, IClient *protocol,
                                Queue *queue) {
   Command cmd;
 
-  std::cout << "Kill entity command receive" << std::endl;
-
   cmd.type = CommandType::KILLENTITY;
   cmd.killEntity.entityId = static_cast<int>(buffer[1]);
 
-  std::cout << "Entity id: " << cmd.killEntity.entityId << std::endl;
   queue->pushGameQueue(cmd);
 }
 

@@ -48,6 +48,27 @@ CommandGame::CommandGame() {
 
 CommandGame::~CommandGame() {}
 
+const std::string pathSpaceship[] = {
+    "../src/graphical/assets/spaceship/michou.png",
+    "../src/graphical/assets/spaceship/inox.png",
+    "../src/graphical/assets/spaceship/valouz.png",
+    "../src/graphical/assets/spaceship/bouzi.png",
+};
+
+const std::string pathShoot[] = {
+    "../src/graphical/assets/shoot/bullet1.png",
+    "../src/graphical/assets/shoot/bullet2.png",
+    "../src/graphical/assets/shoot/bullet3.png",
+    "../src/graphical/assets/shoot/bullet4.png",
+};
+
+const std::size_t velocityShoot[] = {
+    10,
+    20,
+    30,
+    40,
+};
+
 void CommandGame::executeCommandGame(Command command, Queue *queue,
                                      Registry *ecs, Window *window) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
@@ -59,14 +80,9 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
 
 void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
                           Window *window) {
-  SDL_Texture *playerTexture =
-      window->loadTexture("../src/graphical/assets/michou.png");
+  std::string texturePath = pathSpaceship[command.repConnect.spaceshipId];
 
-  std::cout << "CONTROLABLE Je cree le player avec l'id "
-            << command.repConnect.id << std::endl;
-  std::cout << "Nickname: " << command.repConnect.Nickname << std::endl;
-  std::cout << "SpaceshipID : " << command.repConnect.spaceshipId << std::endl;
-  std::cout << "ShootID : " << command.repConnect.shootId << std::endl;
+  SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
 
   auto player = create_entity<EntityType::Player>(
       *ecs,
@@ -132,20 +148,16 @@ void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
 void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
                               Window *window) {
   SDL_Texture *enemyTexture =
-      window->loadTexture("../src/graphical/assets/enemy.png");
-
-  std::cout << "[GamecommandGRAPHIC] Enemy id : " << command.createEnemy.enemyId
-            << std::endl;
-  std::cout << "[GamecommandGRAPHIC]Enemy positionX : "
-            << command.createEnemy.positionX << std::endl;
-  std::cout << "[GamecommandGRAPHIC]Enemy positionY : "
-            << command.createEnemy.positionY << std::endl;
+      window->loadTexture("../src/graphical/assets/enemy/enemy.png");
 
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
       Velocity(0, 0), Health(1),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, enemyTexture),
+      Draw({0, 255, 0, 255},
+           {(int)command.createEnemy.positionX,
+            (int)command.createEnemy.positionY, 50, 50},
+           enemyTexture),
       AiType::Aggressive,
       std::optional<std::size_t>(command.createEnemy.enemyId));
   std::cout << "Enemy created" << std::endl;
@@ -153,11 +165,10 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
 
 void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
                             Window *window) {
-  SDL_Texture *playerTexture =
-      window->loadTexture("../src/graphical/assets/michou.png");
+  std::string texturePath = pathSpaceship[command.newPlayer.spaceshipId];
 
-  std::cout << "PAS CONTROLABLE Je cree le player avec l'id "
-            << command.newPlayer.id << std::endl;
+  SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
+
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
       Velocity(), Health(1),
@@ -175,14 +186,30 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
 
 void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
                         Window *window) {
-  SDL_Texture *bulletTexture =
-      window->loadTexture("../src/graphical/assets/bullet.png");
+  auto &entities = ecs->get_components<EntityType>();
+  auto &properties = ecs->get_components<Property>();
+  int shootId = -1;
+
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (entities[i] && entities[i] == EntityType::Player) {
+      if (i == command.shoot.playerId) {
+        if (properties[i].has_value()) {
+          shootId = properties[i]->shootId;
+        }
+      }
+    }
+  }
+
+  std::string texturePath = pathShoot[shootId];
+  std::size_t velocity = velocityShoot[shootId];
+
+  SDL_Texture *shootTexture = window->loadTexture(texturePath.c_str());
 
   auto bullet = create_entity<EntityType::Projectile>(
       *ecs, Position(command.shoot.positionX, command.shoot.positionY),
-      Velocity(10, 0),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, bulletTexture),
-      std::optional<std::size_t>(command.shoot.playerId));
+      Velocity(velocity, 0),
+      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, shootTexture),
+      std::optional<std::size_t>(command.shoot.bulletId));
 }
 
 void CommandGame::getUsersLobby(Command command, Queue *queue, Registry *ecs,

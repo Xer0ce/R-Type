@@ -15,9 +15,9 @@ void aggresive_ai(Registry *ecs) {
   for (std::size_t i = 0; i < entityType.size(); i++) {
     if (entityType[i] == EntityType::Enemy) {
       if (position[i]->y <= 0) {
-        velocity[i]->y = 10;
+        velocity[i]->y = 12.5;
       } else if (position[i]->y >= 600) {
-        velocity[i]->y = -10;
+        velocity[i]->y = -12.5;
       }
     }
   }
