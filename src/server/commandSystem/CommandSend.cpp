@@ -135,6 +135,8 @@ void CommandSend::shoot(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.shoot.playerId));
 
+  binaryData.push_back(static_cast<uint8_t>(command.shoot.bulletId));
+
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.shoot.positionX);
   binaryData.insert(binaryData.end(), positionXBytes,
