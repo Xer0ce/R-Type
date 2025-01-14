@@ -10,3 +10,6 @@
 [submodule "external/json"]
 	path = external/json
 	url = https://github.com/nlohmann/json.git
+[submodule "external/SDL3_mixer"]
+	path = external/SDL3_mixer
+	url = https://github.com/libsdl-org/SDL_mixer
