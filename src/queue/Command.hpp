@@ -68,6 +68,7 @@ struct Move {
 
 struct Shoot {
   int playerId;
+  int bulletId;
   float positionX;
   float positionY;
 };
