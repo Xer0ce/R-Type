@@ -44,9 +44,15 @@ CommandGame::CommandGame() {
                                               Registry *ecs, Window *window) {
     cooldown(command, queue, ecs, window);
   };
+
 }
 
 CommandGame::~CommandGame() {}
+
+const std::string pathSpaceship[] = {
+    "../src/graphical/assets/michou.png",
+    "../src/graphical/assets/inox.png",
+};
 
 void CommandGame::executeCommandGame(Command command, Queue *queue,
                                      Registry *ecs, Window *window) {
@@ -57,16 +63,12 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
   }
 }
 
+
 void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
                           Window *window) {
-  SDL_Texture *playerTexture =
-      window->loadTexture("../src/graphical/assets/michou.png");
+  std::string texturePath = pathSpaceship[command.repConnect.spaceshipId];
 
-  std::cout << "CONTROLABLE Je cree le player avec l'id "
-            << command.repConnect.id << std::endl;
-  std::cout << "Nickname: " << command.repConnect.Nickname << std::endl;
-  std::cout << "SpaceshipID : " << command.repConnect.spaceshipId << std::endl;
-  std::cout << "ShootID : " << command.repConnect.shootId << std::endl;
+  SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
 
   auto player = create_entity<EntityType::Player>(
       *ecs,
@@ -207,6 +209,6 @@ void CommandGame::cooldown(Command command, Queue *queue, Registry *ecs,
                   200, "../src/graphical/assets/RTypefont.otf",
                   {255, 255, 255, 255});
   if (command.cooldown.time == 0) {
-    window->setAllowToInteract(true);
+    window->setAllowToInteract(true); 
   }
 }
