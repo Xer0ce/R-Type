@@ -69,6 +69,8 @@ const std::size_t velocityShoot[] = {
     40,
 };
 
+
+
 void CommandGame::executeCommandGame(Command command, Queue *queue,
                                      Registry *ecs, Window *window) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
@@ -83,9 +85,6 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
   std::string texturePath = pathSpaceship[command.repConnect.spaceshipId];
 
   SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
-
-  std::cout << "[CREATE PLAYER CONTROLABLE ] Je cree le player avec l'id " << command.repConnect.id
-            << std::endl;
 
   auto player = create_entity<EntityType::Player>(
       *ecs,
@@ -153,13 +152,6 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *enemyTexture =
       window->loadTexture("../src/graphical/assets/enemy/enemy.png");
 
-  std::cout << "[GamecommandGRAPHIC] Enemy id : " << command.createEnemy.enemyId
-            << std::endl;
-  std::cout << "[GamecommandGRAPHIC]Enemy positionX : "
-            << command.createEnemy.positionX << std::endl;
-  std::cout << "[GamecommandGRAPHIC]Enemy positionY : "
-            << command.createEnemy.positionY << std::endl;
-
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
@@ -179,8 +171,6 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
 
   SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
 
-  std::cout << "PAS CONTROLABLE Je cree le player avec l'id "
-            << command.newPlayer.id << std::endl;
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
       Velocity(), Health(1),
