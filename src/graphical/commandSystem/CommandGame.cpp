@@ -64,9 +64,9 @@ const std::string pathShoot[] = {
 
 const std::size_t velocityShoot[] = {
     10,
-    20,
-    30,
-    40,
+    10,
+    10,
+    10,
 };
 
 void CommandGame::executeCommandGame(Command command, Queue *queue,

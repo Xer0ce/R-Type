@@ -29,6 +29,16 @@ void position_system_net(
         queue->pushUdpQueue(command);
       }
     }
+    if (entityType[i] == EntityType::Projectile) {
+      if (now >= _next) {
+        Command command;
+        command.type = CommandType::MOVE;
+        command.move.positionX = position[i]->x;
+        command.move.positionY = position[i]->y;
+        command.move.entityId = i;
+        queue->pushUdpQueue(command);
+      }
+    }
   }
 }
 
