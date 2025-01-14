@@ -44,7 +44,6 @@ CommandGame::CommandGame() {
                                               Registry *ecs, Window *window) {
     cooldown(command, queue, ecs, window);
   };
-
 }
 
 CommandGame::~CommandGame() {}
@@ -78,7 +77,6 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
     std::cout << "Invalid command type! [Game]" << std::endl;
   }
 }
-
 
 void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
                           Window *window) {
@@ -245,6 +243,6 @@ void CommandGame::cooldown(Command command, Queue *queue, Registry *ecs,
                   200, "../src/graphical/assets/RTypefont.otf",
                   {255, 255, 255, 255});
   if (command.cooldown.time == 0) {
-    window->setAllowToInteract(true); 
+    window->setAllowToInteract(true);
   }
 }
