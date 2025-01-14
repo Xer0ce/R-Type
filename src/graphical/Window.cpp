@@ -63,7 +63,8 @@ void Window::init() {
     destroyWindow();
     exit(84);
   }
-  _sounds.push_back(Sound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND));
+  _sounds.push_back(
+      Sound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND));
 }
 
 void Window::destroyWindow() {
