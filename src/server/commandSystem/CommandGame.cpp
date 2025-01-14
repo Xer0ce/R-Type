@@ -74,10 +74,10 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
         commandNewPlayer.newPlayer.id = i;
         commandNewPlayer.newPlayer.positionX = position[i]->x;
         commandNewPlayer.newPlayer.positionY = position[i]->y;
+        commandNewPlayer.newPlayer.spaceshipId = property[i]->spaceshipId;
+        commandNewPlayer.newPlayer.shootId = property[i]->shootId;
         commandNewPlayer.id = property[i]->sockedId;
 
-        std::cout << "Jenvoie le new player --------><>>>>" << std::endl;
-        std::cout << "Player cree avec l'id : " << i << std::endl;
         queue->pushTcpQueue(commandNewPlayer);
       }
     }

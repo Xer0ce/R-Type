@@ -140,10 +140,12 @@ void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
 
   cmd.type = CommandType::NEWPLAYER;
   cmd.newPlayer.id = static_cast<int>(buffer[1]);
-  cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[2]);
-  cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[6]);
-  int playloadSize = static_cast<int>(buffer[10]);
-  std::string nickname(buffer.begin() + 11, buffer.begin() + 11 + playloadSize);
+  cmd.newPlayer.spaceshipId = static_cast<int>(buffer[2]);
+  cmd.newPlayer.shootId = static_cast<int>(buffer[3]);
+  cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[4]);
+  cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[8]);
+  int playloadSize = static_cast<int>(buffer[12]);
+  std::string nickname(buffer.begin() + 13, buffer.begin() + 13 + playloadSize);
   cmd.newPlayer.Nickname = nickname;
 
   queue->pushGameQueue(cmd);

@@ -191,6 +191,10 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.newPlayer.id));
 
+  binaryData.push_back(static_cast<uint8_t>(command.newPlayer.spaceshipId));
+
+  binaryData.push_back(static_cast<uint8_t>(command.newPlayer.shootId));
+
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.newPlayer.positionX);
   binaryData.insert(binaryData.end(), positionXBytes,

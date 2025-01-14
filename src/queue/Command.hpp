@@ -55,6 +55,8 @@ struct NewPlayer {
   float positionX;
   float positionY;
   int id;
+  int spaceshipId;
+  int shootId;
   std::string Nickname;
 };
 
