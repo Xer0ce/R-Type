@@ -93,14 +93,12 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && position[i].has_value()) {
       if (entityType[i] && entityType[i] == EntityType::Enemy) {
-        std::cout << "Create enemy pour 1 client" << std::endl;
         Command newCommandEnemy;
         newCommandEnemy.type = CommandType::CREATEENEMY;
         newCommandEnemy.createEnemy.positionX = position[i]->x;
         newCommandEnemy.createEnemy.positionY = position[i]->y;
         newCommandEnemy.createEnemy.enemyId = i;
         newCommandEnemy.id = command.id;
-        std::cout << "Enemy id : " << i << std::endl;
         queue->pushTcpQueue(newCommandEnemy);
       }
     }
