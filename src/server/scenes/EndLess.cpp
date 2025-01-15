@@ -112,6 +112,7 @@ void EndLess::waveGestion() {
         _ecs->kill_entity(static_cast<Entities>(i));
       }
     }
+    _queue->removeCommandByType(CommandType::SHOOT);
     std::this_thread::sleep_for(std::chrono::seconds(3));
     cmd.type = CommandType::WAVE;
     cmd.wave.wave = _waveNumber;
