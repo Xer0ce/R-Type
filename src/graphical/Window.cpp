@@ -65,7 +65,13 @@ void Window::init() {
   }
 
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
-  addSound("../src/graphical/assets/sounds/endless.mp3", ENDLESS_MUSIC, 100);
+  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
+  addSound("../src/graphical/assets/sounds/un.mp3", WAVE1, 25);
+  addSound("../src/graphical/assets/sounds/deux.mp3", WAVE2, 25);
+  addSound("../src/graphical/assets/sounds/trois.mp3", WAVE3, 25);
+  addSound("../src/graphical/assets/sounds/nouvelleVague.mp3", NEWWAVE, 25);
+  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
+  addSound("../src/graphical/assets/sounds/endless.mp3", ENDLESS_MUSIC, 50);
   addSound("../src/graphical/assets/sounds/Michou_croute_et_Elsa_2.mp3",
            MICHOU_ET_ELSA_2, 100);
 }
