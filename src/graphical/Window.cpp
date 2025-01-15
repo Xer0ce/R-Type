@@ -261,11 +261,10 @@ void Window::deleteText(std::string text) {
   for (auto &t : _texts) {
     if (t.getText() == text) {
       t.destroyText();
-      _texts.erase(std::remove_if(_texts.begin(), _texts.end(),
-                                  [&text](Text &t) {
-                                    return t.getText() == text;
-                                  }),
-                   _texts.end());
+      _texts.erase(
+          std::remove_if(_texts.begin(), _texts.end(),
+                         [&text](Text &t) { return t.getText() == text; }),
+          _texts.end());
     }
   }
 }
