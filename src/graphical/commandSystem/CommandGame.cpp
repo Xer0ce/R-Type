@@ -161,8 +161,7 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
            {(int)command.createEnemy.positionX,
             (int)command.createEnemy.positionY, 100, 100},
            enemyTexture),
-      aiType,
-      std::optional<std::size_t>(command.createEnemy.enemyId));
+      aiType, std::optional<std::size_t>(command.createEnemy.enemyId));
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
@@ -263,8 +262,10 @@ void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
   window->addText("Vague " + std::to_string(command.wave.wave), 25, 20, 50, 50,
                   35, "../src/graphical/assets/RTypefont.otf",
                   {255, 255, 255, 255});
-  
-  window->addText("Nouvelle vague", 250, 300, 50, 50, 100, "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
+
+  window->addText("Nouvelle vague", 250, 300, 50, 50, 100,
+                  "../src/graphical/assets/RTypefont.otf",
+                  {255, 255, 255, 255});
   window->playSound(NEWWAVE, 0);
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (entities[i] == EntityType::Enemy) {
