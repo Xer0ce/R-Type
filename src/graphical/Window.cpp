@@ -238,7 +238,12 @@ int Window::getMouseState(float *x, float *y) {
   return SDL_GetMouseState(x, y);
 }
 
-void Window::deleteTexts() { _texts.clear(); }
+void Window::deleteTexts() {
+  for (auto &text : _texts) {
+    text.destroyText();
+  }
+  _texts.clear();
+}
 
 void Window::deleteButtons(const std::string &tag) {
   if (tag.empty()) {
@@ -256,6 +261,11 @@ void Window::deleteText(std::string text) {
   for (auto &t : _texts) {
     if (t.getText() == text) {
       t.destroyText();
+      _texts.erase(std::remove_if(_texts.begin(), _texts.end(),
+                                  [&text](Text &t) {
+                                    return t.getText() == text;
+                                  }),
+                   _texts.end());
     }
   }
 }
