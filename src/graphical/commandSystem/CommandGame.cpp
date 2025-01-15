@@ -76,7 +76,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
            {(int)command.repConnect.positionX,
             (int)command.repConnect.positionY, 50, 50},
            playerTexture),
-      Nickname(command.repConnect.Nickname, {0, 0, 0, 0}, window->loadText(
+      Nickname(command.repConnect.Nickname, {0, 0, 20, 20}, window->loadText(
                                                              command.repConnect.Nickname,
                                                              20,
                                                              "../src/graphical/assets/RTypefont.otf",
@@ -165,7 +165,7 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
            {(int)command.newPlayer.positionX, (int)command.newPlayer.positionY,
             50, 50},
            playerTexture),
-      Nickname(command.newPlayer.Nickname, {0, 0, 0, 0}, window->loadText(command.newPlayer.Nickname, 20, "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255})), Property(0, 0, 0), std::nullopt,
+      Nickname(command.newPlayer.Nickname, {0, 0, 20, 20}, window->loadText(command.newPlayer.Nickname, 20, "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255})), Property(0, 0, 0), std::nullopt,
       std::optional<std::size_t>(command.newPlayer.id));
 
 }

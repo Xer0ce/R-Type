@@ -275,11 +275,6 @@ void Window::setTextPos(std::string text, int x, int y) {
   }
 }
 
-void Window::setNickName(std::unique_ptr<Text> nickName) {
-  _nickName = std::move(nickName);
-  _nickName->init();
-}
-
 SDL_Texture *Window::loadText(std::string text, int size, std::string fontPath,
                               SDL_Color color) {
   TTF_Font *font = TTF_OpenFont(fontPath.c_str(), size);

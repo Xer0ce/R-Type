@@ -103,10 +103,6 @@ public:
 
   bool getAllowToInteract() { return _allowToInteract; }
 
-  void setNickName(std::unique_ptr<Text> nickName);
-
-  Text &getNickName() { return *_nickName; }
-
   LifeBar &getLifeBar() { return *_lifeBar; }
 
 private:
@@ -121,6 +117,5 @@ private:
   std::vector<LifeBar> _lifeBars;
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;
-  std::unique_ptr<Text> _nickName;
   std::unique_ptr<LifeBar> _lifeBar;
 };
