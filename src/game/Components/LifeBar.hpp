@@ -10,9 +10,9 @@
 #include <SDL3/SDL.h>
 
 struct LifeBar {
-    int hp;
-    SDL_FRect bar;
-    SDL_Color color;
+  int hp;
+  SDL_FRect bar;
+  SDL_Color color;
 
-    LifeBar(int hp, SDL_FRect bar) : hp(hp), bar(bar) {}
+  LifeBar(int hp, SDL_FRect bar) : hp(hp), bar(bar) {}
 };

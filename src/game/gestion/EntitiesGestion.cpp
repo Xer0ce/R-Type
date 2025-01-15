@@ -3,7 +3,8 @@
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
                               Health health, Draw draw, Nickname nickname,
                               Property property, std::optional<Control> control,
-                              std::optional<std::size_t> id, std::optional<LifeBar> lifeBar) {
+                              std::optional<std::size_t> id,
+                              std::optional<LifeBar> lifeBar) {
   auto entity = id.has_value() ? r.spawn_entity(id.value()) : r.spawn_entity();
   r.add_component<Position>(entity, std::move(position));
   r.add_component<Velocity>(entity, std::move(velocity));

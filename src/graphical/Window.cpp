@@ -164,36 +164,25 @@ SDL_Texture *Window::loadTexture(const char *path) {
 
 void Window::setBackground(SDL_Texture *texture) { _background = texture; }
 
-void Window::drawBackground(bool isScrolling, float deltaTime)
-{
-    float bgWidth = 0.f;
-    float bgHeight = 0.f;
+void Window::drawBackground(bool isScrolling, float deltaTime) {
+  float bgWidth = 0.f;
+  float bgHeight = 0.f;
 
-    if (!_background)
-        return;
-    if (!isScrolling) {
-        SDL_RenderTexture(_renderer, _background, nullptr, nullptr);
-        return;
-    }
+  if (!_background)
+    return;
+  if (!isScrolling) {
+    SDL_RenderTexture(_renderer, _background, nullptr, nullptr);
+    return;
+  }
 
-    SDL_GetTextureSize(_background, &bgWidth, &bgHeight);
-    _bgOffset -= _bgScrollSpeed * deltaTime;
-    if (_bgOffset <= -bgWidth)
-        _bgOffset = 0.f;
-    SDL_FRect destRect1 = {
-        _bgOffset,
-        0.f,
-        bgWidth,
-        bgHeight
-    };
-    SDL_RenderTexture(_renderer, _background, nullptr, &destRect1);
-    SDL_FRect destRect2 = {
-        _bgOffset + bgWidth,
-        0.f,
-        bgWidth,
-        bgHeight
-    };
-    SDL_RenderTexture(_renderer, _background, nullptr, &destRect2);
+  SDL_GetTextureSize(_background, &bgWidth, &bgHeight);
+  _bgOffset -= _bgScrollSpeed * deltaTime;
+  if (_bgOffset <= -bgWidth)
+    _bgOffset = 0.f;
+  SDL_FRect destRect1 = {_bgOffset, 0.f, bgWidth, bgHeight};
+  SDL_RenderTexture(_renderer, _background, nullptr, &destRect1);
+  SDL_FRect destRect2 = {_bgOffset + bgWidth, 0.f, bgWidth, bgHeight};
+  SDL_RenderTexture(_renderer, _background, nullptr, &destRect2);
 }
 
 keyType Window::catchKeyOnce() {
@@ -337,7 +326,6 @@ void Window::stopSound(soundType type) {
     }
   }
 }
-
 
 SDL_Texture *Window::loadText(std::string text, int size, std::string fontPath,
                               SDL_Color color) {
