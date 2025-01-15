@@ -127,8 +127,9 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
 
   auto bullet = create_entity<EntityType::Projectile>(
       *ecs, Position(command.shoot.positionX, command.shoot.positionY),
-      Velocity(50, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+      Velocity(10, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
 
+  command.shoot.playerId = bullet;
   queue->pushTcpQueue(command);
 }
 
@@ -152,7 +153,7 @@ void CommandGame::connectLobby(Command command, Queue *queue, Registry *ecs) {
 
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(0, 0), Velocity(), Health(),
-      Draw({0, 0, 0, 0}, {0, 0, 0, 0}), Nickname(command.connectLobby.Nickname),
+      Draw({0, 0, 0, 0}, {0, 0, 0, 0}), Nickname(command.connectLobby.Nickname, {0, 0, 0, 0}, nullptr),
       Property(command.connectLobby.spaceshipId, command.connectLobby.shootId,
                command.id));
 

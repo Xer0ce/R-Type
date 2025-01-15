@@ -25,7 +25,7 @@ void LifeBar::init()
     _barBackground.h = 5;
 }
 
-void LifeBar::drawLifeBar(int x, int y, int hp)
+void LifeBar::drawLifeBar(float x, float y, int hp)
 {
     _life.x = x + 5;
     _life.y = y - 11;

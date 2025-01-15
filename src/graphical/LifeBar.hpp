@@ -7,11 +7,7 @@
 
 #pragma once
 
-#include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
-#include <SDL3_ttf/SDL_ttf.h>
 #include "Text.hpp"
-#include <iostream>
 
 class LifeBar {
     public:
@@ -19,7 +15,7 @@ class LifeBar {
         ~LifeBar();
 
     void init();
-    void drawLifeBar(int x, int y, int hp);
+    void drawLifeBar(float x, float y, int hp);
     SDL_Color changeColor(int hp);
 
     private:

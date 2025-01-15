@@ -167,16 +167,17 @@ void Window::drawBackground(bool isScrolling, float deltaTime)
     SDL_RenderTexture(_renderer, _background, nullptr, &destRect2);
 }
 
-void Window::initLifeBar() {
-  LifeBar lifeBar = LifeBar(_renderer);
-  lifeBar.init();
-  _lifeBars.push_back(lifeBar);
+void Window::initLifeBar()
+{
+    _lifeBar = std::make_unique<LifeBar>(_renderer);
+    _lifeBar->init();
 }
 
-void Window::drawLifeBar(int x, int y, int hp) {
-  for (auto &lifeBar : _lifeBars) {
-    lifeBar.drawLifeBar(x, y, hp);
-  }
+void Window::drawLifeBar(int x, int y, int hp)
+{
+    if (_lifeBar) {
+        _lifeBar->drawLifeBar(x, y, hp);
+    }
 }
 
 keyType Window::catchKeyOnce() {
@@ -272,4 +273,22 @@ void Window::setTextPos(std::string text, int x, int y) {
       t.setPos(x, y);
     }
   }
+}
+
+void Window::setNickName(std::unique_ptr<Text> nickName) {
+  _nickName = std::move(nickName);
+  _nickName->init();
+}
+
+SDL_Texture *Window::loadText(std::string text, int size, std::string fontPath,
+                              SDL_Color color) {
+  TTF_Font *font = TTF_OpenFont(fontPath.c_str(), size);
+
+  SDL_Surface *surface =
+      TTF_RenderText_Blended(font, text.c_str(), text.length(), color);
+
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(_renderer, surface);
+
+  //SDL_DestroySurface(surface);
+  return texture;
 }

@@ -33,6 +33,9 @@ public:
 
   SDL_Texture *loadTexture(const char *path);
 
+  SDL_Texture *loadText(std::string text, int size, std::string fontPath,
+                        SDL_Color color);
+
   void draw(SDL_Texture *texture, SDL_Rect rect);
 
   void drawText();
@@ -100,6 +103,12 @@ public:
 
   bool getAllowToInteract() { return _allowToInteract; }
 
+  void setNickName(std::unique_ptr<Text> nickName);
+
+  Text &getNickName() { return *_nickName; }
+
+  LifeBar &getLifeBar() { return *_lifeBar; }
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -112,4 +121,6 @@ private:
   std::vector<LifeBar> _lifeBars;
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;
+  std::unique_ptr<Text> _nickName;
+  std::unique_ptr<LifeBar> _lifeBar;
 };
