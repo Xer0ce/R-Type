@@ -12,13 +12,12 @@ void balzy_ai(Registry *ecs, std::size_t enemy) {
   auto &position = ecs->get_components<Position>();
 
   if (position[enemy]->y <= 0) {
-    velocity[enemy]->y = 6.5;
-  } else if (position[enemy]->y >= 800) {
-    velocity[enemy]->y = -6.5;
+    velocity[enemy]->y = 20;
+  } else if (position[enemy]->y >= 750) {
+    velocity[enemy]->y = -20;
   }
-  if (position[enemy]->x <= 400) {
-    velocity[enemy]->x = 6.5;
-  } else if (position[enemy]->x >= 1200) {
-    velocity[enemy]->x = -6.5;
+  if (position[enemy]->x < -10) {
+    position[enemy]->x = 1300;
   }
+  velocity[enemy]->x = -10;
 }

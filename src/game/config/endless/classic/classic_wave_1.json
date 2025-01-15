@@ -8,15 +8,18 @@
         },
         {
             "type": "Balourd",
-            "number": 0,
-            "ia": "Aggressive"
+            "number": 1,
+            "ia": "Balzy"
         },
         {
             "type": "Zinzolin",
-            "number": 0,
-            "ia": "Aggressive",
-            "shootype": "Damage",
-            "shootFrequency": ""
+            "number": 1,
+            "ia": "Passive"
+        },
+        {
+            "type": "BigBoss",
+            "number": 1,
+            "ia": "Boss"
         }
     ]
 }

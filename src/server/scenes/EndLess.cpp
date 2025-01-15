@@ -95,7 +95,7 @@ void EndLess::loadBoss() {
   _wave.load(bossWave[random], *_queue);
 };
 
-bool EndLess::waveGestion() {
+void EndLess::waveGestion() {
   if (waveIsClear()) {
     _waveNumber++;
     Command cmd;
@@ -128,9 +128,7 @@ bool EndLess::waveGestion() {
     } else {
       loadClassic();
     }
-    return true;
   }
-  return false;
 }
 
 sceneType
@@ -170,8 +168,8 @@ EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
       _wave.load(classicWave[0], *_queue);
     }
     if (now > deltaTime) {
-      auto nextWave = waveGestion();
-      enemy_system(_ecs, nextWave);
+      waveGestion();
+      enemy_system(_ecs);
       position_system_net(1, _ecs, _queue, _nextCorrectPosition);
       collision_system(_ecs, _queue);
       if (now > _nextCorrectPosition)

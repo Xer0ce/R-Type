@@ -73,7 +73,7 @@ template <EnemyType T> Entities create_enemy(Registry &r, AiType type) {
                                             Draw({}, {}, nullptr), type);
   }
   if constexpr (T == EnemyType::BigBoss) {
-    return create_entity<EntityType::Enemy>(r, Position(random_x, random_y),
+    return create_entity<EntityType::Enemy>(r, Position(1100, random_y),
                                             Velocity(0, 10), Health(300),
                                             Draw({}, {}, nullptr), type);
   }

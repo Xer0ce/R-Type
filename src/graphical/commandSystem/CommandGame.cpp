@@ -265,7 +265,6 @@ void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
     window->setAllowToInteract(true);
     queue->removeCommandByType(CommandType::SHOOT);
     window->deleteText("Nouvelle vague");
-    window->setNextWave(false);
     return;
   }
   window->deleteText("Vague " + std::to_string(command.wave.wave - 1));
@@ -277,7 +276,6 @@ void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
                   "../src/graphical/assets/RTypefont.otf",
                   {255, 255, 255, 255});
   window->playSound(NEWWAVE, 0);
-  window->setNextWave(true);
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (entities[i] == EntityType::Enemy) {
       ecs->kill_entity(static_cast<Entities>(i));

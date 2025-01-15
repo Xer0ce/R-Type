@@ -60,7 +60,7 @@ History::loop(eventType event,
         _nextBullet = now + std::chrono::milliseconds(150);
       }
       position_system_graphic(1, *_ecs, _queue);
-      enemy_system(_ecs, _window->isNewWave());
+      enemy_system(_ecs);
       display_infos(_ecs);
     }
   }

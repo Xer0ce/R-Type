@@ -53,4 +53,8 @@ void aggresive_ai(Registry *ecs, std::size_t enemy) {
   } else if (position[enemy]->y < position[randomPlayerId]->y) {
     velocity[enemy]->y = 6.5;
   }
+  if (position[enemy]->x < -10) {
+    position[enemy]->x = 1300;
+  }
+  velocity[enemy]->x = -17;
 }
