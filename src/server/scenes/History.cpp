@@ -50,7 +50,7 @@ History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
       _wave.load(path, *_queue);
     }
     if (now > deltaTime) {
-      enemy_system(_ecs);
+      enemy_system(_ecs, false);
       position_system_net(1, _ecs, _queue, _nextCorrectPosition);
       if (now > _nextCorrectPosition)
         _nextCorrectPosition =

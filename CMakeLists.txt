@@ -53,8 +53,6 @@ if(BUILD_SERVER)
     file(GLOB SOURCES_GAME_SYSTEMS "src/game/systems/enemy/*.cpp")
     file(GLOB SOURCES_GAME_SYSTEMS_GLOBAL "src/game/systems/global/*.cpp")
 
-    file(GLOB SOURCES_GRAPHICAL "src/graphical/Text.cpp" "src/graphical/LifeBar.cpp")
-
     add_executable(r-type_server
         ${SOURCES_SERVER}
         ${SOURCES_SERVER_COMMAND}
