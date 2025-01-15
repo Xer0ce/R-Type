@@ -115,6 +115,9 @@ public:
 
   void stopSound(soundType type);
 
+  bool isNewWave() { return _nextWave; };
+
+  void setNextWave(bool next) { _nextWave = next; };
 
 private:
   SDL_Window *_window;
@@ -128,4 +131,5 @@ private:
   bool _allowToInteract;
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;
+  bool _nextWave;
 };

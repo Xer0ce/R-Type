@@ -17,6 +17,6 @@ void boss_ai(Registry *ecs, std::size_t enemy);
 void passive_ai(Registry *ecs, std::size_t enemy);
 
 void call_enemy_ai(Registry *ecs, AiType type);
-void enemy_system(Registry *ecs);
+void enemy_system(Registry *ecs, bool nextWave);
 
 #endif // ENEMYSYTEMS_HPP
