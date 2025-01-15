@@ -44,24 +44,22 @@ History::loop(eventType event,
 
   _window->drawBackground();
   _window->drawText();
-  keyType key = _window->catchKey();
+  std::vector<keyType> keys = _window->catchKey();
+  auto movementKeys = _window->catchMovementKey();
   keyType keyOnce = _window->catchKeyOnce();
-
-  if (key == keyType::ESCAPE) {
-    return sceneType::MENU;
-  }
 
   if (now > deltaTime) {
     if (_window->getAllowToInteract()) {
       std::chrono::time_point<std::chrono::steady_clock> now =
           std::chrono::steady_clock::now();
       _window->deleteText("0");
-      control_system(key, *_ecs);
-      shoot_system(key, *_ecs, _queue, _nextBullet);
+      control_system(movementKeys, *_ecs);
+      shoot_system(keys, *_ecs, _queue, _nextBullet);
       if (now >= _nextBullet) {
-        _nextBullet = now + std::chrono::milliseconds(50);
+        _nextBullet = now + std::chrono::milliseconds(150);
       }
       position_system_graphic(1, *_ecs, _queue);
+      enemy_system(_ecs);
       display_infos(_ecs);
     }
   }

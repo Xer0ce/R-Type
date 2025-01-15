@@ -20,7 +20,7 @@ UDP::UDP(std::size_t port, std::string ip) {
   _ip = ip;
   _type = "UDP";
   _timeout.tv_sec = 0;
-  _timeout.tv_usec = 1;
+  _timeout.tv_usec = 10000;
 }
 
 UDP::~UDP() { closeSocket(); }
@@ -144,6 +144,7 @@ bool UDP::listenSocket(int backlog) {
 
 void UDP::closeSocket() {
   if (_socket >= 0) {
+    shutdown(_socket, SHUT_RDWR);
     close(_socket);
     _socket = -1;
     std::cout << "[DEBUG] UDP socket closed." << std::endl;

@@ -12,11 +12,12 @@ History::History() {
   _startCooldown = true;
   _firstRound = true;
   _coolDown = 4;
+  _nextCorrectPosition = std::chrono::steady_clock::now();
 }
 
 History::~History() {}
 
-void History::init() {}
+void History::init() { _wave = Wave(_ecs); }
 
 sceneType
 History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
@@ -44,18 +45,16 @@ History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   if (!_startCooldown) {
     if (_firstRound) {
       _firstRound = false;
-      std::cout << "First round" << std::endl;
-      auto enemy1 = create_enemy<EnemyType::Pion>(*_ecs, AiType::Aggressive);
-      Command command;
-      command.type = CommandType::CREATEENEMY;
-      command.createEnemy.enemyId = enemy1;
-      command.createEnemy.positionX = 800;
-      command.createEnemy.positionY = 0;
-      _queue->pushTcpQueue(command);
+      std::string path =
+          "../src/game/config/endless/classic/classic_wave_1.json";
+      _wave.load(path, *_queue);
     }
     if (now > deltaTime) {
       enemy_system(_ecs);
-      position_system_net(1, _ecs, _queue);
+      position_system_net(1, _ecs, _queue, _nextCorrectPosition);
+      if (now > _nextCorrectPosition)
+        _nextCorrectPosition =
+            std::chrono::steady_clock::now() + std::chrono::milliseconds(500);
       collision_system(_ecs, _queue);
     }
   }

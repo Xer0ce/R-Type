@@ -20,6 +20,21 @@ void Window::init() {
     exit(84);
   }
 
+  if (!SDL_Init(SDL_INIT_AUDIO)) {
+    std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
+
+  if (Mix_Init(MIX_INIT_MP3) == 0) {
+    std::cerr << "Mix_Init Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
+
+  if (!Mix_OpenAudio(0, NULL)) {
+    std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
+
   if (!TTF_Init()) {
     std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
     exit(84);
@@ -48,12 +63,25 @@ void Window::init() {
     destroyWindow();
     exit(84);
   }
+
+  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
+  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
+  addSound("../src/graphical/assets/sounds/un.mp3", WAVE1, 25);
+  addSound("../src/graphical/assets/sounds/deux.mp3", WAVE2, 25);
+  addSound("../src/graphical/assets/sounds/trois.mp3", WAVE3, 25);
+  addSound("../src/graphical/assets/sounds/nouvelleVague.mp3", NEWWAVE, 25);
+  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
+  addSound("../src/graphical/assets/sounds/endless.mp3", ENDLESS_MUSIC, 50);
+  addSound("../src/graphical/assets/sounds/Michou_croute_et_Elsa_2.mp3",
+           MICHOU_ET_ELSA_2, 100);
 }
 
 void Window::destroyWindow() {
   SDL_DestroyWindow(_window);
+  Mix_CloseAudio();
   TTF_Quit();
   SDL_Quit();
+  Mix_Quit();
 }
 
 void Window::delay(int time) { SDL_Delay(time); }
@@ -193,23 +221,35 @@ keyType Window::catchKeyOnce() {
   return NONE;
 }
 
-keyType Window::catchKey() {
+std::vector<keyType> Window::catchKey() {
   const bool *keyState = SDL_GetKeyboardState(NULL);
+  std::vector<keyType> keys;
 
-  if (keyState[SDL_SCANCODE_UP]) {
-    return UP;
-  } else if (keyState[SDL_SCANCODE_RIGHT]) {
-    return RIGHT;
-  } else if (keyState[SDL_SCANCODE_DOWN]) {
-    return DOWN;
-  } else if (keyState[SDL_SCANCODE_LEFT]) {
-    return LEFT;
-  } else if (keyState[SDL_SCANCODE_ESCAPE]) {
-    return ESCAPE;
-  } else if (keyState[SDL_SCANCODE_SPACE]) {
-    return SPACE;
-  }
-  return NONE;
+  if (keyState[SDL_SCANCODE_ESCAPE])
+    keys.push_back(ESCAPE);
+  if (keyState[SDL_SCANCODE_SPACE])
+    keys.push_back(SPACE);
+  if (keys.empty())
+    keys.push_back(NONE);
+  return keys;
+}
+
+std::vector<keyType> Window::catchMovementKey() {
+  const bool *keyState = SDL_GetKeyboardState(NULL);
+  std::vector<keyType> keys;
+
+  if (keyState[SDL_SCANCODE_UP])
+    keys.push_back(UP);
+  if (keyState[SDL_SCANCODE_RIGHT])
+    keys.push_back(RIGHT);
+  if (keyState[SDL_SCANCODE_DOWN])
+    keys.push_back(DOWN);
+  if (keyState[SDL_SCANCODE_LEFT])
+    keys.push_back(LEFT);
+
+  if (keys.empty())
+    keys.push_back(NONE);
+  return keys;
 }
 
 SDL_Event Window::catchEvent() { return _event; }
@@ -232,7 +272,12 @@ int Window::getMouseState(float *x, float *y) {
   return SDL_GetMouseState(x, y);
 }
 
-void Window::deleteTexts() { _texts.clear(); }
+void Window::deleteTexts() {
+  for (auto &text : _texts) {
+    text.destroyText();
+  }
+  _texts.clear();
+}
 
 void Window::deleteButtons(const std::string &tag) {
   if (tag.empty()) {
@@ -250,6 +295,10 @@ void Window::deleteText(std::string text) {
   for (auto &t : _texts) {
     if (t.getText() == text) {
       t.destroyText();
+      _texts.erase(
+          std::remove_if(_texts.begin(), _texts.end(),
+                         [&text](Text &t) { return t.getText() == text; }),
+          _texts.end());
     }
   }
 }
@@ -261,6 +310,33 @@ void Window::setTextPos(std::string text, int x, int y) {
     }
   }
 }
+
+void Window::playSound(soundType type, int loop) {
+  for (auto &sound : _sounds) {
+    if (sound->getSoundType() == type) {
+      sound->playSound(loop);
+    }
+  }
+}
+
+void Window::addSound(std::string soundPath, soundType type, int volume) {
+  _sounds.push_back(std::make_unique<Sound>(soundPath, type, volume));
+}
+
+void Window::stopAllSound() {
+  for (auto &sound : _sounds) {
+    sound->stopSound();
+  }
+}
+
+void Window::stopSound(soundType type) {
+  for (auto &sound : _sounds) {
+    if (sound->getSoundType() == type) {
+      sound->stopSound();
+    }
+  }
+}
+
 
 SDL_Texture *Window::loadText(std::string text, int size, std::string fontPath,
                               SDL_Color color) {

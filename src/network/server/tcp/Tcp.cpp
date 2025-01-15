@@ -15,7 +15,7 @@ Tcp::Tcp(std::size_t port, std::string ip) {
   _ip = ip;
   _type = "TCP";
   _timeout.tv_sec = 0;
-  _timeout.tv_usec = 1000;
+  _timeout.tv_usec = 10000;
 }
 
 Tcp::~Tcp() { closeSocket(); }
@@ -24,6 +24,12 @@ bool Tcp::initializeSocket() {
   _socket = socket(AF_INET, SOCK_STREAM, 0);
   if (_socket < 0) {
     perror("Failed to create TCP socket");
+    return false;
+  }
+
+  int opt = 1;
+  if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+    perror("Failed to set SO_REUSEADDR");
     return false;
   }
 
@@ -84,7 +90,7 @@ bool Tcp::listenSocket(int backlog) {
   }
 
   _timeout.tv_sec = 0;
-  _timeout.tv_usec = 1000;
+  _timeout.tv_usec = 10000;
 
   if (FD_ISSET(_socket, &tempFds)) {
     sockaddr_in clientAddr;
@@ -152,8 +158,6 @@ bool Tcp::sendDataToAll(std::vector<uint8_t> binaryData) {
     if (send(clientSocket, binaryData.data(), binaryData.size(), 0) < 0) {
       perror("Failed to send data");
       return false;
-    } else {
-      std::cout << "Data sent to all clients" << std::endl;
     }
   }
   return true;
@@ -174,11 +178,13 @@ bool Tcp::sendDataToAllExceptOne(std::size_t socketId,
 
 void Tcp::closeSocket() {
   for (int clientSocket : _clientSockets) {
+    shutdown(clientSocket, SHUT_RDWR);
     close(clientSocket);
   }
   _clientSockets.clear();
 
   if (_socket >= 0) {
+    shutdown(_socket, SHUT_RDWR);
     close(_socket);
     _socket = -1;
   }

@@ -48,7 +48,7 @@ bool Tcp::receiveFromServer() {
   FD_SET(_socket, &readfds);
 
   timeout.tv_sec = 0;
-  timeout.tv_usec = 1;
+  timeout.tv_usec = 10000;
 
   int activity = select(_socket + 1, &readfds, NULL, NULL, &timeout);
 

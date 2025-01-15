@@ -35,6 +35,7 @@ private:
   void getUsersLobby(Command command, Queue *queue, Registry *ecs,
                      Window *window);
   void cooldown(Command command, Queue *queue, Registry *ecs, Window *window);
+  void wave(Command command, Queue *queue, Registry *ecs, Window *window);
 
   std::map<CommandType,
            std::function<void(Command, Queue *, Registry *, Window *)>>

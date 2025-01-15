@@ -44,9 +44,34 @@ CommandGame::CommandGame() {
                                               Registry *ecs, Window *window) {
     cooldown(command, queue, ecs, window);
   };
+  _commandMap[CommandType::WAVE] = [this](Command command, Queue *queue,
+                                          Registry *ecs, Window *window) {
+    wave(command, queue, ecs, window);
+  };
 }
 
 CommandGame::~CommandGame() {}
+
+const std::string pathSpaceship[] = {
+    "../src/graphical/assets/spaceship/michou.png",
+    "../src/graphical/assets/spaceship/inox.png",
+    "../src/graphical/assets/spaceship/valouz.png",
+    "../src/graphical/assets/spaceship/bouzi.png",
+};
+
+const std::string pathShoot[] = {
+    "../src/graphical/assets/shoot/bullet1.png",
+    "../src/graphical/assets/shoot/bullet2.png",
+    "../src/graphical/assets/shoot/bullet3.png",
+    "../src/graphical/assets/shoot/bullet4.png",
+};
+
+const std::size_t velocityShoot[] = {
+    10,
+    20,
+    30,
+    40,
+};
 
 void CommandGame::executeCommandGame(Command command, Queue *queue,
                                      Registry *ecs, Window *window) {
@@ -59,14 +84,9 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
 
 void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
                           Window *window) {
-  SDL_Texture *playerTexture =
-      window->loadTexture("../src/graphical/assets/michou.png");
+  std::string texturePath = pathSpaceship[command.repConnect.spaceshipId];
 
-  std::cout << "CONTROLABLE Je cree le player avec l'id "
-            << command.repConnect.id << std::endl;
-  std::cout << "Nickname: " << command.repConnect.Nickname << std::endl;
-  std::cout << "SpaceshipID : " << command.repConnect.spaceshipId << std::endl;
-  std::cout << "ShootID : " << command.repConnect.shootId << std::endl;
+  SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
 
   int w = (int)(command.repConnect.Nickname.size() * 10);
 
@@ -125,10 +145,8 @@ void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
         std::cout << "Enemy is dead" << std::endl;
       }
       if (entities[i] && entities[i] == EntityType::Projectile) {
-        std::cout << "Projectile is dead" << command.killEntity.entityId
-                  << std::endl;
       }
-      ecs->kill_entity(Entities(command.killEntity.entityId));
+      ecs->kill_entity(static_cast<Entities>(command.killEntity.entityId));
     }
   }
 }
@@ -136,34 +154,28 @@ void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
 void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
                               Window *window) {
   SDL_Texture *enemyTexture =
-      window->loadTexture("../src/graphical/assets/enemy.png");
-
-  std::cout << "[GamecommandGRAPHIC] Enemy id : " << command.createEnemy.enemyId
-            << std::endl;
-  std::cout << "[GamecommandGRAPHIC]Enemy positionX : "
-            << command.createEnemy.positionX << std::endl;
-  std::cout << "[GamecommandGRAPHIC]Enemy positionY : "
-            << command.createEnemy.positionY << std::endl;
+      window->loadTexture("../src/graphical/assets/enemy/enemy.png");
+  AiType aiType = static_cast<AiType>(command.createEnemy.aiType);
 
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
-      Velocity(0, 0), Health(1),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, enemyTexture),
-      AiType::Aggressive,
-      std::optional<std::size_t>(command.createEnemy.enemyId));
-  std::cout << "Enemy created" << std::endl;
+      Velocity(0, 10), Health(1),
+      Draw({0, 0, 0, 0},
+           {(int)command.createEnemy.positionX,
+            (int)command.createEnemy.positionY, 100, 100},
+           enemyTexture),
+      aiType, std::optional<std::size_t>(command.createEnemy.enemyId));
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
                             Window *window) {
-  SDL_Texture *playerTexture =
-      window->loadTexture("../src/graphical/assets/michou.png");
+  std::string texturePath = pathSpaceship[command.newPlayer.spaceshipId];
+
+  SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
 
   int w = (int)(command.repConnect.Nickname.size() * 10);
 
-  std::cout << "PAS CONTROLABLE Je cree le player avec l'id "
-            << command.newPlayer.id << std::endl;
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
       Velocity(), Health(100),
@@ -184,14 +196,32 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
 
 void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
                         Window *window) {
-  SDL_Texture *bulletTexture =
-      window->loadTexture("../src/graphical/assets/bullet.png");
+  auto &entities = ecs->get_components<EntityType>();
+  auto &properties = ecs->get_components<Property>();
+  int shootId = -1;
+
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (entities[i] == EntityType::Player) {
+      if (i == command.shoot.playerId) {
+        if (properties[i].has_value()) {
+          shootId = properties[i]->shootId;
+        }
+      }
+    }
+  }
+
+  std::string texturePath = pathShoot[shootId];
+  std::size_t velocity = velocityShoot[shootId];
+
+  SDL_Texture *shootTexture = window->loadTexture(texturePath.c_str());
 
   auto bullet = create_entity<EntityType::Projectile>(
       *ecs, Position(command.shoot.positionX, command.shoot.positionY),
-      Velocity(10, 0),
-      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, bulletTexture),
-      std::optional<std::size_t>(command.shoot.playerId));
+      Velocity(velocity, 0),
+      Draw({0, 255, 0, 255}, {100, 150, 50, 50}, shootTexture),
+      std::optional<std::size_t>(command.shoot.bulletId));
+
+  window->playSound(BULLET_SOUND, 0);
 }
 
 void CommandGame::getUsersLobby(Command command, Queue *queue, Registry *ecs,
@@ -212,7 +242,47 @@ void CommandGame::cooldown(Command command, Queue *queue, Registry *ecs,
   window->addText(std::to_string(command.cooldown.time), 550, 350, 200, 200,
                   200, "../src/graphical/assets/RTypefont.otf",
                   {255, 255, 255, 255});
+  if (command.cooldown.time == 3) {
+    window->playSound(WAVE3, 0);
+    std::cout << "3" << std::endl;
+  } else if (command.cooldown.time == 2) {
+    window->playSound(WAVE2, 0);
+    std::cout << "2" << std::endl;
+  } else if (command.cooldown.time == 1) {
+    window->playSound(WAVE1, 0);
+    std::cout << "1" << std::endl;
+  }
   if (command.cooldown.time == 0) {
     window->setAllowToInteract(true);
   }
+}
+
+void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
+                       Window *window) {
+  auto &entities = ecs->get_components<EntityType>();
+
+  if (!window->getAllowToInteract()) {
+    window->setAllowToInteract(true);
+    queue->removeCommandByType(CommandType::SHOOT);
+    window->deleteText("Nouvelle vague");
+    return;
+  }
+  window->deleteText("Vague " + std::to_string(command.wave.wave - 1));
+  window->addText("Vague " + std::to_string(command.wave.wave), 25, 20, 50, 50,
+                  35, "../src/graphical/assets/RTypefont.otf",
+                  {255, 255, 255, 255});
+
+  window->addText("Nouvelle vague", 250, 300, 50, 50, 100,
+                  "../src/graphical/assets/RTypefont.otf",
+                  {255, 255, 255, 255});
+  window->playSound(NEWWAVE, 0);
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (entities[i] == EntityType::Enemy) {
+      ecs->kill_entity(static_cast<Entities>(i));
+    }
+    if (entities[i] == EntityType::Projectile) {
+      ecs->kill_entity(static_cast<Entities>(i));
+    }
+  }
+  window->setAllowToInteract(false);
 }

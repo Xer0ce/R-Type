@@ -12,6 +12,7 @@ option(BUILD_SERVER "Build the server executable" ON)
 add_subdirectory(external/SDL3)
 add_subdirectory(external/SDL3_ttf)
 add_subdirectory(external/SDL3_image)
+add_subdirectory(external/SDL3_mixer)
 add_subdirectory(external/json)
 
 if(BUILD_CLIENT)
@@ -24,14 +25,16 @@ if(BUILD_CLIENT)
 
     file(GLOB SOURCES_ECS "src/ecs/*.cpp")
     file(GLOB SOURCES_GAME_GESTION "src/game/gestion/*.cpp")
+    file(GLOB SOURCES_GAME_SYSTEMS "src/game/systems/enemy/*.cpp")
     file(GLOB SOURCES_GAME_SYSTEMS_GLOBAL "src/game/systems/global/*.cpp")
 
-    add_executable(r-type_client ${SOURCES_CLIENT} ${SOURCES_CLIENT_COMMAND} ${SOURCES_ECS} ${SOURCES_CLIENT_SCENES} ${SOURCES_GAME_GESTION} ${SOURCES_CLIENT_NETWORK} ${SOURCES_QUEUE} ${SOURCES_GAME_SYSTEMS_GLOBAL})
+    add_executable(r-type_client ${SOURCES_GAME_SYSTEMS} ${SOURCES_CLIENT} ${SOURCES_CLIENT_COMMAND} ${SOURCES_ECS} ${SOURCES_CLIENT_SCENES} ${SOURCES_GAME_GESTION} ${SOURCES_CLIENT_NETWORK} ${SOURCES_QUEUE} ${SOURCES_GAME_SYSTEMS_GLOBAL})
     target_include_directories(r-type_client PRIVATE include/graphical)
 
     target_link_libraries(r-type_client PRIVATE SDL3::SDL3)
     target_link_libraries(r-type_client PRIVATE SDL3_ttf::SDL3_ttf)
     target_link_libraries(r-type_client PRIVATE SDL3_image::SDL3_image)
+    target_link_libraries(r-type_client PRIVATE SDL3_mixer::SDL3_mixer)
 
     target_compile_definitions(r-type_client PRIVATE $<$<CONFIG:Debug>:DEBUG>)
 endif()
@@ -71,6 +74,7 @@ if(BUILD_SERVER)
     target_link_libraries(r-type_server PRIVATE SDL3::SDL3)
     target_link_libraries(r-type_server PRIVATE SDL3_ttf::SDL3_ttf)
     target_link_libraries(r-type_server PRIVATE SDL3_image::SDL3_image)
+    target_link_libraries(r-type_server PRIVATE SDL3_mixer::SDL3_mixer)
     target_link_libraries(r-type_server PRIVATE nlohmann_json)
 endif()
 

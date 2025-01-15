@@ -81,13 +81,14 @@ void Server::game() {
 
     if (now > next)
       next += std::chrono::milliseconds(25);
-    if (switchScene != sceneType::NO_SWITCH) {
 
+    if (switchScene != sceneType::NO_SWITCH) {
       _currentScene = switchScene;
       _scenes[_currentScene]->setEcs(_ecs.get());
       _scenes[_currentScene]->setQueue(_queue.get());
       _scenes[_currentScene]->init();
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 }
 

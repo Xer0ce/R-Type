@@ -36,3 +36,13 @@ struct ChoosingParams {
   int spaceshipId;
   int bulletId;
 };
+
+enum soundType {
+  BULLET_SOUND,
+  ENDLESS_MUSIC,
+  MICHOU_ET_ELSA_2,
+  WAVE1,
+  WAVE2,
+  WAVE3,
+  NEWWAVE,
+};

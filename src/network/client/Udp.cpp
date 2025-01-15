@@ -12,7 +12,7 @@ Udp::Udp(std::string ip, int port) {
   _port = port;
   _type = "UDP";
   _timeout.tv_sec = 0;
-  _timeout.tv_usec = 1000;
+  _timeout.tv_usec = 10000;
 }
 
 Udp::~Udp() {}
@@ -47,7 +47,7 @@ bool Udp::receiveFromServer() {
   FD_SET(_socket, &_readfds);
 
   _timeout.tv_sec = 0;
-  _timeout.tv_usec = 1000;
+  _timeout.tv_usec = 10000;
 
   int result = select(_socket + 1, &_readfds, NULL, NULL, &_timeout);
   if (result == -1) {

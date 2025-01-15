@@ -22,6 +22,7 @@ void EndLess::init() {
   command.type = CommandType::CONNECT;
   command.connect.Nickname = "Player";
   _queue->pushTcpQueue(command);
+  _window->playSound(ENDLESS_MUSIC, -1);
 }
 
 sceneType
@@ -36,37 +37,38 @@ EndLess::loop(eventType event,
       std::chrono::steady_clock::now();
 
   command = _queue->popGameQueue();
-  if (command.type != EMPTY)
+  if (command.type != EMPTY) {
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
+  }
 
   _window->drawBackground();
   _window->drawText();
-  keyType key = _window->catchKey();
+  std::vector<keyType> keys = _window->catchKey();
+  auto movementKeys = _window->catchMovementKey();
   keyType keyOnce = _window->catchKeyOnce();
-
-  if (key == keyType::ESCAPE) {
-    return sceneType::MENU;
-  }
 
   if (now > deltaTime) {
     if (_window->getAllowToInteract()) {
       std::chrono::time_point<std::chrono::steady_clock> now =
           std::chrono::steady_clock::now();
       _window->deleteText("0");
-      control_system(key, *_ecs);
-      shoot_system(key, *_ecs, _queue, _nextBullet);
+      control_system(movementKeys, *_ecs);
+      shoot_system(keys, *_ecs, _queue, _nextBullet);
       if (now >= _nextBullet) {
-        _nextBullet = now + std::chrono::milliseconds(50);
+        _nextBullet = now + std::chrono::milliseconds(150);
       }
       position_system_graphic(1, *_ecs, _queue);
+      enemy_system(_ecs);
     }
   }
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
     if (entities[i] == EntityType::Player) {
-      _window->setTextPos(nicknames[i]->nickname, positions[i]->x,
-                          positions[i]->y - 30);
+      if (positions[i].has_value()) {
+        _window->setTextPos(nicknames[i]->nickname, positions[i]->x,
+                            positions[i]->y - 30);
+      }
     }
     _window->draw(draw[i]->texture, draw[i]->rect);
   }
