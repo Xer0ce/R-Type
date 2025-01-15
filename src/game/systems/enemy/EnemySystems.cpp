@@ -28,7 +28,7 @@ void enemy_system(Registry *ecs) {
   auto &velocity = ecs->get_components<Velocity>();
   static int entry_distance = 0;
 
-  entry_distance+= 10;
+  entry_distance += 10;
   for (std::size_t i = 0; i < entityType.size(); i++) {
     if (entry_distance < 750) {
       velocity[i]->y = 10;
