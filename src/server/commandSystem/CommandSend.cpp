@@ -50,10 +50,8 @@ CommandSend::CommandSend() {
                                               IProtocol *protocol) {
     cooldown(command, protocol);
   };
-  _commandMap[CommandType::WAVE] = [this](Command command,
-                                          IProtocol *protocol) {
-    wave(command, protocol);
-  };
+  _commandMap[CommandType::WAVE] =
+      [this](Command command, IProtocol *protocol) { wave(command, protocol); };
 }
 
 CommandSend::~CommandSend() {}

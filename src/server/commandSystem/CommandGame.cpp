@@ -38,9 +38,9 @@ CommandGame::~CommandGame() {}
 
 const std::size_t velocityShoot[] = {
     10,
-    10,
-    10,
-    10,
+    20,
+    30,
+    40,
 };
 
 void CommandGame::executeCommandGame(Command command, Queue *queue,

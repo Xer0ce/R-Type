@@ -68,9 +68,9 @@ const std::string pathShoot[] = {
 
 const std::size_t velocityShoot[] = {
     10,
-    10,
-    10,
-    10,
+    20,
+    30,
+    40,
 };
 
 void CommandGame::executeCommandGame(Command command, Queue *queue,
@@ -242,7 +242,6 @@ void CommandGame::cooldown(Command command, Queue *queue, Registry *ecs,
 void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
                        Window *window) {
   auto &entities = ecs->get_components<EntityType>();
-
 
   if (!window->getAllowToInteract()) {
     window->setAllowToInteract(true);
