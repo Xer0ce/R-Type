@@ -119,7 +119,9 @@ public:
 
   bool isBackgroundScrolling() { return _isBackgroundScrolling; }
 
-  void setBackgroundScrolling(bool scrolling) { _isBackgroundScrolling = scrolling; }
+  void setBackgroundScrolling(bool scrolling) {
+    _isBackgroundScrolling = scrolling;
+  }
 
 private:
   SDL_Window *_window;

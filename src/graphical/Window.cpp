@@ -164,44 +164,42 @@ SDL_Texture *Window::loadTexture(const char *path) {
 
 void Window::setBackground(SDL_Texture *texture) {
   _background = texture;
-  _background2 = texture;;
+  _background2 = texture;
+  ;
 }
 
-void Window::moveBackground()
-{
-    if (!_background)
-        return;
+void Window::moveBackground() {
+  if (!_background)
+    return;
 
-    float bgWidth = 0.f;
-    float bgHeight = 0.f;
-    SDL_GetTextureSize(_background, &bgWidth, &bgHeight);
+  float bgWidth = 0.f;
+  float bgHeight = 0.f;
+  SDL_GetTextureSize(_background, &bgWidth, &bgHeight);
 
-    _bgOffset -= _bgScrollSpeed;
+  _bgOffset -= _bgScrollSpeed;
 
-    if (_bgOffset <= -bgWidth)
-        _bgOffset = 0.f;
+  if (_bgOffset <= -bgWidth)
+    _bgOffset = 0.f;
 }
 
-void Window::drawBackground()
-{
-    if (!_background)
-        return;
+void Window::drawBackground() {
+  if (!_background)
+    return;
 
-    float bgWidth = 0.f;
-    float bgHeight = 0.f;
-    SDL_GetTextureSize(_background, &bgWidth, &bgHeight);
+  float bgWidth = 0.f;
+  float bgHeight = 0.f;
+  SDL_GetTextureSize(_background, &bgWidth, &bgHeight);
 
-    if (!_isBackgroundScrolling) {
-        SDL_RenderTexture(_renderer, _background, nullptr, nullptr);
-    } else {
-        SDL_FRect destRect1 = {_bgOffset, 0.f, bgWidth, bgHeight};
-        SDL_RenderTexture(_renderer, _background, nullptr, &destRect1);
+  if (!_isBackgroundScrolling) {
+    SDL_RenderTexture(_renderer, _background, nullptr, nullptr);
+  } else {
+    SDL_FRect destRect1 = {_bgOffset, 0.f, bgWidth, bgHeight};
+    SDL_RenderTexture(_renderer, _background, nullptr, &destRect1);
 
-        SDL_FRect destRect2 = {_bgOffset + bgWidth, 0.f, bgWidth, bgHeight};
-        SDL_RenderTexture(_renderer, _background, nullptr, &destRect2);
-    }
+    SDL_FRect destRect2 = {_bgOffset + bgWidth, 0.f, bgWidth, bgHeight};
+    SDL_RenderTexture(_renderer, _background, nullptr, &destRect2);
+  }
 }
-
 
 keyType Window::catchKeyOnce() {
   static std::vector<bool> prevKeyState(512, false);
