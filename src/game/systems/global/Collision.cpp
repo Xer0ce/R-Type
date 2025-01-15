@@ -19,7 +19,6 @@ void collision_system(Registry *ecs, Queue *queue) {
         cmd.type = CommandType::KILLENTITY;
         cmd.killEntity.entityId = i;
         queue->pushTcpQueue(cmd);
-        std::cout << "Kill bullet" << std::endl;
       }
       for (std::size_t j = 0; j < position.size(); j++) {
         if (entityType[j] == EntityType::Enemy) {
@@ -27,7 +26,6 @@ void collision_system(Registry *ecs, Queue *queue) {
               position[i]->x + 50 > position[j]->x &&
               position[i]->y < position[j]->y + 50 &&
               position[i]->y + 50 > position[j]->y) {
-            std::cout << "HIT" << std::endl;
             ecs->kill_entity(Entities(j));
             ecs->kill_entity(Entities(i));
             Command cmd;

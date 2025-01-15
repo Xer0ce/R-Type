@@ -6,6 +6,29 @@
 */
 
 #include "EndLess.hpp"
+#include <bits/this_thread_sleep.h>
+
+static const std::string classicPath = "../src/game/config/endless/classic/";
+static const std::string miniBossPath = "../src/game/config/endless/mini_boss/";
+static const std::string bossPath = "../src/game/config/endless/boss/";
+
+static const std::string classicWave[] = {
+    classicPath + "classic_wave_1.json", classicPath + "classic_wave_2.json",
+    classicPath + "classic_wave_3.json", classicPath + "classic_wave_4.json",
+    classicPath + "classic_wave_5.json", classicPath + "classic_wave_6.json",
+    classicPath + "classic_wave_7.json", classicPath + "classic_wave_8.json",
+    classicPath + "classic_wave_9.json", classicPath + "classic_wave_10.json"};
+
+static const std::string miniBossWave[] = {
+    miniBossPath + "mini_boss_wave_1.json",
+    miniBossPath + "mini_boss_wave_2.json",
+    miniBossPath + "mini_boss_wave_3.json",
+};
+
+static const std::string bossWave[] = {
+    bossPath + "boss_wave_1.json",
+    bossPath + "boss_wave_2.json",
+};
 
 EndLess::EndLess() {
   _name = "EndLess";
@@ -17,6 +40,80 @@ EndLess::EndLess() {
 EndLess::~EndLess() {}
 
 void EndLess::init() { _wave = Wave(_ecs); }
+
+bool EndLess::waveIsClear() {
+  auto &entityType = _ecs->get_components<EntityType>();
+
+  for (std::size_t i = 0; i < entityType.size(); i++) {
+    if (entityType[i] == EntityType::Enemy) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void EndLess::loadClassic() {
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(0, 9);
+  int random = dis(gen);
+
+  _wave.load(classicWave[random], *_queue);
+};
+
+void EndLess::loadMiniBoss() {
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(0, 2);
+  int random = dis(gen);
+
+  _wave.load(miniBossWave[random], *_queue);
+};
+
+void EndLess::loadBoss() {
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(0, 1);
+  int random = dis(gen);
+
+  _wave.load(bossWave[random], *_queue);
+};
+
+void EndLess::waveGestion() {
+  if (waveIsClear()) {
+    Command cmd;
+    auto &entities = _ecs->get_components<EntityType>();
+    cmd.type = CommandType::WAVE;
+    cmd.wave.wave = _waveNumber;
+    cmd.wave.time = 3;
+    _queue->pushTcpQueue(cmd);
+    for (int i = 0; i < entities.size(); i++) {
+      if (entities[i] == EntityType::Projectile) {
+        _ecs->kill_entity(static_cast<Entities>(i));
+      }
+      if (entities[i] == EntityType::Enemy) {
+        _ecs->kill_entity(static_cast<Entities>(i));
+      }
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    cmd.type = CommandType::WAVE;
+    cmd.wave.wave = _waveNumber;
+    cmd.wave.time = 3;
+    _queue->pushTcpQueue(cmd);
+    _waveNumber++;
+    _wave.load(classicWave[0], *_queue);
+
+    // int lastDigit = _waveNumber % 10;
+    //
+    // if (lastDigit == 5) {
+    //  loadMiniBoss();
+    //} else if (lastDigit == 0) {
+    //  loadBoss();
+    //} else {
+    //  loadClassic();
+    //}
+  }
+}
 
 sceneType
 EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
@@ -44,10 +141,10 @@ EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   if (!_startCooldown) {
     if (_firstRound) {
       _firstRound = false;
-      std::string path = "../src/game/config/endless/wave_type_1.json";
-      _wave.load(path, *_queue);
+      _wave.load(classicWave[0], *_queue);
     }
     if (now > deltaTime) {
+      waveGestion();
       enemy_system(_ecs);
       position_system_net(1, _ecs, _queue, _nextCorrectPosition);
       collision_system(_ecs, _queue);

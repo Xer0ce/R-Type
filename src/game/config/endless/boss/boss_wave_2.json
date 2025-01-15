@@ -1,0 +1,29 @@
+{
+  "enemies": [
+    {
+      "type": "Pion",
+      "number": 20,
+      "ia": "Aggressive"
+    },
+    {
+      "type": "Balourd",
+      "number": 5,
+      "ia": "Aggressive"
+    },
+    {
+      "type": "Zinzolin",
+      "number": 10,
+      "ia": "Aggressive"
+    },
+    {
+      "type": "Boss",
+      "number": 2,
+      "ia": "Aggressive"
+    },
+    {
+      "type": "BigBoss",
+      "number": 1,
+      "ia": "Boss"
+    }
+  ]
+}

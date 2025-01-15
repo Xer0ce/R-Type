@@ -50,29 +50,29 @@ template <EnemyType T> Entities create_enemy(Registry &r, AiType type) {
   std::cout << random_y << std::endl;
 
   if constexpr (T == EnemyType::Pion) {
-    return create_entity<EntityType::Enemy>(r, Position(700, 0), Velocity(),
-                                            Health(30), Draw({}, {}, nullptr),
-                                            type);
+    return create_entity<EntityType::Enemy>(r, Position(700, 0),
+                                            Velocity(0, 10), Health(30),
+                                            Draw({}, {}, nullptr), type);
   }
   if constexpr (T == EnemyType::Balourd) {
-    return create_entity<EntityType::Enemy>(r, Position(800, 0), Velocity(),
-                                            Health(50), Draw({}, {}, nullptr),
-                                            type);
+    return create_entity<EntityType::Enemy>(r, Position(800, 0),
+                                            Velocity(0, 10), Health(50),
+                                            Draw({}, {}, nullptr), type);
   }
   if constexpr (T == EnemyType::Zinzolin) {
-    return create_entity<EntityType::Enemy>(r, Position(900, 0), Velocity(),
-                                            Health(25), Draw({}, {}, nullptr),
-                                            type);
+    return create_entity<EntityType::Enemy>(r, Position(900, 0),
+                                            Velocity(0, 10), Health(25),
+                                            Draw({}, {}, nullptr), type);
   }
   if constexpr (T == EnemyType::Boss) {
-    return create_entity<EntityType::Enemy>(r, Position(600, 0), Velocity(),
-                                            Health(100), Draw({}, {}, nullptr),
-                                            type);
+    return create_entity<EntityType::Enemy>(r, Position(600, 0),
+                                            Velocity(0, 10), Health(100),
+                                            Draw({}, {}, nullptr), type);
   }
   if constexpr (T == EnemyType::BigBoss) {
-    return create_entity<EntityType::Enemy>(r, Position(500, 0), Velocity(),
-                                            Health(300), Draw({}, {}, nullptr),
-                                            type);
+    return create_entity<EntityType::Enemy>(r, Position(500, 0),
+                                            Velocity(0, 10), Health(300),
+                                            Draw({}, {}, nullptr), type);
   }
 }
 
