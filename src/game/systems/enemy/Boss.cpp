@@ -13,8 +13,8 @@ void boss_ai(Registry *ecs, std::size_t enemy) {
   auto &position = ecs->get_components<Position>();
 
   if (position[enemy]->y <= 0) {
-    velocity[enemy]->y = 3;
+    velocity[enemy]->y = 0.5;
   } else if (position[enemy]->y >= 500) {
-    velocity[enemy]->y = -3;
+    velocity[enemy]->y = -0.5;
   }
 }

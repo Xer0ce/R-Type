@@ -31,13 +31,13 @@ void enemy_system(Registry *ecs) {
       if (aiType[i] == AiType::Passive) {
         call_enemy_ai(ecs, AiType::Aggressive, i);
       }
-      if (aiType[i] == AiType::Aggressive) {
+      if (aiType[i] == AiType::Passive) {
         call_enemy_ai(ecs, AiType::Passive, i);
       }
       if (aiType[i] == AiType::Balzy) {
         call_enemy_ai(ecs, AiType::Balzy, i);
       }
-      if (aiType[i] == AiType::Boss) {
+      if (aiType[i] == AiType::Aggressive) {
         call_enemy_ai(ecs, AiType::Boss, i);
       }
     }
