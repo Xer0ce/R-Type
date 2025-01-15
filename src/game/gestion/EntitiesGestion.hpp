@@ -47,9 +47,9 @@ template <EnemyType T> Entities create_enemy(Registry &r, AiType type) {
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_int_distribution<> distrib_y(y_min, y_max);
-  std::uniform_int_distribution<> distrib_x(y_min, y_max);
+  std::uniform_int_distribution<> distrib_x(x_min, x_max);
   int random_y = distrib_y(gen);
-  int random_x = distrib_y(gen);
+  int random_x = distrib_x(gen);
 
   if constexpr (T == EnemyType::Pion) {
     return create_entity<EntityType::Enemy>(r, Position(random_x, random_y),
