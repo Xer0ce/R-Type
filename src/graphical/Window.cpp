@@ -15,6 +15,7 @@ Window::Window() { _allowToInteract = false; }
 Window::~Window() {}
 
 void Window::init() {
+  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
   if (!SDL_Init(SDL_INIT_VIDEO)) {
     std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
     exit(84);
@@ -47,6 +48,7 @@ void Window::init() {
 
   int windowWidth = 1200;
   int windowHeight = 800;
+
 
   _window = SDL_CreateWindow("R-Type", windowWidth, windowHeight, 0);
   if (!_window) {
