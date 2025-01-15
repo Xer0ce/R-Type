@@ -66,7 +66,8 @@ void Window::init() {
 
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/endless.mp3", ENDLESS_MUSIC, 100);
-  addSound("../src/graphical/assets/sounds/Michou_croute_et_Elsa_2.mp3", MICHOU_ET_ELSA_2, 100);
+  addSound("../src/graphical/assets/sounds/Michou_croute_et_Elsa_2.mp3",
+           MICHOU_ET_ELSA_2, 100);
 }
 
 void Window::destroyWindow() {
