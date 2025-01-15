@@ -88,23 +88,27 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
 
   SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
 
+  int w = (int)(command.repConnect.Nickname.size() * 10);
+
   auto player = create_entity<EntityType::Player>(
       *ecs,
       Position(command.repConnect.positionX, command.repConnect.positionY),
-      Velocity(), Health(1),
+      Velocity(), Health(100),
       Draw({0, 255, 0, 255},
            {(int)command.repConnect.positionX,
             (int)command.repConnect.positionY, 50, 50},
            playerTexture),
-      Nickname(command.repConnect.Nickname),
+      Nickname(command.repConnect.Nickname,
+               {((int)command.repConnect.positionX) - (w / 2),
+                (int)command.repConnect.positionY,
+                w, 20},
+               window->loadText(command.repConnect.Nickname, 20,
+                                "../src/graphical/assets/RTypefont.otf",
+                                {255, 255, 255, 255})),
       Property(command.repConnect.spaceshipId, command.repConnect.shootId, 0),
       std::optional<Control>(Control()),
-      std::optional<std::size_t>(command.repConnect.id));
-
-  window->addText(command.repConnect.Nickname, command.repConnect.positionX,
-                  command.repConnect.positionY, 50, 50, 20,
-                  "../src/graphical/assets/RTypefont.otf",
-                  {255, 255, 255, 255});
+      std::optional<std::size_t>(command.repConnect.id),
+      std::optional<LifeBar>(LifeBar(100, {(command.repConnect.positionX), (command.repConnect.positionY), 50, 5})));
 }
 
 void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs,
@@ -170,19 +174,24 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
 
   SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
 
+  int w = (int)(command.repConnect.Nickname.size() * 10);
+
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
-      Velocity(), Health(1),
+      Velocity(), Health(100),
       Draw({0, 255, 0, 255},
            {(int)command.newPlayer.positionX, (int)command.newPlayer.positionY,
             50, 50},
            playerTexture),
-      Nickname(command.newPlayer.Nickname), Property(0, 0, 0), std::nullopt,
+      Nickname(command.newPlayer.Nickname,
+               {(int)command.newPlayer.positionX - (w / 2) + 50,
+                (int)command.newPlayer.positionY - 20,
+                w, 20},
+               window->loadText(command.newPlayer.Nickname, 20,
+                                "../src/graphical/assets/RTypefont.otf",
+                                {255, 255, 255, 255})),
+      Property(0, 0, 0), std::nullopt,
       std::optional<std::size_t>(command.newPlayer.id));
-  window->addText(command.newPlayer.Nickname, command.newPlayer.positionX,
-                  command.newPlayer.positionY, 50, 50, 20,
-                  "../src/graphical/assets/RTypefont.otf",
-                  {255, 255, 255, 255});
 }
 
 void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,

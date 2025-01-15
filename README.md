@@ -5,7 +5,7 @@
 - ### step 1
     git clone the repository `git clone https://github.com/M0ugou-club/R-Type`
 - ### step 2
-    update the submodules using the command `git submodule update --init`
+    update the submodules using the command `git submodule update --init --recursive`
 
 
 ## how to build the project ?
@@ -16,7 +16,7 @@
 - ### step 3
     in the same folder `make`
 - ### step 4
-    you'l have 3 binaries !
+    you'l have 2 binaries !
 
 
 ## Documentation

@@ -33,6 +33,11 @@ public:
 
   SDL_Texture *loadTexture(const char *path);
 
+  SDL_Texture *loadText(std::string text, int size, std::string fontPath,
+                        SDL_Color color);
+
+  void drawRect(SDL_FRect rect, SDL_Color color);
+
   void draw(SDL_Texture *texture, SDL_Rect rect);
 
   void drawText();
@@ -68,7 +73,11 @@ public:
 
   void setBackground(SDL_Texture *texture);
 
-  void drawBackground();
+  void drawBackground(bool isScrolling = false, float deltaTime = 0.0f);
+
+  void initLifeBar();
+
+  void drawLifeBar(int x, int y, int hp);
 
   std::vector<keyType> catchKey();
 
@@ -120,5 +129,7 @@ private:
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
   std::vector<std::unique_ptr<Sound>> _sounds;
   bool _allowToInteract;
+  float _bgOffset = 0;
+  float _bgScrollSpeed = 5.0f;
   bool _nextWave;
 };

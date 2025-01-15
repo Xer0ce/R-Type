@@ -10,6 +10,8 @@
 
 struct Nickname {
   std::string nickname;
+  SDL_Rect rect;
+  SDL_Texture *texture;
 
-  Nickname(std::string nickname = "Player") : nickname(nickname){};
+  Nickname(std::string nickname,  SDL_Rect rect, SDL_Texture *texture): nickname(nickname), rect(rect), texture(texture){};
 };
