@@ -190,7 +190,7 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
                window->loadText(command.newPlayer.Nickname, 20,
                                 "../src/graphical/assets/RTypefont.otf",
                                 {255, 255, 255, 255})),
-      Property(0, 0, 0), std::nullopt,
+      Property(command.newPlayer.spaceshipId, command.newPlayer.shootId, 0), std::nullopt,
       std::optional<std::size_t>(command.newPlayer.id));
 }
 
