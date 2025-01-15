@@ -37,7 +37,6 @@ void Queue::removeCommandByType(CommandType type) {
   }
 }
 
-
 void Queue::pushUdpQueue(Command command) {
   std::lock_guard<std::mutex> lock(_udpMutex);
   _udpQueue.push(command);
