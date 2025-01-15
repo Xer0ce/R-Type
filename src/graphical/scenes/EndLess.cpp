@@ -22,7 +22,7 @@ void EndLess::init() {
   command.type = CommandType::CONNECT;
   command.connect.Nickname = "Player";
   _queue->pushTcpQueue(command);
-  _window->playSound(ENDLESS_MUSIC, 0);
+  // _window->playSound(ENDLESS_MUSIC, 0);
 }
 
 sceneType
@@ -37,8 +37,9 @@ EndLess::loop(eventType event,
       std::chrono::steady_clock::now();
 
   command = _queue->popGameQueue();
-  if (command.type != EMPTY)
+  if (command.type != EMPTY) {
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
+  }
 
   _window->drawBackground();
   _window->drawText();
@@ -54,7 +55,7 @@ EndLess::loop(eventType event,
       control_system(movementKeys, *_ecs);
       shoot_system(keys, *_ecs, _queue, _nextBullet);
       if (now >= _nextBullet) {
-        _nextBullet = now + std::chrono::milliseconds(50);
+        _nextBullet = now + std::chrono::milliseconds(150);
       }
       position_system_graphic(1, *_ecs, _queue);
       enemy_system(_ecs);
