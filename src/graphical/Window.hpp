@@ -11,7 +11,6 @@
 #include "Dropdown.hpp"
 #include "Text.hpp"
 #include "Utils.hpp"
-#include "LifeBar.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>

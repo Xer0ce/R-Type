@@ -271,7 +271,7 @@ SDL_Texture *Window::loadText(std::string text, int size, std::string fontPath,
 
   SDL_Texture *texture = SDL_CreateTextureFromSurface(_renderer, surface);
 
-  //SDL_DestroySurface(surface);
+  SDL_DestroySurface(surface);
   return texture;
 }
 

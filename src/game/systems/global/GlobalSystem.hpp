@@ -12,7 +12,6 @@
 #include "../../../queue/Queue.hpp"
 #include "../../Components/Components.hpp"
 #include "../../gestion/EntitiesGestion.hpp"
-#include "../../../graphical/LifeBar.hpp"
 
 void position_system_net(float deltaTime, Registry *ecs, Queue *queue);
 void position_system_graphic(float deltaTime, Registry &ecs, Queue *queue);
