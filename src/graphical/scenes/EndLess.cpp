@@ -63,8 +63,10 @@ EndLess::loop(eventType event,
     if (!draw[i].has_value())
       continue;
     if (entities[i] == EntityType::Player) {
-      _window->setTextPos(nicknames[i]->nickname, positions[i]->x,
-                          positions[i]->y - 30);
+      if (positions[i].has_value()) {
+        _window->setTextPos(nicknames[i]->nickname, positions[i]->x,
+                            positions[i]->y - 30);
+      }
     }
     _window->draw(draw[i]->texture, draw[i]->rect);
   }

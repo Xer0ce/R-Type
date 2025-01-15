@@ -162,7 +162,6 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
            enemyTexture),
       AiType::Aggressive,
       std::optional<std::size_t>(command.createEnemy.enemyId));
-  std::cout << "Enemy created" << std::endl;
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
@@ -193,7 +192,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
   int shootId = -1;
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
-    if (entities[i] && entities[i] == EntityType::Player) {
+    if (entities[i] == EntityType::Player) {
       if (i == command.shoot.playerId) {
         if (properties[i].has_value()) {
           shootId = properties[i]->shootId;
