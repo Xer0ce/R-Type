@@ -174,7 +174,7 @@ EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
       collision_system(_ecs, _queue);
       if (now > _nextCorrectPosition)
         _nextCorrectPosition =
-            std::chrono::steady_clock::now() + std::chrono::milliseconds(500);
+            std::chrono::steady_clock::now() + std::chrono::seconds(1);
     }
   }
   return sceneType::NO_SWITCH;
