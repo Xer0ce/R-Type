@@ -106,6 +106,10 @@ public:
 
   void stopSound(soundType type);
 
+  bool isNewWave() { return _nextWave; };
+
+  void setNextWave(bool next) { _nextWave = next; };
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -116,4 +120,5 @@ private:
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
   std::vector<std::unique_ptr<Sound>> _sounds;
   bool _allowToInteract;
+  bool _nextWave;
 };

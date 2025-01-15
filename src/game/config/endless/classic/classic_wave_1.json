@@ -14,7 +14,9 @@
         {
             "type": "Zinzolin",
             "number": 0,
-            "ia": "Aggressive"
+            "ia": "Aggressive",
+            "shootype": "Damage",
+            "shootFrequency": ""
         }
     ]
 }

@@ -21,7 +21,7 @@ public:
   loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
   bool waveIsClear();
-  void waveGestion();
+  bool waveGestion();
   void loadClassic();
   void loadMiniBoss();
   void loadBoss();

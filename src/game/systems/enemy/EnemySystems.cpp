@@ -22,12 +22,15 @@ void call_enemy_ai(Registry *ecs, AiType type, std::size_t enemy) {
   }
 }
 
-void enemy_system(Registry *ecs) {
+void enemy_system(Registry *ecs, bool nextWave) {
   auto &entityType = ecs->get_components<EntityType>();
   auto &aiType = ecs->get_components<AiType>();
   auto &velocity = ecs->get_components<Velocity>();
   static int entry_distance = 0;
 
+  if (nextWave) {
+    entry_distance = 0;
+  }
   entry_distance += 10;
   for (std::size_t i = 0; i < entityType.size(); i++) {
     if (entityType[i] == EntityType::Enemy) {

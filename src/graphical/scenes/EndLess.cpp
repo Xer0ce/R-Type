@@ -58,7 +58,7 @@ EndLess::loop(eventType event,
         _nextBullet = now + std::chrono::milliseconds(150);
       }
       position_system_graphic(1, *_ecs, _queue);
-      enemy_system(_ecs);
+      enemy_system(_ecs, _window->isNewWave());
     }
   }
   for (std::size_t i = 0; i < draw.size(); ++i) {
