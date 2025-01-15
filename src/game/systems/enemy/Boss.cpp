@@ -18,7 +18,7 @@ void boss_ai(Registry *ecs) {
   static bool direction = true;
 
   for (std::size_t i = 0; i < entityType.size(); i++) {
-    if (entityType[i] == EntityType::Enemy && aiType[i] == AiType::Aggressive) {
+    if (entityType[i] == EntityType::Enemy && aiType[i] == AiType::Passive) {
       auto now = std::chrono::steady_clock::now();
       auto duration = std::chrono::duration_cast<std::chrono::seconds>(now - lastChangeTime).count();
 

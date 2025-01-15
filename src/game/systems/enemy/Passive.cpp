@@ -15,7 +15,7 @@ void passive_ai(Registry *ecs) {
 
   for (std::size_t i = 0; i < entityType.size(); i++) {
     if (entityType[i] == EntityType::Enemy) {
-      if (aiType[i] == AiType::Passive) {
+      if (aiType[i] == AiType::Aggressive) {
         if (position[i]->y <= 0) {
           velocity[i]->y = 10;
         } else if (position[i]->y >= 500) {
