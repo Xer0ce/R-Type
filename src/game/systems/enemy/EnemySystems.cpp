@@ -30,12 +30,14 @@ void enemy_system(Registry *ecs) {
 
   entry_distance += 10;
   for (std::size_t i = 0; i < entityType.size(); i++) {
-    if (entry_distance < 750) {
-      velocity[i]->y = 10;
-      continue;
-    }
     if (entityType[i] == EntityType::Enemy) {
-      if (aiType[i] == AiType::Passive) {
+      if (entry_distance < 750) {
+        velocity[i]->x = -10;
+        velocity[i]->y = 0;
+        continue;
+      }
+      velocity[i]->x = 0;
+      if (aiType[i] == AiType::Aggressive) {
         call_enemy_ai(ecs, AiType::Aggressive, i);
       }
       if (aiType[i] == AiType::Passive) {
@@ -44,7 +46,7 @@ void enemy_system(Registry *ecs) {
       if (aiType[i] == AiType::Balzy) {
         call_enemy_ai(ecs, AiType::Balzy, i);
       }
-      if (aiType[i] == AiType::Aggressive) {
+      if (aiType[i] == AiType::Boss) {
         call_enemy_ai(ecs, AiType::Boss, i);
       }
     }
