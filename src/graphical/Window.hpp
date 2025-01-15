@@ -36,6 +36,8 @@ public:
   SDL_Texture *loadText(std::string text, int size, std::string fontPath,
                         SDL_Color color);
 
+  void drawRect(SDL_FRect rect, SDL_Color color);
+
   void draw(SDL_Texture *texture, SDL_Rect rect);
 
   void drawText();
@@ -103,7 +105,6 @@ public:
 
   bool getAllowToInteract() { return _allowToInteract; }
 
-  LifeBar &getLifeBar() { return *_lifeBar; }
 
 private:
   SDL_Window *_window;
@@ -114,8 +115,6 @@ private:
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
   bool _allowToInteract;
-  std::vector<LifeBar> _lifeBars;
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;
-  std::unique_ptr<LifeBar> _lifeBar;
 };

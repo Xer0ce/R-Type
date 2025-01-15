@@ -167,19 +167,6 @@ void Window::drawBackground(bool isScrolling, float deltaTime)
     SDL_RenderTexture(_renderer, _background, nullptr, &destRect2);
 }
 
-void Window::initLifeBar()
-{
-    _lifeBar = std::make_unique<LifeBar>(_renderer);
-    _lifeBar->init();
-}
-
-void Window::drawLifeBar(int x, int y, int hp)
-{
-    if (_lifeBar) {
-        _lifeBar->drawLifeBar(x, y, hp);
-    }
-}
-
 keyType Window::catchKeyOnce() {
   static std::vector<bool> prevKeyState(512, false);
   const bool *keyState = SDL_GetKeyboardState(NULL);
@@ -286,4 +273,9 @@ SDL_Texture *Window::loadText(std::string text, int size, std::string fontPath,
 
   //SDL_DestroySurface(surface);
   return texture;
+}
+
+void Window::drawRect(SDL_FRect rect, SDL_Color color) {
+  SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a);
+  SDL_RenderFillRect(_renderer, &rect);
 }

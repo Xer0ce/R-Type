@@ -43,6 +43,7 @@ public:
     _ecs->register_component<AiType>();
     _ecs->register_component<Nickname>();
     _ecs->register_component<Property>();
+    _ecs->register_component<LifeBar>();
   };
 
   void loadScene(sceneType sceneName);
