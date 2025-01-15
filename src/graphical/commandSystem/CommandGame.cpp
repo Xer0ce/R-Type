@@ -174,7 +174,7 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
 
   SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
 
-  int w = (int)(command.repConnect.Nickname.size() * 10);
+  int w = (int)(command.newPlayer.Nickname.size() * 10);
 
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
