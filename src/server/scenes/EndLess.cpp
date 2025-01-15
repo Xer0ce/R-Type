@@ -6,7 +6,6 @@
 */
 
 #include "EndLess.hpp"
-#include <bits/this_thread_sleep.h>
 
 static const std::string classicPath = "../src/game/config/endless/classic/";
 static const std::string miniBossPath = "../src/game/config/endless/mini_boss/";

@@ -51,8 +51,8 @@ void Wave::factory_call(const json &enemy, Queue &queue) {
       Command command;
       command.type = CommandType::CREATEENEMY;
       command.createEnemy.enemyId = id;
-      command.createEnemy.positionX = position[id]->y;
-      command.createEnemy.positionY = position[id]->x;
+      command.createEnemy.positionX = position[id]->x;
+      command.createEnemy.positionY = position[id]->y;
       queue.pushTcpQueue(command);
     } else {
       std::cout << "Unknown enemy type: " << enemy["type"] << std::endl;
