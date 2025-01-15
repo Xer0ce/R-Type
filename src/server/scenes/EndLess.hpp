@@ -26,6 +26,7 @@ public:
   void loadMiniBoss();
   void loadBoss();
   void init() override;
+  void setPlayersPosition(Registry *ecs);
 
 private:
   CommandGame _commandGame;

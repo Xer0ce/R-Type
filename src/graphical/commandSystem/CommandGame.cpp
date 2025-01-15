@@ -246,9 +246,9 @@ void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
     window->setAllowToInteract(true);
     return;
   }
-  window->deleteText("Wave " + std::to_string(command.wave.wave - 1));
-  window->addText("Wave " + std::to_string(command.wave.wave), 550, 50, 50, 50,
-                  50, "../src/graphical/assets/RTypefont.otf",
+  window->deleteText("Vague " + std::to_string(command.wave.wave - 1));
+  window->addText("Vague " + std::to_string(command.wave.wave), 25, 20, 50, 50,
+                  35, "../src/graphical/assets/RTypefont.otf",
                   {255, 255, 255, 255});
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (entities[i] == EntityType::Enemy) {
