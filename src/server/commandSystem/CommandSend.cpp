@@ -50,6 +50,10 @@ CommandSend::CommandSend() {
                                               IProtocol *protocol) {
     cooldown(command, protocol);
   };
+  _commandMap[CommandType::WAVE] = [this](Command command,
+                                          IProtocol *protocol) {
+    wave(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -300,6 +304,20 @@ void CommandSend::cooldown(Command command, IProtocol *protocol) {
   binaryData.push_back(0x12);
 
   binaryData.push_back(static_cast<uint8_t>(command.cooldown.time));
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::wave(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x13);
+
+  binaryData.push_back(static_cast<uint8_t>(command.wave.wave));
+
+  binaryData.push_back(static_cast<uint8_t>(command.wave.time));
 
   binaryData.push_back(0xFF);
 

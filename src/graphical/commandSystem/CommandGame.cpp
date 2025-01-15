@@ -44,6 +44,10 @@ CommandGame::CommandGame() {
                                               Registry *ecs, Window *window) {
     cooldown(command, queue, ecs, window);
   };
+  _commandMap[CommandType::WAVE] = [this](Command command, Queue *queue,
+                                          Registry *ecs, Window *window) {
+    wave(command, queue, ecs, window);
+  };
 }
 
 CommandGame::~CommandGame() {}
@@ -137,10 +141,8 @@ void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
         std::cout << "Enemy is dead" << std::endl;
       }
       if (entities[i] && entities[i] == EntityType::Projectile) {
-        std::cout << "Projectile is dead" << command.killEntity.entityId
-                  << std::endl;
       }
-      ecs->kill_entity(Entities(command.killEntity.entityId));
+      ecs->kill_entity(static_cast<Entities>(command.killEntity.entityId));
     }
   }
 }
@@ -153,10 +155,10 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
-      Velocity(0, 0), Health(1),
-      Draw({0, 255, 0, 255},
+      Velocity(0, 10), Health(1),
+      Draw({0, 0, 0, 0},
            {(int)command.createEnemy.positionX,
-            (int)command.createEnemy.positionY, 50, 50},
+            (int)command.createEnemy.positionY, 100, 100},
            enemyTexture),
       AiType::Aggressive,
       std::optional<std::size_t>(command.createEnemy.enemyId));
@@ -235,4 +237,28 @@ void CommandGame::cooldown(Command command, Queue *queue, Registry *ecs,
   if (command.cooldown.time == 0) {
     window->setAllowToInteract(true);
   }
+}
+
+void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
+                       Window *window) {
+  auto &entities = ecs->get_components<EntityType>();
+
+
+  if (!window->getAllowToInteract()) {
+    window->setAllowToInteract(true);
+    return;
+  }
+  window->deleteText("Wave " + std::to_string(command.wave.wave - 1));
+  window->addText("Wave " + std::to_string(command.wave.wave), 550, 50, 50, 50,
+                  50, "../src/graphical/assets/RTypefont.otf",
+                  {255, 255, 255, 255});
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (entities[i] == EntityType::Enemy) {
+      ecs->kill_entity(static_cast<Entities>(i));
+    }
+    if (entities[i] == EntityType::Projectile) {
+      ecs->kill_entity(static_cast<Entities>(i));
+    }
+  }
+  window->setAllowToInteract(false);
 }

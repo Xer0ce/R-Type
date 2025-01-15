@@ -45,7 +45,7 @@ History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   if (!_startCooldown) {
     if (_firstRound) {
       _firstRound = false;
-      std::string path = "../src/game/config/endless/wave_type_1.json";
+      std::string path = "../src/game/config/endless/classic/classic_wave_1.json";
       _wave.load(path, *_queue);
     }
     if (now > deltaTime) {
