@@ -25,8 +25,15 @@ void call_enemy_ai(Registry *ecs, AiType type, std::size_t enemy) {
 void enemy_system(Registry *ecs) {
   auto &entityType = ecs->get_components<EntityType>();
   auto &aiType = ecs->get_components<AiType>();
+  auto &velocity = ecs->get_components<Velocity>();
+  static int entry_distance = 0;
 
+  entry_distance+= 10;
   for (std::size_t i = 0; i < entityType.size(); i++) {
+    if (entry_distance < 750) {
+      velocity[i]->y = 10;
+      continue;
+    }
     if (entityType[i] == EntityType::Enemy) {
       if (aiType[i] == AiType::Passive) {
         call_enemy_ai(ecs, AiType::Aggressive, i);
