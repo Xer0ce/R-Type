@@ -34,6 +34,7 @@ History::loop(eventType event,
   auto &entities = _ecs->get_components<EntityType>();
   auto &lifebars = _ecs->get_components<LifeBar>();
   auto &health = _ecs->get_components<Health>();
+  auto &control = _ecs->get_components<Control>();
   Command command;
   std::chrono::time_point<std::chrono::steady_clock> now =
       std::chrono::steady_clock::now();
@@ -70,7 +71,7 @@ History::loop(eventType event,
     if (nicknames[i].has_value()) {
       _window->draw(nicknames[i]->texture, nicknames[i]->rect);
     }
-    if (lifebars[i].has_value()) {
+    if (lifebars[i].has_value() && control[i].has_value()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
   }
