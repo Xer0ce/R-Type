@@ -73,11 +73,9 @@ public:
 
   void setBackground(SDL_Texture *texture);
 
-  void drawBackground(bool isScrolling = false, float deltaTime = 0.0f);
+  void drawBackground();
 
-  void initLifeBar();
-
-  void drawLifeBar(int x, int y, int hp);
+  void moveBackground();
 
   std::vector<keyType> catchKey();
 
@@ -119,11 +117,16 @@ public:
 
   void setNextWave(bool next) { _nextWave = next; };
 
+  bool isBackgroundScrolling() { return _isBackgroundScrolling; }
+
+  void setBackgroundScrolling(bool scrolling) { _isBackgroundScrolling = scrolling; }
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
   SDL_Event _event;
   SDL_Texture *_background;
+  SDL_Texture *_background2;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
@@ -132,4 +135,5 @@ private:
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;
   bool _nextWave;
+  bool _isBackgroundScrolling = false;
 };

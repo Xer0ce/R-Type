@@ -23,6 +23,7 @@ void History::init() {
   _queue->pushTcpQueue(command);
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
+  _window->setBackgroundScrolling(true);
 }
 
 sceneType
@@ -43,8 +44,6 @@ History::loop(eventType event,
   if (command.type != EMPTY)
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
 
-  _window->drawBackground();
-  _window->drawText();
   std::vector<keyType> keys = _window->catchKey();
   auto movementKeys = _window->catchMovementKey();
   keyType keyOnce = _window->catchKeyOnce();
@@ -62,8 +61,11 @@ History::loop(eventType event,
       position_system_graphic(1, *_ecs, _queue);
       enemy_system(_ecs, _window->isNewWave());
       display_infos(_ecs);
+      _window->moveBackground();
     }
   }
+  _window->drawBackground();
+  _window->drawText();
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
