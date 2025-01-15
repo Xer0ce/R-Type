@@ -36,6 +36,7 @@ void Menu::init() {
       Draw({255, 255, 255, 255}, {700, 300, 887, 484},
            _window->loadTexture("../src/graphical/assets/CreateParty.svg")));
   _ecs->add_component<EntityType>(entitie, EntityType::Menu);
+  _window->playSound(MICHOU_ET_ELSA_2, 0);
 }
 
 void Menu::setMenu(std::string selectedButton) {

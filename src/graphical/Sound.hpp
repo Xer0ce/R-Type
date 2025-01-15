@@ -13,19 +13,26 @@
 
 class Sound {
 public:
-  Sound(std::string soundPath, soundType type);
+  Sound(std::string soundPath, soundType type, int volume);
   ~Sound();
 
   void loadSound(const std::string path);
 
-  void playSound();
+  void playSound(int loop);
 
   void setSoundType(soundType type) { _type = type; }
 
   soundType getSoundType() { return _type; }
 
+  void stopSound();
+
+  void setVolume(int volume);
+
 private:
   soundType _type;
   std::string _path;
-  Mix_Music *_sound;
+  Mix_Chunk *_sound;
+  int _channel;
+  int _loop;
+  int _volume;
 };
