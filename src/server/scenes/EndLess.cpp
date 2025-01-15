@@ -13,27 +13,21 @@ static const std::string miniBossPath = "../src/game/config/endless/mini_boss/";
 static const std::string bossPath = "../src/game/config/endless/boss/";
 
 static const std::string classicWave[] = {
-  classicPath + "classic_wave_1.json",
-  classicPath + "classic_wave_2.json",
-  classicPath + "classic_wave_3.json",
-  classicPath + "classic_wave_4.json",
-  classicPath + "classic_wave_5.json",
-  classicPath + "classic_wave_6.json",
-  classicPath + "classic_wave_7.json",
-  classicPath + "classic_wave_8.json",
-  classicPath + "classic_wave_9.json",
-  classicPath + "classic_wave_10.json"
-};
+    classicPath + "classic_wave_1.json", classicPath + "classic_wave_2.json",
+    classicPath + "classic_wave_3.json", classicPath + "classic_wave_4.json",
+    classicPath + "classic_wave_5.json", classicPath + "classic_wave_6.json",
+    classicPath + "classic_wave_7.json", classicPath + "classic_wave_8.json",
+    classicPath + "classic_wave_9.json", classicPath + "classic_wave_10.json"};
 
 static const std::string miniBossWave[] = {
-  miniBossPath + "mini_boss_wave_1.json",
-  miniBossPath + "mini_boss_wave_2.json",
-  miniBossPath + "mini_boss_wave_3.json",
+    miniBossPath + "mini_boss_wave_1.json",
+    miniBossPath + "mini_boss_wave_2.json",
+    miniBossPath + "mini_boss_wave_3.json",
 };
 
 static const std::string bossWave[] = {
-  bossPath + "boss_wave_1.json",
-  bossPath + "boss_wave_2.json",
+    bossPath + "boss_wave_1.json",
+    bossPath + "boss_wave_2.json",
 };
 
 EndLess::EndLess() {
@@ -109,9 +103,9 @@ void EndLess::waveGestion() {
     _waveNumber++;
     _wave.load(classicWave[0], *_queue);
 
-    //int lastDigit = _waveNumber % 10;
-//
-    //if (lastDigit == 5) {
+    // int lastDigit = _waveNumber % 10;
+    //
+    // if (lastDigit == 5) {
     //  loadMiniBoss();
     //} else if (lastDigit == 0) {
     //  loadBoss();
@@ -120,7 +114,6 @@ void EndLess::waveGestion() {
     //}
   }
 }
-
 
 sceneType
 EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {

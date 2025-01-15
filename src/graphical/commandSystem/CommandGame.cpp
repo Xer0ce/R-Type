@@ -243,7 +243,6 @@ void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
                        Window *window) {
   auto &entities = ecs->get_components<EntityType>();
 
-
   if (!window->getAllowToInteract()) {
     window->setAllowToInteract(true);
     return;
