@@ -11,6 +11,32 @@ Queue::Queue() {}
 
 Queue::~Queue() {}
 
+void Queue::removeCommandByType(CommandType type) {
+  while (!_udpQueue.empty()) {
+    if (_udpQueue.front().type == type) {
+      _udpQueue.pop();
+    } else {
+      break;
+    }
+  }
+
+  while (!_tcpQueue.empty()) {
+    if (_tcpQueue.front().type == type) {
+      _tcpQueue.pop();
+    } else {
+      break;
+    }
+  }
+
+  while (!_gameQueue.empty()) {
+    if (_gameQueue.front().type == type) {
+      _gameQueue.pop();
+    } else {
+      break;
+    }
+  }
+}
+
 void Queue::pushUdpQueue(Command command) {
   std::lock_guard<std::mutex> lock(_udpMutex);
   _udpQueue.push(command);
@@ -32,8 +58,6 @@ void Queue::popUdpQueueEnemy(int id) {
   std::lock_guard<std::mutex> lock(_udpMutex);
   std::queue<Command> tempQueue;
 
-  // Parcourt la file pour conserver uniquement les commandes non liées à l'ID
-  // ennemi donné
   while (!_udpQueue.empty()) {
     Command command = _udpQueue.front();
     _udpQueue.pop();
@@ -56,7 +80,6 @@ void Queue::popUdpQueueEnemy(int id) {
       }
       break;
     default:
-      // Garder toutes les autres commandes
       break;
     }
 
@@ -65,7 +88,6 @@ void Queue::popUdpQueueEnemy(int id) {
     }
   }
 
-  // Remplace la queue originale par la nouvelle
   _udpQueue = std::move(tempQueue);
 }
 

@@ -38,7 +38,24 @@ EndLess::EndLess() {
 
 EndLess::~EndLess() {}
 
-void EndLess::init() { _wave = Wave(_ecs); }
+void EndLess::init() {
+  _wave = Wave(_ecs);
+  setPlayersPosition(_ecs);
+}
+
+void EndLess::setPlayersPosition(Registry *ecs) {
+  auto &position = ecs->get_components<Position>();
+  auto &entityType = ecs->get_components<EntityType>();
+  int playerCount = 1;
+
+  for (std::size_t i = 0; i < entityType.size(); i++) {
+    if (entityType[i] == EntityType::Player) {
+      position[i]->x = 100;
+      position[i]->y = (150 * playerCount);
+      playerCount++;
+    }
+  }
+}
 
 bool EndLess::waveIsClear() {
   auto &entityType = _ecs->get_components<EntityType>();
@@ -80,6 +97,7 @@ void EndLess::loadBoss() {
 
 void EndLess::waveGestion() {
   if (waveIsClear()) {
+    _waveNumber++;
     Command cmd;
     auto &entities = _ecs->get_components<EntityType>();
     cmd.type = CommandType::WAVE;
@@ -94,23 +112,22 @@ void EndLess::waveGestion() {
         _ecs->kill_entity(static_cast<Entities>(i));
       }
     }
+    _queue->removeCommandByType(CommandType::SHOOT);
     std::this_thread::sleep_for(std::chrono::seconds(3));
     cmd.type = CommandType::WAVE;
     cmd.wave.wave = _waveNumber;
     cmd.wave.time = 3;
     _queue->pushTcpQueue(cmd);
-    _waveNumber++;
-    _wave.load(classicWave[0], *_queue);
 
-    // int lastDigit = _waveNumber % 10;
-    //
-    // if (lastDigit == 5) {
-    //  loadMiniBoss();
-    //} else if (lastDigit == 0) {
-    //  loadBoss();
-    //} else {
-    //  loadClassic();
-    //}
+    int lastDigit = _waveNumber % 10;
+
+    if (lastDigit == 5) {
+      loadMiniBoss();
+    } else if (lastDigit == 0) {
+      loadBoss();
+    } else {
+      loadClassic();
+    }
   }
 }
 
@@ -140,6 +157,14 @@ EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   if (!_startCooldown) {
     if (_firstRound) {
       _firstRound = false;
+      Command cmd;
+
+      cmd.type = CommandType::WAVE;
+      cmd.wave.wave = 1;
+      cmd.wave.time = 3;
+      _queue->pushTcpQueue(cmd);
+      _queue->pushTcpQueue(cmd);
+
       _wave.load(classicWave[0], *_queue);
     }
     if (now > deltaTime) {
