@@ -51,6 +51,7 @@ EndLess::loop(eventType event,
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
+    _window->moveBackground();
     if (_window->getAllowToInteract()) {
       std::chrono::time_point<std::chrono::steady_clock> now =
           std::chrono::steady_clock::now();
@@ -63,7 +64,6 @@ EndLess::loop(eventType event,
       position_system_graphic(1, *_ecs, _queue);
       enemy_system(_ecs, _window->isNewWave());
       display_infos(_ecs);
-      _window->moveBackground();
     }
   }
   _window->drawBackground();
