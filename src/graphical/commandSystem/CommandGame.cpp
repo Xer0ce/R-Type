@@ -151,6 +151,7 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
                               Window *window) {
   SDL_Texture *enemyTexture =
       window->loadTexture("../src/graphical/assets/enemy/enemy.png");
+  AiType aiType = static_cast<AiType>(command.createEnemy.aiType);
 
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
@@ -160,7 +161,7 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
            {(int)command.createEnemy.positionX,
             (int)command.createEnemy.positionY, 100, 100},
            enemyTexture),
-      AiType::Aggressive,
+      aiType,
       std::optional<std::size_t>(command.createEnemy.enemyId));
 }
 
@@ -233,6 +234,16 @@ void CommandGame::cooldown(Command command, Queue *queue, Registry *ecs,
   window->addText(std::to_string(command.cooldown.time), 550, 350, 200, 200,
                   200, "../src/graphical/assets/RTypefont.otf",
                   {255, 255, 255, 255});
+  if (command.cooldown.time == 3) {
+    window->playSound(WAVE3, 0);
+    std::cout << "3" << std::endl;
+  } else if (command.cooldown.time == 2) {
+    window->playSound(WAVE2, 0);
+    std::cout << "2" << std::endl;
+  } else if (command.cooldown.time == 1) {
+    window->playSound(WAVE1, 0);
+    std::cout << "1" << std::endl;
+  }
   if (command.cooldown.time == 0) {
     window->setAllowToInteract(true);
   }
@@ -244,12 +255,17 @@ void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
 
   if (!window->getAllowToInteract()) {
     window->setAllowToInteract(true);
+    queue->removeCommandByType(CommandType::SHOOT);
+    window->deleteText("Nouvelle vague");
     return;
   }
   window->deleteText("Vague " + std::to_string(command.wave.wave - 1));
   window->addText("Vague " + std::to_string(command.wave.wave), 25, 20, 50, 50,
                   35, "../src/graphical/assets/RTypefont.otf",
                   {255, 255, 255, 255});
+  
+  window->addText("Nouvelle vague", 250, 300, 50, 50, 100, "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
+  window->playSound(NEWWAVE, 0);
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (entities[i] == EntityType::Enemy) {
       ecs->kill_entity(static_cast<Entities>(i));
