@@ -50,7 +50,7 @@ void EndLess::setPlayersPosition(Registry *ecs) {
 
   for (std::size_t i = 0; i < entityType.size(); i++) {
     if (entityType[i] == EntityType::Player) {
-      position[i]->x = 100;
+      position[i]->x = 112;
       position[i]->y = (150 * playerCount);
       playerCount++;
     }
