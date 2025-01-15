@@ -10,6 +10,7 @@
 #include "../../game/systems/enemy/EnemySystems.hpp"
 #include "../commandSystem/CommandGame.hpp"
 #include "AScene.hpp"
+#include <thread>
 
 class EndLess : public AScene {
 public:
