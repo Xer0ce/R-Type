@@ -68,6 +68,8 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
   std::cout << "SpaceshipID : " << command.repConnect.spaceshipId << std::endl;
   std::cout << "ShootID : " << command.repConnect.shootId << std::endl;
 
+  int w = (int)(command.repConnect.Nickname.size() * 10);
+
   auto player = create_entity<EntityType::Player>(
       *ecs,
       Position(command.repConnect.positionX, command.repConnect.positionY),
@@ -76,15 +78,16 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
            {(int)command.repConnect.positionX,
             (int)command.repConnect.positionY, 50, 50},
            playerTexture),
-      Nickname(command.repConnect.Nickname, {0, 0, 20, 20}, window->loadText(
-                                                             command.repConnect.Nickname,
-                                                             20,
-                                                             "../src/graphical/assets/RTypefont.otf",
-                                                             {255, 255, 255, 255})),
+      Nickname(command.repConnect.Nickname,
+               {((int)command.repConnect.positionX) - (w / 2),
+                (int)command.repConnect.positionY,
+                w, 20},
+               window->loadText(command.repConnect.Nickname, 20,
+                                "../src/graphical/assets/RTypefont.otf",
+                                {255, 255, 255, 255})),
       Property(command.repConnect.spaceshipId, command.repConnect.shootId, 0),
       std::optional<Control>(Control()),
       std::optional<std::size_t>(command.repConnect.id));
-
 }
 
 void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs,
@@ -156,6 +159,8 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *playerTexture =
       window->loadTexture("../src/graphical/assets/michou.png");
 
+  int w = (int)(command.repConnect.Nickname.size() * 10);
+
   std::cout << "PAS CONTROLABLE Je cree le player avec l'id "
             << command.newPlayer.id << std::endl;
   auto player = create_entity<EntityType::Player>(
@@ -165,9 +170,15 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
            {(int)command.newPlayer.positionX, (int)command.newPlayer.positionY,
             50, 50},
            playerTexture),
-      Nickname(command.newPlayer.Nickname, {0, 0, 20, 20}, window->loadText(command.newPlayer.Nickname, 20, "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255})), Property(0, 0, 0), std::nullopt,
+      Nickname(command.newPlayer.Nickname,
+               {(int)command.newPlayer.positionX - (w / 2) + 50,
+                (int)command.newPlayer.positionY - 20,
+                w, 20},
+               window->loadText(command.newPlayer.Nickname, 20,
+                                "../src/graphical/assets/RTypefont.otf",
+                                {255, 255, 255, 255})),
+      Property(0, 0, 0), std::nullopt,
       std::optional<std::size_t>(command.newPlayer.id));
-
 }
 
 void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,

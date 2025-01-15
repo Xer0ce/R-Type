@@ -15,10 +15,10 @@ void display_infos(Registry *ecs)
     auto &health = ecs->get_components<Health>();
     auto &nicknames = ecs->get_components<Nickname>();
     auto &entities = ecs->get_components<EntityType>();
-    
+
     for (std::size_t i = 0; i < entities.size(); ++i) {
         if (entities[i] == EntityType::Player && nicknames[i].has_value()) {
-            nicknames[i]->rect.x = positions[i]->x;
+            nicknames[i]->rect.x = positions[i]->x - (nicknames[i]->rect.w / 2) + 25;
             nicknames[i]->rect.y = positions[i]->y - 20;
         }
     }
