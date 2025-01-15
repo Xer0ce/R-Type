@@ -38,7 +38,7 @@ EndLess::EndLess() {
 
 EndLess::~EndLess() {}
 
-void EndLess::init() { 
+void EndLess::init() {
   _wave = Wave(_ecs);
   setPlayersPosition(_ecs);
 }
@@ -52,7 +52,7 @@ void EndLess::setPlayersPosition(Registry *ecs) {
     if (entityType[i] == EntityType::Player) {
       position[i]->x = 100;
       position[i]->y = (150 * playerCount);
-      playerCount++; 
+      playerCount++;
     }
   }
 }
@@ -123,9 +123,9 @@ void EndLess::waveGestion() {
     if (lastDigit == 5) {
       loadMiniBoss();
     } else if (lastDigit == 0) {
-     loadBoss();
+      loadBoss();
     } else {
-     loadClassic();
+      loadClassic();
     }
   }
 }
