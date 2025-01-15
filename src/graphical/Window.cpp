@@ -49,7 +49,6 @@ void Window::init() {
   int windowWidth = 1200;
   int windowHeight = 800;
 
-
   _window = SDL_CreateWindow("R-Type", windowWidth, windowHeight, 0);
   if (!_window) {
     std::cerr << "Erreur lors de la création de la fenêtre : " << SDL_GetError()
