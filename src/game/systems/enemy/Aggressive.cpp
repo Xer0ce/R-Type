@@ -11,11 +11,10 @@
 #include <iostream>
 #include <random>
 
-void aggresive_ai(Registry *ecs) {
+void aggresive_ai(Registry *ecs, std::size_t enemy) {
   auto &velocity = ecs->get_components<Velocity>();
   auto &position = ecs->get_components<Position>();
   auto &entityType = ecs->get_components<EntityType>();
-  auto &aiType = ecs->get_components<AiType>();
   std::vector<std::size_t> playerId;
 
   static std::size_t randomPlayerId = 0;
@@ -46,18 +45,12 @@ void aggresive_ai(Registry *ecs) {
     return;
   }
 
-  for (std::size_t i = 0; i < entityType.size(); i++) {
-    if (entityType[i] == EntityType::Enemy) {
-      if (aiType[i] == AiType::Balzy) {
-        if ((position[i]->y >= position[randomPlayerId]->y - 30) &&
-            (position[randomPlayerId]->y + 10 >= position[i]->y)) {
-          velocity[i]->y = 0;
-        } else if (position[i]->y > position[randomPlayerId]->y) {
-          velocity[i]->y = -6.5;
-        } else if (position[i]->y < position[randomPlayerId]->y) {
-          velocity[i]->y = 6.5;
-        }
-      }
-    }
+  if ((position[enemy]->y >= position[randomPlayerId]->y - 30) &&
+      (position[randomPlayerId]->y + 10 >= position[enemy]->y)) {
+    velocity[enemy]->y = 0;
+  } else if (position[enemy]->y > position[randomPlayerId]->y) {
+    velocity[enemy]->y = -6.5;
+  } else if (position[enemy]->y < position[randomPlayerId]->y) {
+    velocity[enemy]->y = 6.5;
   }
 }

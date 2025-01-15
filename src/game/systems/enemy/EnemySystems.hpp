@@ -11,10 +11,10 @@
 #include "../../gestion/EntitiesGestion.hpp"
 #include <map>
 
-void aggresive_ai(Registry *ecs);
-void balzy_ai(Registry *ecs);
-void boss_ai(Registry *ecs);
-void passive_ai(Registry *ecs);
+void aggresive_ai(Registry *ecs, std::size_t enemy);
+void balzy_ai(Registry *ecs, std::size_t enemy);
+void boss_ai(Registry *ecs, std::size_t enemy);
+void passive_ai(Registry *ecs, std::size_t enemy);
 
 void call_enemy_ai(Registry *ecs, AiType type);
 void enemy_system(Registry *ecs);
