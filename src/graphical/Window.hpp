@@ -98,9 +98,13 @@ public:
 
   bool getAllowToInteract() { return _allowToInteract; }
 
-  void playSound(soundType type);
+  void playSound(soundType type, int loop);
 
-  void addSound(std::string soundPath, soundType type);
+  void addSound(std::string soundPath, soundType type, int volume);
+
+  void stopAllSound();
+
+  void stopSound(soundType type);
 
 private:
   SDL_Window *_window;

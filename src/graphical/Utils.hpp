@@ -39,4 +39,6 @@ struct ChoosingParams {
 
 enum soundType {
   BULLET_SOUND,
+  ENDLESS_MUSIC,
+  MICHOU_ET_ELSA_2,
 };

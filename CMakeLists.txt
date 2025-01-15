@@ -31,10 +31,13 @@ if(BUILD_CLIENT)
     add_executable(r-type_client ${SOURCES_GAME_SYSTEMS} ${SOURCES_CLIENT} ${SOURCES_CLIENT_COMMAND} ${SOURCES_ECS} ${SOURCES_CLIENT_SCENES} ${SOURCES_GAME_GESTION} ${SOURCES_CLIENT_NETWORK} ${SOURCES_QUEUE} ${SOURCES_GAME_SYSTEMS_GLOBAL})
     target_include_directories(r-type_client PRIVATE include/graphical)
 
+    target_link_libraries(r-type_client PRIVATE asan)
     target_link_libraries(r-type_client PRIVATE SDL3::SDL3)
     target_link_libraries(r-type_client PRIVATE SDL3_ttf::SDL3_ttf)
     target_link_libraries(r-type_client PRIVATE SDL3_image::SDL3_image)
     target_link_libraries(r-type_client PRIVATE SDL3_mixer::SDL3_mixer)
+
+    target_link_options(r-type_client PRIVATE -g3)
 
     target_compile_definitions(r-type_client PRIVATE $<$<CONFIG:Debug>:DEBUG>)
 endif()

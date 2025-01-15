@@ -64,7 +64,9 @@ void Window::init() {
     exit(84);
   }
 
-  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND);
+  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
+  addSound("../src/graphical/assets/sounds/endless.mp3", ENDLESS_MUSIC, 100);
+  addSound("../src/graphical/assets/sounds/Michou_croute_et_Elsa_2.mp3", MICHOU_ET_ELSA_2, 100);
 }
 
 void Window::destroyWindow() {
@@ -265,14 +267,28 @@ void Window::setTextPos(std::string text, int x, int y) {
   }
 }
 
-void Window::playSound(soundType type) {
+void Window::playSound(soundType type, int loop) {
   for (auto &sound : _sounds) {
     if (sound->getSoundType() == type) {
-      sound->playSound();
+      sound->playSound(loop);
     }
   }
 }
 
-void Window::addSound(std::string soundPath, soundType type) {
-  _sounds.push_back(std::make_unique<Sound>(soundPath, type));
+void Window::addSound(std::string soundPath, soundType type, int volume) {
+  _sounds.push_back(std::make_unique<Sound>(soundPath, type, volume));
+}
+
+void Window::stopAllSound() {
+  for (auto &sound : _sounds) {
+    sound->stopSound();
+  }
+}
+
+void Window::stopSound(soundType type) {
+  for (auto &sound : _sounds) {
+    if (sound->getSoundType() == type) {
+      sound->stopSound();
+    }
+  }
 }

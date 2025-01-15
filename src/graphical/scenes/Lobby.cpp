@@ -45,6 +45,7 @@ Lobby::loop(eventType event,
           _ecs->kill_entity(static_cast<Entities>(i));
         }
       }
+      _window->stopAllSound();
       return sceneType::ENDLESS;
     }
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
