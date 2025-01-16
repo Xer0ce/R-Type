@@ -19,7 +19,6 @@
 #include "scenes/EndLess.hpp"
 #include "scenes/History.hpp"
 #include "scenes/Lobby.hpp"
-#include "scenes/Lobby1v1.hpp"
 #include "scenes/OneVsOne.hpp"
 #include <map>
 #include <memory>
