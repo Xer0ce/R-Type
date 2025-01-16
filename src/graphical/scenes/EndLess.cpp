@@ -22,7 +22,7 @@ void EndLess::init() {
   command.type = CommandType::CONNECT;
   command.connect.Nickname = "Player";
   _queue->pushTcpQueue(command);
-  _window->playSound(ENDLESS_MUSIC, -1);
+  _window->playSound(MICHOU_REMIX_WINTERZUUKO, -1);
   _window->setBackgroundScrolling(true);
 }
 

@@ -45,4 +45,5 @@ enum soundType {
   WAVE2,
   WAVE3,
   NEWWAVE,
+  MICHOU_REMIX_WINTERZUUKO,
 };
