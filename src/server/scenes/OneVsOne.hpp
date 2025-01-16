@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "AScene.hpp"
 #include "../commandSystem/CommandGame.hpp"
+#include "AScene.hpp"
 
 class OneVsOne : public AScene {
 public:

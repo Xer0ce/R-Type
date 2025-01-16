@@ -38,7 +38,7 @@ CommandSend::CommandSend() {
     startGame(command, protocol);
   };
   _commandMap[CommandType::CONNECT1V1] = [this](Command command,
-                                               IClient *protocol) {
+                                                IClient *protocol) {
     connect1v1(command, protocol);
   };
 }

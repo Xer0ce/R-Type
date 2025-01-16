@@ -15,14 +15,16 @@ OneVsOne::OneVsOne() {
   _backgroundPaths.push_back("../src/graphical/assets/level2.png");
   _backgroundPaths.push_back("../src/graphical/assets/level4.png");
   _backgroundPaths.push_back("../src/graphical/assets/level5.png");
-  _nextBullet = std::chrono::steady_clock::now() + std::chrono::milliseconds(150);
+  _nextBullet =
+      std::chrono::steady_clock::now() + std::chrono::milliseconds(150);
 }
 
 OneVsOne::~OneVsOne() {}
 
 void OneVsOne::init() {
   std::srand(std::time(0));
-  _window->setBackground(_window->loadTexture(_backgroundPaths[std::rand() % 5].c_str()));
+  _window->setBackground(
+      _window->loadTexture(_backgroundPaths[std::rand() % 5].c_str()));
   _window->setBackgroundScrolling(true);
   Command command;
   command.type = CONNECT1V1;

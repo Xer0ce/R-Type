@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "AScene.hpp"
-#include "../commandSystem/CommandGame.hpp"
 #include "../../game/systems/global/GlobalSystem.hpp"
+#include "../commandSystem/CommandGame.hpp"
+#include "AScene.hpp"
 #include <cstdlib>
 #include <ctime>
 

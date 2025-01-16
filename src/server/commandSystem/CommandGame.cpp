@@ -236,7 +236,6 @@ void CommandGame::connect1v1(Command command, Queue *queue, Registry *ecs) {
     }
   }
 
-
   if (player < otherPlayer || otherPlayer == -1)
     playerNumber = 1;
   else

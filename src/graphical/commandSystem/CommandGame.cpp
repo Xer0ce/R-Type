@@ -109,7 +109,8 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
                window->loadText(command.repConnect.Nickname, 20,
                                 "../src/graphical/assets/RTypefont.otf",
                                 {255, 255, 255, 255})),
-      Property(command.repConnect.spaceshipId, command.repConnect.shootId, 0, command.repConnect.playerNbr),
+      Property(command.repConnect.spaceshipId, command.repConnect.shootId, 0,
+               command.repConnect.playerNbr),
       std::optional<Control>(Control()),
       std::optional<std::size_t>(command.repConnect.id),
       std::optional<LifeBar>(
@@ -200,7 +201,8 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
                window->loadText(command.newPlayer.Nickname, 20,
                                 "../src/graphical/assets/RTypefont.otf",
                                 {255, 255, 255, 255})),
-      Property(command.newPlayer.spaceshipId, command.newPlayer.shootId, 0, command.newPlayer.playerNbr),
+      Property(command.newPlayer.spaceshipId, command.newPlayer.shootId, 0,
+               command.newPlayer.playerNbr),
       std::nullopt, std::optional<std::size_t>(command.newPlayer.id));
 }
 
@@ -222,7 +224,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
 
   std::string texturePath = pathShoot[shootId];
   int velocity = (int)velocityShoot[shootId];
-  if(command.shoot.direction == 1) {
+  if (command.shoot.direction == 1) {
     velocity = -velocity;
   }
 

@@ -133,7 +133,6 @@ void CommandHandle::connect1v1(std::vector<uint8_t> buffer, IProtocol *protocol,
                                Queue *queue) {
   Command cmd;
 
-
   int playloadSize = static_cast<int>(buffer[1]);
 
   std::string nickname(buffer.begin() + 2, buffer.begin() + 2 + playloadSize);
