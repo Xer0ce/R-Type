@@ -18,6 +18,42 @@ void Lobby::init() {
   _window->addButton(700, 500, 150, 35, "Start");
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/lobby.png"));
+  fillHistoryLevels();
+  addLevelsButtons();
+}
+
+void Lobby::addLevelsButtons() {
+
+    const auto &levels = getHistoryLevels();
+
+    for (int i = 0; i < std::min(20, static_cast<int>(levels.size())); ++i) {
+        int row = i / 5;
+        int col = i % 5;
+
+        int posX = 100 + (col * 60);
+        int posY = 100 + (row * 60);
+
+        _window->addButton(posX, posY, 40, 40, std::to_string(i + 1), levels[i]);
+    }
+}
+
+void Lobby::fillHistoryLevels() {
+  std::string path = "../src/game/config/history";
+  std::vector<std::string> levels;
+    try
+    {
+        for (const auto &entry : std::filesystem::directory_iterator(path))
+        {
+            if (entry.is_regular_file()) {
+               levels.push_back(entry.path().filename().string());
+            }
+        }
+    }
+    catch (const std::exception &ex)
+    {
+        std::cerr << "Erreur : " << ex.what() << std::endl;
+    }
+  setHistoryLevels(levels);
 }
 
 sceneType
@@ -61,6 +97,7 @@ Lobby::loop(eventType event,
           command.type = CommandType::STARTGAME;
           _queue->pushTcpQueue(command);
         }
+        std::cout << "Fichier associé : " << button.getTag() << std::endl;
       }
     }
   }
