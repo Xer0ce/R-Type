@@ -70,16 +70,18 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
   Command cmd;
 
   int id = static_cast<int>(buffer[1]);
-  int spaceshipId = static_cast<int>(buffer[2]);
-  int shootId = static_cast<int>(buffer[3]);
-  float positionX = *reinterpret_cast<float *>(&buffer[4]);
-  float positionY = *reinterpret_cast<float *>(&buffer[8]);
-  int playloadSize = static_cast<int>(buffer[12]);
+  int playerNbr = static_cast<int>(buffer[2]);
+  int spaceshipId = static_cast<int>(buffer[3]);
+  int shootId = static_cast<int>(buffer[4]);
+  float positionX = *reinterpret_cast<float *>(&buffer[5]);
+  float positionY = *reinterpret_cast<float *>(&buffer[9]);
+  int playloadSize = static_cast<int>(buffer[13]);
 
-  std::string nickname(buffer.begin() + 13, buffer.begin() + 13 + playloadSize);
+  std::string nickname(buffer.begin() + 14, buffer.begin() + 14 + playloadSize);
 
   cmd.type = CommandType::REPCONNECT;
   cmd.repConnect.id = id;
+  cmd.repConnect.playerNbr = playerNbr;
   cmd.repConnect.spaceshipId = spaceshipId;
   cmd.repConnect.shootId = shootId;
   cmd.repConnect.positionX = positionX;
@@ -115,6 +117,7 @@ void CommandHandle::shoot(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.shoot.bulletId = static_cast<int>(buffer[2]);
   cmd.shoot.positionX = *reinterpret_cast<float *>(&buffer[3]);
   cmd.shoot.positionY = *reinterpret_cast<float *>(&buffer[7]);
+  cmd.shoot.direction = static_cast<int>(buffer[11]);
 
   queue->pushGameQueue(cmd);
 }
@@ -139,12 +142,13 @@ void CommandHandle::newPlayer(std::vector<uint8_t> buffer, IClient *protocol,
 
   cmd.type = CommandType::NEWPLAYER;
   cmd.newPlayer.id = static_cast<int>(buffer[1]);
-  cmd.newPlayer.spaceshipId = static_cast<int>(buffer[2]);
-  cmd.newPlayer.shootId = static_cast<int>(buffer[3]);
-  cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[4]);
-  cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[8]);
-  int playloadSize = static_cast<int>(buffer[12]);
-  std::string nickname(buffer.begin() + 13, buffer.begin() + 13 + playloadSize);
+  cmd.newPlayer.playerNbr = static_cast<int>(buffer[2]);
+  cmd.newPlayer.spaceshipId = static_cast<int>(buffer[3]);
+  cmd.newPlayer.shootId = static_cast<int>(buffer[4]);
+  cmd.newPlayer.positionX = *reinterpret_cast<float *>(&buffer[5]);
+  cmd.newPlayer.positionY = *reinterpret_cast<float *>(&buffer[9]);
+  int playloadSize = static_cast<int>(buffer[13]);
+  std::string nickname(buffer.begin() + 14, buffer.begin() + 14 + playloadSize);
   cmd.newPlayer.Nickname = nickname;
 
   queue->pushGameQueue(cmd);

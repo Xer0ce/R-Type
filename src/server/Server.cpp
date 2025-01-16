@@ -12,6 +12,8 @@ Server::Server() {
   _scenes[sceneType::ENDLESS] = std::make_shared<EndLess>();
   _scenes[sceneType::HISTORY] = std::make_shared<History>();
   _scenes[sceneType::LOBBY] = std::make_shared<Lobby>();
+  _scenes[sceneType::LOBBY1V1] = std::make_shared<Lobby1v1>();
+
   _currentScene = sceneType::LOBBY;
 
   _tcp = std::make_shared<Tcp>(4243, "0.0.0.0");

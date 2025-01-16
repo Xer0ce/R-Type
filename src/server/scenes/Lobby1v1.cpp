@@ -2,27 +2,28 @@
 ** EPITECH PROJECT, 2025
 ** R-Type
 ** File description:
-** Lobby
+** Lobby1v1
 */
 
-#include "Lobby.hpp"
+#include "Lobby1v1.hpp"
 
-Lobby::Lobby() { _name = "Lobby"; }
+Lobby1v1::Lobby1v1() {}
 
-Lobby::~Lobby() {}
+Lobby1v1::~Lobby1v1() {}
 
-void Lobby::init() {}
+void Lobby1v1::init() {}
 
 sceneType
-Lobby::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
+Lobby1v1::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   Command command;
-
   command = _queue->popGameQueue();
+
   if (command.type != EMPTY) {
     if (command.type == CommandType::STARTGAME) {
       return sceneType::ONE_VS_ONE;
     }
     _commandGame.executeCommandGame(command, _queue, _ecs);
   }
+
   return sceneType::NO_SWITCH;
 }

@@ -2,21 +2,18 @@
 ** EPITECH PROJECT, 2025
 ** R-Type
 ** File description:
-** OneVsOne
+** Lobby1v1
 */
 
 #pragma once
 
 #include "AScene.hpp"
 #include "../commandSystem/CommandGame.hpp"
-#include "../../game/systems/global/GlobalSystem.hpp"
-#include <cstdlib>
-#include <ctime>
 
-class OneVsOne : public AScene {
+class Lobby1v1 : public AScene {
 public:
-  OneVsOne();
-  ~OneVsOne();
+  Lobby1v1();
+  ~Lobby1v1();
 
   sceneType
   loop(eventType event,
@@ -26,6 +23,4 @@ public:
 
 private:
   CommandGame commandGame;
-  std::vector<std::string> _backgroundPaths;
-  std::chrono::time_point<std::chrono::steady_clock> _nextBullet;
 };

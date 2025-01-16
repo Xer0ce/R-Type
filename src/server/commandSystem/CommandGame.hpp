@@ -28,6 +28,7 @@ private:
   void shoot(Command command, Queue *queue, Registry *ecs);
   void hit(Command command, Queue *queue, Registry *ecs);
   void connectLobby(Command command, Queue *queue, Registry *ecs);
+  void connect1v1(Command command, Queue *queue, Registry *ecs);
 
   std::map<CommandType, std::function<void(Command, Queue *, Registry *)>>
       _commandMap;

@@ -29,6 +29,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     connectLobby(buffer, protocol, queue);
   };
+  _commandMap[0x07] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                             Queue *queue) {
+    connect1v1(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -87,11 +91,13 @@ void CommandHandle::shoot(std::vector<uint8_t> buffer, IProtocol *protocol,
   int id = static_cast<int>(buffer[1]);
   float positionX = *reinterpret_cast<float *>(&buffer[2]);
   float positionY = *reinterpret_cast<float *>(&buffer[6]);
+  int direction = static_cast<int>(buffer[10]);
 
   cmd.type = CommandType::SHOOT;
   cmd.shoot.playerId = id;
   cmd.shoot.positionX = positionX;
   cmd.shoot.positionY = positionY;
+  cmd.shoot.direction = direction;
   queue->pushGameQueue(cmd);
 }
 
@@ -110,14 +116,29 @@ void CommandHandle::connectLobby(std::vector<uint8_t> buffer,
 
   cmd.type = CommandType::CONNECTLOBBY;
 
-  int spaceshipId = static_cast<int>(buffer[1]);
-
-  int shootId = static_cast<int>(buffer[2]);
-  int playloadSize = static_cast<int>(buffer[3]);
+  int gamemode = static_cast<int>(buffer[1]);
+  int spaceshipId = static_cast<int>(buffer[2]);
+  int shootId = static_cast<int>(buffer[3]);
+  int playloadSize = static_cast<int>(buffer[4]);
+  cmd.connectLobby.gamemode = gamemode;
   cmd.connectLobby.spaceshipId = spaceshipId;
   cmd.connectLobby.shootId = shootId;
   cmd.connectLobby.Nickname =
-      std::string(buffer.begin() + 4, buffer.begin() + 4 + playloadSize);
+      std::string(buffer.begin() + 5, buffer.begin() + 5 + playloadSize);
   cmd.id = static_cast<int>(buffer.back());
   queue->pushGameQueue(cmd);
 }
+
+void CommandHandle::connect1v1(std::vector<uint8_t> buffer, IProtocol *protocol,
+                               Queue *queue) {
+  Command cmd;
+
+
+  int playloadSize = static_cast<int>(buffer[1]);
+
+  std::string nickname(buffer.begin() + 2, buffer.begin() + 2 + playloadSize);
+  cmd.type = CommandType::CONNECT1V1;
+  cmd.connect.Nickname = nickname;
+  cmd.id = static_cast<int>(buffer.back());
+  queue->pushGameQueue(cmd);
+};

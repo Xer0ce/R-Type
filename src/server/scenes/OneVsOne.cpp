@@ -20,8 +20,15 @@ void OneVsOne::init() {}
 
 sceneType
 OneVsOne::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
+
   std::chrono::time_point<std::chrono::steady_clock> now =
       std::chrono::steady_clock::now();
+
+  Command command;
+  command = _queue->popGameQueue();
+
+  if (command.type != EMPTY)
+    commandGame.executeCommandGame(command, _queue, _ecs);
 
   if (_startCooldown && now > _next) {
     _next = std::chrono::steady_clock::now() + std::chrono::seconds(1);

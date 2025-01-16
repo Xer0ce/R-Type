@@ -70,6 +70,8 @@ void CommandSend::connect(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.repConnect.id));
 
+  binaryData.push_back(static_cast<uint8_t>(command.repConnect.playerNbr));
+
   binaryData.push_back(static_cast<uint8_t>(command.repConnect.spaceshipId));
 
   binaryData.push_back(static_cast<uint8_t>(command.repConnect.shootId));
@@ -146,6 +148,8 @@ void CommandSend::shoot(Command command, IProtocol *protocol) {
   binaryData.insert(binaryData.end(), positionYBytes,
                     positionYBytes + sizeof(float));
 
+  binaryData.push_back(static_cast<uint8_t>(command.shoot.direction));
+
   binaryData.push_back(0xFF);
 
   protocol->sendDataToAll(binaryData);
@@ -193,6 +197,8 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
   binaryData.push_back(0x08);
 
   binaryData.push_back(static_cast<uint8_t>(command.newPlayer.id));
+
+  binaryData.push_back(static_cast<uint8_t>(command.repConnect.playerNbr));
 
   binaryData.push_back(static_cast<uint8_t>(command.newPlayer.spaceshipId));
 

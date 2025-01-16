@@ -15,6 +15,7 @@ enum sceneType {
   ENDLESS,
   ONE_VS_ONE,
   LOBBY,
+  LOBBY1V1,
   NO_SWITCH,
 };
 
@@ -35,6 +36,7 @@ struct ChoosingParams {
   std::string ip;
   int spaceshipId;
   int bulletId;
+  int gamemode;
 };
 
 enum soundType {
