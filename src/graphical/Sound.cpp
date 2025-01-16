@@ -39,9 +39,6 @@ void Sound::playSound(int loop) {
     return;
   }
   _channel = Mix_PlayChannel(-1, _sound, loop);
-  if (_channel == -1) {
-    std::cerr << "Error while playing sound: " << SDL_GetError() << std::endl;
-  }
 }
 
 void Sound::stopSound() {
