@@ -113,7 +113,7 @@ void Game::init(std::string nickname, ChoosingParams *params) {
 
 void Game::game(std::string nickname) {
   std::chrono::time_point<std::chrono::steady_clock> next =
-      std::chrono::steady_clock::now() + std::chrono::milliseconds(100);
+      std::chrono::steady_clock::now() + std::chrono::milliseconds(25);
   bool running = true;
   eventType event = NO_EVENT;
   ChoosingParams *params = new ChoosingParams();

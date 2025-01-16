@@ -19,13 +19,13 @@ public:
 
   sceneType
   loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
+  void init() override;
 
   bool waveIsClear();
   void waveGestion();
   void loadClassic();
   void loadMiniBoss();
   void loadBoss();
-  void init() override;
   void setPlayersPosition(Registry *ecs);
 
 private:
