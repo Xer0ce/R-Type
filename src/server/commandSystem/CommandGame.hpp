@@ -26,7 +26,6 @@ private:
   void disconnect(Command command, Queue *queue, Registry *ecs);
   void move(Command command, Queue *queue, Registry *ecs);
   void shoot(Command command, Queue *queue, Registry *ecs);
-  void hit(Command command, Queue *queue, Registry *ecs);
   void connectLobby(Command command, Queue *queue, Registry *ecs);
   void connect1v1(Command command, Queue *queue, Registry *ecs);
 

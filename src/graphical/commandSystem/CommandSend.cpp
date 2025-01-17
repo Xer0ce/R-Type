@@ -15,9 +15,6 @@ CommandSend::CommandSend() {
   _commandMap[CommandType::SHOOT] = [this](Command command, IClient *protocol) {
     shoot(command, protocol);
   };
-  _commandMap[CommandType::HIT] = [this](Command command, IClient *protocol) {
-    hit(command, protocol);
-  };
   _commandMap[CommandType::MOVE] = [this](Command command, IClient *protocol) {
     move(command, protocol);
   };
@@ -117,10 +114,6 @@ void CommandSend::shoot(Command command, IClient *protocol) {
   binaryData.push_back(0xFF);
 
   protocol->sendToServer(binaryData);
-}
-
-void CommandSend::hit(Command command, IClient *protocol) {
-  std::cout << "Hit command" << std::endl;
 }
 
 void CommandSend::createEnemy(Command command, IClient *protocol) {

@@ -56,6 +56,9 @@ CommandSend::CommandSend() {
                                                      IProtocol *protocol) {
     createMeteorite(command, protocol);
   };
+  _commandMap[CommandType::HIT] = [this](Command command, IProtocol *protocol) {
+    hit(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -351,6 +354,16 @@ void CommandSend::createMeteorite(Command command, IProtocol *protocol) {
       reinterpret_cast<uint8_t *>(&command.createMeteorite.positionY);
   binaryData.insert(binaryData.end(), positionYBytes,
                     positionYBytes + sizeof(float));
+}
+
+void CommandSend::hit(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x15);
+
+  binaryData.push_back(static_cast<uint8_t>(command.hit.entityHit));
+
+  binaryData.push_back(static_cast<uint8_t>(command.hit.damage));
 
   binaryData.push_back(0xFF);
 

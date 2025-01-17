@@ -83,10 +83,7 @@ struct Shoot {
 
 struct Hit {
   int entityHit;
-  int bulletId;
   int damage;
-  float positionX;
-  float positionY;
 };
 
 struct killEntity {
