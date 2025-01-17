@@ -92,7 +92,7 @@ void Menu::initMenu(int responsiveWidth, int responsiveHeight, int posX, int pos
 void Menu::initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
 
   SDL_Texture *hostBackgroundTexture =
-      _window->loadTexture("../src/graphical/assets/menu/CreateParty.svg");
+      _window->loadTexture("../src/graphical/assets/menu/createParty.svg");
 
   SDL_Texture *endlessTexture =
       _window->loadTexture("../src/graphical/assets/menu/endless.png");
@@ -123,7 +123,7 @@ void Menu::initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int
       _window->loadTexture("../src/graphical/assets/menu/ship4.png");
   SDL_Texture *selectedship4Texture =
       _window->loadTexture("../src/graphical/assets/menu/selectedship4.png");
-SDL_Texture *shoot1Texture =
+  SDL_Texture *shoot1Texture =
       _window->loadTexture("../src/graphical/assets/menu/shoot1.png");
   SDL_Texture *selectedshoot1Texture =
       _window->loadTexture("../src/graphical/assets/menu/selectedshoot1.png");
