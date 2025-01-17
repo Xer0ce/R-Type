@@ -27,6 +27,7 @@ enum keyType {
   SPACE,
   ENTER,
   ESCAPE,
+  F,
   NONE,
 };
 

@@ -30,7 +30,6 @@ Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
   r.add_component<Velocity>(entity, std::move(velocity));
   r.add_component<Health>(entity, std::move(health));
   r.add_component<Draw>(entity, std::move(draw));
-  // r.add_component<Control>(entity, Control());
   r.add_component<EntityType>(entity, EntityType::Enemy);
   r.add_component<AiType>(entity, std::move(type));
   return entity;

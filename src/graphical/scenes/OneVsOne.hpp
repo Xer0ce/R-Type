@@ -24,8 +24,11 @@ public:
 
   void init() override;
 
+  void spell_system(std::vector<keyType> keys);
+
 private:
   CommandGame commandGame;
   std::vector<std::string> _backgroundPaths;
   std::chrono::time_point<std::chrono::steady_clock> _nextBullet;
+  std::chrono::time_point<std::chrono::steady_clock> _nextSpell;
 };

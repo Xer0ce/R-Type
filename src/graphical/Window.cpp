@@ -65,6 +65,8 @@ void Window::init() {
     exit(84);
   }
 
+  _spell = loadTexture("../src/graphical/assets/freezeSpell.png");
+
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/un.mp3", WAVE1, 45);
@@ -238,6 +240,8 @@ std::vector<keyType> Window::catchKey() {
     keys.push_back(ESCAPE);
   if (keyState[SDL_SCANCODE_SPACE])
     keys.push_back(SPACE);
+  if (keyState[SDL_SCANCODE_F])
+    keys.push_back(F);
   if (keys.empty())
     keys.push_back(NONE);
   return keys;
@@ -363,3 +367,20 @@ void Window::drawRect(SDL_FRect rect, SDL_Color color) {
   SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a);
   SDL_RenderFillRect(_renderer, &rect);
 }
+
+void Window::drawSpell() {
+  SDL_FRect spellRect = {550, 675, 100, 100};
+  SDL_RenderTexture(_renderer, _spell, nullptr, &spellRect);
+}
+
+void Window::changeSpellStatus(bool enable) {
+  if (enable) {
+    _spell = loadTexture("../src/graphical/assets/freezeSpell.png");
+    _spellIsEnable = true;
+  } else {
+    _spell = loadTexture("../src/graphical/assets/freezeSpellDisable.png");
+    _spellIsEnable = false;
+  }
+}
+
+bool &Window::getSpellEnable() { return _spellIsEnable; }

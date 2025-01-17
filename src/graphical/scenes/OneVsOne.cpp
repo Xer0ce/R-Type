@@ -33,6 +33,24 @@ void OneVsOne::init() {
   _window->playSound(soundType::ENDLESS_MUSIC, -1);
 }
 
+void OneVsOne::spell_system(std::vector<keyType> keys) {
+  auto now = std::chrono::steady_clock::now();
+  if (now > _nextSpell && !_window->getSpellEnable()) {
+    _window->changeSpellStatus(true);
+  }
+
+  if (_window->getSpellEnable()) {
+    if (keys.empty())
+      return;
+    for (auto &key : keys) {
+      if (key == F) {
+        _window->changeSpellStatus(false);
+        _nextSpell = now + std::chrono::seconds(10);
+      }
+    }
+  }
+}
+
 sceneType
 OneVsOne::loop(eventType event,
                std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
@@ -64,12 +82,12 @@ OneVsOne::loop(eventType event,
       _window->deleteText("0");
       control_system(movementKeys, *_ecs);
       shoot_system(keys, *_ecs, _queue, _nextBullet);
-      if (now >= _nextBullet) {
-        _nextBullet = now + std::chrono::milliseconds(150);
-      }
+      if (now >= _nextBullet)
+        _nextBullet = now + std::chrono::milliseconds(500);
       position_system_graphic(1, *_ecs, _queue);
       enemy_system(_ecs);
       display_infos(_ecs);
+      spell_system(keys);
     }
   }
   _window->drawBackground();
@@ -85,5 +103,6 @@ OneVsOne::loop(eventType event,
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
   }
+  _window->drawSpell();
   return sceneType::NO_SWITCH;
 }
