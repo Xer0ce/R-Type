@@ -331,4 +331,5 @@ void CommandGame::hit(Command command, Queue *queue, Registry *ecs,
 
 void CommandGame::freezeSpell(Command command, Queue *queue, Registry *ecs, Window *window) {
   window->setAllowToInteract(false);
+  window->changeFreezeStatus(true);
 }

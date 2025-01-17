@@ -125,6 +125,12 @@ public:
 
   bool &getSpellEnable();
 
+  void drawFreezeOverlay();
+
+  void changeFreezeStatus(bool enable);
+
+  bool &getFreezeEnable();
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -133,6 +139,7 @@ private:
   SDL_Texture *_background2;
   SDL_Texture *_spell;
   SDL_Texture *_spellDisable;
+  SDL_Texture *_freezeOverlay;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
@@ -142,4 +149,5 @@ private:
   float _bgScrollSpeed = 5.0f;
   bool _isBackgroundScrolling = false;
   bool _spellIsEnable = true;
+  bool _freezeIsEnable = false;
 };

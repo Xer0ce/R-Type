@@ -94,10 +94,9 @@ OneVsOne::loop(eventType event,
       shoot_system(keys, *_ecs, _queue, _nextBullet);
       if (now >= _nextBullet)
         _nextBullet = now + std::chrono::milliseconds(500);
-      position_system_graphic(1, *_ecs, _queue);
-      enemy_system(_ecs);
       spell_system(keys);
     }
+    position_system_graphic(1, *_ecs, _queue);
     display_infos(_ecs);
   }
   _window->drawBackground();
@@ -114,5 +113,8 @@ OneVsOne::loop(eventType event,
     }
   }
   _window->drawSpell();
+  if (_window->getFreezeEnable()) {
+    _window->drawFreezeOverlay();
+  }
   return sceneType::NO_SWITCH;
 }

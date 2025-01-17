@@ -67,6 +67,7 @@ void Window::init() {
 
   _spell = loadTexture("../src/graphical/assets/freezeSpell.png");
   _spellDisable = loadTexture("../src/graphical/assets/freezeSpellDisable.png");
+  _freezeOverlay = loadTexture("../src/graphical/assets/freezeOverlay.png");
 
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
@@ -378,10 +379,19 @@ void Window::drawSpell() {
 }
 
 void Window::changeSpellStatus(bool enable) {
-  if (enable)
-    _spellIsEnable = true;
-  else
-    _spellIsEnable = false;
+  _spellIsEnable = enable;
 }
 
 bool &Window::getSpellEnable() { return _spellIsEnable; }
+
+void Window::drawFreezeOverlay() {
+  SDL_FRect freezeRect = {0, 0, 1200, 800};
+  if (_freezeIsEnable)
+    SDL_RenderTexture(_renderer, _freezeOverlay, nullptr, &freezeRect);
+}
+
+void Window::changeFreezeStatus(bool enable) {
+  _freezeIsEnable = enable;
+}
+
+bool &Window::getFreezeEnable() { return _freezeIsEnable; }
