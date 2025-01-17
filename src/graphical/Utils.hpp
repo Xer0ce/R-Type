@@ -15,6 +15,7 @@ enum sceneType {
   ENDLESS,
   ONE_VS_ONE,
   LOBBY,
+  LOBBY1V1,
   NO_SWITCH,
 };
 
@@ -35,4 +36,16 @@ struct ChoosingParams {
   std::string ip;
   int spaceshipId;
   int bulletId;
+  int gamemode;
+};
+
+enum soundType {
+  BULLET_SOUND,
+  ENDLESS_MUSIC,
+  MICHOU_ET_ELSA_2,
+  WAVE1,
+  WAVE2,
+  WAVE3,
+  NEWWAVE,
+  MICHOU_REMIX_WINTERZUUKO,
 };

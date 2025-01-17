@@ -37,6 +37,10 @@ CommandSend::CommandSend() {
                                                IClient *protocol) {
     startGame(command, protocol);
   };
+  _commandMap[CommandType::CONNECT1V1] = [this](Command command,
+                                                IClient *protocol) {
+    connect1v1(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -108,6 +112,8 @@ void CommandSend::shoot(Command command, IClient *protocol) {
   binaryData.insert(binaryData.end(), positionYBytes,
                     positionYBytes + sizeof(float));
 
+  binaryData.push_back(static_cast<uint8_t>(command.shoot.direction));
+
   binaryData.push_back(0xFF);
 
   protocol->sendToServer(binaryData);
@@ -135,6 +141,20 @@ void CommandSend::startGame(Command command, IClient *protocol) {
   binaryData.push_back(0x05);
 
   binaryData.push_back(0xFF);
+
+  protocol->sendToServer(binaryData);
+}
+
+void CommandSend::connect1v1(Command command, IClient *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0X07);
+
+  binaryData.push_back(static_cast<uint8_t>(command.connect.Nickname.size()));
+  std::string playerName = command.connect.Nickname;
+
+  for (auto &c : playerName)
+    binaryData.push_back(static_cast<uint8_t>(c));
 
   protocol->sendToServer(binaryData);
 }

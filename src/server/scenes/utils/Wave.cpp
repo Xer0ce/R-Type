@@ -51,8 +51,9 @@ void Wave::factory_call(const json &enemy, Queue &queue) {
       Command command;
       command.type = CommandType::CREATEENEMY;
       command.createEnemy.enemyId = id;
-      command.createEnemy.positionX = position[id]->y;
-      command.createEnemy.positionY = position[id]->x;
+      command.createEnemy.positionX = position[id]->x;
+      command.createEnemy.positionY = position[id]->y;
+      command.createEnemy.aiType = static_cast<int>(it_ai->second);
       queue.pushTcpQueue(command);
     } else {
       std::cout << "Unknown enemy type: " << enemy["type"] << std::endl;
@@ -73,6 +74,7 @@ void Wave::load_enemy(const json &enemy, Queue &queue) {
 };
 
 void Wave::load(std::string path, Queue &queue) {
+  std::cout << "Loading wave from " << path << std::endl;
   std::ifstream file(path);
   if (!file.is_open()) {
     throw std::runtime_error("Impossible d'ouvrir le fichier : " + path);

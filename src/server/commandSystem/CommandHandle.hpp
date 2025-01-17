@@ -34,6 +34,8 @@ private:
                  Queue *queue);
   void connectLobby(std::vector<uint8_t> buffer, IProtocol *protocol,
                     Queue *queue);
+  void connect1v1(std::vector<uint8_t> buffer, IProtocol *protocol,
+                  Queue *queue);
 
   std::map<uint8_t,
            std::function<void(std::vector<uint8_t>, IProtocol *, Queue *)>>

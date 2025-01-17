@@ -36,6 +36,7 @@ void Menu::init() {
       Draw({255, 255, 255, 255}, {700, 300, 887, 484},
            _window->loadTexture("../src/graphical/assets/CreateParty.svg")));
   _ecs->add_component<EntityType>(entitie, EntityType::Menu);
+  _window->playSound(MICHOU_ET_ELSA_2, -1);
 }
 
 void Menu::setMenu(std::string selectedButton) {
@@ -100,6 +101,7 @@ Menu::loop(eventType event,
     _params->ip = "127.0.0.1";
     _params->spaceshipId = 3;
     _params->bulletId = 2;
+    _params->gamemode = 1;
     return sceneType::LOBBY;
   }
 

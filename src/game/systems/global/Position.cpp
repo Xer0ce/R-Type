@@ -17,8 +17,8 @@ void position_system_net(
   auto now = std::chrono::steady_clock::now();
 
   for (std::size_t i = 0; i < entityType.size(); i++) {
-    position[i]->x += velocity[i]->x * deltaTime;
-    position[i]->y += velocity[i]->y * deltaTime;
+    position[i]->x += velocity[i]->x;
+    position[i]->y += velocity[i]->y;
     if (entityType[i] == EntityType::Enemy) {
       if (now >= _next) {
         Command command;
@@ -44,8 +44,8 @@ void position_system_graphic(float deltaTime, Registry &ecs, Queue *queue) {
       continue;
     if (velocities[i]->x == 0 && velocities[i]->y == 0)
       continue;
-    positions[i]->x += velocities[i]->x * deltaTime;
-    positions[i]->y += velocities[i]->y * deltaTime;
+    positions[i]->x += velocities[i]->x;
+    positions[i]->y += velocities[i]->y;
     draw[i]->rect.x = positions[i]->x;
     draw[i]->rect.y = positions[i]->y;
     if (entities[i] == EntityType::Player && control[i].has_value()) {

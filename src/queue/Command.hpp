@@ -26,12 +26,16 @@ enum CommandType {
   GETUSERSLOBBY,
   NEWPLAYERLOBBY,
   COOLDOWN,
+  WAVE,
+  NEXTWAVE,
+  CONNECT1V1,
 };
 
 struct createEnemy {
   float positionX;
   float positionY;
   int enemyId;
+  int aiType;
 };
 
 struct repConnect {
@@ -40,6 +44,7 @@ struct repConnect {
   int id;
   int spaceshipId;
   int shootId;
+  int playerNbr;
   std::string Nickname;
 };
 
@@ -57,6 +62,7 @@ struct NewPlayer {
   int id;
   int spaceshipId;
   int shootId;
+  int playerNbr;
   std::string Nickname;
 };
 
@@ -71,6 +77,7 @@ struct Shoot {
   int bulletId;
   float positionX;
   float positionY;
+  int direction;
 };
 
 struct Hit {
@@ -96,6 +103,7 @@ struct ConnectLobby {
   std::string Nickname;
   int spaceshipId;
   int shootId;
+  int gamemode;
 };
 
 struct getUsersLobby {
@@ -110,6 +118,15 @@ struct newPlayerLobby {
 
 struct cooldown {
   int time;
+};
+
+struct wave {
+  int wave;
+  int time;
+};
+
+struct connect1v1 {
+  std::string Nickname;
 };
 
 struct Command {
@@ -127,5 +144,7 @@ struct Command {
   struct getUsersLobby getUsersLobby;
   struct newPlayerLobby newPlayerLobby;
   struct cooldown cooldown;
+  struct wave wave;
+  struct connect1v1 connect1v1;
   int id;
 };

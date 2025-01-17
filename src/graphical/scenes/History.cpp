@@ -17,12 +17,13 @@ History::History() {
 History::~History() {}
 
 void History::init() {
-  _window->setBackground(
-      _window->loadTexture("../src/graphical/assets/level1.png"));
   Command command;
   command.type = CommandType::CONNECT;
   command.connect.Nickname = "Player";
   _queue->pushTcpQueue(command);
+  _window->setBackground(
+      _window->loadTexture("../src/graphical/assets/level1.png"));
+  _window->setBackgroundScrolling(true);
 }
 
 sceneType
@@ -32,6 +33,9 @@ History::loop(eventType event,
   auto &draw = _ecs->get_components<Draw>();
   auto &nicknames = _ecs->get_components<Nickname>();
   auto &entities = _ecs->get_components<EntityType>();
+  auto &lifebars = _ecs->get_components<LifeBar>();
+  auto &health = _ecs->get_components<Health>();
+  auto &control = _ecs->get_components<Control>();
   Command command;
   std::chrono::time_point<std::chrono::steady_clock> now =
       std::chrono::steady_clock::now();
@@ -40,13 +44,12 @@ History::loop(eventType event,
   if (command.type != EMPTY)
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
 
-  _window->drawBackground();
-  _window->drawText();
   std::vector<keyType> keys = _window->catchKey();
   auto movementKeys = _window->catchMovementKey();
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
+    _window->moveBackground();
     if (_window->getAllowToInteract()) {
       std::chrono::time_point<std::chrono::steady_clock> now =
           std::chrono::steady_clock::now();
@@ -58,16 +61,21 @@ History::loop(eventType event,
       }
       position_system_graphic(1, *_ecs, _queue);
       enemy_system(_ecs);
+      display_infos(_ecs);
     }
   }
+  _window->drawBackground();
+  _window->drawText();
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
-    if (entities[i] == EntityType::Player) {
-      _window->setTextPos(nicknames[i]->nickname, positions[i]->x,
-                          positions[i]->y - 30);
-    }
     _window->draw(draw[i]->texture, draw[i]->rect);
+    if (nicknames[i].has_value()) {
+      _window->draw(nicknames[i]->texture, nicknames[i]->rect);
+    }
+    if (lifebars[i].has_value() && control[i].has_value()) {
+      _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
+    }
   }
   return sceneType::NO_SWITCH;
 }
