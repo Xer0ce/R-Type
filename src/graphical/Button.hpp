@@ -39,6 +39,8 @@ public:
 
   SDL_FRect *getRect() { return _rect; }
 
+  void setNormalColor(SDL_Color color) { _normalColor = color; }
+
 private:
   SDL_Renderer *_renderer;
   SDL_FRect *_rect;

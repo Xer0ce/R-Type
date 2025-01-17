@@ -241,8 +241,8 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
 
 void CommandGame::getUsersLobby(Command command, Queue *queue, Registry *ecs,
                                 Window *window) {
-  int x = 550;
-  int y = 250;
+  int x = 370;
+  int y = 180;
 
   y += window->getNumberText() * 60;
 

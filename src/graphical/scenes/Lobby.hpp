@@ -34,4 +34,5 @@ public:
 private:
   CommandGame commandGame;
   std::vector<std::string> _historyLevels;
+  std::string _selectedLevel;
 };

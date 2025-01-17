@@ -15,7 +15,7 @@ Lobby::Lobby() {
 Lobby::~Lobby() {}
 
 void Lobby::init() {
-  _window->addButton(700, 500, 150, 35, "Start");
+  _window->addButton(800, 570, 150, 35, "Start");
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/lobby.png"));
   fillHistoryLevels();
@@ -26,12 +26,20 @@ void Lobby::addLevelsButtons() {
 
     const auto &levels = getHistoryLevels();
 
+    _window->addText("Joueurs :", 300, 220, 200, 50, 37,
+                     "../src/graphical/assets/RTypefont.otf",
+                     {255, 255, 255, 255});
+
+    _window->addText("Choisir un niveau :", 600, 220, 200, 50, 37,
+                     "../src/graphical/assets/RTypefont.otf",
+                     {255, 255, 255, 255});
+    
     for (int i = 0; i < std::min(20, static_cast<int>(levels.size())); ++i) {
         int row = i / 5;
         int col = i % 5;
 
-        int posX = 100 + (col * 60);
-        int posY = 100 + (row * 60);
+        int posX = 620 + (col * 60);
+        int posY = 300 + (row * 60);
 
         _window->addButton(posX, posY, 40, 40, std::to_string(i + 1), levels[i]);
     }
@@ -97,6 +105,7 @@ Lobby::loop(eventType event,
           command.type = CommandType::STARTGAME;
           _queue->pushTcpQueue(command);
         }
+        _selectedLevel = button.getText();
         std::cout << "Fichier associé : " << button.getTag() << std::endl;
       }
     }
