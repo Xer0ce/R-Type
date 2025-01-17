@@ -14,8 +14,7 @@ Entities create_player_entity(Registry &r, Position position, Velocity velocity,
                               std::optional<LifeBar> lifeBar = std::nullopt);
 
 Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
-                             Health health, Draw draw,
-                             EnemyProperty enemy,
+                             Health health, Draw draw, EnemyProperty enemy,
                              std::optional<std::size_t> id = std::nullopt);
 
 Entities create_projectile_entity(Registry &r, Position position,
@@ -27,10 +26,9 @@ Entities create_meteorite_entity(Registry &r, Position position,
                                  Velocity velocity, Draw draw,
                                  std::optional<std::size_t> id = std::nullopt);
 
-Entities create_menu_entity(Registry &r, Position position, Size size, 
-                            Draw draw, Visibility visibility, 
-                            MenuType menuType,
-                            std::vector<MenuElements> elements = {}, 
+Entities create_menu_entity(Registry &r, Position position, Size size,
+                            Draw draw, Visibility visibility, MenuType menuType,
+                            std::vector<MenuElements> elements = {},
                             std::optional<std::size_t> id = std::nullopt);
 
 template <EntityType T, typename... Args>
@@ -91,6 +89,5 @@ template <EnemyType T> Entities create_enemy(Registry &r, EnemyProperty enemy) {
                                             Draw({}, {}, nullptr), enemy);
   }
 }
-
 
 #endif // ENTITIESGESTION_HPP

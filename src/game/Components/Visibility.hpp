@@ -14,4 +14,3 @@ struct Visibility {
 };
 
 #endif // VISIBILITY_HPP
-
