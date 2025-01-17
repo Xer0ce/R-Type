@@ -31,4 +31,6 @@ private:
   std::vector<std::string> _backgroundPaths;
   std::chrono::time_point<std::chrono::steady_clock> _nextBullet;
   std::chrono::time_point<std::chrono::steady_clock> _nextSpell;
+  std::chrono::time_point<std::chrono::steady_clock> _unFreeze;
+  bool _isFirstRoundSpell;
 };

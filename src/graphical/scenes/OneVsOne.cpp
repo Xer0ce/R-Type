@@ -15,6 +15,7 @@ OneVsOne::OneVsOne() {
   _backgroundPaths.push_back("../src/graphical/assets/level2.png");
   _backgroundPaths.push_back("../src/graphical/assets/level4.png");
   _backgroundPaths.push_back("../src/graphical/assets/level5.png");
+  _isFirstRoundSpell = true;
   _nextBullet =
       std::chrono::steady_clock::now() + std::chrono::milliseconds(150);
 }
@@ -86,6 +87,17 @@ OneVsOne::loop(eventType event,
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
+    if (_window->getFreezeEnable()) {
+      if (_isFirstRoundSpell) {
+        _unFreeze = now + std::chrono::seconds(2);
+        _isFirstRoundSpell = false;
+      }
+      if (now > _unFreeze) {
+        _window->changeFreezeStatus(false);
+        _window->setAllowToInteract(true);
+        _isFirstRoundSpell = true;
+      }
+    }
     _window->moveBackground();
     if (_window->getAllowToInteract()) {
       now = std::chrono::steady_clock::now();
