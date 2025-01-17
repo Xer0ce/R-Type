@@ -6,13 +6,6 @@
 #include "../Components/Components.hpp"
 #include <random>
 
-enum class EntityType { Player, Enemy, Projectile, Menu };
-enum class EnemyType { Pion, Balourd, Zinzolin, Boss, BigBoss };
-enum class AiType { Aggressive, Passive, Balzy, Boss };
-enum class DamageType { Poke, Punch, Marmite };
-enum class FrequencyType { Slow, High, Turret };
-enum class BulletType { Missile, FelixBalls, Obus };
-
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
                               Health health, Draw draw, Nickname nickname,
                               Property property,
@@ -22,10 +15,7 @@ Entities create_player_entity(Registry &r, Position position, Velocity velocity,
 
 Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
                              Health health, Draw draw,
-                             AiType aiType = AiType::Aggressive,
-                             DamageType dmgType = DamageType::Punch,
-                             FrequencyType fType = FrequencyType::High,
-                             BulletType bType = BulletType::Missile,
+                             EnemyProperty enemy,
                              std::optional<std::size_t> id = std::nullopt);
 
 Entities create_projectile_entity(Registry &r, Position position,
@@ -54,7 +44,7 @@ Entities create_entity(Registry &r, Args &&...args) {
   }
 }
 
-template <EnemyType T> Entities create_enemy(Registry &r, AiType aiType, DamageType dmgType, FrequencyType fType, BulletType bType) {
+template <EnemyType T> Entities create_enemy(Registry &r, EnemyProperty enemy) {
   static constexpr int y_min = 50;
   static constexpr int y_max = 750;
   static constexpr int x_min = 1250;
@@ -70,27 +60,27 @@ template <EnemyType T> Entities create_enemy(Registry &r, AiType aiType, DamageT
   if constexpr (T == EnemyType::Pion) {
     return create_entity<EntityType::Enemy>(r, Position(random_x, random_y),
                                             Velocity(0, 10), Health(30),
-                                            Draw({}, {}, nullptr), aiType, dmgType, fType, bType);
+                                            Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::Balourd) {
     return create_entity<EntityType::Enemy>(r, Position(random_x, random_y),
                                             Velocity(0, 10), Health(50),
-                                            Draw({}, {}, nullptr), aiType, dmgType, fType, bType);
+                                            Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::Zinzolin) {
     return create_entity<EntityType::Enemy>(r, Position(random_x, random_y),
                                             Velocity(0, 10), Health(25),
-                                            Draw({}, {}, nullptr), aiType, dmgType, fType, bType);
+                                            Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::Boss) {
     return create_entity<EntityType::Enemy>(r, Position(random_x, random_y),
                                             Velocity(0, 10), Health(100),
-                                            Draw({}, {}, nullptr), aiType, dmgType, fType, bType);
+                                            Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::BigBoss) {
     return create_entity<EntityType::Enemy>(r, Position(1100, random_y),
                                             Velocity(0, 10), Health(300),
-                                            Draw({}, {}, nullptr), aiType, dmgType, fType, bType);
+                                            Draw({}, {}, nullptr), enemy);
   }
 }
 

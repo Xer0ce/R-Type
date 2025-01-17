@@ -36,40 +36,32 @@ static const std::map<std::string, BulletType> b_type = {
 
 void Wave::factory_call(const json &enemy, Queue &queue, AiType ai, DamageType dmg, FrequencyType fr, BulletType bullet) {
   auto &position = _ecs->get_components<Position>();
-  auto &enemyType = _ecs->get_components<EnemyType>();
+  auto &enemies_properties = _ecs->get_components<EnemyProperty>();
 
   std::map<std::string, std::function<Entities()>> type_map = {
-    {"Pion",
-     [&]() { return create_enemy<EnemyType::Pion>(*_ecs, ai, dmg, fr, bullet); }},
-    {"Balourd",
-     [&]() {
-       return create_enemy<EnemyType::Balourd>(*_ecs, ai, dmg, fr, bullet);
-    }},
-   {"Zinzolin",
-    [&]() {
-      return create_enemy<EnemyType::Zinzolin>(*_ecs, ai, dmg, fr, bullet);
-   }},
+  {"Pion",
+    [&]() { return create_enemy<EnemyType::Pion>(*_ecs, EnemyProperty(EnemyType::Pion, ai, dmg, fr, bullet)); }},
+  {"Balourd",
+    [&]() { return create_enemy<EnemyType::Balourd>(*_ecs, EnemyProperty(EnemyType::Balourd, ai, dmg, fr, bullet)); }},
+  {"Zinzolin",
+   [&]() { return create_enemy<EnemyType::Zinzolin>(*_ecs, EnemyProperty(EnemyType::Zinzolin, ai, dmg, fr, bullet)); }},
   {"Boss",
-   [&]() { return create_enemy<EnemyType::Boss>(*_ecs, ai, dmg, fr, bullet); }},
+   [&]() { return create_enemy<EnemyType::Boss>(*_ecs, EnemyProperty(EnemyType::Boss, ai, dmg, fr, bullet)); }},
   {"BigBoss",
-   [&]() {
-     return create_enemy<EnemyType::BigBoss>(*_ecs, ai, dmg, fr, bullet);
-  }},
+   [&]() { return create_enemy<EnemyType::BigBoss>(*_ecs, EnemyProperty(EnemyType::BigBoss, ai, dmg, fr, bullet)); }},
 };
 
   for (int i = 0; i < enemy["number"]; i++) {
     auto it = type_map.find(enemy["type"]);
     if (it != type_map.end()) {
       auto id = it->second();
+      EnemyProperty property = enemies_properties[id].value();
       Command command;
       command.type = CommandType::CREATEENEMY;
       command.createEnemy.enemyId = id;
       command.createEnemy.positionX = position[id]->x;
       command.createEnemy.positionY = position[id]->y;
-      command.createEnemy.aiType = static_cast<int>(ai);
-      command.createEnemy.dmgType = static_cast<int>(dmg);
-      command.createEnemy.frType = static_cast<int>(fr);
-      command.createEnemy.blType = static_cast<int>(bullet);
+      command.createEnemy.p_enemy = property;
       queue.pushTcpQueue(command);
     } else {
       std::cout << "Unknown enemy type: " << enemy["type"] << std::endl;
@@ -81,7 +73,7 @@ void Wave::factory_call(const json &enemy, Queue &queue, AiType ai, DamageType d
 void Wave::load_enemy_properties(const json &enemy, Queue &queue) {
   auto it_ai = ai_type.find(enemy["ia"]);
   DamageType dmg = DamageType::Punch;
-  FrequencyType fr = FrequencyType::High;
+  FrequencyType fr = FrequencyType::Slow;
   BulletType bl = BulletType::Missile;
 
   if (enemy.contains("damage")) {

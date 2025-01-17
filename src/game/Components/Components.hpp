@@ -22,5 +22,7 @@
     #include "MenuElements.hpp"
     #include "Boutton.hpp"
     #include "Background.hpp"
+    #include "EnemyProperty.hpp"
+    #include "Type.hpp"
 
     #endif // COMPONENTS_HPP

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <iostream>
+#include "../game/Components/Components.hpp"
 
 enum CommandType {
   CONNECT,
@@ -35,10 +36,7 @@ struct createEnemy {
   float positionX;
   float positionY;
   int enemyId;
-  int aiType;
-  int dmgType;
-  int frType;
-  int blType;
+  EnemyProperty p_enemy;
 };
 
 struct repConnect {

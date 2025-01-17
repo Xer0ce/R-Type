@@ -161,11 +161,9 @@ void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
 void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
                               Window *window) {
   SDL_Texture *enemyTexture =
-      window->loadTexture("../src/graphical/assets/enemy/enemy.png");
-  AiType aiType = static_cast<AiType>(command.createEnemy.aiType);
-  DamageType dmgType = static_cast<DamageType>(command.createEnemy.dmgType);
-  FrequencyType frType = static_cast<FrequencyType>(command.createEnemy.frType);
-  BulletType blType = static_cast<BulletType>(command.createEnemy.blType);
+      window->loadTexture("../src/graphical/assets/enemy/enemy1.png");
+
+  std::cout << "Create Enemy" << std::endl;
 
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
@@ -175,7 +173,7 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
            {(int)command.createEnemy.positionX,
             (int)command.createEnemy.positionY, 100, 100},
            enemyTexture),
-      aiType, dmgType, frType, blType,
+      EnemyProperty(command.createEnemy.p_enemy),
       std::optional<std::size_t>(command.createEnemy.enemyId));
 }
 
