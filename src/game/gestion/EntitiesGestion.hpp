@@ -29,6 +29,7 @@ Entities create_meteorite_entity(Registry &r, Position position,
 
 Entities create_menu_entity(Registry &r, Position position, Size size, 
                             Draw draw, Visibility visibility, 
+                            MenuType menuType,
                             std::vector<MenuElements> elements = {}, 
                             std::optional<std::size_t> id = std::nullopt);
 

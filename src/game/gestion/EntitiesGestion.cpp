@@ -61,6 +61,7 @@ Entities create_meteorite_entity(Registry &r, Position position,
 }
 Entities create_menu_entity(Registry &r, Position position, Size size, 
                              Draw draw, Visibility visibility, 
+                             MenuType menuType,
                             std::vector<MenuElements> elements, 
                             std::optional<std::size_t> id) {
   auto entity = id.has_value() ? r.spawn_entity(id.value()) : r.spawn_entity();
@@ -69,6 +70,7 @@ Entities create_menu_entity(Registry &r, Position position, Size size,
   r.add_component<Size>(entity, std::move(size));
   r.add_component<Draw>(entity, std::move(draw));
   r.add_component<Visibility>(entity, std::move(visibility));
+  r.add_component<MenuType>(entity, std::move(menuType));
   for (auto &element : elements) {
     r.add_component<MenuElements>(entity, std::move(element));
   }

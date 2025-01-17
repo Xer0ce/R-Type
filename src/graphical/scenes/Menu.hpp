@@ -21,8 +21,17 @@ public:
        std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
 
-  void setMenu(std::string selectedButton);
+  void resetGameValues();
 
+  bool isGameReady();
+
+  void hideAllMenu();
+
+  void unselectAllBoutton(int menuId);
+
+  void unclickAllBoutton(Boutton &boutton, MenuType menuType);
+
+  void unclickTypeBoutton(Boutton &boutton, std::string type);
 
   void initMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
 
@@ -35,9 +44,6 @@ public:
   void mouseHandler(float mouseX, float mouseY, eventType event);
 
   void buttonSystem(Boutton &boutton);
-
-  void textSystem(Text &text);
-
 
 private:
   std::string _selectedButton;

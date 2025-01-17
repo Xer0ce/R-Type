@@ -15,5 +15,6 @@ enum class AiType { Aggressive, Passive, Balzy, Boss };
 enum class DamageType { Poke, Punch, Marmite };
 enum class FrequencyType { Slow, High, Turret };
 enum class BulletType { Missile, FelixBalls, Obus };
+enum class MenuType { menu, host, join, settings };
 
 #endif //TYPE_HPP

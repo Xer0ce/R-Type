@@ -50,6 +50,7 @@ public:
     _ecs->register_component<Boutton>();
     _ecs->register_component<MenuElements>();
     _ecs->register_component<PlayerId>();
+    _ecs->register_component<MenuType>();
   };
 
   void loadScene(sceneType sceneName);
