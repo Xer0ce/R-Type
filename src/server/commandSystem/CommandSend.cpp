@@ -136,7 +136,7 @@ void CommandSend::move(Command command, IProtocol *protocol) {
                     positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
-
+  std::cout << "sending move command" << std::endl;
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 

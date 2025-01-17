@@ -8,6 +8,7 @@
 #pragma once
 
 #include "AScene.hpp"
+#include "../../game/LaunchServer.hpp"
 
 class Menu : public AScene {
 public:
@@ -43,9 +44,9 @@ public:
   void initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX,
                         int posY);
 
-  void mouseHandler(float mouseX, float mouseY, eventType event);
+  sceneType mouseHandler(float mouseX, float mouseY, eventType event);
 
-  void buttonSystem(Boutton &boutton);
+  sceneType buttonSystem(Boutton &boutton);
 
 private:
   std::string _selectedButton;

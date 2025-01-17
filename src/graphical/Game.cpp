@@ -141,8 +141,7 @@ void Game::game(std::string nickname) {
     if (now > next)
       next += std::chrono::milliseconds(25);
     if (switchScene != sceneType::NO_SWITCH) {
-      if (switchScene == LOBBY || switchScene == LOBBY1V1 ||
-          switchScene == LOBBY_HISTORY) {
+      if (switchScene == LOBBY || switchScene == LOBBY_HISTORY) {
         init(nickname, params);
       }
       _currentScene = switchScene;
@@ -155,5 +154,6 @@ void Game::game(std::string nickname) {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
   _window->destroyWindow();
+  killAllServer();
   exit(0);
 }

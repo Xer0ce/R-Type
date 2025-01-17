@@ -491,7 +491,7 @@ bool Menu::isGameReady() {
   return _spaceshipId != -1 && _bulletId != -1 && _gameMode != -1;
 }
 
-void Menu::buttonSystem(Boutton &boutton) {
+sceneType Menu::buttonSystem(Boutton &boutton) {
   if (boutton.isClicked) {
     if (boutton.label == "ship") {
       std::cout << "ship value selected id : " << boutton.value << std::endl;
@@ -507,24 +507,38 @@ void Menu::buttonSystem(Boutton &boutton) {
       _gameMode = boutton.value;
     }
     if (boutton.label == "createParty") {
-      std::cout << "createParty" << std::endl;
-      std::cout << "spaceshipId: " << _spaceshipId << std::endl;
-      std::cout << "bulletId: " << _bulletId << std::endl;
-      std::cout << "gamemode: " << _gameMode << std::endl;
       if (isGameReady()) {
-        std::cout << "game is ready" << std::endl;
+        launchServer(_gameMode);
+        _params->bulletId = _bulletId;
+        _params->spaceshipId = _spaceshipId;
+        _params->gamemode = _gameMode;
+        _params->ip = "127.0.0.1";
+        auto &entities = _ecs->get_components<EntityType>();
+        for (std::size_t i = 0; i != entities.size(); i++)
+          _ecs->kill_entity(static_cast<Entities>(i));
+        for (std::size_t i = 0; i != 10; i++)
+          _ecs->kill_entity(static_cast<Entities>(i));
+        _ecs->kill_entity(static_cast<Entities>(0));
+        _ecs->kill_entity(static_cast<Entities>(1));
+        return sceneType::LOBBY;
       } else {
         std::cout << "game is not ready" << std::endl;
       }
     }
     if (boutton.label == "joinparty") {
-      std::cout << "joinparty" << std::endl;
-      std::cout << "spaceshipId: " << _spaceshipId << std::endl;
-      std::cout << "bulletId: " << _bulletId << std::endl;
-      if (isGameReady()) {
-        std::cout << "game is ready" << std::endl;
-      } else {
-        std::cout << "game is not ready" << std::endl;
+      if (_bulletId != -1 && _spaceshipId != -1) {
+        _params->bulletId = _bulletId;
+        _params->spaceshipId = _spaceshipId;
+        _params->gamemode = _gameMode;
+        _params->ip = "127.0.0.1";
+        auto &entities = _ecs->get_components<EntityType>();
+        for (std::size_t i = 0; i != entities.size(); i++)
+          _ecs->kill_entity(static_cast<Entities>(i));
+        for (std::size_t i = 0; i != 10; i++)
+          _ecs->kill_entity(static_cast<Entities>(i));
+        _ecs->kill_entity(static_cast<Entities>(0));
+        _ecs->kill_entity(static_cast<Entities>(1));
+        return sceneType::LOBBY;
       }
     }
     if (boutton.label == "host") {
@@ -571,9 +585,10 @@ void Menu::buttonSystem(Boutton &boutton) {
       _bulletId = -1;
     }
   }
+  return sceneType::NO_SWITCH;
 }
 
-void Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
+sceneType Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
   if (event == MOUSE_CLICK) {
     auto &entityType = _ecs->get_components<EntityType>();
     auto &draw = _ecs->get_components<Draw>();
@@ -595,19 +610,23 @@ void Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
               if (!boutton.isClicked) {
                 unclickAllBoutton(boutton, menuType[i].value());
                 boutton.isClicked = true;
-                buttonSystem(boutton);
+                auto scene = buttonSystem(boutton);
+                if (scene != sceneType::NO_SWITCH)
+                  return LOBBY;
               } else {
                 boutton.isClicked = false;
-                buttonSystem(boutton);
+                auto scene = buttonSystem(boutton);
+                if (scene != sceneType::NO_SWITCH)
+                  return LOBBY;
               }
-              return;
+              return NO_SWITCH;
             }
           }
         }
       }
     }
   }
-  return;
+  return NO_SWITCH;
 }
 
 sceneType
@@ -624,7 +643,9 @@ Menu::loop(eventType event,
   auto &visibility = _ecs->get_components<Visibility>();
 
   _window->drawBackground();
-  mouseHandler(mouseX, mouseY, event);
+  auto scene = mouseHandler(mouseX, mouseY, event);
+  if (scene != sceneType::NO_SWITCH)
+    return scene;
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i] == EntityType::Menu && visibility[i]->isVisible) {

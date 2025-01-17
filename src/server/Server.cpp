@@ -63,8 +63,8 @@ void Server::init() {
   std::thread udpThread([this]() { listen(_udp.get()); });
   std::thread gameThread([this]() { game(); });
 
-  tcpThread.join();
-  udpThread.join();
+  tcpThread.detach();
+  udpThread.detach();
   gameThread.join();
 }
 
@@ -92,6 +92,7 @@ void Server::game() {
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
+  exit(0);
 }
 
 void Server::load_component() {
