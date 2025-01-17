@@ -77,6 +77,7 @@ void Window::init() {
            MICHOU_ET_ELSA_2, 100);
   addSound("../src/graphical/assets/sounds/Michou_Elsa_remix_winterzuuko.mp3",
            MICHOU_REMIX_WINTERZUUKO, 100);
+  addSound("../src/graphical/assets/sounds/hit.mp3", HURT, 50);
 }
 
 void Window::destroyWindow() {

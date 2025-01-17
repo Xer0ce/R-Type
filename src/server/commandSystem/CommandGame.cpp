@@ -24,10 +24,6 @@ CommandGame::CommandGame() {
                                            Registry *ecs) {
     shoot(command, queue, ecs);
   };
-  _commandMap[CommandType::HIT] = [this](Command command, Queue *queue,
-                                         Registry *ecs) {
-    hit(command, queue, ecs);
-  };
   _commandMap[CommandType::CONNECTLOBBY] = [this](Command command, Queue *queue,
                                                   Registry *ecs) {
     connectLobby(command, queue, ecs);
@@ -164,20 +160,6 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
 
   command.shoot.bulletId = bullet;
   queue->pushTcpQueue(command);
-}
-
-void CommandGame::hit(Command command, Queue *queue, Registry *ecs) {
-  auto &health = ecs->get_components<Health>();
-  auto &entityType = ecs->get_components<EntityType>();
-  Command cmd;
-
-  health[command.hit.entityHit]->hp -= command.hit.damage;
-  if (health[command.hit.entityHit]->hp <= 0) {
-    ecs->kill_entity(Entities(command.hit.entityHit));
-    cmd.type = CommandType::KILLENTITY;
-    cmd.killEntity.entityId = command.hit.entityHit;
-    queue->pushTcpQueue(cmd);
-  }
 }
 
 void CommandGame::connectLobby(Command command, Queue *queue, Registry *ecs) {

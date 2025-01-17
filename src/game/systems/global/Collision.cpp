@@ -30,12 +30,6 @@ void collision_system(Registry *ecs, Queue *queue) {
             ecs->kill_entity(Entities(i));
             Command cmd;
 
-            cmd.type = CommandType::HIT;
-            cmd.hit.entityHit = j;
-            cmd.hit.bulletId = i;
-            cmd.hit.damage = 100;
-            queue->pushGameQueue(cmd);
-
             cmd.type = CommandType::KILLENTITY;
             cmd.killEntity.entityId = i;
             queue->pushTcpQueue(cmd);

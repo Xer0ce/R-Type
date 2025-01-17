@@ -52,6 +52,9 @@ CommandSend::CommandSend() {
   };
   _commandMap[CommandType::WAVE] =
       [this](Command command, IProtocol *protocol) { wave(command, protocol); };
+  _commandMap[CommandType::HIT] = [this](Command command, IProtocol *protocol) {
+    hit(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -324,6 +327,20 @@ void CommandSend::wave(Command command, IProtocol *protocol) {
   binaryData.push_back(static_cast<uint8_t>(command.wave.wave));
 
   binaryData.push_back(static_cast<uint8_t>(command.wave.time));
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::hit(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x15);
+
+  binaryData.push_back(static_cast<uint8_t>(command.hit.entityHit));
+
+  binaryData.push_back(static_cast<uint8_t>(command.hit.damage));
 
   binaryData.push_back(0xFF);
 
