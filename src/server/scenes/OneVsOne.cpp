@@ -28,7 +28,7 @@ void OneVsOne::init() {
       position[i]->x = x;
       position[i]->y = 300;
       x += 950;
-    } 
+    }
   }
 }
 

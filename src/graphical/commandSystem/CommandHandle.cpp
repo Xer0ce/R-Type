@@ -51,10 +51,12 @@ CommandHandle::CommandHandle() {
   };
   _commandMap[0x13] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) { wave(buffer, protocol, queue); };
-  _commandMap[0x15] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+  _commandMap[0x14] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) {
-    hit(buffer, protocol, queue);
+    createMeteorite(buffer, protocol, queue);
   };
+  _commandMap[0x15] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) { hit(buffer, protocol, queue); };
   _commandMap[0x16] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) {
     freezeSpell(buffer, protocol, queue);
@@ -223,6 +225,24 @@ void CommandHandle::wave(std::vector<uint8_t> buffer, IClient *protocol,
   queue->pushGameQueue(cmd);
 }
 
+void CommandHandle::createMeteorite(std::vector<uint8_t> buffer,
+                                    IClient *protocol, Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::CREATEMETEORITE;
+  cmd.createMeteorite.positionX = *reinterpret_cast<float *>(&buffer[2]);
+  cmd.createMeteorite.positionY = *reinterpret_cast<float *>(&buffer[6]);
+  cmd.createMeteorite.meteoriteId = static_cast<int>(buffer[1]);
+
+  std::cout << "Meteorite created " << cmd.createMeteorite.meteoriteId
+            << std::endl;
+
+  std::cout << "pos x " << cmd.createMeteorite.positionX << std::endl;
+
+  std::cout << "pos y " << cmd.createMeteorite.positionY << std::endl;
+
+  queue->pushGameQueue(cmd);
+}
 void CommandHandle::hit(std::vector<uint8_t> buffer, IClient *protocol,
                         Queue *queue) {
   Command cmd;

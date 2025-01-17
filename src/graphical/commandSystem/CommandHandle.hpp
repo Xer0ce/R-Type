@@ -40,6 +40,8 @@ private:
                       Queue *queue);
   void cooldown(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
   void wave(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
+  void createMeteorite(std::vector<uint8_t> buffer, IClient *protocol,
+                       Queue *queue);
   void hit(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
   void freezeSpell(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
 

@@ -6,7 +6,7 @@
 #include "../Components/Components.hpp"
 #include <random>
 
-enum class EntityType { Player, Enemy, Projectile, Menu };
+enum class EntityType { Player, Enemy, Projectile, Menu, Meteorite };
 enum class EnemyType { Pion, Balourd, Zinzolin, Boss, BigBoss };
 enum class AiType { Aggressive, Passive, Balzy, Boss };
 
@@ -27,6 +27,10 @@ Entities create_projectile_entity(Registry &r, Position position,
                                   PlayerId playerId,
                                   std::optional<std::size_t> id = std::nullopt);
 
+Entities create_meteorite_entity(Registry &r, Position position,
+                                 Velocity velocity, Draw draw,
+                                 std::optional<std::size_t> id = std::nullopt);
+
 template <EntityType T, typename... Args>
 Entities create_entity(Registry &r, Args &&...args) {
   if constexpr (T == EntityType::Player) {
@@ -37,6 +41,9 @@ Entities create_entity(Registry &r, Args &&...args) {
   }
   if constexpr (T == EntityType::Projectile) {
     return create_projectile_entity(r, std::forward<Args>(args)...);
+  }
+  if constexpr (T == EntityType::Meteorite) {
+    return create_meteorite_entity(r, std::forward<Args>(args)...);
   }
 }
 

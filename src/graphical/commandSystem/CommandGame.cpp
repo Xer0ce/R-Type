@@ -56,6 +56,10 @@ CommandGame::CommandGame() {
       [this](Command command, Queue *queue, Registry *ecs, Window *window) {
         freezeSpell(command, queue, ecs, window);
       };
+  _commandMap[CommandType::CREATEMETEORITE] =
+      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+        createMeteorite(command, queue, ecs, window);
+      };
 }
 
 CommandGame::~CommandGame() {}
@@ -329,7 +333,22 @@ void CommandGame::hit(Command command, Queue *queue, Registry *ecs,
   }
 }
 
-void CommandGame::freezeSpell(Command command, Queue *queue, Registry *ecs, Window *window) {
+void CommandGame::createMeteorite(Command command, Queue *queue, Registry *ecs,
+                                  Window *window) {
+  auto entities = create_entity<EntityType::Meteorite>(
+      *ecs,
+      Position(command.createMeteorite.positionX,
+               command.createMeteorite.positionY),
+      Velocity(-10, 1),
+      Draw({0, 0, 0, 0},
+           {(int)command.createMeteorite.positionX,
+            (int)command.createMeteorite.positionY, 100, 100},
+           window->loadTexture("../src/graphical/assets/meteor.png")),
+      std::optional<std::size_t>(command.createMeteorite.meteoriteId));
+}
+
+void CommandGame::freezeSpell(Command command, Queue *queue, Registry *ecs,
+                              Window *window) {
   window->setAllowToInteract(false);
   window->changeFreezeStatus(true);
 }
