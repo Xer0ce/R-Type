@@ -329,24 +329,6 @@ void CommandGame::hit(Command command, Queue *queue, Registry *ecs,
   }
 }
 
-void CommandGame::hit(Command command, Queue *queue, Registry *ecs,
-                      Window *window) {
-  auto &entities = ecs->get_components<EntityType>();
-  auto &health = ecs->get_components<Health>();
-  auto &control = ecs->get_components<Control>();
-
-  for (std::size_t i = 0; i < entities.size(); ++i) {
-    if (i == command.hit.entityHit) {
-      if (health[i].has_value()) {
-        health[i]->hp -= command.hit.damage;
-        if (control[i].has_value()) {
-          window->playSound(HURT, 0);
-        }
-      }
-    }
-  }
-}
-
 void CommandGame::createMeteorite(Command command, Queue *queue, Registry *ecs,
                                   Window *window) {
   auto entities = create_entity<EntityType::Meteorite>(
