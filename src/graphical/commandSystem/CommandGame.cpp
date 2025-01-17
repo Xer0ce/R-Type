@@ -220,7 +220,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
                         Window *window) {
   auto &entities = ecs->get_components<EntityType>();
   auto &properties = ecs->get_components<Property>();
-  int shootId = -1;
+  int shootId = 3;
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (entities[i] == EntityType::Player) {

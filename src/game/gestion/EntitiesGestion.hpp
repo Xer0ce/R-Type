@@ -6,13 +6,6 @@
 #include "../Components/Components.hpp"
 #include <random>
 
-enum class EntityType { Player, Enemy, Projectile, Menu, Meteorite };
-enum class EnemyType { Pion, Balourd, Zinzolin, Boss, BigBoss };
-enum class AiType { Aggressive, Passive, Balzy, Boss };
-enum class DamageType { Poke, Punch, Marmite };
-enum class FrequencyType { Slow, High, Turret };
-enum class BulletType { Missile, FelixBalls, Obus };
-
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
                               Health health, Draw draw, Nickname nickname,
                               Property property,
