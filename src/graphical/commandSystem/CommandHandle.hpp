@@ -40,6 +40,8 @@ private:
                       Queue *queue);
   void cooldown(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
   void wave(std::vector<uint8_t> buffer, IClient *protocol, Queue *queue);
+  void createMeteorite(std::vector<uint8_t> buffer, IClient *protocol,
+                       Queue *queue);
 
   std::map<uint8_t,
            std::function<void(std::vector<uint8_t>, IClient *, Queue *)>>

@@ -46,3 +46,14 @@ Entities create_projectile_entity(Registry &r, Position position,
   r.add_component<Draw>(entity, std::move(draw));
   return entity;
 }
+
+Entities create_meteorite_entity(Registry &r, Position position,
+                                 Velocity velocity, Draw draw,
+                                 std::optional<std::size_t> id) {
+  auto entity = id.has_value() ? r.spawn_entity(id.value()) : r.spawn_entity();
+  r.add_component<EntityType>(entity, EntityType::Meteorite);
+  r.add_component<Position>(entity, std::move(position));
+  r.add_component<Velocity>(entity, std::move(velocity));
+  r.add_component<Draw>(entity, std::move(draw));
+  return entity;
+}
