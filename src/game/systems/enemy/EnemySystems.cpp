@@ -6,6 +6,7 @@
 */
 
 #include "EnemySystems.hpp"
+#include <chrono>
 
 void call_enemy_ai(Registry *ecs, AiType type, std::size_t enemy) {
   const std::map<AiType, std::function<void()>> type_map = {
@@ -44,3 +45,49 @@ void enemy_system(Registry *ecs) {
     }
   }
 }
+
+void enemy_shoot_system(Registry *ecs, Queue *queue) {
+  auto &positions = ecs->get_components<Position>();
+  auto &entities = ecs->get_components<EntityType>();
+  auto &fType = ecs->get_components<FrequencyType>();
+  Command command;
+
+  const std::unordered_map<FrequencyType, double> shootFrequencies = {
+    {FrequencyType::Slow, 2.0},
+    {FrequencyType::High, 1.0},
+    {FrequencyType::Turret, 0.5}
+  };
+
+  static std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastShootTimes;
+
+  auto now = std::chrono::steady_clock::now();
+
+  for (std::size_t i = 0; i < entities.size(); i++) {
+    double frequency = 0;
+    if (entities[i] != EntityType::Enemy) {
+      continue;
+    }
+    if (fType[i] == FrequencyType::Slow) {
+      frequency = shootFrequencies.at(FrequencyType::Slow);
+    } else if (fType[i] == FrequencyType::High) {
+      frequency = shootFrequencies.at(FrequencyType::High);
+    } else if (fType[i] == FrequencyType::Turret) {
+      frequency = shootFrequencies.at(FrequencyType::Turret);
+    } else {
+      continue;
+    }
+
+    auto lastShootTime = lastShootTimes[i];
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(now - lastShootTime).count();
+
+    if (duration >= frequency) {
+      //command.type = CommandType::SHOOT;
+      //command.shoot.playerId = i;
+      //command.shoot.positionX = positions[i]->x;
+      //command.shoot.positionY = positions[i]->y;
+      //queue->pushGameQueue(command);
+      lastShootTimes[i] = now;
+    }
+  }
+}
+

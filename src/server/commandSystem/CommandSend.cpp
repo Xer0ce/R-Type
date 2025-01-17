@@ -164,6 +164,12 @@ void CommandSend::createEnemy(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.createEnemy.aiType));
 
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.dmgType));
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.frType));
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.blType));
+
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.createEnemy.positionX);
   binaryData.insert(binaryData.end(), positionXBytes,

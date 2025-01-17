@@ -163,6 +163,9 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
   SDL_Texture *enemyTexture =
       window->loadTexture("../src/graphical/assets/enemy/enemy.png");
   AiType aiType = static_cast<AiType>(command.createEnemy.aiType);
+  DamageType dmgType = static_cast<DamageType>(command.createEnemy.dmgType);
+  FrequencyType frType = static_cast<FrequencyType>(command.createEnemy.frType);
+  BulletType blType = static_cast<BulletType>(command.createEnemy.blType);
 
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
@@ -172,7 +175,8 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
            {(int)command.createEnemy.positionX,
             (int)command.createEnemy.positionY, 100, 100},
            enemyTexture),
-      aiType, std::optional<std::size_t>(command.createEnemy.enemyId));
+      aiType, dmgType, frType, blType,
+      std::optional<std::size_t>(command.createEnemy.enemyId));
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,

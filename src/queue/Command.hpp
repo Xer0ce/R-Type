@@ -36,6 +36,9 @@ struct createEnemy {
   float positionY;
   int enemyId;
   int aiType;
+  int dmgType;
+  int frType;
+  int blType;
 };
 
 struct repConnect {

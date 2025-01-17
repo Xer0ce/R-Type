@@ -101,6 +101,9 @@ void Server::load_component() {
   _ecs->register_component<EntityType>();
   _ecs->register_component<Control>();
   _ecs->register_component<AiType>();
+  _ecs->register_component<DamageType>();
+  _ecs->register_component<FrequencyType>();
+  _ecs->register_component<BulletType>();
   _ecs->register_component<Nickname>();
   _ecs->register_component<Property>();
 }
