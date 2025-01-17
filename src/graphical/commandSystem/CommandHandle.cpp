@@ -52,9 +52,7 @@ CommandHandle::CommandHandle() {
   _commandMap[0x13] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) { wave(buffer, protocol, queue); };
   _commandMap[0x15] = [this](std::vector<uint8_t> buffer, IClient *protocol,
-                             Queue *queue) {
-    hit(buffer, protocol, queue);
-  };
+                             Queue *queue) { hit(buffer, protocol, queue); };
 }
 
 CommandHandle::~CommandHandle() {}

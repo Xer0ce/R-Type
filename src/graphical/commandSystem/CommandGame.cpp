@@ -49,7 +49,7 @@ CommandGame::CommandGame() {
     wave(command, queue, ecs, window);
   };
   _commandMap[CommandType::HIT] = [this](Command command, Queue *queue,
-                                        Registry *ecs, Window *window) {
+                                         Registry *ecs, Window *window) {
     hit(command, queue, ecs, window);
   };
 }
