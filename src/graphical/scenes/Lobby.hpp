@@ -9,8 +9,6 @@
 
 #include "../commandSystem/CommandGame.hpp"
 #include "AScene.hpp"
-#include "../Text.hpp"
-#include <filesystem>
 
 class Lobby : public AScene {
 public:
@@ -23,17 +21,6 @@ public:
 
   void init() override;
 
-
-  void setHistoryLevels(std::vector<std::string> historyLevels) { _historyLevels = historyLevels; }
-
-  std::vector<std::string> getHistoryLevels() { return _historyLevels; }
-
-  void fillHistoryLevels();
-
-  void addLevelsButtons();
-
 private:
   CommandGame commandGame;
-  std::vector<std::string> _historyLevels;
-  std::string _selectedLevel;
 };

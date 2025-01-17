@@ -16,6 +16,7 @@ enum sceneType {
   ONE_VS_ONE,
   LOBBY,
   LOBBY1V1,
+  LOBBY_HISTORY,
   NO_SWITCH,
 };
 
