@@ -106,7 +106,7 @@ void Menu::initHostMenu(int responsiveWidth, int responsiveHeight, int posX,
                         int posY) {
 
   SDL_Texture *hostBackgroundTexture =
-      _window->loadTexture("../src/graphical/assets/menu/CreateParty.svg");
+      _window->loadTexture("../src/graphical/assets/menu/createParty.svg");
 
   SDL_Texture *endlessTexture =
       _window->loadTexture("../src/graphical/assets/menu/endless.png");
