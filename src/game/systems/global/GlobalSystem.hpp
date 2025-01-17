@@ -9,6 +9,7 @@
 
 #include "../../../ecs/Registry.hpp"
 #include "../../../graphical/Utils.hpp"
+#include "../../../graphical/Window.hpp"
 #include "../../../queue/Queue.hpp"
 #include "../../Components/Components.hpp"
 #include "../../gestion/EntitiesGestion.hpp"

@@ -21,20 +21,20 @@ void Window::init() {
     exit(84);
   }
 
-  // if (!SDL_Init(SDL_INIT_AUDIO)) {
-  //   std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
-  //   exit(84);
-  // }
+  if (!SDL_Init(SDL_INIT_AUDIO)) {
+    std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
 
-  // if (Mix_Init(MIX_INIT_MP3) == 0) {
-  //   std::cerr << "Mix_Init Error: " << SDL_GetError() << std::endl;
-  //   exit(84);
-  // }
+  if (Mix_Init(MIX_INIT_MP3) == 0) {
+    std::cerr << "Mix_Init Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
 
-  // if (!Mix_OpenAudio(0, NULL)) {
-  //   std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
-  //   exit(84);
-  // }
+  if (!Mix_OpenAudio(0, NULL)) {
+    std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
 
   if (!TTF_Init()) {
     std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
@@ -67,6 +67,10 @@ void Window::init() {
     destroyWindow();
     exit(84);
   }
+
+  _spell = loadTexture("../src/graphical/assets/freezeSpell.png");
+  _spellDisable = loadTexture("../src/graphical/assets/freezeSpellDisable.png");
+  _freezeOverlay = loadTexture("../src/graphical/assets/freezeOverlay.png");
 
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
@@ -244,6 +248,8 @@ std::vector<keyType> Window::catchKey() {
     keys.push_back(ESCAPE);
   if (keyState[SDL_SCANCODE_SPACE])
     keys.push_back(SPACE);
+  if (keyState[SDL_SCANCODE_F])
+    keys.push_back(F);
   if (keys.empty())
     keys.push_back(NONE);
   return keys;
@@ -369,3 +375,25 @@ void Window::drawRect(SDL_FRect rect, SDL_Color color) {
   SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a);
   SDL_RenderFillRect(_renderer, &rect);
 }
+
+void Window::drawSpell() {
+  SDL_FRect spellRect = {550, 675, 100, 100};
+  if (_spellIsEnable)
+    SDL_RenderTexture(_renderer, _spell, nullptr, &spellRect);
+  else
+    SDL_RenderTexture(_renderer, _spellDisable, nullptr, &spellRect);
+}
+
+void Window::changeSpellStatus(bool enable) { _spellIsEnable = enable; }
+
+bool &Window::getSpellEnable() { return _spellIsEnable; }
+
+void Window::drawFreezeOverlay() {
+  SDL_FRect freezeRect = {0, 0, 1200, 800};
+  if (_freezeIsEnable)
+    SDL_RenderTexture(_renderer, _freezeOverlay, nullptr, &freezeRect);
+}
+
+void Window::changeFreezeStatus(bool enable) { _freezeIsEnable = enable; }
+
+bool &Window::getFreezeEnable() { return _freezeIsEnable; }

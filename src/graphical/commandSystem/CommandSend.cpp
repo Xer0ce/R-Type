@@ -38,6 +38,10 @@ CommandSend::CommandSend() {
                                                 IClient *protocol) {
     connect1v1(command, protocol);
   };
+  _commandMap[CommandType::FREEZESPELL] = [this](Command command,
+                                                 IClient *protocol) {
+    freezeSpell(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -148,6 +152,18 @@ void CommandSend::connect1v1(Command command, IClient *protocol) {
 
   for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
+
+  protocol->sendToServer(binaryData);
+}
+
+void CommandSend::freezeSpell(Command command, IClient *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x08);
+
+  binaryData.push_back(static_cast<uint8_t>(command.freezeSpell.playerId));
+
+  binaryData.push_back(0xFF);
 
   protocol->sendToServer(binaryData);
 }

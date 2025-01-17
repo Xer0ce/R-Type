@@ -31,6 +31,7 @@ enum CommandType {
   NEXTWAVE,
   CONNECT1V1,
   CREATEMETEORITE,
+  FREEZESPELL,
 };
 
 struct createEnemy {
@@ -128,6 +129,10 @@ struct connect1v1 {
   std::string Nickname;
 };
 
+struct freezeSpell {
+  int playerId;
+};
+
 struct createMeteorite {
   float positionX;
   float positionY;
@@ -151,6 +156,7 @@ struct Command {
   struct cooldown cooldown;
   struct wave wave;
   struct connect1v1 connect1v1;
+  struct freezeSpell freezeSpell;
   struct createMeteorite createMeteorite;
   int id;
 };

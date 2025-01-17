@@ -52,6 +52,10 @@ CommandGame::CommandGame() {
                                          Registry *ecs, Window *window) {
     hit(command, queue, ecs, window);
   };
+  _commandMap[CommandType::FREEZESPELL] =
+      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+        freezeSpell(command, queue, ecs, window);
+      };
   _commandMap[CommandType::CREATEMETEORITE] =
       [this](Command command, Queue *queue, Registry *ecs, Window *window) {
         createMeteorite(command, queue, ecs, window);
@@ -360,4 +364,10 @@ void CommandGame::createMeteorite(Command command, Queue *queue, Registry *ecs,
             (int)command.createMeteorite.positionY, 100, 100},
            window->loadTexture("../src/graphical/assets/meteor.png")),
       std::optional<std::size_t>(command.createMeteorite.meteoriteId));
+}
+
+void CommandGame::freezeSpell(Command command, Queue *queue, Registry *ecs,
+                              Window *window) {
+  window->setAllowToInteract(false);
+  window->changeFreezeStatus(true);
 }

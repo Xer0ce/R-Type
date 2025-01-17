@@ -33,6 +33,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     connect1v1(buffer, protocol, queue);
   };
+  _commandMap[0x08] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                             Queue *queue) {
+    freezeSpell(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -141,3 +145,13 @@ void CommandHandle::connect1v1(std::vector<uint8_t> buffer, IProtocol *protocol,
   cmd.id = static_cast<int>(buffer.back());
   queue->pushGameQueue(cmd);
 };
+
+void CommandHandle::freezeSpell(std::vector<uint8_t> buffer,
+                                IProtocol *protocol, Queue *queue) {
+  Command cmd;
+
+  int playerId = static_cast<int>(buffer[1]);
+  cmd.type = CommandType::FREEZESPELL;
+  cmd.freezeSpell.playerId = playerId;
+  queue->pushGameQueue(cmd);
+}

@@ -32,6 +32,10 @@ CommandGame::CommandGame() {
                                                 Registry *ecs) {
     connect1v1(command, queue, ecs);
   };
+  _commandMap[CommandType::FREEZESPELL] = [this](Command command, Queue *queue,
+                                                 Registry *ecs) {
+    freezeSpell(command, queue, ecs);
+  };
 }
 
 CommandGame::~CommandGame() {}
@@ -251,4 +255,20 @@ void CommandGame::connect1v1(Command command, Queue *queue, Registry *ecs) {
   cmd.id = property[player]->sockedId;
 
   queue->pushTcpQueue(cmd);
+}
+
+void CommandGame::freezeSpell(Command command, Queue *queue, Registry *ecs) {
+  auto &entityType = ecs->get_components<EntityType>();
+  auto &properties = ecs->get_components<Property>();
+
+  for (std::size_t i = 0; i < entityType.size(); ++i) {
+    if (entityType[i].has_value() && entityType[i] == EntityType::Player) {
+      if (i == command.freezeSpell.playerId) {
+        Command cmd;
+        cmd.type = CommandType::FREEZESPELL;
+        cmd.freezeSpell.playerId = properties[i]->sockedId;
+        queue->pushTcpQueue(cmd);
+      }
+    }
+  }
 }
