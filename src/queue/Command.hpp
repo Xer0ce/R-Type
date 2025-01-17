@@ -77,7 +77,7 @@ struct Shoot {
   int bulletId;
   float positionX;
   float positionY;
-  int direction;
+  int direction; // 1 = Left | 2 = Right
 };
 
 struct Hit {

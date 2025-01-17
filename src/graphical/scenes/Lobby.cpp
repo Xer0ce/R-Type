@@ -46,7 +46,7 @@ Lobby::loop(eventType event,
         }
       }
       _window->stopAllSound();
-      return sceneType::ENDLESS;
+      return sceneType::ONE_VS_ONE;
     }
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
   }

@@ -160,7 +160,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
 
   auto bullet = create_entity<EntityType::Projectile>(
       *ecs, Position(command.shoot.positionX, command.shoot.positionY),
-      Velocity(velocity, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+      Velocity(velocity, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}), PlayerId(command.shoot.playerId));
 
   command.shoot.bulletId = bullet;
   queue->pushTcpQueue(command);
