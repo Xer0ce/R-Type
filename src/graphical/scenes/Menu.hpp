@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "AScene.hpp"
 #include "../../game/LaunchServer.hpp"
+#include "AScene.hpp"
 
 class Menu : public AScene {
 public:

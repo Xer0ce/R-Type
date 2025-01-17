@@ -136,8 +136,8 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
       std::optional<LifeBar>(
           LifeBar(100, {(command.repConnect.positionX),
                         (command.repConnect.positionY), 50, 5})));
-  std::cout << "connect " << player << " attendu " << command.repConnect.id << std::endl;
-
+  std::cout << "connect " << player << " attendu " << command.repConnect.id
+            << std::endl;
 }
 
 void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs,
@@ -229,7 +229,8 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
       Property(command.newPlayer.spaceshipId, command.newPlayer.shootId, 0,
                command.newPlayer.playerNbr),
       std::nullopt, std::optional<std::size_t>(command.newPlayer.id));
-  std::cout << "new player " << player << " attendu " << command.newPlayer.id << std::endl;
+  std::cout << "new player " << player << " attendu " << command.newPlayer.id
+            << std::endl;
 }
 
 void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
