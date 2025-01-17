@@ -23,7 +23,8 @@ Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
                              std::optional<std::size_t> id = std::nullopt);
 
 Entities create_projectile_entity(Registry &r, Position position,
-                                  Velocity velocity, Draw draw, PlayerId playerId,
+                                  Velocity velocity, Draw draw,
+                                  PlayerId playerId,
                                   std::optional<std::size_t> id = std::nullopt);
 
 template <EntityType T, typename... Args>
