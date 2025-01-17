@@ -11,8 +11,9 @@
 #include <vector>
 #include <variant>
 #include "Boutton.hpp"
+#include "TextInput.hpp"
 
-using MenuElement = std::variant<Boutton>;
+using MenuElement = std::variant<Boutton, TextInput>;
 
 struct MenuElements {
   std::vector<MenuElement> elements;

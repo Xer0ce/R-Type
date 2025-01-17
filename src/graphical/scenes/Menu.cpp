@@ -128,6 +128,12 @@ SDL_Texture *shoot1Texture =
 
   auto [createPartyPosX, createPartyPosY] = calculateResponsivePosition(550, 800, _windowWidth, _windowHeight);
 
+  auto [textInputWidth, textInputHeight] = calculateResponsiveSize(300, 50, _windowWidth, _windowHeight, 300, 100);
+  auto [textInputPosX, textInputPosY] = calculateResponsivePosition(600, 400, _windowWidth, _windowHeight);
+
+  SDL_Color textColor = {255, 255, 255, 255};  // Blanc
+  SDL_Color bgColor = {0, 0, 0, 255};   
+
   auto host = create_entity<EntityType::Menu>(
     *_ecs, 
     Position(100, 100), 
@@ -139,6 +145,7 @@ SDL_Texture *shoot1Texture =
             Boutton(SDL_Rect{endlessPosX, endlessPosY, gameModeWidth, gameModeHeight}, "gamemode", endlessTexture, selectedendlessTexture, false, false, 1),
             Boutton(SDL_Rect{onevsonePosX, onevsonePosY, gameModeWidth, gameModeHeight}, "gamemode", onevsoneTexture, selectedonevsoneTexture, false, false, 2),
             Boutton(SDL_Rect{historyPosX, historyPosY, gameModeWidth, gameModeHeight}, "gamemode", historyTexture, selectedhistoryTexture, false, false, 3),
+            TextInput(SDL_Rect{textInputPosX, textInputPosY, textInputWidth, textInputHeight}, textColor, bgColor),
             Boutton(SDL_Rect{ship1PosX, ship1PosY, shipWidth, shipHeight}, "ship", ship1Texture, selectedship1Texture, false, false, 1),
             Boutton(SDL_Rect{ship2PosX, ship2PosY, shipWidth, shipHeight}, "ship", ship2Texture, selectedship2Texture, false, false, 2),
             Boutton(SDL_Rect{ship3PosX, ship3PosY, shipWidth, shipHeight}, "ship", ship3Texture, selectedship3Texture, false, false, 3),
@@ -252,6 +259,14 @@ void Menu::setMenu(std::string selectedButton) {
                    "../src/graphical/assets/RTypefont.otf", {0, 0, 0, 0});
 }
 
+void Menu::textSystem(Text &text) {
+  if (text.isClicked) {
+    if (text.label == "window") {
+      std::cout << "window value selected id : " << text.value << std::endl;
+    }
+  }
+}
+
 void Menu::buttonSystem(Boutton &boutton) {
   if (boutton.isClicked) {
     if (boutton.label == "ship") {
@@ -298,21 +313,33 @@ void Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
             auto &boutton = std::get<Boutton>(element);
             if (mouseX >= boutton.rect.x && mouseX <= boutton.rect.x + boutton.rect.w &&
                 mouseY >= boutton.rect.y && mouseY <= boutton.rect.y + boutton.rect.h) {
-              if (!boutton.isClicked) {
-                boutton.isClicked = true;
-                buttonSystem(boutton);
-              } else {
-                boutton.isClicked = false;
-                buttonSystem(boutton);
-              }
+              boutton.isClicked = !boutton.isClicked;
+              buttonSystem(boutton);
               return;
+            }
+          } else if (std::holds_alternative<TextInput>(element)) {
+            auto &textInput = std::get<TextInput>(element);
+            if (mouseX >= textInput.rect.x && mouseX <= textInput.rect.x + textInput.rect.w &&
+                mouseY >= textInput.rect.y && mouseY <= textInput.rect.y + textInput.rect.h) {
+              textInput.isActive = true;
+            } else {
+              textInput.isActive = false;
             }
           }
         }
       }
     }
   }
-  return;
+}
+
+void Menu::handleTextInput(SDL_Event &event, TextInput &textInput) {
+  if (textInput.isActive) {
+    if (event.type == SDL_TEXTINPUT) {
+      textInput.text += event.text.text; // Ajoute le caractère saisi
+    } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE && !textInput.text.empty()) {
+      textInput.text.pop_back(); // Supprime le dernier caractère
+    }
+  }
 }
 
 sceneType Menu::loop(eventType event,
@@ -349,7 +376,12 @@ sceneType Menu::loop(eventType event,
             } else {
               _window->draw(boutton.texture, boutton.rect);
             }
-          }
+          } 
+        }
+        if (std::holds_alternative<TextInput>(element)) {
+          auto &textInput = std::get<TextInput>(element);
+          _window->addText(textInput.text, textInput.rect.x, textInput.rect.y, textInput.rect.w, textInput.rect.h, 37,
+                   "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
         }
       }
     }

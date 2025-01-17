@@ -9,7 +9,7 @@
 #ifndef TYPE_HPP
 #define TYPE_HPP
 
-enum class EntityType { Player, Enemy, Projectile, Menu };
+enum class EntityType { Player, Enemy, Projectile, Menu, Meteorite };
 enum class EnemyType { Pion, Balourd, Zinzolin, Boss, BigBoss };
 enum class AiType { Aggressive, Passive, Balzy, Boss };
 enum class DamageType { Poke, Punch, Marmite };
