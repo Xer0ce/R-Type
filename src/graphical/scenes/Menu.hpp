@@ -33,6 +33,8 @@ public:
 
   void buttonSystem(Boutton &boutton);
 
+  void textSystem(Text &text);
+
 
 private:
   std::string _selectedButton;
