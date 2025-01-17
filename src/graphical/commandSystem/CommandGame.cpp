@@ -71,6 +71,16 @@ const std::string pathSpaceship[] = {
     "../src/graphical/assets/spaceship/bouzi.png",
 };
 
+const std::string pathSpaceshipEnemy[] = {
+    "../src/graphical/assets/enemy/enemy1.png",
+    "../src/graphical/assets/enemy/enemy2.png",
+    "../src/graphical/assets/enemy/enemy3.png",
+    "../src/graphical/assets/enemy/miniBoss1.png",
+    "../src/graphical/assets/enemy/miniBoss2.png",
+    "../src/graphical/assets/enemy/boss1.png",
+    "../src/graphical/assets/enemy/boss2.png",
+};
+
 const std::string pathShoot[] = {
     "../src/graphical/assets/shoot/bullet1.png",
     "../src/graphical/assets/shoot/bullet2.png",
@@ -180,8 +190,17 @@ void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
 
 void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
                               Window *window) {
+  int textureId = static_cast<int>(command.createEnemy.p_enemy.enemyType);
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> distrib_miniBoss(3, 4);
+  std::uniform_int_distribution<> distrib_Boss(5, 6);
+  if (command.createEnemy.p_enemy.enemyType == EnemyType::Boss)
+    textureId = distrib_miniBoss(gen);
+  if (command.createEnemy.p_enemy.enemyType == EnemyType::BigBoss)
+    textureId = distrib_Boss(gen);
   SDL_Texture *enemyTexture =
-      window->loadTexture("../src/graphical/assets/enemy/enemy1.png");
+    window->loadTexture(pathSpaceshipEnemy[textureId].c_str());
 
   std::cout << "Create Enemy" << std::endl;
 
@@ -232,6 +251,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
                         Window *window) {
   auto &entities = ecs->get_components<EntityType>();
   auto &properties = ecs->get_components<Property>();
+  auto &enemies_properties = ecs->get_components<EnemyProperty>();
   int shootId = 0;
   std::string texturePath;
 
@@ -246,8 +266,8 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
     }
     if (entities[i] == EntityType::Enemy) {
       if (i == command.shoot.playerId) {
-        if (properties[i].has_value()) {
-          shootId = properties[i]->shootId;
+        if (enemies_properties[i].has_value()) {
+          shootId = static_cast<int>(enemies_properties[i]->enemyType);
           texturePath = pathShootEnemy[shootId];
         }
       }

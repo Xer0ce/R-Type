@@ -140,7 +140,7 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
 
   cmd.createEnemy.enemyId = static_cast<int>(buffer[1]);
   cmd.createEnemy.p_enemy.enemyType = static_cast<EnemyType>(buffer[2]);
-  cmd.createEnemy.p_enemy.aiType = static_cast<AiType>(buffer[2]);
+  cmd.createEnemy.p_enemy.aiType = static_cast<AiType>(buffer[3]);
   cmd.createEnemy.p_enemy.damageType = static_cast<DamageType>(buffer[4]);
   cmd.createEnemy.p_enemy.frequencyType = static_cast<FrequencyType>(buffer[5]);
   cmd.createEnemy.p_enemy.bulletType = static_cast<BulletType>(buffer[6]);

@@ -84,11 +84,9 @@ void enemy_shoot_system(Registry *ecs, Queue *queue) {
     if (duration >= frequency) {
       command.type = CommandType::SHOOT;
       command.shoot.playerId = i;
-      command.shoot.bulletId = static_cast<int>(p_enemy[i]->enemyType);
       command.shoot.positionX = positions[i]->x;
       command.shoot.positionY = positions[i]->y;
       command.shoot.direction = 1;
-
       queue->pushGameQueue(command);
       lastShootTimes[i] = now;
     }
