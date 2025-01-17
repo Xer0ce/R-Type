@@ -173,7 +173,15 @@ void CommandSend::createEnemy(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.createEnemy.enemyId));
 
-  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.aiType));
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.enemyType));
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.aiType));
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.damageType));
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.frequencyType));
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.bulletType));
 
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.createEnemy.positionX);

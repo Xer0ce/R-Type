@@ -206,6 +206,7 @@ EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
     if (now > deltaTime) {
       waveGestion();
       enemy_system(_ecs);
+      enemy_shoot_system(_ecs, _queue);
       position_system_net(1, _ecs, _queue, _nextCorrectPosition);
       collision_system(_ecs, _queue);
       if (now > _nextCorrectPosition)

@@ -60,6 +60,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   auto &entityType = ecs->get_components<EntityType>();
   auto &nicknames = ecs->get_components<Nickname>();
   auto &property = ecs->get_components<Property>();
+  auto &enemies_property = ecs->get_components<EnemyProperty>();
   auto &position = ecs->get_components<Position>();
   Command commandRepConnect;
   Command commandNewPlayer;
@@ -99,11 +100,13 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && position[i].has_value()) {
       if (entityType[i] && entityType[i] == EntityType::Enemy) {
+        EnemyProperty p_enemy = enemies_property[i].value();
         Command newCommandEnemy;
         newCommandEnemy.type = CommandType::CREATEENEMY;
         newCommandEnemy.createEnemy.positionX = position[i]->x;
         newCommandEnemy.createEnemy.positionY = position[i]->y;
         newCommandEnemy.createEnemy.enemyId = i;
+        newCommandEnemy.createEnemy.p_enemy = p_enemy;
         newCommandEnemy.id = command.id;
         queue->pushTcpQueue(newCommandEnemy);
       }
