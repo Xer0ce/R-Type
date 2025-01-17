@@ -117,10 +117,10 @@ void EndLess::createMeteorites(int nbr) {
     std::uniform_int_distribution<> dis(0, 800);
     int random = dis(gen);
     auto entitiesId = create_entity<EntityType::Meteorite>(
-        *_ecs, Position(1000, random), Velocity(-10, 1), Draw({}, {}, nullptr));
+        *_ecs, Position(1200, random), Velocity(-10, 1), Draw({}, {}, nullptr));
     Command cmd;
     cmd.type = CommandType::CREATEMETEORITE;
-    cmd.createMeteorite.positionX = 1000;
+    cmd.createMeteorite.positionX = 1200;
     cmd.createMeteorite.positionY = random;
     cmd.createMeteorite.meteoriteId = entitiesId;
     _queue->pushTcpQueue(cmd);
