@@ -101,6 +101,8 @@ public:
 
   void setTextPos(std::string text, int x, int y);
 
+  void setTextContent(std::string text, std::string content);
+
   void setAllowToInteract(bool allow) { _allowToInteract = allow; }
 
   bool getAllowToInteract() { return _allowToInteract; }

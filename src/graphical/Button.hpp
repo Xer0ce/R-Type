@@ -39,7 +39,19 @@ public:
 
   SDL_FRect *getRect() { return _rect; }
 
-  void setNormalColor(SDL_Color color) { _normalColor = color; }
+  void setColor(SDL_Color color) {_normalColor = color;}
+
+  float getX() { return _rect->x; }
+
+  float getY() { return _rect->y; }
+
+  float getW() { return _rect->w; }
+
+  float getH() { return _rect->h; }
+
+  std::string getTag() { return _tag; }
+
+  void deleteButton() { delete _rect; }
 
 private:
   SDL_Renderer *_renderer;
