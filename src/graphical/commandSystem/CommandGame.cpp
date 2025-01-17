@@ -74,6 +74,14 @@ const std::string pathShoot[] = {
     "../src/graphical/assets/shoot/bullet4.png",
 };
 
+const std::string pathShootEnemy[] = {
+    "../src/graphical/assets/enemy/shoot/pionBullet.png",
+    "../src/graphical/assets/enemy/shoot/balourdBullet.png",
+    "../src/graphical/assets/enemy/shoot/zinzolinBullet.png",
+    "../src/graphical/assets/enemy/shoot/bossBullet.png",
+    "../src/graphical/assets/enemy/shoot/bigBossBullet.png",
+};
+
 const std::size_t velocityShoot[] = {
     10,
     20,
@@ -220,19 +228,28 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
                         Window *window) {
   auto &entities = ecs->get_components<EntityType>();
   auto &properties = ecs->get_components<Property>();
-  int shootId = 3;
+  int shootId = 0;
+  std::string texturePath;
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (entities[i] == EntityType::Player) {
       if (i == command.shoot.playerId) {
         if (properties[i].has_value()) {
           shootId = properties[i]->shootId;
+          texturePath = pathShoot[shootId];
+        }
+      }
+    }
+    if (entities[i] == EntityType::Enemy) {
+      if (i == command.shoot.playerId) {
+        if (properties[i].has_value()) {
+          shootId = properties[i]->shootId;
+          texturePath = pathShootEnemy[shootId];
         }
       }
     }
   }
 
-  std::string texturePath = pathShoot[shootId];
   int velocity = (int)velocityShoot[shootId];
   if (command.shoot.direction == 1) {
     velocity = -velocity;
