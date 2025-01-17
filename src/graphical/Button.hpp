@@ -39,7 +39,7 @@ public:
 
   SDL_FRect *getRect() { return _rect; }
 
-  void setColor(SDL_Color color) {_normalColor = color;}
+  void setColor(SDL_Color color) { _normalColor = color; }
 
   float getX() { return _rect->x; }
 

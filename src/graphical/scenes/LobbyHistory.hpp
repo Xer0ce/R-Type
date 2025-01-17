@@ -1,8 +1,8 @@
 #pragma once
 
+#include "../Text.hpp"
 #include "../commandSystem/CommandGame.hpp"
 #include "AScene.hpp"
-#include "../Text.hpp"
 #include <filesystem>
 
 class LobbyHistory : public AScene {

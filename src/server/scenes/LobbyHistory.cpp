@@ -7,16 +7,14 @@
 
 #include "LobbyHistory.hpp"
 
-LobbyHistory::LobbyHistory() {
-  _name = "LobbyHistory";
-}
+LobbyHistory::LobbyHistory() { _name = "LobbyHistory"; }
 
 LobbyHistory::~LobbyHistory() {}
 
 void LobbyHistory::init() {}
 
-sceneType
-LobbyHistory::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
+sceneType LobbyHistory::loop(
+    std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   Command command;
 
   command = _queue->popGameQueue();
