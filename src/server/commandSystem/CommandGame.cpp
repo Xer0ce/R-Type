@@ -33,7 +33,7 @@ CommandGame::CommandGame() {
     connect1v1(command, queue, ecs);
   };
   _commandMap[CommandType::FREEZESPELL] = [this](Command command, Queue *queue,
-                                                Registry *ecs) {
+                                                 Registry *ecs) {
     freezeSpell(command, queue, ecs);
   };
 }

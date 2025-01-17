@@ -39,7 +39,7 @@ CommandSend::CommandSend() {
     connect1v1(command, protocol);
   };
   _commandMap[CommandType::FREEZESPELL] = [this](Command command,
-                                                IClient *protocol) {
+                                                 IClient *protocol) {
     freezeSpell(command, protocol);
   };
 }

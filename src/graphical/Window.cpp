@@ -378,9 +378,7 @@ void Window::drawSpell() {
     SDL_RenderTexture(_renderer, _spellDisable, nullptr, &spellRect);
 }
 
-void Window::changeSpellStatus(bool enable) {
-  _spellIsEnable = enable;
-}
+void Window::changeSpellStatus(bool enable) { _spellIsEnable = enable; }
 
 bool &Window::getSpellEnable() { return _spellIsEnable; }
 
@@ -390,8 +388,6 @@ void Window::drawFreezeOverlay() {
     SDL_RenderTexture(_renderer, _freezeOverlay, nullptr, &freezeRect);
 }
 
-void Window::changeFreezeStatus(bool enable) {
-  _freezeIsEnable = enable;
-}
+void Window::changeFreezeStatus(bool enable) { _freezeIsEnable = enable; }
 
 bool &Window::getFreezeEnable() { return _freezeIsEnable; }
