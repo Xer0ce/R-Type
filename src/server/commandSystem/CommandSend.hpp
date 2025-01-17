@@ -34,6 +34,7 @@ private:
   void newPlayerLobby(Command command, IProtocol *protocol);
   void cooldown(Command command, IProtocol *protocol);
   void wave(Command command, IProtocol *protocol);
+  void createMeteorite(Command command, IProtocol *protocol);
   void hit(Command command, IProtocol *protocol);
 
   std::map<CommandType, std::function<void(Command, IProtocol *)>> _commandMap;

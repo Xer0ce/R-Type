@@ -36,6 +36,8 @@ private:
                      Window *window);
   void cooldown(Command command, Queue *queue, Registry *ecs, Window *window);
   void wave(Command command, Queue *queue, Registry *ecs, Window *window);
+  void createMeteorite(Command command, Queue *queue, Registry *ecs,
+                       Window *window);
   void hit(Command command, Queue *queue, Registry *ecs, Window *window);
 
   std::map<CommandType,
