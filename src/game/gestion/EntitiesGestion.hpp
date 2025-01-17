@@ -32,6 +32,11 @@ Entities create_projectile_entity(Registry &r, Position position,
                                   Velocity velocity, Draw draw,
                                   std::optional<std::size_t> id = std::nullopt);
 
+Entities create_menu_entity(Registry &r, Position position, Size size, 
+                            Draw draw, Visibility visibility, 
+                            std::vector<MenuElements> elements = {}, 
+                            std::optional<std::size_t> id = std::nullopt);
+
 template <EntityType T, typename... Args>
 Entities create_entity(Registry &r, Args &&...args) {
   if constexpr (T == EntityType::Player) {
@@ -42,6 +47,9 @@ Entities create_entity(Registry &r, Args &&...args) {
   }
   if constexpr (T == EntityType::Projectile) {
     return create_projectile_entity(r, std::forward<Args>(args)...);
+  }
+  if constexpr (T == EntityType::Menu) {
+    return create_menu_entity(r, std::forward<Args>(args)...);
   }
 }
 
@@ -84,5 +92,11 @@ template <EnemyType T> Entities create_enemy(Registry &r, AiType aiType, DamageT
                                             Draw({}, {}, nullptr), aiType, dmgType, fType, bType);
   }
 }
+
+template <EnemyType T> Entities create_menu(Registry &r) {
+
+
+}
+
 
 #endif // ENTITIESGESTION_HPP

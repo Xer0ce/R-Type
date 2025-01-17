@@ -47,6 +47,11 @@ public:
     _ecs->register_component<Nickname>();
     _ecs->register_component<Property>();
     _ecs->register_component<LifeBar>();
+    _ecs->register_component<Visibility>();
+    _ecs->register_component<Size>();
+    _ecs->register_component<Background>();
+    _ecs->register_component<Boutton>();
+    _ecs->register_component<MenuElements>();
   };
 
   void loadScene(sceneType sceneName);

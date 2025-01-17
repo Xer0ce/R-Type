@@ -43,11 +43,11 @@ void Window::init() {
   SDL_DisplayID displayID = SDL_GetPrimaryDisplay();
   const SDL_DisplayMode *currentMode = SDL_GetCurrentDisplayMode(displayID);
 
-  // int windowWidth = static_cast<int>(currentMode->w * 0.9);
-  // int windowHeight = static_cast<int>(currentMode->h * 0.8);
+  int windowWidth = static_cast<int>(currentMode->w * 0.9);
+  int windowHeight = static_cast<int>(currentMode->h * 0.8);
 
-  int windowWidth = 1200;
-  int windowHeight = 800;
+  _windowWidth = windowWidth;
+  _windowHeight = windowHeight;
 
   _window = SDL_CreateWindow("R-Type", windowWidth, windowHeight, 0);
   if (!_window) {
@@ -96,6 +96,9 @@ eventType Window::updateEvents() {
     }
     if (_event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
       return MOUSE_CLICK;
+    }
+    if (_event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+      return MOUSE_RELEASE;
     }
   }
   return NO_EVENT;

@@ -119,6 +119,10 @@ public:
     _isBackgroundScrolling = scrolling;
   }
 
+  float getWindowWidth() { return _windowWidth; }
+
+  float getWindowHeight() { return _windowHeight; }
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -133,4 +137,6 @@ private:
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;
   bool _isBackgroundScrolling = false;
+  float _windowWidth;
+  float _windowHeight;
 };

@@ -30,7 +30,7 @@ enum keyType {
   NONE,
 };
 
-enum eventType { MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT };
+enum eventType { MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT, MOUSE_RELEASE };
 
 struct ChoosingParams {
   std::string ip;

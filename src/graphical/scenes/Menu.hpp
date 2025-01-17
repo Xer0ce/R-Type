@@ -27,4 +27,6 @@ public:
 private:
   std::string _selectedButton;
   std::string _menuTitle;
+  float _windowWidth;
+  float _windowHeight;
 };
