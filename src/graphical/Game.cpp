@@ -14,6 +14,7 @@ Game::Game() {
   _scenes[sceneType::ENDLESS] = std::make_shared<EndLess>();
   _scenes[sceneType::ONE_VS_ONE] = std::make_shared<OneVsOne>();
   _scenes[sceneType::LOBBY] = std::make_shared<Lobby>();
+  _scenes[sceneType::LOBBY_HISTORY] = std::make_shared<LobbyHistory>();
 
   _currentScene = sceneType::MENU;
 
@@ -140,7 +141,8 @@ void Game::game(std::string nickname) {
     if (now > next)
       next += std::chrono::milliseconds(25);
     if (switchScene != sceneType::NO_SWITCH) {
-      if (switchScene == LOBBY || switchScene == LOBBY1V1) {
+      if (switchScene == LOBBY || switchScene == LOBBY1V1 ||
+          switchScene == LOBBY_HISTORY) {
         init(nickname, params);
       }
       _currentScene = switchScene;

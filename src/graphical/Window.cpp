@@ -332,6 +332,14 @@ void Window::setTextPos(std::string text, int x, int y) {
   }
 }
 
+void Window::setTextContent(std::string text, std::string content) {
+  for (auto &t : _texts) {
+    if (t.getText() == text) {
+      t.setText(content);
+    }
+  }
+}
+
 void Window::playSound(soundType type, int loop) {
   for (auto &sound : _sounds) {
     if (sound->getSoundType() == type) {

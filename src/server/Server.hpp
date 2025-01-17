@@ -20,6 +20,7 @@
 #include "scenes/History.hpp"
 #include "scenes/Lobby.hpp"
 #include "scenes/OneVsOne.hpp"
+#include "scenes/LobbyHistory.hpp"
 #include <map>
 #include <memory>
 
