@@ -52,6 +52,17 @@ CommandSend::CommandSend() {
   };
   _commandMap[CommandType::WAVE] =
       [this](Command command, IProtocol *protocol) { wave(command, protocol); };
+  _commandMap[CommandType::CREATEMETEORITE] = [this](Command command,
+                                                     IProtocol *protocol) {
+    createMeteorite(command, protocol);
+  };
+  _commandMap[CommandType::HIT] = [this](Command command, IProtocol *protocol) {
+    hit(command, protocol);
+  };
+  _commandMap[CommandType::FREEZESPELL] = [this](Command command,
+                                                 IProtocol *protocol) {
+    freezeSpell(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -162,7 +173,15 @@ void CommandSend::createEnemy(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.createEnemy.enemyId));
 
-  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.aiType));
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.enemyType));
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.aiType));
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.damageType));
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.frequencyType));
+
+  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.bulletType));
 
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.createEnemy.positionX);
@@ -328,4 +347,47 @@ void CommandSend::wave(Command command, IProtocol *protocol) {
   binaryData.push_back(0xFF);
 
   protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::createMeteorite(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x14);
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createMeteorite.meteoriteId));
+
+  uint8_t *positionXBytes =
+      reinterpret_cast<uint8_t *>(&command.createMeteorite.positionX);
+  binaryData.insert(binaryData.end(), positionXBytes,
+                    positionXBytes + sizeof(float));
+
+  uint8_t *positionYBytes =
+      reinterpret_cast<uint8_t *>(&command.createMeteorite.positionY);
+  binaryData.insert(binaryData.end(), positionYBytes,
+                    positionYBytes + sizeof(float));
+}
+
+void CommandSend::hit(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x15);
+
+  binaryData.push_back(static_cast<uint8_t>(command.hit.entityHit));
+
+  binaryData.push_back(static_cast<uint8_t>(command.hit.damage));
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::freezeSpell(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x16);
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAllExceptOne(command.freezeSpell.playerId, binaryData);
 }

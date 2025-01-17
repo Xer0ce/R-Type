@@ -8,6 +8,7 @@
 #pragma once
 
 #include <iostream>
+#include "../game/Components/Components.hpp"
 
 enum CommandType {
   CONNECT,
@@ -29,13 +30,15 @@ enum CommandType {
   WAVE,
   NEXTWAVE,
   CONNECT1V1,
+  CREATEMETEORITE,
+  FREEZESPELL,
 };
 
 struct createEnemy {
   float positionX;
   float positionY;
   int enemyId;
-  int aiType;
+  EnemyProperty p_enemy;
 };
 
 struct repConnect {
@@ -77,15 +80,12 @@ struct Shoot {
   int bulletId;
   float positionX;
   float positionY;
-  int direction;
+  int direction; // 1 = Left | 2 = Right
 };
 
 struct Hit {
   int entityHit;
-  int bulletId;
   int damage;
-  float positionX;
-  float positionY;
 };
 
 struct killEntity {
@@ -129,6 +129,16 @@ struct connect1v1 {
   std::string Nickname;
 };
 
+struct freezeSpell {
+  int playerId;
+};
+
+struct createMeteorite {
+  float positionX;
+  float positionY;
+  int meteoriteId;
+};
+
 struct Command {
   CommandType type;
   struct Connect connect;
@@ -146,5 +156,7 @@ struct Command {
   struct cooldown cooldown;
   struct wave wave;
   struct connect1v1 connect1v1;
+  struct freezeSpell freezeSpell;
+  struct createMeteorite createMeteorite;
   int id;
 };

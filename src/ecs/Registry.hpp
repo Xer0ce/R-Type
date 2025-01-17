@@ -84,7 +84,7 @@ public:
       return std::any_cast<SparseArray<Component> &>(it->second);
     } else {
       throw std::runtime_error(
-          "Component type not registered in the registry.");
+          std::string("Component type not registered in the registry: ") + typeid(Component).name());
     }
   };
 
@@ -103,7 +103,7 @@ public:
       return std::any_cast<SparseArray<Component> &>(it->second);
     } else {
       throw std::runtime_error(
-          "Component type not registered in the registry.");
+          std::string("Component type not registered in the registry: ") + typeid(Component).name());
     }
   };
   ///@}

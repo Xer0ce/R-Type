@@ -27,6 +27,8 @@ public:
   void loadMiniBoss();
   void loadBoss();
   void setPlayersPosition(Registry *ecs);
+  void killMeteorites();
+  void createMeteorites(int nbr);
 
 private:
   CommandGame _commandGame;

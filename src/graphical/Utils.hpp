@@ -28,10 +28,11 @@ enum keyType {
   SPACE,
   ENTER,
   ESCAPE,
+  F,
   NONE,
 };
 
-enum eventType { MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT };
+enum eventType { MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT, MOUSE_RELEASE };
 
 struct ChoosingParams {
   std::string ip;
@@ -49,4 +50,5 @@ enum soundType {
   WAVE3,
   NEWWAVE,
   MICHOU_REMIX_WINTERZUUKO,
+  HURT,
 };

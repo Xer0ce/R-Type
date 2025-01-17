@@ -48,6 +48,18 @@ CommandGame::CommandGame() {
                                           Registry *ecs, Window *window) {
     wave(command, queue, ecs, window);
   };
+  _commandMap[CommandType::HIT] = [this](Command command, Queue *queue,
+                                         Registry *ecs, Window *window) {
+    hit(command, queue, ecs, window);
+  };
+  _commandMap[CommandType::FREEZESPELL] =
+      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+        freezeSpell(command, queue, ecs, window);
+      };
+  _commandMap[CommandType::CREATEMETEORITE] =
+      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+        createMeteorite(command, queue, ecs, window);
+      };
 }
 
 CommandGame::~CommandGame() {}
@@ -64,6 +76,14 @@ const std::string pathShoot[] = {
     "../src/graphical/assets/shoot/bullet2.png",
     "../src/graphical/assets/shoot/bullet3.png",
     "../src/graphical/assets/shoot/bullet4.png",
+};
+
+const std::string pathShootEnemy[] = {
+    "../src/graphical/assets/enemy/shoot/pionBullet.png",
+    "../src/graphical/assets/enemy/shoot/balourdBullet.png",
+    "../src/graphical/assets/enemy/shoot/zinzolinBullet.png",
+    "../src/graphical/assets/enemy/shoot/bossBullet.png",
+    "../src/graphical/assets/enemy/shoot/bigBossBullet.png",
 };
 
 const std::size_t velocityShoot[] = {
@@ -161,8 +181,9 @@ void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
 void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
                               Window *window) {
   SDL_Texture *enemyTexture =
-      window->loadTexture("../src/graphical/assets/enemy/enemy.png");
-  AiType aiType = static_cast<AiType>(command.createEnemy.aiType);
+      window->loadTexture("../src/graphical/assets/enemy/enemy1.png");
+
+  std::cout << "Create Enemy" << std::endl;
 
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
@@ -172,7 +193,8 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
            {(int)command.createEnemy.positionX,
             (int)command.createEnemy.positionY, 100, 100},
            enemyTexture),
-      aiType, std::optional<std::size_t>(command.createEnemy.enemyId));
+      EnemyProperty(command.createEnemy.p_enemy),
+      std::optional<std::size_t>(command.createEnemy.enemyId));
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
@@ -210,19 +232,28 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
                         Window *window) {
   auto &entities = ecs->get_components<EntityType>();
   auto &properties = ecs->get_components<Property>();
-  int shootId = -1;
+  int shootId = 0;
+  std::string texturePath;
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (entities[i] == EntityType::Player) {
       if (i == command.shoot.playerId) {
         if (properties[i].has_value()) {
           shootId = properties[i]->shootId;
+          texturePath = pathShoot[shootId];
+        }
+      }
+    }
+    if (entities[i] == EntityType::Enemy) {
+      if (i == command.shoot.playerId) {
+        if (properties[i].has_value()) {
+          shootId = properties[i]->shootId;
+          texturePath = pathShootEnemy[shootId];
         }
       }
     }
   }
 
-  std::string texturePath = pathShoot[shootId];
   int velocity = (int)velocityShoot[shootId];
   if (command.shoot.direction == 1) {
     velocity = -velocity;
@@ -234,6 +265,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
       *ecs, Position(command.shoot.positionX, command.shoot.positionY),
       Velocity(velocity, 0),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, shootTexture),
+      PlayerId(command.shoot.playerId),
       std::optional<std::size_t>(command.shoot.bulletId));
 
   window->playSound(BULLET_SOUND, 0);
@@ -300,4 +332,42 @@ void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
     }
   }
   window->setAllowToInteract(false);
+}
+
+void CommandGame::hit(Command command, Queue *queue, Registry *ecs,
+                      Window *window) {
+  auto &entities = ecs->get_components<EntityType>();
+  auto &health = ecs->get_components<Health>();
+  auto &control = ecs->get_components<Control>();
+
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (i == command.hit.entityHit) {
+      if (health[i].has_value()) {
+        health[i]->hp -= command.hit.damage;
+        if (control[i].has_value()) {
+          window->playSound(HURT, 0);
+        }
+      }
+    }
+  }
+}
+
+void CommandGame::createMeteorite(Command command, Queue *queue, Registry *ecs,
+                                  Window *window) {
+  auto entities = create_entity<EntityType::Meteorite>(
+      *ecs,
+      Position(command.createMeteorite.positionX,
+               command.createMeteorite.positionY),
+      Velocity(-10, 1),
+      Draw({0, 0, 0, 0},
+           {(int)command.createMeteorite.positionX,
+            (int)command.createMeteorite.positionY, 100, 100},
+           window->loadTexture("../src/graphical/assets/meteor.png")),
+      std::optional<std::size_t>(command.createMeteorite.meteoriteId));
+}
+
+void CommandGame::freezeSpell(Command command, Queue *queue, Registry *ecs,
+                              Window *window) {
+  window->setAllowToInteract(false);
+  window->changeFreezeStatus(true);
 }

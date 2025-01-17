@@ -51,6 +51,16 @@ CommandHandle::CommandHandle() {
   };
   _commandMap[0x13] = [this](std::vector<uint8_t> buffer, IClient *protocol,
                              Queue *queue) { wave(buffer, protocol, queue); };
+  _commandMap[0x14] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    createMeteorite(buffer, protocol, queue);
+  };
+  _commandMap[0x15] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) { hit(buffer, protocol, queue); };
+  _commandMap[0x16] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    freezeSpell(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -129,9 +139,13 @@ void CommandHandle::createEnemy(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.type = CommandType::CREATEENEMY;
 
   cmd.createEnemy.enemyId = static_cast<int>(buffer[1]);
-  cmd.createEnemy.aiType = static_cast<int>(buffer[2]);
-  cmd.createEnemy.positionX = *reinterpret_cast<float *>(&buffer[3]);
-  cmd.createEnemy.positionY = *reinterpret_cast<float *>(&buffer[7]);
+  cmd.createEnemy.p_enemy.enemyType = static_cast<EnemyType>(buffer[2]);
+  cmd.createEnemy.p_enemy.aiType = static_cast<AiType>(buffer[2]);
+  cmd.createEnemy.p_enemy.damageType = static_cast<DamageType>(buffer[4]);
+  cmd.createEnemy.p_enemy.frequencyType = static_cast<FrequencyType>(buffer[5]);
+  cmd.createEnemy.p_enemy.bulletType = static_cast<BulletType>(buffer[6]);
+  cmd.createEnemy.positionX = *reinterpret_cast<float *>(&buffer[7]);
+  cmd.createEnemy.positionY = *reinterpret_cast<float *>(&buffer[11]);
 
   queue->pushGameQueue(cmd);
 }
@@ -212,5 +226,41 @@ void CommandHandle::wave(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.type = CommandType::WAVE;
   cmd.wave.wave = static_cast<int>(buffer[1]);
   cmd.wave.time = static_cast<int>(buffer[2]);
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::createMeteorite(std::vector<uint8_t> buffer,
+                                    IClient *protocol, Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::CREATEMETEORITE;
+  cmd.createMeteorite.positionX = *reinterpret_cast<float *>(&buffer[2]);
+  cmd.createMeteorite.positionY = *reinterpret_cast<float *>(&buffer[6]);
+  cmd.createMeteorite.meteoriteId = static_cast<int>(buffer[1]);
+
+  std::cout << "Meteorite created " << cmd.createMeteorite.meteoriteId
+            << std::endl;
+
+  std::cout << "pos x " << cmd.createMeteorite.positionX << std::endl;
+
+  std::cout << "pos y " << cmd.createMeteorite.positionY << std::endl;
+
+  queue->pushGameQueue(cmd);
+}
+void CommandHandle::hit(std::vector<uint8_t> buffer, IClient *protocol,
+                        Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::HIT;
+  cmd.hit.entityHit = static_cast<int>(buffer[1]);
+  cmd.hit.damage = static_cast<int>(buffer[2]);
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::freezeSpell(std::vector<uint8_t> buffer, IClient *protocol,
+                                Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::FREEZESPELL;
   queue->pushGameQueue(cmd);
 }
