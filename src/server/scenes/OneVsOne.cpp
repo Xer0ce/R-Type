@@ -12,6 +12,8 @@ OneVsOne::OneVsOne() {
   _startCooldown = true;
   _firstRound = true;
   _coolDown = 4;
+  _nextCorrectPosition =
+      std::chrono::steady_clock::now() + std::chrono::seconds(1);
 }
 
 OneVsOne::~OneVsOne() {}
@@ -41,6 +43,13 @@ OneVsOne::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
     if (_coolDown == 0)
       _startCooldown = false;
     _coolDown--;
+  }
+  if (now > deltaTime) {
+    position_system_net(1, _ecs, _queue, _nextCorrectPosition);
+    collision_system_1v1(_ecs, _queue);
+    if (now > _nextCorrectPosition)
+      _nextCorrectPosition =
+          std::chrono::steady_clock::now() + std::chrono::seconds(1);
   }
   return sceneType::NO_SWITCH;
 }

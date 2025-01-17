@@ -52,6 +52,7 @@ public:
     _ecs->register_component<Background>();
     _ecs->register_component<Boutton>();
     _ecs->register_component<MenuElements>();
+    _ecs->register_component<PlayerId>();
   };
 
   void loadScene(sceneType sceneName);

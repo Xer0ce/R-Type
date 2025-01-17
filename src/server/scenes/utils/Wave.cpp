@@ -36,6 +36,7 @@ static const std::map<std::string, BulletType> b_type = {
 
 void Wave::factory_call(const json &enemy, Queue &queue, AiType ai, DamageType dmg, FrequencyType fr, BulletType bullet) {
   auto &position = _ecs->get_components<Position>();
+  auto &enemyType = _ecs->get_components<EnemyType>();
 
   std::map<std::string, std::function<Entities()>> type_map = {
     {"Pion",

@@ -30,6 +30,7 @@ Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
 
 Entities create_projectile_entity(Registry &r, Position position,
                                   Velocity velocity, Draw draw,
+                                  PlayerId playerId,
                                   std::optional<std::size_t> id = std::nullopt);
 
 Entities create_menu_entity(Registry &r, Position position, Size size, 

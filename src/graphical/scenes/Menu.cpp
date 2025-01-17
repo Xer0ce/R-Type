@@ -41,9 +41,84 @@ std::pair<int, int> calculateResponsiveSize(int originalWidth, int originalHeigh
     return {newWidth, newHeight};
 }
 
+void Menu::initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
+
+  SDL_Texture *hostBackgroundTexture =
+      _window->loadTexture("../src/graphical/assets/menu/CreateParty.png");
+
+  SDL_Texture *ship1Texture =
+      _window->loadTexture("../src/graphical/assets/menu/ship1.png");
+  SDL_Texture *ship2Texture =
+      _window->loadTexture("../src/graphical/assets/menu/ship2.png");
+  SDL_Texture *ship3Texture =
+      _window->loadTexture("../src/graphical/assets/menu/ship3.png");
+  SDL_Texture *ship4Texture =
+      _window->loadTexture("../src/graphical/assets/menu/ship4.png");
+  
+  auto [shipWidth, shipHeight] = calculateResponsiveSize(147, 93, _windowWidth, _windowHeight, 100, 200);
+  
+  auto [ship1PosX, ship1PosY] = calculateResponsivePosition(550, 500, _windowWidth, _windowHeight);
+
+  auto [ship2PosX, ship2PosY] = calculateResponsivePosition(750, 500, _windowWidth, _windowHeight);
+
+  auto [ship3PosX, ship3PosY] = calculateResponsivePosition(950, 500, _windowWidth, _windowHeight);
+
+  auto [ship4PosX, ship4PosY] = calculateResponsivePosition(1150, 500, _windowWidth, _windowHeight);
+
+  auto host = create_entity<EntityType::Menu>(
+    *_ecs, 
+    Position(100, 100), 
+    Size(400, 300),
+    Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight}, hostBackgroundTexture),
+    Visibility(true),
+    std::vector<MenuElements>{
+        MenuElements({
+            Boutton(SDL_Rect{ship1PosX, ship1PosY, shipWidth, shipHeight}, "caca", ship1Texture),
+            Boutton(SDL_Rect{ship2PosX, ship2PosY, shipWidth, shipHeight}, "shi", ship2Texture),
+            Boutton(SDL_Rect{ship3PosX, ship3PosY, shipWidth, shipHeight}, "aza", ship3Texture),
+            Boutton(SDL_Rect{ship4PosX, ship4PosY, shipWidth, shipHeight}, "lll", ship4Texture)
+        })
+    }
+  );
+}
+
+void Menu::initJoinMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
+
+  SDL_Texture *joinBackgroundTexture =
+      _window->loadTexture("../src/graphical/assets/menu/JoinParty.png");
+
+  auto join = create_entity<EntityType::Menu>(
+    *_ecs, 
+    Position(100, 100), 
+    Size(400, 300),
+    Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight}, joinBackgroundTexture),
+    Visibility(false),
+    std::vector<MenuElements>{}
+  );
+}
+
+void Menu::initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
+
+  SDL_Texture *settingsBackgroundTexture =
+    _window->loadTexture("../src/graphical/assets/menu/ParamsParty.png");
+    
+  auto params = create_entity<EntityType::Menu>(
+    *_ecs, 
+    Position(100, 100), 
+    Size(400, 300),
+    Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight}, settingsBackgroundTexture),
+    Visibility(false),
+    std::vector<MenuElements>{}
+  );
+}
+
 void Menu::init() {
   _windowWidth = _window->getWindowWidth();
   _windowHeight = _window->getWindowHeight();
+
+  auto [responsiveWidth, responsiveHeight] = calculateResponsiveSize(717, 457, _windowWidth, _windowHeight, 600, 400);
+  auto [posX, posY] = calculateResponsivePosition(500, 400, _windowWidth, _windowHeight);
+
   _window->addText("Cosmic Michou", 50, 50, 500, 50, 100,
                    "../src/graphical/assets/RTypefont.otf",
                    {255, 255, 255, 255});
@@ -67,70 +142,9 @@ void Menu::init() {
   _ecs->add_component<EntityType>(entitie, EntityType::Menu);
   _window->playSound(MICHOU_ET_ELSA_2, -1);
 
-  SDL_Texture *hebergerTexture =
-      _window->loadTexture("../src/graphical/assets/menu/CreateParty.png");
-  SDL_Texture *rejoindreTexture =
-      _window->loadTexture("../src/graphical/assets/menu/JoinParty.png");
-  SDL_Texture *paramsTexture =
-      _window->loadTexture("../src/graphical/assets/menu/ParamsParty.png");
-  SDL_Texture *ship1Texture =
-      _window->loadTexture("../src/graphical/assets/menu/ship1.png");
-  SDL_Texture *ship2Texture =
-      _window->loadTexture("../src/graphical/assets/menu/ship2.png");
-  SDL_Texture *ship3Texture =
-      _window->loadTexture("../src/graphical/assets/menu/ship3.png");
-  SDL_Texture *ship4Texture =
-      _window->loadTexture("../src/graphical/assets/menu/ship4.png");
-
-  
-  auto [newWidth, newHeight] = calculateResponsiveSize(717, 457, _windowWidth, _windowHeight, 600, 400);
-
-  auto [shipWidth, shipHeight] = calculateResponsiveSize(147, 93, _windowWidth, _windowHeight, 100, 200);
-
-  auto [posX, posY] = calculateResponsivePosition(500, 400, _windowWidth, _windowHeight);
-  
-  auto [ship1PosX, ship1PosY] = calculateResponsivePosition(550, 500, _windowWidth, _windowHeight);
-
-  auto [ship2PosX, ship2PosY] = calculateResponsivePosition(650, 500, _windowWidth, _windowHeight);
-
-  auto [ship3PosX, ship3PosY] = calculateResponsivePosition(750, 500, _windowWidth, _windowHeight);
-
-  auto [ship4PosX, ship4PosY] = calculateResponsivePosition(850, 500, _windowWidth, _windowHeight);
-
-  auto host = create_entity<EntityType::Menu>(
-    *_ecs, 
-    Position(100, 100), 
-    Size(400, 300),
-    Draw({0, 0, 0, 0}, {posX, posY, newWidth, newHeight}, hebergerTexture),
-    Visibility(false),
-    std::vector<MenuElements>{}
-  );
-  auto join = create_entity<EntityType::Menu>(
-    *_ecs, 
-    Position(100, 100), 
-    Size(400, 300),
-    Draw({0, 0, 0, 0}, {posX, posY, newWidth, newHeight}, rejoindreTexture),
-    Visibility(false),
-    std::vector<MenuElements>{}
-  );
-auto params = create_entity<EntityType::Menu>(
-    *_ecs, 
-    Position(100, 100), 
-    Size(400, 300),
-    Draw({0, 0, 0, 0}, {posX, posY, newWidth, newHeight}, paramsTexture),
-    Visibility(true),
-    std::vector<MenuElements>{ // Un vecteur contenant un seul MenuElements
-        MenuElements({
-            Boutton(SDL_Rect{ship1PosX, ship1PosY, shipWidth, shipHeight}, "test1", ship1Texture),
-            Boutton(SDL_Rect{ship2PosX, ship2PosY, shipWidth, shipHeight}, "test2", ship2Texture),
-            Boutton(SDL_Rect{ship3PosX, ship3PosY, shipWidth, shipHeight}, "test3", ship3Texture),
-            Boutton(SDL_Rect{ship4PosX, ship4PosY, shipWidth, shipHeight}, "test4", ship4Texture)
-        })
-    }
-);
-
-
-
+  initHostMenu(responsiveWidth, responsiveHeight, posX, posY);
+  initJoinMenu(responsiveWidth, responsiveHeight, posX, posY);
+  initSettingsMenu(responsiveWidth, responsiveHeight, posX, posY);
 }
 
 
@@ -162,22 +176,29 @@ void Menu::setMenu(std::string selectedButton) {
 std::string Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
   _window->getMouseState(&mouseX, &mouseY);
   if (event == MOUSE_CLICK) {
-    for (auto &button : _window->getButtons()) {
-      if (button.isClicked(mouseX, mouseY)) {
-        std::string menu = button.getText();
-        setMenu(menu);
-        return menu;
-      }
-    }
-    for (auto &dropdown : _window->getDropdowns()) {
-      if (dropdown->isClicked(mouseX, mouseY)) {
-        dropdown->toggleOpen();
-        return "";
+    auto &entityType = _ecs->get_components<EntityType>();
+    auto &draw = _ecs->get_components<Draw>();
+    auto &position = _ecs->get_components<Position>();
+    auto &visibility = _ecs->get_components<Visibility>();
+    for (std::size_t i = 0; i < entityType.size(); ++i) {
+      if (entityType[i] == EntityType::Menu && visibility[i]->isVisible) {
+        auto &menuElements = _ecs->get_components<MenuElements>()[i]->elements;
+        for (auto &element : menuElements) {
+          if (std::holds_alternative<Boutton>(element)) {
+            const auto &boutton = std::get<Boutton>(element);
+            if (mouseX >= boutton.rect.x && mouseX <= boutton.rect.x + boutton.rect.w &&
+                mouseY >= boutton.rect.y && mouseY <= boutton.rect.y + boutton.rect.h) {
+              std::cout << "click on boutton" << std::endl;
+              return "";
+            }
+          }
+        }
       }
     }
   }
   return "";
 }
+
 
 
 sceneType Menu::loop(eventType event,
@@ -194,81 +215,26 @@ sceneType Menu::loop(eventType event,
 
   auto button = mouseHandler(mouseX, mouseY, event);
 
-  if (event == MOUSE_CLICK) {
-    mouseButtonPressed = true;
-  } else if (event == MOUSE_RELEASE) {
-    mouseButtonPressed = false;
-  }
-
-  if (button == "Heberger" && event == MOUSE_CLICK) {
-    if (visibility[1]->isVisible) {
-      visibility[1]->isVisible = false;
-    } else {
-      visibility[1]->isVisible = true;
-      for (std::size_t i = 0; i < entityType.size(); ++i) {
-        if (entityType[i] == EntityType::Menu && i != 1) {
-          visibility[i]->isVisible = false;
-        }
-      }
-    }
-  }
-
-  if (button == "Rejoindre" && event == MOUSE_CLICK) {
-    if (visibility[1]->isVisible) {
-      visibility[1]->isVisible = false;
-    } else {
-      visibility[1]->isVisible = true;
-      for (std::size_t i = 0; i < entityType.size(); ++i) {
-        if (entityType[i] == EntityType::Menu && i != 1) {
-          visibility[i]->isVisible = false;
-        }
-      }
-    }
-  }
-
-  if (button == "Parametres" && event == MOUSE_CLICK) {
-    if (visibility[3]->isVisible) {
-      visibility[3]->isVisible = false;
-    } else {
-      visibility[3]->isVisible = true;
-      for (std::size_t i = 0; i < entityType.size(); ++i) {
-        if (entityType[i] == EntityType::Menu && i != 3) {
-          visibility[i]->isVisible = false;
-        }
-      }
-    }
-  }
-
   _window->drawBackground();
   _window->drawButton("menu");
   _window->createMenuPipe();
 
   _window->drawText();
   _window->drawButton("window");
-  //_window->drawDropdown();
 
-for (std::size_t i = 0; i < entityType.size(); ++i) {
+  for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i] == EntityType::Menu && visibility[i]->isVisible) {
-        _window->draw(draw[i]->texture, draw[i]->rect);
-
-        auto &menuElements = _ecs->get_components<MenuElements>()[i]->elements;
-
-        for (auto &element : menuElements) {
-            if (std::holds_alternative<Boutton>(element)) {
-                const auto &boutton = std::get<Boutton>(element);
-
-                if (boutton.texture != nullptr && boutton.rect.w > 0 && boutton.rect.h > 0) {
-                    _window->draw(boutton.texture, boutton.rect);
-                }
-            }
+      _window->draw(draw[i]->texture, draw[i]->rect);
+      auto &menuElements = _ecs->get_components<MenuElements>()[i]->elements;
+      for (auto &element : menuElements) {
+        if (std::holds_alternative<Boutton>(element)) {
+          const auto &boutton = std::get<Boutton>(element);
+          if (boutton.texture != nullptr && boutton.rect.w > 0 && boutton.rect.h > 0) {
+            _window->draw(boutton.texture, boutton.rect);
+          }
         }
+      }
     }
-}
-
-  if (button == "Quitter" && event == MOUSE_CLICK) {
-    _window->deleteTexts();
-    _window->deleteButtons();
-    return sceneType::HISTORY;
   }
 
   return sceneType::NO_SWITCH;

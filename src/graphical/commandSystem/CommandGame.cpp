@@ -238,6 +238,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
       *ecs, Position(command.shoot.positionX, command.shoot.positionY),
       Velocity(velocity, 0),
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, shootTexture),
+      PlayerId(command.shoot.playerId),
       std::optional<std::size_t>(command.shoot.bulletId));
 
   window->playSound(BULLET_SOUND, 0);

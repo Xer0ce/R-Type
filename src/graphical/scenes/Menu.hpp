@@ -24,6 +24,12 @@ public:
 
   void setMenu(std::string selectedButton);
 
+  void initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+
+  void initJoinMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+
+  void initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+
 private:
   std::string _selectedButton;
   std::string _menuTitle;
