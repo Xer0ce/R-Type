@@ -7,40 +7,48 @@
 
 #include "Menu.hpp"
 
-Menu::Menu() {
-  _name = "Menu";
-}
+Menu::Menu() { _name = "Menu"; }
 
 Menu::~Menu() {}
 
-std::pair<int, int> calculateResponsivePosition(int initialX, int initialY, int windowWidth, int windowHeight) {
-    int referenceWidth = 1920;
-    int referenceHeight = 1080;
+std::pair<int, int> calculateResponsivePosition(int initialX, int initialY,
+                                                int windowWidth,
+                                                int windowHeight) {
+  int referenceWidth = 1920;
+  int referenceHeight = 1080;
 
-    float widthRatio = static_cast<float>(windowWidth) / static_cast<float>(referenceWidth);
-    float heightRatio = static_cast<float>(windowHeight) / static_cast<float>(referenceHeight);
+  float widthRatio =
+      static_cast<float>(windowWidth) / static_cast<float>(referenceWidth);
+  float heightRatio =
+      static_cast<float>(windowHeight) / static_cast<float>(referenceHeight);
 
-    int posX = static_cast<int>(initialX * widthRatio);
-    int posY = static_cast<int>(initialY * heightRatio);
+  int posX = static_cast<int>(initialX * widthRatio);
+  int posY = static_cast<int>(initialY * heightRatio);
 
-    return {posX, posY};
+  return {posX, posY};
 }
 
-std::pair<int, int> calculateResponsiveSize(int originalWidth, int originalHeight, int windowWidth, int windowHeight, int arbitraryWidth, int arbitraryHeight) {
-    float aspectRatio = static_cast<float>(originalWidth) / static_cast<float>(originalHeight);
+std::pair<int, int> calculateResponsiveSize(int originalWidth,
+                                            int originalHeight, int windowWidth,
+                                            int windowHeight,
+                                            int arbitraryWidth,
+                                            int arbitraryHeight) {
+  float aspectRatio =
+      static_cast<float>(originalWidth) / static_cast<float>(originalHeight);
 
-    int newWidth = arbitraryWidth;
-    int newHeight = static_cast<int>(arbitraryWidth / aspectRatio);
+  int newWidth = arbitraryWidth;
+  int newHeight = static_cast<int>(arbitraryWidth / aspectRatio);
 
-    if (newHeight > arbitraryHeight) {
-        newHeight = arbitraryHeight;
-        newWidth = static_cast<int>(arbitraryHeight * aspectRatio);
-    }
+  if (newHeight > arbitraryHeight) {
+    newHeight = arbitraryHeight;
+    newWidth = static_cast<int>(arbitraryHeight * aspectRatio);
+  }
 
-    return {newWidth, newHeight};
+  return {newWidth, newHeight};
 }
 
-void Menu::initMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
+void Menu::initMenu(int responsiveWidth, int responsiveHeight, int posX,
+                    int posY) {
   SDL_Texture *pipeMenuTexture =
       _window->loadTexture("../src/graphical/assets/menu/menuPipe.png");
 
@@ -61,35 +69,41 @@ void Menu::initMenu(int responsiveWidth, int responsiveHeight, int posX, int pos
   SDL_Texture *selectedexitTexture =
       _window->loadTexture("../src/graphical/assets/menu/selectedleft.png");
 
-  auto [buttontWidth, buttonHeight] = calculateResponsiveSize(393, 55, _windowWidth, _windowHeight, 350, 100);
-  
-  auto [hostPosX, hostPosY] = calculateResponsivePosition((posX + 50), (posY + 100), _windowWidth, _windowHeight);
+  auto [buttontWidth, buttonHeight] =
+      calculateResponsiveSize(393, 55, _windowWidth, _windowHeight, 350, 100);
 
-  auto [joinPosX, joinPosY] = calculateResponsivePosition((posX + 50), (posY + 180), _windowWidth, _windowHeight);
+  auto [hostPosX, hostPosY] = calculateResponsivePosition(
+      (posX + 50), (posY + 100), _windowWidth, _windowHeight);
 
-  auto [paramsPosX, paramsPosY] = calculateResponsivePosition((posX + 50), (posY + 260), _windowWidth, _windowHeight);
+  auto [joinPosX, joinPosY] = calculateResponsivePosition(
+      (posX + 50), (posY + 180), _windowWidth, _windowHeight);
 
-  auto [exitPosX, exitPosY] = calculateResponsivePosition((posX + 50), (posY + 340), _windowWidth, _windowHeight);
+  auto [paramsPosX, paramsPosY] = calculateResponsivePosition(
+      (posX + 50), (posY + 260), _windowWidth, _windowHeight);
+
+  auto [exitPosX, exitPosY] = calculateResponsivePosition(
+      (posX + 50), (posY + 340), _windowWidth, _windowHeight);
 
   auto join = create_entity<EntityType::Menu>(
-    *_ecs, 
-    Position(posX, posY), 
-    Size(responsiveWidth, responsiveHeight),
-    Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight}, pipeMenuTexture),
-    Visibility(true),
-    MenuType::menu,
-    std::vector<MenuElements>{
-        MenuElements({
-            Boutton(SDL_Rect{hostPosX, hostPosY, buttontWidth, buttonHeight}, "host", hostTexture, selectedhostTexture, false, false, 1),
-            Boutton(SDL_Rect{joinPosX, joinPosY, buttontWidth, buttonHeight}, "join", joinTexture, selectedjoinTexture, false, false, 1),
-            Boutton(SDL_Rect{paramsPosX, paramsPosY, buttontWidth, buttonHeight}, "params", paramsTexture, selectedparamsTexture, false, false, 1),
-            Boutton(SDL_Rect{exitPosX, exitPosY, buttontWidth, buttonHeight}, "exit", exitTexture, selectedexitTexture, false, false, 1),
-        })
-    }
-  );
+      *_ecs, Position(posX, posY), Size(responsiveWidth, responsiveHeight),
+      Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight},
+           pipeMenuTexture),
+      Visibility(true), MenuType::menu,
+      std::vector<MenuElements>{MenuElements({
+          Boutton(SDL_Rect{hostPosX, hostPosY, buttontWidth, buttonHeight},
+                  "host", hostTexture, selectedhostTexture, false, false, 1),
+          Boutton(SDL_Rect{joinPosX, joinPosY, buttontWidth, buttonHeight},
+                  "join", joinTexture, selectedjoinTexture, false, false, 1),
+          Boutton(SDL_Rect{paramsPosX, paramsPosY, buttontWidth, buttonHeight},
+                  "params", paramsTexture, selectedparamsTexture, false, false,
+                  1),
+          Boutton(SDL_Rect{exitPosX, exitPosY, buttontWidth, buttonHeight},
+                  "exit", exitTexture, selectedexitTexture, false, false, 1),
+      })});
 }
 
-void Menu::initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
+void Menu::initHostMenu(int responsiveWidth, int responsiveHeight, int posX,
+                        int posY) {
 
   SDL_Texture *hostBackgroundTexture =
       _window->loadTexture("../src/graphical/assets/menu/CreateParty.svg");
@@ -106,7 +120,7 @@ void Menu::initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int
       _window->loadTexture("../src/graphical/assets/menu/history.png");
   SDL_Texture *selectedhistoryTexture =
       _window->loadTexture("../src/graphical/assets/menu/selectedhistory.png");
-    
+
   SDL_Texture *ship1Texture =
       _window->loadTexture("../src/graphical/assets/menu/ship1.png");
   SDL_Texture *selectedship1Texture =
@@ -123,7 +137,7 @@ void Menu::initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int
       _window->loadTexture("../src/graphical/assets/menu/ship4.png");
   SDL_Texture *selectedship4Texture =
       _window->loadTexture("../src/graphical/assets/menu/selectedship4.png");
-SDL_Texture *shoot1Texture =
+  SDL_Texture *shoot1Texture =
       _window->loadTexture("../src/graphical/assets/menu/shoot1.png");
   SDL_Texture *selectedshoot1Texture =
       _window->loadTexture("../src/graphical/assets/menu/selectedshoot1.png");
@@ -141,68 +155,104 @@ SDL_Texture *shoot1Texture =
       _window->loadTexture("../src/graphical/assets/menu/selectedshoot4.png");
   SDL_Texture *createPartyTexture =
       _window->loadTexture("../src/graphical/assets/menu/createPartyBtn.png");
-  SDL_Texture *createPartySelTexture =
-      _window->loadTexture("../src/graphical/assets/menu/createPartyBtnSel.png");
-  
-  auto [shipWidth, shipHeight] = calculateResponsiveSize(147, 93, _windowWidth, _windowHeight, 160, 250);
+  SDL_Texture *createPartySelTexture = _window->loadTexture(
+      "../src/graphical/assets/menu/createPartyBtnSel.png");
 
-  auto [createPartyWidth, createPartyHeight] = calculateResponsiveSize(686, 60, _windowWidth, _windowHeight, 620, 250);
+  auto [shipWidth, shipHeight] =
+      calculateResponsiveSize(147, 93, _windowWidth, _windowHeight, 160, 250);
 
-  auto [gameModeWidth, gameModeHeight] = calculateResponsiveSize(133, 60, _windowWidth, _windowHeight, 120, 80);
+  auto [createPartyWidth, createPartyHeight] =
+      calculateResponsiveSize(686, 60, _windowWidth, _windowHeight, 620, 250);
 
-  auto [shootWidth, shootHeight] = calculateResponsiveSize(686, 60, _windowWidth, _windowHeight, 600, 200);
-  
-  auto [ship1PosX, ship1PosY] = calculateResponsivePosition(740, 518, _windowWidth, _windowHeight);
+  auto [gameModeWidth, gameModeHeight] =
+      calculateResponsiveSize(133, 60, _windowWidth, _windowHeight, 120, 80);
 
-  auto [ship2PosX, ship2PosY] = calculateResponsivePosition(985, 515, _windowWidth, _windowHeight);
+  auto [shootWidth, shootHeight] =
+      calculateResponsiveSize(686, 60, _windowWidth, _windowHeight, 600, 200);
 
-  auto [ship3PosX, ship3PosY] = calculateResponsivePosition(1230, 515, _windowWidth, _windowHeight);
+  auto [ship1PosX, ship1PosY] =
+      calculateResponsivePosition(740, 518, _windowWidth, _windowHeight);
 
-  auto [ship4PosX, ship4PosY] = calculateResponsivePosition(1480, 515, _windowWidth, _windowHeight);
+  auto [ship2PosX, ship2PosY] =
+      calculateResponsivePosition(985, 515, _windowWidth, _windowHeight);
 
-  auto [shoot1PosX, shoot1PosY] = calculateResponsivePosition(740, 700, _windowWidth, _windowHeight);
+  auto [ship3PosX, ship3PosY] =
+      calculateResponsivePosition(1230, 515, _windowWidth, _windowHeight);
 
-  auto [shoot2PosX, shoot2PosY] = calculateResponsivePosition(985, 700, _windowWidth, _windowHeight);
+  auto [ship4PosX, ship4PosY] =
+      calculateResponsivePosition(1480, 515, _windowWidth, _windowHeight);
 
-  auto [shoot3PosX, shoot3PosY] = calculateResponsivePosition(1230, 700, _windowWidth, _windowHeight);
+  auto [shoot1PosX, shoot1PosY] =
+      calculateResponsivePosition(740, 700, _windowWidth, _windowHeight);
 
-  auto [shoot4PosX, shoot4PosY] = calculateResponsivePosition(1480, 700, _windowWidth, _windowHeight);
+  auto [shoot2PosX, shoot2PosY] =
+      calculateResponsivePosition(985, 700, _windowWidth, _windowHeight);
 
-  auto [endlessPosX, endlessPosY] = calculateResponsivePosition(740, 430, _windowWidth, _windowHeight);
+  auto [shoot3PosX, shoot3PosY] =
+      calculateResponsivePosition(1230, 700, _windowWidth, _windowHeight);
 
-  auto [onevsonePosX, onevsonePosY] = calculateResponsivePosition(915, 430, _windowWidth, _windowHeight);
-  
-  auto [historyPosX, historyPosY] = calculateResponsivePosition(1090, 430, _windowWidth, _windowHeight);
+  auto [shoot4PosX, shoot4PosY] =
+      calculateResponsivePosition(1480, 700, _windowWidth, _windowHeight);
 
-  auto [createPartyPosX, createPartyPosY] = calculateResponsivePosition(740, 850, _windowWidth, _windowHeight);
+  auto [endlessPosX, endlessPosY] =
+      calculateResponsivePosition(740, 430, _windowWidth, _windowHeight);
+
+  auto [onevsonePosX, onevsonePosY] =
+      calculateResponsivePosition(915, 430, _windowWidth, _windowHeight);
+
+  auto [historyPosX, historyPosY] =
+      calculateResponsivePosition(1090, 430, _windowWidth, _windowHeight);
+
+  auto [createPartyPosX, createPartyPosY] =
+      calculateResponsivePosition(740, 850, _windowWidth, _windowHeight);
 
   auto host = create_entity<EntityType::Menu>(
-    *_ecs, 
-    Position(posX, posY), 
-    Size(responsiveWidth, responsiveHeight),
-    Draw({255, 255, 255, 255}, {posX, posY, responsiveWidth, responsiveHeight}, hostBackgroundTexture),
-    Visibility(false),
-    MenuType::host,
-    std::vector<MenuElements>{
-        MenuElements({
-            Boutton(SDL_Rect{endlessPosX, endlessPosY, gameModeWidth, gameModeHeight}, "gamemode", endlessTexture, selectedendlessTexture, false, false, 1),
-            Boutton(SDL_Rect{onevsonePosX, onevsonePosY, gameModeWidth, gameModeHeight}, "gamemode", onevsoneTexture, selectedonevsoneTexture, false, false, 2),
-            Boutton(SDL_Rect{historyPosX, historyPosY, gameModeWidth, gameModeHeight}, "gamemode", historyTexture, selectedhistoryTexture, false, false, 3),
-            Boutton(SDL_Rect{ship1PosX, ship1PosY, shipWidth, shipHeight}, "ship", ship1Texture, selectedship1Texture, false, false, 1),
-            Boutton(SDL_Rect{ship2PosX, ship2PosY, shipWidth, shipHeight}, "ship", ship2Texture, selectedship2Texture, false, false, 2),
-            Boutton(SDL_Rect{ship3PosX, ship3PosY, shipWidth, shipHeight}, "ship", ship3Texture, selectedship3Texture, false, false, 3),
-            Boutton(SDL_Rect{ship4PosX, ship4PosY, shipWidth, shipHeight}, "ship", ship4Texture, selectedship4Texture, false, false, 4),
-            Boutton(SDL_Rect{shoot1PosX, shoot1PosY, shipWidth, shipHeight}, "shoot", shoot1Texture, selectedshoot1Texture, false, false, 1),
-            Boutton(SDL_Rect{shoot2PosX, shoot2PosY, shipWidth, shipHeight}, "shoot", shoot2Texture, selectedshoot2Texture, false, false, 2),
-            Boutton(SDL_Rect{shoot3PosX, shoot3PosY, shipWidth, shipHeight}, "shoot", shoot3Texture, selectedshoot3Texture, false, false, 3),
-            Boutton(SDL_Rect{shoot4PosX, shoot4PosY, shipWidth, shipHeight}, "shoot", shoot4Texture, selectedshoot4Texture, false, false, 4),
-            Boutton(SDL_Rect{createPartyPosX, createPartyPosY, createPartyWidth, createPartyHeight}, "createParty", createPartyTexture, createPartySelTexture, 0)
-        })
-    }
-  );
+      *_ecs, Position(posX, posY), Size(responsiveWidth, responsiveHeight),
+      Draw({255, 255, 255, 255},
+           {posX, posY, responsiveWidth, responsiveHeight},
+           hostBackgroundTexture),
+      Visibility(false), MenuType::host,
+      std::vector<MenuElements>{MenuElements(
+          {Boutton(SDL_Rect{endlessPosX, endlessPosY, gameModeWidth,
+                            gameModeHeight},
+                   "gamemode", endlessTexture, selectedendlessTexture, false,
+                   false, 1),
+           Boutton(SDL_Rect{onevsonePosX, onevsonePosY, gameModeWidth,
+                            gameModeHeight},
+                   "gamemode", onevsoneTexture, selectedonevsoneTexture, false,
+                   false, 2),
+           Boutton(SDL_Rect{historyPosX, historyPosY, gameModeWidth,
+                            gameModeHeight},
+                   "gamemode", historyTexture, selectedhistoryTexture, false,
+                   false, 3),
+           Boutton(SDL_Rect{ship1PosX, ship1PosY, shipWidth, shipHeight},
+                   "ship", ship1Texture, selectedship1Texture, false, false, 1),
+           Boutton(SDL_Rect{ship2PosX, ship2PosY, shipWidth, shipHeight},
+                   "ship", ship2Texture, selectedship2Texture, false, false, 2),
+           Boutton(SDL_Rect{ship3PosX, ship3PosY, shipWidth, shipHeight},
+                   "ship", ship3Texture, selectedship3Texture, false, false, 3),
+           Boutton(SDL_Rect{ship4PosX, ship4PosY, shipWidth, shipHeight},
+                   "ship", ship4Texture, selectedship4Texture, false, false, 4),
+           Boutton(SDL_Rect{shoot1PosX, shoot1PosY, shipWidth, shipHeight},
+                   "shoot", shoot1Texture, selectedshoot1Texture, false, false,
+                   1),
+           Boutton(SDL_Rect{shoot2PosX, shoot2PosY, shipWidth, shipHeight},
+                   "shoot", shoot2Texture, selectedshoot2Texture, false, false,
+                   2),
+           Boutton(SDL_Rect{shoot3PosX, shoot3PosY, shipWidth, shipHeight},
+                   "shoot", shoot3Texture, selectedshoot3Texture, false, false,
+                   3),
+           Boutton(SDL_Rect{shoot4PosX, shoot4PosY, shipWidth, shipHeight},
+                   "shoot", shoot4Texture, selectedshoot4Texture, false, false,
+                   4),
+           Boutton(SDL_Rect{createPartyPosX, createPartyPosY, createPartyWidth,
+                            createPartyHeight},
+                   "createParty", createPartyTexture, createPartySelTexture,
+                   0)})});
 }
 
-void Menu::initJoinMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
+void Menu::initJoinMenu(int responsiveWidth, int responsiveHeight, int posX,
+                        int posY) {
   SDL_Rect optionRect = {100, 150, 200, 50};
 
   SDL_Texture *joinBackgroundTexture =
@@ -245,85 +295,108 @@ void Menu::initJoinMenu(int responsiveWidth, int responsiveHeight, int posX, int
   SDL_Texture *joinPartySelTexture =
       _window->loadTexture("../src/graphical/assets/menu/joinPartyBtnSel.png");
 
-  auto [joinPartyWidth, joinPartyHeight] = calculateResponsiveSize(686, 60, _windowWidth, _windowHeight, 620, 250);
-  
-  auto [shipWidth, shipHeight] = calculateResponsiveSize(147, 93, _windowWidth, _windowHeight, 160, 250);
-  
-  auto [ship1PosX, ship1PosY] = calculateResponsivePosition(740, 518, _windowWidth, _windowHeight);
+  auto [joinPartyWidth, joinPartyHeight] =
+      calculateResponsiveSize(686, 60, _windowWidth, _windowHeight, 620, 250);
 
-  auto [ship2PosX, ship2PosY] = calculateResponsivePosition(985, 515, _windowWidth, _windowHeight);
+  auto [shipWidth, shipHeight] =
+      calculateResponsiveSize(147, 93, _windowWidth, _windowHeight, 160, 250);
 
-  auto [ship3PosX, ship3PosY] = calculateResponsivePosition(1230, 515, _windowWidth, _windowHeight);
+  auto [ship1PosX, ship1PosY] =
+      calculateResponsivePosition(740, 518, _windowWidth, _windowHeight);
 
-  auto [ship4PosX, ship4PosY] = calculateResponsivePosition(1480, 515, _windowWidth, _windowHeight);
+  auto [ship2PosX, ship2PosY] =
+      calculateResponsivePosition(985, 515, _windowWidth, _windowHeight);
 
-  auto [shoot1PosX, shoot1PosY] = calculateResponsivePosition(740, 700, _windowWidth, _windowHeight);
+  auto [ship3PosX, ship3PosY] =
+      calculateResponsivePosition(1230, 515, _windowWidth, _windowHeight);
 
-  auto [shoot2PosX, shoot2PosY] = calculateResponsivePosition(985, 700, _windowWidth, _windowHeight);
+  auto [ship4PosX, ship4PosY] =
+      calculateResponsivePosition(1480, 515, _windowWidth, _windowHeight);
 
-  auto [shoot3PosX, shoot3PosY] = calculateResponsivePosition(1230, 700, _windowWidth, _windowHeight);
+  auto [shoot1PosX, shoot1PosY] =
+      calculateResponsivePosition(740, 700, _windowWidth, _windowHeight);
 
-  auto [shoot4PosX, shoot4PosY] = calculateResponsivePosition(1480, 700, _windowWidth, _windowHeight);
+  auto [shoot2PosX, shoot2PosY] =
+      calculateResponsivePosition(985, 700, _windowWidth, _windowHeight);
 
-  auto [endlessPosX, endlessPosY] = calculateResponsivePosition(740, 430, _windowWidth, _windowHeight);
+  auto [shoot3PosX, shoot3PosY] =
+      calculateResponsivePosition(1230, 700, _windowWidth, _windowHeight);
 
-  auto [onevsonePosX, onevsonePosY] = calculateResponsivePosition(915, 430, _windowWidth, _windowHeight);
-  
-  auto [historyPosX, historyPosY] = calculateResponsivePosition(1090, 430, _windowWidth, _windowHeight);
+  auto [shoot4PosX, shoot4PosY] =
+      calculateResponsivePosition(1480, 700, _windowWidth, _windowHeight);
 
-  auto [joinPartyPosX, joinPartyPosY] = calculateResponsivePosition(740, 850, _windowWidth, _windowHeight);
+  auto [endlessPosX, endlessPosY] =
+      calculateResponsivePosition(740, 430, _windowWidth, _windowHeight);
+
+  auto [onevsonePosX, onevsonePosY] =
+      calculateResponsivePosition(915, 430, _windowWidth, _windowHeight);
+
+  auto [historyPosX, historyPosY] =
+      calculateResponsivePosition(1090, 430, _windowWidth, _windowHeight);
+
+  auto [joinPartyPosX, joinPartyPosY] =
+      calculateResponsivePosition(740, 850, _windowWidth, _windowHeight);
 
   auto join = create_entity<EntityType::Menu>(
-    *_ecs, 
-    Position(posX, posY), 
-    Size(400, 300),
-    Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight}, joinBackgroundTexture),
-    Visibility(false),
-    MenuType::join,
-    std::vector<MenuElements>{
-        MenuElements({
-            Boutton(SDL_Rect{ship1PosX, ship1PosY, shipWidth, shipHeight}, "ship", ship1Texture, selectedship1Texture, false, false, 1),
-            Boutton(SDL_Rect{ship2PosX, ship2PosY, shipWidth, shipHeight}, "ship", ship2Texture, selectedship2Texture, false, false, 2),
-            Boutton(SDL_Rect{ship3PosX, ship3PosY, shipWidth, shipHeight}, "ship", ship3Texture, selectedship3Texture, false, false, 3),
-            Boutton(SDL_Rect{ship4PosX, ship4PosY, shipWidth, shipHeight}, "ship", ship4Texture, selectedship4Texture, false, false, 4),
-            Boutton(SDL_Rect{shoot1PosX, shoot1PosY, shipWidth, shipHeight}, "shoot", shoot1Texture, selectedshoot1Texture, false, false, 1),
-            Boutton(SDL_Rect{shoot2PosX, shoot2PosY, shipWidth, shipHeight}, "shoot", shoot2Texture, selectedshoot2Texture, false, false, 2),
-            Boutton(SDL_Rect{shoot3PosX, shoot3PosY, shipWidth, shipHeight}, "shoot", shoot3Texture, selectedshoot3Texture, false, false, 3),
-            Boutton(SDL_Rect{shoot4PosX, shoot4PosY, shipWidth, shipHeight}, "shoot", shoot4Texture, selectedshoot4Texture, false, false, 4),
-            Boutton(SDL_Rect{joinPartyPosX, joinPartyPosY, joinPartyWidth, joinPartyHeight}, "joinparty", joinPartyTexture, joinPartySelTexture, 0)
-        })
-    }
-  );
+      *_ecs, Position(posX, posY), Size(400, 300),
+      Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight},
+           joinBackgroundTexture),
+      Visibility(false), MenuType::join,
+      std::vector<MenuElements>{MenuElements(
+          {Boutton(SDL_Rect{ship1PosX, ship1PosY, shipWidth, shipHeight},
+                   "ship", ship1Texture, selectedship1Texture, false, false, 1),
+           Boutton(SDL_Rect{ship2PosX, ship2PosY, shipWidth, shipHeight},
+                   "ship", ship2Texture, selectedship2Texture, false, false, 2),
+           Boutton(SDL_Rect{ship3PosX, ship3PosY, shipWidth, shipHeight},
+                   "ship", ship3Texture, selectedship3Texture, false, false, 3),
+           Boutton(SDL_Rect{ship4PosX, ship4PosY, shipWidth, shipHeight},
+                   "ship", ship4Texture, selectedship4Texture, false, false, 4),
+           Boutton(SDL_Rect{shoot1PosX, shoot1PosY, shipWidth, shipHeight},
+                   "shoot", shoot1Texture, selectedshoot1Texture, false, false,
+                   1),
+           Boutton(SDL_Rect{shoot2PosX, shoot2PosY, shipWidth, shipHeight},
+                   "shoot", shoot2Texture, selectedshoot2Texture, false, false,
+                   2),
+           Boutton(SDL_Rect{shoot3PosX, shoot3PosY, shipWidth, shipHeight},
+                   "shoot", shoot3Texture, selectedshoot3Texture, false, false,
+                   3),
+           Boutton(SDL_Rect{shoot4PosX, shoot4PosY, shipWidth, shipHeight},
+                   "shoot", shoot4Texture, selectedshoot4Texture, false, false,
+                   4),
+           Boutton(SDL_Rect{joinPartyPosX, joinPartyPosY, joinPartyWidth,
+                            joinPartyHeight},
+                   "joinparty", joinPartyTexture, joinPartySelTexture, 0)})});
 }
 
-void Menu::initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
+void Menu::initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX,
+                            int posY) {
 
   SDL_Texture *settingsBackgroundTexture =
-    _window->loadTexture("../src/graphical/assets/menu/ParamsParty.png");
-    
-  auto params = create_entity<EntityType::Menu> (
-    *_ecs,
-    Position(posX, posY), 
-    Size(400, 300),
-    Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight}, settingsBackgroundTexture),
-    Visibility(false),
-    MenuType::settings,
-    std::vector<MenuElements>{}
-  );
+      _window->loadTexture("../src/graphical/assets/menu/ParamsParty.png");
+
+  auto params = create_entity<EntityType::Menu>(
+      *_ecs, Position(posX, posY), Size(400, 300),
+      Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight},
+           settingsBackgroundTexture),
+      Visibility(false), MenuType::settings, std::vector<MenuElements>{});
 }
 
 void Menu::init() {
   _windowWidth = _window->getWindowWidth();
   _windowHeight = _window->getWindowHeight();
 
-  auto [responsiveWidth, responsiveHeight] = calculateResponsiveSize(717, 457, _windowWidth, _windowHeight, 700, 450);
-  auto [responsivePipeWidth, responsivePipeHeight] = calculateResponsiveSize(4, 266, _windowWidth, _windowHeight, 250, 230);
-  auto [posX, posY] = calculateResponsivePosition(690, 350, _windowWidth, _windowHeight);
-  auto [posMenuX, posMenuY] = calculateResponsivePosition(110, 350, _windowWidth, _windowHeight);
+  auto [responsiveWidth, responsiveHeight] =
+      calculateResponsiveSize(717, 457, _windowWidth, _windowHeight, 700, 450);
+  auto [responsivePipeWidth, responsivePipeHeight] =
+      calculateResponsiveSize(4, 266, _windowWidth, _windowHeight, 250, 230);
+  auto [posX, posY] =
+      calculateResponsivePosition(690, 350, _windowWidth, _windowHeight);
+  auto [posMenuX, posMenuY] =
+      calculateResponsivePosition(110, 350, _windowWidth, _windowHeight);
 
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/menu/menu.png"));
-  
+
   _window->playSound(MICHOU_ET_ELSA_2, -1);
 
   initMenu(responsivePipeWidth, responsivePipeHeight, posMenuX, posMenuY);
@@ -425,7 +498,8 @@ void Menu::buttonSystem(Boutton &boutton) {
       _spaceshipId = boutton.value;
     }
     if (boutton.label == "shoot") {
-      std::cout << "gamemode value selected id : " << boutton.value << std::endl;
+      std::cout << "gamemode value selected id : " << boutton.value
+                << std::endl;
       _bulletId = boutton.value;
     }
     if (boutton.label == "gamemode") {
@@ -456,33 +530,33 @@ void Menu::buttonSystem(Boutton &boutton) {
     if (boutton.label == "host") {
       auto &visibility = _ecs->get_components<Visibility>();
       auto &menuType = _ecs->get_components<MenuType>();
-        if (visibility[1]->isVisible) {
-          visibility[1]->isVisible = false;
-        } else {
-          hideAllMenu();
-          resetGameValues();
-          visibility[1]->isVisible = true;
-        }
+      if (visibility[1]->isVisible) {
+        visibility[1]->isVisible = false;
+      } else {
+        hideAllMenu();
+        resetGameValues();
+        visibility[1]->isVisible = true;
+      }
     }
     if (boutton.label == "join") {
       auto &visibility = _ecs->get_components<Visibility>();
-        if (visibility[2]->isVisible) {
-          visibility[2]->isVisible = false;
-        } else {
-          hideAllMenu();
-          resetGameValues();
-          visibility[2]->isVisible = true;
-        }
+      if (visibility[2]->isVisible) {
+        visibility[2]->isVisible = false;
+      } else {
+        hideAllMenu();
+        resetGameValues();
+        visibility[2]->isVisible = true;
+      }
     }
     if (boutton.label == "params") {
       auto &visibility = _ecs->get_components<Visibility>();
-        if (visibility[3]->isVisible) {
-          visibility[3]->isVisible = false;
-        } else {
-          hideAllMenu();
-          resetGameValues();
-          visibility[3]->isVisible = true;
-        }
+      if (visibility[3]->isVisible) {
+        visibility[3]->isVisible = false;
+      } else {
+        hideAllMenu();
+        resetGameValues();
+        visibility[3]->isVisible = true;
+      }
     }
     if (boutton.label == "exit") {
       _window->deleteTexts();
@@ -514,8 +588,10 @@ void Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
         for (auto &element : menuElements) {
           if (std::holds_alternative<Boutton>(element)) {
             auto &boutton = std::get<Boutton>(element);
-            if (mouseX >= boutton.rect.x && mouseX <= boutton.rect.x + boutton.rect.w &&
-                mouseY >= boutton.rect.y && mouseY <= boutton.rect.y + boutton.rect.h) {
+            if (mouseX >= boutton.rect.x &&
+                mouseX <= boutton.rect.x + boutton.rect.w &&
+                mouseY >= boutton.rect.y &&
+                mouseY <= boutton.rect.y + boutton.rect.h) {
               if (!boutton.isClicked) {
                 unclickAllBoutton(boutton, menuType[i].value());
                 boutton.isClicked = true;
@@ -534,7 +610,8 @@ void Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
   return;
 }
 
-sceneType Menu::loop(eventType event,
+sceneType
+Menu::loop(eventType event,
            std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   auto key = _window->catchKey();
   float mouseX, mouseY;
@@ -546,7 +623,6 @@ sceneType Menu::loop(eventType event,
   auto &position = _ecs->get_components<Position>();
   auto &visibility = _ecs->get_components<Visibility>();
 
-
   _window->drawBackground();
   mouseHandler(mouseX, mouseY, event);
 
@@ -557,7 +633,8 @@ sceneType Menu::loop(eventType event,
       for (auto &element : menuElements) {
         if (std::holds_alternative<Boutton>(element)) {
           const auto &boutton = std::get<Boutton>(element);
-          if (boutton.texture != nullptr && boutton.rect.w > 0 && boutton.rect.h > 0) {
+          if (boutton.texture != nullptr && boutton.rect.w > 0 &&
+              boutton.rect.h > 0) {
             if (boutton.isClicked) {
               _window->draw(boutton.selectedTexture, boutton.rect);
             } else {

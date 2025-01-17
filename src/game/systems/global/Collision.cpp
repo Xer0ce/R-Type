@@ -8,10 +8,10 @@
 #include "GlobalSystem.hpp"
 
 void collision_system(Registry *ecs, Queue *queue) {
-  //auto &position = ecs->get_components<Position>();
-  //auto &entityType = ecs->get_components<EntityType>();
-//
-  //for (std::size_t i = 0; i < position.size(); i++) {
+  // auto &position = ecs->get_components<Position>();
+  // auto &entityType = ecs->get_components<EntityType>();
+  //
+  // for (std::size_t i = 0; i < position.size(); i++) {
   //  if (entityType[i] == EntityType::Projectile) {
   //    if (position[i]->x > 1200) {
   //      ecs->kill_entity(Entities(i));
@@ -29,7 +29,7 @@ void collision_system(Registry *ecs, Queue *queue) {
   //          ecs->kill_entity(Entities(j));
   //          ecs->kill_entity(Entities(i));
   //          Command cmd;
-//
+  //
   //          cmd.type = CommandType::KILLENTITY;
   //          cmd.killEntity.entityId = i;
   //          queue->pushTcpQueue(cmd);

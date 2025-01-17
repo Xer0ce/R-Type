@@ -20,7 +20,6 @@ public:
   loop(eventType event,
        std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
-
   void resetGameValues();
 
   bool isGameReady();
@@ -35,11 +34,14 @@ public:
 
   void initMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
 
-  void initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initHostMenu(int responsiveWidth, int responsiveHeight, int posX,
+                    int posY);
 
-  void initJoinMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initJoinMenu(int responsiveWidth, int responsiveHeight, int posX,
+                    int posY);
 
-  void initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX,
+                        int posY);
 
   void mouseHandler(float mouseX, float mouseY, eventType event);
 
