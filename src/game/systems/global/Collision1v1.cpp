@@ -11,6 +11,7 @@ void collision_system_1v1(Registry *ecs, Queue *queue) {
   auto &position = ecs->get_components<Position>();
   auto &playerId = ecs->get_components<PlayerId>();
   auto &entityType = ecs->get_components<EntityType>();
+  auto &health = ecs->get_components<Health>();
   Command cmd;
 
   for (std::size_t i = 0; i < position.size(); i++) {
@@ -30,13 +31,18 @@ void collision_system_1v1(Registry *ecs, Queue *queue) {
                 position[i]->x + 50 > position[j]->x &&
                 position[i]->y < position[j]->y + 50 &&
                 position[i]->y + 50 > position[j]->y) {
-              ecs->kill_entity(Entities(i));
-              ecs->kill_entity(Entities(j));
-              cmd.type = CommandType::KILLENTITY;
-              cmd.killEntity.entityId = i;
+              ecs->kill_entity(static_cast<Entities>(j));
+              cmd.type = HIT;
+              cmd.hit.damage = 10;
+              cmd.hit.entityHit = i;
               queue->pushTcpQueue(cmd);
-              cmd.killEntity.entityId = j;
-              queue->pushTcpQueue(cmd);
+              health[i]->hp -= 10;
+              if (health[i]->hp <= 0) {
+                ecs->kill_entity(static_cast<Entities>(i));
+                cmd.type = CommandType::KILLENTITY;
+                cmd.killEntity.entityId = i;
+                queue->pushTcpQueue(cmd);
+              }
             }
           }
         }

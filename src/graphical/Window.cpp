@@ -21,20 +21,20 @@ void Window::init() {
     exit(84);
   }
 
-  if (!SDL_Init(SDL_INIT_AUDIO)) {
-    std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
-    exit(84);
-  }
+  // if (!SDL_Init(SDL_INIT_AUDIO)) {
+  //   std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
+  //   exit(84);
+  // }
 
-  if (Mix_Init(MIX_INIT_MP3) == 0) {
-    std::cerr << "Mix_Init Error: " << SDL_GetError() << std::endl;
-    exit(84);
-  }
+  // if (Mix_Init(MIX_INIT_MP3) == 0) {
+  //   std::cerr << "Mix_Init Error: " << SDL_GetError() << std::endl;
+  //   exit(84);
+  // }
 
-  if (!Mix_OpenAudio(0, NULL)) {
-    std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
-    exit(84);
-  }
+  // if (!Mix_OpenAudio(0, NULL)) {
+  //   std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
+  //   exit(84);
+  // }
 
   if (!TTF_Init()) {
     std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
@@ -77,6 +77,7 @@ void Window::init() {
            MICHOU_ET_ELSA_2, 100);
   addSound("../src/graphical/assets/sounds/Michou_Elsa_remix_winterzuuko.mp3",
            MICHOU_REMIX_WINTERZUUKO, 100);
+  addSound("../src/graphical/assets/sounds/hit.mp3", HURT, 50);
 }
 
 void Window::destroyWindow() {

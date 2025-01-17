@@ -15,10 +15,14 @@
 struct Boutton {
   SDL_Rect rect;
   SDL_Texture *texture;
+  SDL_Texture *selectedTexture;
   std::string label;
+  int value;
+  bool isHover;
+  bool isClicked;
 
-  Boutton(SDL_Rect r, std::string lbl, SDL_Texture *tex = nullptr)
-      : rect(r), label(std::move(lbl)), texture(tex) {}
+  Boutton(SDL_Rect r, std::string lbl, SDL_Texture *tex = nullptr, SDL_Texture *seltex = nullptr, bool hover = false, bool clicked = false, int val = 0)
+      : rect(r), label(std::move(lbl)), texture(tex), selectedTexture(seltex), isHover(hover), isClicked(clicked), value(val) {}
 };
 
 #endif // BUTTON_HPP

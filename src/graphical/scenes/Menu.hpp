@@ -20,7 +20,6 @@ public:
   loop(eventType event,
        std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
-  std::string mouseHandler(float mouseX, float mouseY, eventType event);
 
   void setMenu(std::string selectedButton);
 
@@ -30,9 +29,18 @@ public:
 
   void initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
 
+  void mouseHandler(float mouseX, float mouseY, eventType event);
+
+  void buttonSystem(Boutton &boutton);
+
+
 private:
   std::string _selectedButton;
   std::string _menuTitle;
   float _windowWidth;
   float _windowHeight;
+  std::string _nickname;
+  int _gameMode;
+  int _spaceshipId;
+  int _bulletId;
 };

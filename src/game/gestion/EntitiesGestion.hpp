@@ -6,6 +6,13 @@
 #include "../Components/Components.hpp"
 #include <random>
 
+enum class EntityType { Player, Enemy, Projectile, Menu, Meteorite };
+enum class EnemyType { Pion, Balourd, Zinzolin, Boss, BigBoss };
+enum class AiType { Aggressive, Passive, Balzy, Boss };
+enum class DamageType { Poke, Punch, Marmite };
+enum class FrequencyType { Slow, High, Turret };
+enum class BulletType { Missile, FelixBalls, Obus };
+
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
                               Health health, Draw draw, Nickname nickname,
                               Property property,
@@ -22,6 +29,10 @@ Entities create_projectile_entity(Registry &r, Position position,
                                   Velocity velocity, Draw draw,
                                   PlayerId playerId,
                                   std::optional<std::size_t> id = std::nullopt);
+
+Entities create_meteorite_entity(Registry &r, Position position,
+                                 Velocity velocity, Draw draw,
+                                 std::optional<std::size_t> id = std::nullopt);
 
 Entities create_menu_entity(Registry &r, Position position, Size size, 
                             Draw draw, Visibility visibility, 
@@ -41,6 +52,9 @@ Entities create_entity(Registry &r, Args &&...args) {
   }
   if constexpr (T == EntityType::Menu) {
     return create_menu_entity(r, std::forward<Args>(args)...);
+  }
+  if constexpr (T == EntityType::Meteorite) {
+    return create_meteorite_entity(r, std::forward<Args>(args)...);
   }
 }
 
@@ -82,11 +96,6 @@ template <EnemyType T> Entities create_enemy(Registry &r, EnemyProperty enemy) {
                                             Velocity(0, 10), Health(300),
                                             Draw({}, {}, nullptr), enemy);
   }
-}
-
-template <EnemyType T> Entities create_menu(Registry &r) {
-
-
 }
 
 

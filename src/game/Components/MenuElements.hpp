@@ -11,8 +11,6 @@
 #include <vector>
 #include <variant>
 #include "Boutton.hpp"
-// #include "Text.hpp"
-// #include "TextInput.hpp"
 
 using MenuElement = std::variant<Boutton>;
 

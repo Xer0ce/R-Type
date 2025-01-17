@@ -48,6 +48,14 @@ CommandGame::CommandGame() {
                                           Registry *ecs, Window *window) {
     wave(command, queue, ecs, window);
   };
+  _commandMap[CommandType::HIT] = [this](Command command, Queue *queue,
+                                         Registry *ecs, Window *window) {
+    hit(command, queue, ecs, window);
+  };
+  _commandMap[CommandType::CREATEMETEORITE] =
+      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+        createMeteorite(command, queue, ecs, window);
+      };
 }
 
 CommandGame::~CommandGame() {}
@@ -303,4 +311,36 @@ void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
     }
   }
   window->setAllowToInteract(false);
+}
+
+void CommandGame::hit(Command command, Queue *queue, Registry *ecs,
+                      Window *window) {
+  auto &entities = ecs->get_components<EntityType>();
+  auto &health = ecs->get_components<Health>();
+  auto &control = ecs->get_components<Control>();
+
+  for (std::size_t i = 0; i < entities.size(); ++i) {
+    if (i == command.hit.entityHit) {
+      if (health[i].has_value()) {
+        health[i]->hp -= command.hit.damage;
+        if (control[i].has_value()) {
+          window->playSound(HURT, 0);
+        }
+      }
+    }
+  }
+}
+
+void CommandGame::createMeteorite(Command command, Queue *queue, Registry *ecs,
+                                  Window *window) {
+  auto entities = create_entity<EntityType::Meteorite>(
+      *ecs,
+      Position(command.createMeteorite.positionX,
+               command.createMeteorite.positionY),
+      Velocity(-10, 1),
+      Draw({0, 0, 0, 0},
+           {(int)command.createMeteorite.positionX,
+            (int)command.createMeteorite.positionY, 100, 100},
+           window->loadTexture("../src/graphical/assets/meteor.png")),
+      std::optional<std::size_t>(command.createMeteorite.meteoriteId));
 }

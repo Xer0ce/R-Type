@@ -30,6 +30,7 @@ void OneVsOne::init() {
   command.type = CONNECT1V1;
   command.connect1v1.Nickname = "Player";
   _queue->pushTcpQueue(command);
+  _window->playSound(soundType::ENDLESS_MUSIC, -1);
 }
 
 sceneType

@@ -18,7 +18,19 @@ OneVsOne::OneVsOne() {
 
 OneVsOne::~OneVsOne() {}
 
-void OneVsOne::init() {}
+void OneVsOne::init() {
+  auto &entityType = _ecs->get_components<EntityType>();
+  auto &position = _ecs->get_components<Position>();
+  int x = 100;
+
+  for (std::size_t i = 0; i < entityType.size(); i++) {
+    if (entityType[i] == EntityType::Player) {
+      position[i]->x = x;
+      position[i]->y = 300;
+      x += 950;
+    }
+  }
+}
 
 sceneType
 OneVsOne::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
