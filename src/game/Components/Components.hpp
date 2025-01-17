@@ -24,6 +24,5 @@
     #include "Background.hpp"
     #include "EnemyProperty.hpp"
     #include "Type.hpp"
-    #include "TextInput.hpp"
 
     #endif // COMPONENTS_HPP

@@ -41,6 +41,54 @@ std::pair<int, int> calculateResponsiveSize(int originalWidth, int originalHeigh
     return {newWidth, newHeight};
 }
 
+void Menu::initMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
+  SDL_Texture *pipeMenuTexture =
+      _window->loadTexture("../src/graphical/assets/menu/menuPipe.png");
+
+  SDL_Texture *hostTexture =
+      _window->loadTexture("../src/graphical/assets/menu/host.png");
+  SDL_Texture *selectedhostTexture =
+      _window->loadTexture("../src/graphical/assets/menu/selectedhost.png");
+  SDL_Texture *joinTexture =
+      _window->loadTexture("../src/graphical/assets/menu/join.png");
+  SDL_Texture *selectedjoinTexture =
+      _window->loadTexture("../src/graphical/assets/menu/selectjoin.png");
+  SDL_Texture *paramsTexture =
+      _window->loadTexture("../src/graphical/assets/menu/params.png");
+  SDL_Texture *selectedparamsTexture =
+      _window->loadTexture("../src/graphical/assets/menu/selectedparams.png");
+  SDL_Texture *exitTexture =
+      _window->loadTexture("../src/graphical/assets/menu/left.png");
+  SDL_Texture *selectedexitTexture =
+      _window->loadTexture("../src/graphical/assets/menu/selectedleft.png");
+
+  auto [buttontWidth, buttonHeight] = calculateResponsiveSize(393, 55, _windowWidth, _windowHeight, 350, 100);
+  
+  auto [hostPosX, hostPosY] = calculateResponsivePosition((posX + 50), (posY + 120), _windowWidth, _windowHeight);
+
+  auto [joinPosX, joinPosY] = calculateResponsivePosition((posX + 50), (posY + 200), _windowWidth, _windowHeight);
+
+  auto [paramsPosX, paramsPosY] = calculateResponsivePosition((posX + 50), (posY + 280), _windowWidth, _windowHeight);
+
+  auto [exitPosX, exitPosY] = calculateResponsivePosition((posX + 50), (posY + 360), _windowWidth, _windowHeight);
+
+  auto join = create_entity<EntityType::Menu>(
+    *_ecs, 
+    Position(posX, posY), 
+    Size(responsiveWidth, responsiveHeight),
+    Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight}, pipeMenuTexture),
+    Visibility(true),
+    std::vector<MenuElements>{
+        MenuElements({
+            Boutton(SDL_Rect{hostPosX, hostPosY, buttontWidth, buttonHeight}, "host", hostTexture, selectedhostTexture, false, false, 1),
+            Boutton(SDL_Rect{joinPosX, joinPosY, buttontWidth, buttonHeight}, "join", joinTexture, selectedjoinTexture, false, false, 1),
+            Boutton(SDL_Rect{paramsPosX, paramsPosY, buttontWidth, buttonHeight}, "params", paramsTexture, selectedparamsTexture, false, false, 1),
+            Boutton(SDL_Rect{exitPosX, exitPosY, buttontWidth, buttonHeight}, "exit", exitTexture, selectedexitTexture, false, false, 1),
+        })
+    }
+  );
+}
+
 void Menu::initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
 
   SDL_Texture *hostBackgroundTexture =
@@ -128,24 +176,17 @@ SDL_Texture *shoot1Texture =
 
   auto [createPartyPosX, createPartyPosY] = calculateResponsivePosition(550, 800, _windowWidth, _windowHeight);
 
-  auto [textInputWidth, textInputHeight] = calculateResponsiveSize(300, 50, _windowWidth, _windowHeight, 300, 100);
-  auto [textInputPosX, textInputPosY] = calculateResponsivePosition(600, 400, _windowWidth, _windowHeight);
-
-  SDL_Color textColor = {255, 255, 255, 255};  // Blanc
-  SDL_Color bgColor = {0, 0, 0, 255};   
-
   auto host = create_entity<EntityType::Menu>(
     *_ecs, 
-    Position(100, 100), 
-    Size(400, 300),
-    Draw({0, 0, 0, 0}, {posX, posY, responsiveWidth, responsiveHeight}, hostBackgroundTexture),
+    Position(posX, posY), 
+    Size(responsiveWidth, responsiveHeight),
+    Draw({255, 255, 255, 255}, {posX, posY, responsiveWidth, responsiveHeight}, hostBackgroundTexture),
     Visibility(true),
     std::vector<MenuElements>{
         MenuElements({
             Boutton(SDL_Rect{endlessPosX, endlessPosY, gameModeWidth, gameModeHeight}, "gamemode", endlessTexture, selectedendlessTexture, false, false, 1),
             Boutton(SDL_Rect{onevsonePosX, onevsonePosY, gameModeWidth, gameModeHeight}, "gamemode", onevsoneTexture, selectedonevsoneTexture, false, false, 2),
             Boutton(SDL_Rect{historyPosX, historyPosY, gameModeWidth, gameModeHeight}, "gamemode", historyTexture, selectedhistoryTexture, false, false, 3),
-            TextInput(SDL_Rect{textInputPosX, textInputPosY, textInputWidth, textInputHeight}, textColor, bgColor),
             Boutton(SDL_Rect{ship1PosX, ship1PosY, shipWidth, shipHeight}, "ship", ship1Texture, selectedship1Texture, false, false, 1),
             Boutton(SDL_Rect{ship2PosX, ship2PosY, shipWidth, shipHeight}, "ship", ship2Texture, selectedship2Texture, false, false, 2),
             Boutton(SDL_Rect{ship3PosX, ship3PosY, shipWidth, shipHeight}, "ship", ship3Texture, selectedship3Texture, false, false, 3),
@@ -162,13 +203,6 @@ SDL_Texture *shoot1Texture =
 
 void Menu::initJoinMenu(int responsiveWidth, int responsiveHeight, int posX, int posY) {
   SDL_Rect optionRect = {100, 150, 200, 50};
-
-  std::vector<Boutton> options = {
-    Boutton({optionRect.x, optionRect.y, optionRect.w, optionRect.h}, "Option 1"),
-    Boutton({optionRect.x, optionRect.y + 60, optionRect.w, optionRect.h}, "Option 2"),
-    Boutton({optionRect.x, optionRect.y + 120, optionRect.w, optionRect.h}, "Option 3")
-};
-
 
   SDL_Texture *joinBackgroundTexture =
       _window->loadTexture("../src/graphical/assets/menu/JoinParty.png");
@@ -202,69 +236,20 @@ void Menu::init() {
   _windowWidth = _window->getWindowWidth();
   _windowHeight = _window->getWindowHeight();
 
-  auto [responsiveWidth, responsiveHeight] = calculateResponsiveSize(717, 457, _windowWidth, _windowHeight, 600, 400);
-  auto [posX, posY] = calculateResponsivePosition(500, 400, _windowWidth, _windowHeight);
+  auto [responsiveWidth, responsiveHeight] = calculateResponsiveSize(717, 457, _windowWidth, _windowHeight, 700, 450);
+  auto [responsivePipeWidth, responsivePipeHeight] = calculateResponsiveSize(4, 266, _windowWidth, _windowHeight, 250, 230);
+  auto [posX, posY] = calculateResponsivePosition(500, 350, _windowWidth, _windowHeight);
+  auto [posMenuX, posMenuY] = calculateResponsivePosition(110, 350, _windowWidth, _windowHeight);
 
-  _window->addText("Cosmic Michou", 50, 50, 500, 50, 100,
-                   "../src/graphical/assets/RTypefont.otf",
-                   {255, 255, 255, 255});
-  _window->addText("Vendetta", 60, 150, 500, 50, 50,
-                   "../src/graphical/assets/RTypefont.otf",
-                   {255, 255, 255, 255});
-  _window->addButton(70, 200 + 100, 500, 50, "Heberger", "menu");
-  _window->addButton(70, 200 + 200, 500, 50, "Rejoindre", "menu");
-  _window->addButton(70, 200 + 300, 500, 50, "Parametres", "menu");
-  _window->addButton(70, 200 + 400, 500, 50, "Quitter", "menu");
-  _window->addDropdown(1000, 500, 500, 50, {"test1", "test2", "test3"},
-                       "window");
   _window->setBackground(
-      _window->loadTexture("../src/graphical/assets/menu.png"));
-  auto entitie = _ecs->spawn_entity();
-  _ecs->add_component<Position>(entitie, Position(700, 300));
-  _ecs->add_component<Draw>(
-      entitie,
-      Draw({255, 255, 255, 255}, {700, 300, 887, 484},
-           _window->loadTexture("../src/graphical/assets/CreateParty.svg")));
-  _ecs->add_component<EntityType>(entitie, EntityType::Menu);
+      _window->loadTexture("../src/graphical/assets/menu/menu.png"));
+  
   _window->playSound(MICHOU_ET_ELSA_2, -1);
 
+  initMenu(responsivePipeWidth, responsivePipeHeight, posMenuX, posMenuY);
   initHostMenu(responsiveWidth, responsiveHeight, posX, posY);
   initJoinMenu(responsiveWidth, responsiveHeight, posX, posY);
   initSettingsMenu(responsiveWidth, responsiveHeight, posX, posY);
-}
-
-
-void Menu::setMenu(std::string selectedButton) {
-
-  if (_selectedButton == selectedButton)
-    return;
-
-  _selectedButton = selectedButton;
-
-  _window->deleteText(_menuTitle);
-  if (_selectedButton == "Heberger") {
-    _menuTitle = "Crée une partie";
-    _window->addButton(730, 200 + 500, 830, 50, "Valider", "window",
-                       {37, 37, 37, 70}, {37, 37, 37, 200},
-                       {255, 255, 255, 255}, {255, 255, 255, 255});
-  }
-  if (_selectedButton == "Rejoindre") {
-    _window->deleteButtons("window");
-    _menuTitle = "Rejoindre une partie";
-  }
-  if (_selectedButton == "Parametres") {
-    _menuTitle = "Settings";
-  }
-  _window->addText(_menuTitle, 720, 310, 500, 50, 37,
-                   "../src/graphical/assets/RTypefont.otf", {0, 0, 0, 0});
-}
-
-void Menu::textSystem(Text &text) {
-  if (text.isClicked) {
-    if (text.label == "window") {
-      std::cout << "window value selected id : " << text.value << std::endl;
-    }
-  }
 }
 
 void Menu::buttonSystem(Boutton &boutton) {
@@ -286,6 +271,33 @@ void Menu::buttonSystem(Boutton &boutton) {
       std::cout << "spaceshipId: " << _spaceshipId << std::endl;
       std::cout << "bulletId: " << _bulletId << std::endl;
       std::cout << "gamemode: " << _gameMode << std::endl;
+    }
+    if (boutton.label == "host") {
+      auto &visibility = _ecs->get_components<Visibility>();
+        if (visibility[0]->isVisible) {
+          visibility[0]->isVisible = false;
+        } else {
+          visibility[0]->isVisible = true;
+        }
+    }
+    if (boutton.label == "join") {
+      auto &visibility = _ecs->get_components<Visibility>();
+        if (visibility[1]->isVisible) {
+          visibility[1]->isVisible = false;
+        } else {
+          visibility[1]->isVisible = true;
+        }
+    }
+    if (boutton.label == "params") {
+      auto &visibility = _ecs->get_components<Visibility>();
+        if (visibility[2]->isVisible) {
+          visibility[2]->isVisible = false;
+        } else {
+          visibility[2]->isVisible = true;
+        }
+    }
+    if (boutton.label == "exit") {
+      _window->closeWindow();
     }
   } else {
     if (boutton.label == "ship") {
@@ -313,33 +325,21 @@ void Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
             auto &boutton = std::get<Boutton>(element);
             if (mouseX >= boutton.rect.x && mouseX <= boutton.rect.x + boutton.rect.w &&
                 mouseY >= boutton.rect.y && mouseY <= boutton.rect.y + boutton.rect.h) {
-              boutton.isClicked = !boutton.isClicked;
-              buttonSystem(boutton);
+              if (!boutton.isClicked) {
+                boutton.isClicked = true;
+                buttonSystem(boutton);
+              } else {
+                boutton.isClicked = false;
+                buttonSystem(boutton);
+              }
               return;
-            }
-          } else if (std::holds_alternative<TextInput>(element)) {
-            auto &textInput = std::get<TextInput>(element);
-            if (mouseX >= textInput.rect.x && mouseX <= textInput.rect.x + textInput.rect.w &&
-                mouseY >= textInput.rect.y && mouseY <= textInput.rect.y + textInput.rect.h) {
-              textInput.isActive = true;
-            } else {
-              textInput.isActive = false;
             }
           }
         }
       }
     }
   }
-}
-
-void Menu::handleTextInput(SDL_Event &event, TextInput &textInput) {
-  if (textInput.isActive) {
-    if (event.type == SDL_TEXTINPUT) {
-      textInput.text += event.text.text; // Ajoute le caractère saisi
-    } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE && !textInput.text.empty()) {
-      textInput.text.pop_back(); // Supprime le dernier caractère
-    }
-  }
+  return;
 }
 
 sceneType Menu::loop(eventType event,
@@ -356,11 +356,6 @@ sceneType Menu::loop(eventType event,
 
 
   _window->drawBackground();
-  _window->drawButton("menu");
-  _window->createMenuPipe();
-
-  _window->drawText();
-  _window->drawButton("window");
   mouseHandler(mouseX, mouseY, event);
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
@@ -376,12 +371,7 @@ sceneType Menu::loop(eventType event,
             } else {
               _window->draw(boutton.texture, boutton.rect);
             }
-          } 
-        }
-        if (std::holds_alternative<TextInput>(element)) {
-          auto &textInput = std::get<TextInput>(element);
-          _window->addText(textInput.text, textInput.rect.x, textInput.rect.y, textInput.rect.w, textInput.rect.h, 37,
-                   "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
+          }
         }
       }
     }
