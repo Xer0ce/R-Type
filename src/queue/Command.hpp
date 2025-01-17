@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <iostream>
 #include "../game/Components/Components.hpp"
+#include <iostream>
 
 enum CommandType {
   CONNECT,

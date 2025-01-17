@@ -17,39 +17,55 @@ static const std::map<std::string, AiType> ai_type = {
 };
 
 static const std::map<std::string, DamageType> dmg_type = {
-  {"Poke", DamageType::Poke},
-  {"Punch", DamageType::Punch},
-  {"Marmite", DamageType::Marmite},
+    {"Poke", DamageType::Poke},
+    {"Punch", DamageType::Punch},
+    {"Marmite", DamageType::Marmite},
 };
 
 static const std::map<std::string, FrequencyType> f_type = {
-  {"Slow", FrequencyType::Slow},
-  {"High", FrequencyType::High},
-  {"Turret", FrequencyType::Turret},
+    {"Slow", FrequencyType::Slow},
+    {"High", FrequencyType::High},
+    {"Turret", FrequencyType::Turret},
 };
 
 static const std::map<std::string, BulletType> b_type = {
-  {"Missile", BulletType::Missile},
-  {"FelixBalls", BulletType::FelixBalls},
-  {"Obus", BulletType::Obus},
+    {"Missile", BulletType::Missile},
+    {"FelixBalls", BulletType::FelixBalls},
+    {"Obus", BulletType::Obus},
 };
 
-void Wave::factory_call(const json &enemy, Queue &queue, AiType ai, DamageType dmg, FrequencyType fr, BulletType bullet) {
+void Wave::factory_call(const json &enemy, Queue &queue, AiType ai,
+                        DamageType dmg, FrequencyType fr, BulletType bullet) {
   auto &position = _ecs->get_components<Position>();
   auto &enemies_properties = _ecs->get_components<EnemyProperty>();
 
   std::map<std::string, std::function<Entities()>> type_map = {
-  {"Pion",
-    [&]() { return create_enemy<EnemyType::Pion>(*_ecs, EnemyProperty(EnemyType::Pion, ai, dmg, fr, bullet)); }},
-  {"Balourd",
-    [&]() { return create_enemy<EnemyType::Balourd>(*_ecs, EnemyProperty(EnemyType::Balourd, ai, dmg, fr, bullet)); }},
-  {"Zinzolin",
-   [&]() { return create_enemy<EnemyType::Zinzolin>(*_ecs, EnemyProperty(EnemyType::Zinzolin, ai, dmg, fr, bullet)); }},
-  {"Boss",
-   [&]() { return create_enemy<EnemyType::Boss>(*_ecs, EnemyProperty(EnemyType::Boss, ai, dmg, fr, bullet)); }},
-  {"BigBoss",
-   [&]() { return create_enemy<EnemyType::BigBoss>(*_ecs, EnemyProperty(EnemyType::BigBoss, ai, dmg, fr, bullet)); }},
-};
+      {"Pion",
+       [&]() {
+         return create_enemy<EnemyType::Pion>(
+             *_ecs, EnemyProperty(EnemyType::Pion, ai, dmg, fr, bullet));
+       }},
+      {"Balourd",
+       [&]() {
+         return create_enemy<EnemyType::Balourd>(
+             *_ecs, EnemyProperty(EnemyType::Balourd, ai, dmg, fr, bullet));
+       }},
+      {"Zinzolin",
+       [&]() {
+         return create_enemy<EnemyType::Zinzolin>(
+             *_ecs, EnemyProperty(EnemyType::Zinzolin, ai, dmg, fr, bullet));
+       }},
+      {"Boss",
+       [&]() {
+         return create_enemy<EnemyType::Boss>(
+             *_ecs, EnemyProperty(EnemyType::Boss, ai, dmg, fr, bullet));
+       }},
+      {"BigBoss",
+       [&]() {
+         return create_enemy<EnemyType::BigBoss>(
+             *_ecs, EnemyProperty(EnemyType::BigBoss, ai, dmg, fr, bullet));
+       }},
+  };
 
   for (int i = 0; i < enemy["number"]; i++) {
     auto it = type_map.find(enemy["type"]);

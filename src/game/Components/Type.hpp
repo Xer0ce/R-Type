@@ -5,7 +5,6 @@
 ** Type
 */
 
-
 #ifndef TYPE_HPP
 #define TYPE_HPP
 
@@ -17,4 +16,4 @@ enum class FrequencyType { Slow, High, Turret };
 enum class BulletType { Missile, FelixBalls, Obus };
 enum class MenuType { menu, host, join, settings };
 
-#endif //TYPE_HPP
+#endif // TYPE_HPP
