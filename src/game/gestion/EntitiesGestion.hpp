@@ -6,7 +6,7 @@
 #include "../Components/Components.hpp"
 #include <random>
 
-enum class EntityType { Player, Enemy, Projectile, Menu, Meteorite };
+enum class EntityType { Player, Enemy, Projectile, Menu, Meteorite, Meteorite };
 enum class EnemyType { Pion, Balourd, Zinzolin, Boss, BigBoss };
 enum class AiType { Aggressive, Passive, Balzy, Boss };
 enum class DamageType { Poke, Punch, Marmite };
