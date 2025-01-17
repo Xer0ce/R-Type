@@ -297,7 +297,9 @@ void Menu::buttonSystem(Boutton &boutton) {
         }
     }
     if (boutton.label == "exit") {
-      _window->closeWindow();
+      _window->deleteTexts();
+      _window->deleteButtons();
+      exit(0);
     }
   } else {
     if (boutton.label == "ship") {
