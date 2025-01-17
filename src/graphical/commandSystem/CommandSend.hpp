@@ -30,6 +30,7 @@ private:
   void createPlayer(Command command, IClient *protocol);
   void startGame(Command command, IClient *protocol);
   void connect1v1(Command command, IClient *protocol);
+  void freezeSpell(Command command, IClient *protocol);
 
   std::map<CommandType, std::function<void(Command, IClient *)>> _commandMap;
 };

@@ -43,9 +43,19 @@ void OneVsOne::spell_system(std::vector<keyType> keys) {
     if (keys.empty())
       return;
     for (auto &key : keys) {
+      auto &control = _ecs->get_components<Control>();
+      auto &property = _ecs->get_components<Property>();
       if (key == F) {
         _window->changeSpellStatus(false);
         _nextSpell = now + std::chrono::seconds(10);
+        for (std::size_t i = 0; i < control.size(); ++i) {
+          if (control[i].has_value()) {
+            Command command;
+            command.type = FREEZESPELL;
+            command.freezeSpell.playerId = i;
+            _queue->pushTcpQueue(command);
+          }
+        }
       }
     }
   }
@@ -86,9 +96,9 @@ OneVsOne::loop(eventType event,
         _nextBullet = now + std::chrono::milliseconds(500);
       position_system_graphic(1, *_ecs, _queue);
       enemy_system(_ecs);
-      display_infos(_ecs);
       spell_system(keys);
     }
+    display_infos(_ecs);
   }
   _window->drawBackground();
   _window->drawText();

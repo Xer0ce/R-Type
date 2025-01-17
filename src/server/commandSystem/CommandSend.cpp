@@ -55,6 +55,10 @@ CommandSend::CommandSend() {
   _commandMap[CommandType::HIT] = [this](Command command, IProtocol *protocol) {
     hit(command, protocol);
   };
+  _commandMap[CommandType::FREEZESPELL] = [this](Command command,
+                                                 IProtocol *protocol) {
+    freezeSpell(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -345,4 +349,14 @@ void CommandSend::hit(Command command, IProtocol *protocol) {
   binaryData.push_back(0xFF);
 
   protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::freezeSpell(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x16);
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAllExceptOne(command.freezeSpell.playerId, binaryData);
 }

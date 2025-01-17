@@ -132,6 +132,7 @@ private:
   SDL_Texture *_background;
   SDL_Texture *_background2;
   SDL_Texture *_spell;
+  SDL_Texture *_spellDisable;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;

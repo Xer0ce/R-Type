@@ -55,6 +55,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     hit(buffer, protocol, queue);
   };
+  _commandMap[0x16] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    freezeSpell(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -226,5 +230,13 @@ void CommandHandle::hit(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.type = CommandType::HIT;
   cmd.hit.entityHit = static_cast<int>(buffer[1]);
   cmd.hit.damage = static_cast<int>(buffer[2]);
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::freezeSpell(std::vector<uint8_t> buffer, IClient *protocol,
+                                Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::FREEZESPELL;
   queue->pushGameQueue(cmd);
 }

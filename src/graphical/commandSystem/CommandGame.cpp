@@ -49,9 +49,13 @@ CommandGame::CommandGame() {
     wave(command, queue, ecs, window);
   };
   _commandMap[CommandType::HIT] = [this](Command command, Queue *queue,
-                                        Registry *ecs, Window *window) {
+                                         Registry *ecs, Window *window) {
     hit(command, queue, ecs, window);
   };
+  _commandMap[CommandType::FREEZESPELL] =
+      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+        freezeSpell(command, queue, ecs, window);
+      };
 }
 
 CommandGame::~CommandGame() {}
@@ -323,4 +327,8 @@ void CommandGame::hit(Command command, Queue *queue, Registry *ecs,
       }
     }
   }
+}
+
+void CommandGame::freezeSpell(Command command, Queue *queue, Registry *ecs, Window *window) {
+  window->setAllowToInteract(false);
 }
