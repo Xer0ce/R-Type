@@ -21,4 +21,5 @@ void control_system(std::vector<keyType> keys, Registry &ecs);
 void shoot_system(std::vector<keyType> keys, Registry &_ecs, Queue *_queue,
                   std::chrono::time_point<std::chrono::steady_clock> next);
 void collision_system(Registry *ecs, Queue *queue);
+void collision_system_1v1(Registry *ecs, Queue *queue);
 void display_infos(Registry *ecs);

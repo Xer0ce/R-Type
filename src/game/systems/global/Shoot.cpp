@@ -32,7 +32,6 @@ void shoot_system(std::vector<keyType> keys, Registry &_ecs, Queue *_queue,
           command.shoot.playerId = i;
           command.shoot.positionX = positionX;
           command.shoot.positionY = positionY;
-          std::cout << "player nbr" << property[i]->playerNbr << std::endl;
           if (property[i].has_value() && property[i]->playerNbr == 2)
             command.shoot.direction = 1;
           else
