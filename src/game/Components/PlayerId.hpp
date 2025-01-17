@@ -8,6 +8,6 @@
 #pragma once
 
 struct PlayerId {
-    int id;
-    PlayerId(int id) : id(id) {}
+  int id;
+  PlayerId(int id) : id(id) {}
 };

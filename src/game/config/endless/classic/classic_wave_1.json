@@ -4,12 +4,14 @@
         {
             "type": "Pion",
             "number": 1,
-            "ia": "Aggressive"
+            "ia": "Aggressive",
+            "frequency": "Slow"
         },
         {
             "type": "Balourd",
             "number": 1,
-            "ia": "Balzy"
+            "ia": "Balzy",
+            "frequency": "Turret"
         },
         {
             "type": "Zinzolin",

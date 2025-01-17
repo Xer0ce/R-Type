@@ -13,9 +13,9 @@
 #include "Health.hpp"
 #include "LifeBar.hpp"
 #include "Nickname.hpp"
+#include "PlayerId.hpp"
 #include "Position.hpp"
 #include "Property.hpp"
 #include "Velocity.hpp"
-#include "PlayerId.hpp"
 
 #endif // COMPONENTS_HPP
