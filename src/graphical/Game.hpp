@@ -59,8 +59,8 @@ public:
 
   void listen(IClient &protocol);
 
-  void init(std::string nickname, ChoosingParams *params);
-  void game(std::string nickname);
+  void init(ChoosingParams *params);
+  void game();
 
 private:
   std::map<sceneType, std::shared_ptr<IScene>> _scenes;

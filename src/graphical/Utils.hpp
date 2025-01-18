@@ -44,6 +44,7 @@ struct ChoosingParams {
   int spaceshipId;
   int bulletId;
   int gamemode;
+  std::string nickname;
 };
 
 enum soundType {
