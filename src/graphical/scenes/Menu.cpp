@@ -114,21 +114,21 @@ void Menu::initHostMenu() {
            Boutton(SDL_Rect{709, 345, 129, 55}, "gamemode", historyTexture,
                    selectedhistoryTexture, false, false, 3),
            Boutton(SDL_Rect{449, 413, 129, 75}, "ship", ship1Texture,
-                   selectedship1Texture, false, false, 1),
+                   selectedship1Texture, false, false, 0),
            Boutton(SDL_Rect{603, 413, 129, 75}, "ship", ship2Texture,
-                   selectedship2Texture, false, false, 2),
+                   selectedship2Texture, false, false, 1),
            Boutton(SDL_Rect{758, 413, 129, 75}, "ship", ship3Texture,
-                   selectedship3Texture, false, false, 3),
+                   selectedship3Texture, false, false, 2),
            Boutton(SDL_Rect{914, 413, 129, 75}, "ship", ship4Texture,
-                   selectedship4Texture, false, false, 4),
+                   selectedship4Texture, false, false, 3),
            Boutton(SDL_Rect{449, 537, 129, 75}, "shoot", shoot1Texture,
-                   selectedshoot1Texture, false, false, 1),
+                   selectedshoot1Texture, false, false, 0),
            Boutton(SDL_Rect{603, 537, 129, 75}, "shoot", shoot2Texture,
-                   selectedshoot2Texture, false, false, 2),
+                   selectedshoot2Texture, false, false, 1),
            Boutton(SDL_Rect{758, 537, 129, 75}, "shoot", shoot3Texture,
-                   selectedshoot3Texture, false, false, 3),
+                   selectedshoot3Texture, false, false, 2),
            Boutton(SDL_Rect{914, 537, 129, 75}, "shoot", shoot4Texture,
-                   selectedshoot4Texture, false, false, 4),
+                   selectedshoot4Texture, false, false, 3),
            Boutton(SDL_Rect{445, 641, 600, 52}, "createParty",
                    createPartyTexture, createPartySelTexture, 0)}));
 }
@@ -179,21 +179,21 @@ void Menu::initJoinMenu() {
       Draw({0, 0, 0, 0}, {400, 280, 699, 444}, joinBackgroundTexture),
       Visibility(false), MenuType::join,
       MenuElements({Boutton(SDL_Rect{449, 413, 129, 75}, "ship", ship1Texture,
-                            selectedship1Texture, false, false, 1),
+                            selectedship1Texture, false, false, 0),
                     Boutton(SDL_Rect{603, 413, 129, 75}, "ship", ship2Texture,
-                            selectedship2Texture, false, false, 2),
+                            selectedship2Texture, false, false, 1),
                     Boutton(SDL_Rect{758, 413, 129, 75}, "ship", ship3Texture,
-                            selectedship3Texture, false, false, 3),
+                            selectedship3Texture, false, false, 2),
                     Boutton(SDL_Rect{914, 413, 129, 75}, "ship", ship4Texture,
-                            selectedship4Texture, false, false, 4),
+                            selectedship4Texture, false, false, 3),
                     Boutton(SDL_Rect{449, 537, 129, 75}, "shoot", shoot1Texture,
-                            selectedshoot1Texture, false, false, 1),
+                            selectedshoot1Texture, false, false, 0),
                     Boutton(SDL_Rect{603, 537, 129, 75}, "shoot", shoot2Texture,
-                            selectedshoot2Texture, false, false, 2),
+                            selectedshoot2Texture, false, false, 1),
                     Boutton(SDL_Rect{758, 537, 129, 75}, "shoot", shoot3Texture,
-                            selectedshoot3Texture, false, false, 3),
+                            selectedshoot3Texture, false, false, 2),
                     Boutton(SDL_Rect{914, 537, 129, 75}, "shoot", shoot4Texture,
-                            selectedshoot4Texture, false, false, 4),
+                            selectedshoot4Texture, false, false, 3),
                     Boutton(SDL_Rect{445, 641, 600, 52}, "joinparty",
                             joinPartyTexture, joinPartySelTexture, 0)}));
 }
@@ -339,6 +339,11 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
         auto &entities = _ecs->get_components<EntityType>();
         for (std::size_t i = 0; i != entities.size(); i++)
           _ecs->kill_entity(static_cast<Entities>(i));
+        std::cout << "game is ready id " << _gameMode << std::endl;
+        if (_gameMode == 3) {
+          std::cout << "game is ready lauch to history" << std::endl;
+          return sceneType::LOBBY_HISTORY;
+        }
         return sceneType::LOBBY;
       } else {
         std::cout << "game is not ready" << std::endl;
@@ -427,12 +432,12 @@ sceneType Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
                 boutton.isClicked = true;
                 auto scene = buttonSystem(boutton);
                 if (scene != sceneType::NO_SWITCH)
-                  return LOBBY;
+                  return scene;
               } else {
                 boutton.isClicked = false;
                 auto scene = buttonSystem(boutton);
                 if (scene != sceneType::NO_SWITCH)
-                  return LOBBY;
+                  return scene;
               }
               return NO_SWITCH;
             }
