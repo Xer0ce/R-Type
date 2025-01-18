@@ -20,7 +20,7 @@ TextInput::TextInput(std::string _initText, int size, int x, int y,
   _rectText.y = y + 10;
   int textWidth = 0, textHeight = 0;
   _text = _initText;
-  _isVisible = true;
+  _isVisible = false;
   _isSelected = false;
   _renderer = renderer;
   _size = size;
