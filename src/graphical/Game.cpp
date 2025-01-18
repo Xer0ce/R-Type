@@ -121,7 +121,6 @@ void Game::game(std::string nickname) {
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
 
-  auto ecs = std::make_shared<Registry>(*_ecs);
   _scenes[_currentScene]->setWindow(_window.get());
   _scenes[_currentScene]->setEcs(_ecs);
   _scenes[_currentScene]->init();
