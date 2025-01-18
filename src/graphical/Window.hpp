@@ -11,8 +11,8 @@
 #include "Dropdown.hpp"
 #include "Sound.hpp"
 #include "Text.hpp"
-#include "Utils.hpp"
 #include "TextInput.hpp"
+#include "Utils.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -138,11 +138,13 @@ public:
 
   bool &getFreezeEnable();
 
-  void addTextInput(std::string text, int x, int y, int size);
+  void addTextInput(std::string text, int x, int y, int size, int backgroundW);
 
   void drawTextInput();
 
   void updateTextInput(SDL_Scancode scancode, SDL_Keycode keycode);
+
+  void selectTextInput(eventType event);
 
 private:
   SDL_Window *_window;

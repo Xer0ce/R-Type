@@ -215,7 +215,8 @@ void Menu::initSettingsMenu() {
 
 void Menu::init() {
   std::string textInputLabel = "TextInput";
-  _window->addTextInput(textInputLabel, 500, 500, 50);
+  _window->addTextInput(textInputLabel, 500, 500, 50, 500);
+  _window->addTextInput(textInputLabel, 500, 700, 50, 500);
   _assetsPath = "../src/graphical/assets/menu/";
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/menu/menu.png"));
@@ -458,6 +459,7 @@ Menu::loop(eventType event,
   auto &visibility = _ecs->get_components<Visibility>();
   auto &menuType = _ecs->get_components<MenuType>();
 
+  _window->selectTextInput(event);
   _window->drawBackground();
   auto scene = mouseHandler(mouseX, mouseY, event);
   if (scene != sceneType::NO_SWITCH) {
