@@ -14,6 +14,7 @@ Game::Game() {
   _scenes[sceneType::ENDLESS] = std::make_shared<EndLess>();
   _scenes[sceneType::ONE_VS_ONE] = std::make_shared<OneVsOne>();
   _scenes[sceneType::LOBBY] = std::make_shared<Lobby>();
+  _scenes[sceneType::LOBBY_HISTORY] = std::make_shared<LobbyHistory>();
 
   _currentScene = sceneType::MENU;
 
@@ -98,11 +99,6 @@ void Game::init(std::string nickname, ChoosingParams *params) {
     connectLobby.push_back(nickname[i]);
   }
 
-  std::cout << "[PARAMS]" << params->ip << std::endl;
-  std::cout << "[PARAMS]" << params->spaceshipId << std::endl;
-  std::cout << "[PARAMS]" << params->bulletId << std::endl;
-  std::cout << "[PARAMS] Gamemode : " << params->gamemode << std::endl;
-
   _tcp->sendToServer(connectLobby);
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
 
@@ -140,10 +136,11 @@ void Game::game(std::string nickname) {
     if (now > next)
       next += std::chrono::milliseconds(25);
     if (switchScene != sceneType::NO_SWITCH) {
-      if (switchScene == LOBBY || switchScene == LOBBY1V1) {
+      if (switchScene == LOBBY || switchScene == LOBBY_HISTORY) {
         init(nickname, params);
       }
       _currentScene = switchScene;
+      _scenes[_currentScene]->setGamemode(params->gamemode);
       _scenes[_currentScene]->setWindow(_window.get());
       _scenes[_currentScene]->setEcs(_ecs.get());
       _scenes[_currentScene]->setQueue(_queue.get());
@@ -153,5 +150,6 @@ void Game::game(std::string nickname) {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
   _window->destroyWindow();
+  killAllServer();
   exit(0);
 }

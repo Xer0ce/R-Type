@@ -130,6 +130,7 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs) {
         if (command.move.entityId == i) {
           positions[i]->x = command.move.positionX;
           positions[i]->y = command.move.positionY;
+          std::cout << "changing move command" << std::endl;
           queue->pushUdpQueue(command);
         }
       }

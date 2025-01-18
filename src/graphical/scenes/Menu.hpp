@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../../game/LaunchServer.hpp"
 #include "AScene.hpp"
 
 class Menu : public AScene {
@@ -19,7 +20,6 @@ public:
   sceneType
   loop(eventType event,
        std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
-
 
   void resetGameValues();
 
@@ -35,15 +35,18 @@ public:
 
   void initMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
 
-  void initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initHostMenu(int responsiveWidth, int responsiveHeight, int posX,
+                    int posY);
 
-  void initJoinMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initJoinMenu(int responsiveWidth, int responsiveHeight, int posX,
+                    int posY);
 
-  void initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX,
+                        int posY);
 
-  void mouseHandler(float mouseX, float mouseY, eventType event);
+  sceneType mouseHandler(float mouseX, float mouseY, eventType event);
 
-  void buttonSystem(Boutton &boutton);
+  sceneType buttonSystem(Boutton &boutton);
 
 private:
   std::string _selectedButton;

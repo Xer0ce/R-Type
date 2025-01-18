@@ -14,9 +14,7 @@ struct Background {
   SDL_Color color;
   SDL_Texture *texture;
 
-  Background(SDL_Texture *tex = nullptr)
-      : texture(tex) {}
+  Background(SDL_Texture *tex = nullptr) : texture(tex) {}
 };
 
 #endif // BACKGROUND_HPP
-

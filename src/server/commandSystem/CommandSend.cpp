@@ -34,10 +34,6 @@ CommandSend::CommandSend() {
                                                   IProtocol *protocol) {
     createPlayer(command, protocol);
   };
-  _commandMap[CommandType::STARTGAME] = [this](Command command,
-                                               IProtocol *protocol) {
-    startGame(command, protocol);
-  };
   _commandMap[CommandType::GETUSERSLOBBY] = [this](Command command,
                                                    IProtocol *protocol) {
     getUsersLobby(command, protocol);
@@ -136,7 +132,7 @@ void CommandSend::move(Command command, IProtocol *protocol) {
                     positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
-
+  std::cout << "sending move command" << std::endl;
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 
@@ -173,15 +169,20 @@ void CommandSend::createEnemy(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.createEnemy.enemyId));
 
-  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.enemyType));
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createEnemy.p_enemy.enemyType));
 
-  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.aiType));
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createEnemy.p_enemy.aiType));
 
-  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.damageType));
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createEnemy.p_enemy.damageType));
 
-  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.frequencyType));
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createEnemy.p_enemy.frequencyType));
 
-  binaryData.push_back(static_cast<uint8_t>(command.createEnemy.p_enemy.bulletType));
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createEnemy.p_enemy.bulletType));
 
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.createEnemy.positionX);
@@ -271,16 +272,6 @@ void CommandSend::createPlayer(Command command, IProtocol *protocol) {
   binaryData.push_back(0xFF);
 
   protocol->sendData(command.id, binaryData);
-}
-
-void CommandSend::startGame(Command command, IProtocol *protocol) {
-  std::vector<uint8_t> binaryData;
-
-  binaryData.push_back(0x09);
-
-  binaryData.push_back(0xFF);
-
-  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::getUsersLobby(Command command, IProtocol *protocol) {

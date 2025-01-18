@@ -7,9 +7,9 @@
 #ifndef ENEMYSYTEMS_HPP
 #define ENEMYSYTEMS_HPP
 #include "../../../ecs/Registry.hpp"
+#include "../../../queue/Queue.hpp"
 #include "../../Components/Components.hpp"
 #include "../../gestion/EntitiesGestion.hpp"
-#include "../../../queue/Queue.hpp"
 #include <map>
 
 void aggresive_ai(Registry *ecs, std::size_t enemy);

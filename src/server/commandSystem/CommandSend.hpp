@@ -29,7 +29,6 @@ private:
   void createEnemy(Command command, IProtocol *protocol);
   void newPlayer(Command command, IProtocol *protocol);
   void createPlayer(Command command, IProtocol *protocol);
-  void startGame(Command command, IProtocol *protocol);
   void getUsersLobby(Command command, IProtocol *protocol);
   void newPlayerLobby(Command command, IProtocol *protocol);
   void cooldown(Command command, IProtocol *protocol);
