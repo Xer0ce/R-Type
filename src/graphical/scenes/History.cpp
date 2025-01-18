@@ -26,6 +26,12 @@ void History::init() {
   _window->setBackgroundScrolling(true);
 }
 
+void History::cam_system(keyType key) {
+  if (key == C) {
+    _window->setCameraFeed();
+  }
+}
+
 sceneType
 History::loop(eventType event,
               std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
@@ -49,6 +55,7 @@ History::loop(eventType event,
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
+    cam_system(keyOnce);
     _window->moveBackground();
     if (_window->getAllowToInteract()) {
       std::chrono::time_point<std::chrono::steady_clock> now =
@@ -77,5 +84,6 @@ History::loop(eventType event,
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
   }
+  _window->displayCameraFeed();
   return sceneType::NO_SWITCH;
 }
