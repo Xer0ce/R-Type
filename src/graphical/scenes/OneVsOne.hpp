@@ -26,6 +26,8 @@ public:
 
   void spell_system(std::vector<keyType> keys);
 
+  void cam_system(keyType key);
+
 private:
   CommandGame commandGame;
   std::vector<std::string> _backgroundPaths;
