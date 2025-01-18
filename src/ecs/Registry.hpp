@@ -259,8 +259,9 @@ public:
         [&value](const Entities &entity) { return entity == value; });
 
     if (it != _entities.end()) {
-      if (std::find(_available_entities.begin(), _available_entities.end(), value) == _available_entities.end()) {
-            _available_entities.push_back(value);
+      if (std::find(_available_entities.begin(), _available_entities.end(),
+                    value) == _available_entities.end()) {
+        _available_entities.push_back(value);
       }
       for (auto &elem : _removal_functions) {
         try {
