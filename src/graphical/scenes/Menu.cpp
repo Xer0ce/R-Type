@@ -210,9 +210,9 @@ void Menu::initSettingsMenu() {
 }
 
 void Menu::init() {
-  std::string textInputLabel = "TextInput";
-  _window->addTextInput(textInputLabel, 500, 500, 50, 500);
-  _window->addTextInput(textInputLabel, 500, 700, 50, 500);
+  _window->addTextInput("nickname", 840, 345, 35, 200);
+  _window->addTextInput("ip", 443, 345, 35, 350);
+
   _assetsPath = "../src/graphical/assets/menu/";
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/menu/menu.png"));
@@ -318,16 +318,12 @@ bool Menu::isJoinGameReady() { return _spaceshipId != -1 && _bulletId != -1; }
 sceneType Menu::buttonSystem(Boutton &boutton) {
   if (boutton.isClicked) {
     if (boutton.label == "ship") {
-      std::cout << "ship value selected id : " << boutton.value << std::endl;
       _spaceshipId = boutton.value;
     }
     if (boutton.label == "shoot") {
-      std::cout << "gamemode value selected id : " << boutton.value
-                << std::endl;
       _bulletId = boutton.value;
     }
     if (boutton.label == "gamemode") {
-      std::cout << "shoot value selected id : " << boutton.value << std::endl;
       _gameMode = boutton.value;
     }
     if (boutton.label == "createParty") {
@@ -340,9 +336,7 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
         auto &entities = _ecs->get_components<EntityType>();
         for (std::size_t i = 0; i != entities.size(); i++)
           _ecs->kill_entity(static_cast<Entities>(i));
-        std::cout << "game is ready id " << _gameMode << std::endl;
         if (_gameMode == 3) {
-          std::cout << "game is ready lauch to history" << std::endl;
           return sceneType::LOBBY_HISTORY;
         }
         return sceneType::LOBBY;
@@ -351,7 +345,6 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
       }
     }
     if (boutton.label == "joinparty") {
-      std::cout << "join party" << std::endl;
       if (isJoinGameReady()) {
         _params->bulletId = _bulletId;
         _params->spaceshipId = _spaceshipId;
@@ -368,20 +361,26 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
       auto &menuType = _ecs->get_components<MenuType>();
       if (visibility[1]->isVisible) {
         visibility[1]->isVisible = false;
+        _window->setIsVisible(0, false);
       } else {
         hideAllMenu();
         resetGameValues();
         visibility[1]->isVisible = true;
+        _window->setIsVisible(0, true);
       }
     }
     if (boutton.label == "join") {
       auto &visibility = _ecs->get_components<Visibility>();
       if (visibility[2]->isVisible) {
         visibility[2]->isVisible = false;
+        _window->setIsVisible(0, false);
+        _window->setIsVisible(1, false);
       } else {
         hideAllMenu();
         resetGameValues();
         visibility[2]->isVisible = true;
+        _window->setIsVisible(0, true);
+        _window->setIsVisible(1, true);
       }
     }
     if (boutton.label == "params") {

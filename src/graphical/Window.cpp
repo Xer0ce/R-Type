@@ -293,7 +293,7 @@ void Window::createMenuPipe() {
   pipeRect.h = 400;
 
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+  SDL_SetRenderDrawColor(renderer, 37, 37, 37, 70);
   SDL_RenderFillRect(renderer, &pipeRect);
 }
 
