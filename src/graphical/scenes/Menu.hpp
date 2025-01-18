@@ -47,6 +47,8 @@ public:
 
   sceneType buttonSystem(Boutton &boutton);
 
+  void displayCameraFeed();
+
 private:
   std::string _selectedButton;
   std::string _menuTitle;
