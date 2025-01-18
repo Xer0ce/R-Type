@@ -41,7 +41,7 @@ void aggresive_ai(Registry *ecs, std::size_t enemy) {
       lastChangeTime = now;
     }
   } else {
-    std::cout << "No players found." << std::endl;
+    //std::cout << "No players found." << std::endl;
     return;
   }
 

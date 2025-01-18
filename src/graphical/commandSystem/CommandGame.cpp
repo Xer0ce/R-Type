@@ -156,7 +156,7 @@ void CommandGame::move(Command command, Queue *queue,
       positions[i]->y = command.move.positionY;
       draw[i]->rect.x = command.move.positionX;
       draw[i]->rect.y = command.move.positionY;
-      std::cout << "changing move command" << std::endl;
+      //std::cout << "changing move command" << std::endl;
     }
   }
 }
@@ -164,6 +164,7 @@ void CommandGame::move(Command command, Queue *queue,
 void CommandGame::killEntity(Command command, Queue *queue,
                              std::shared_ptr<Registry> ecs, Window *window) {
   auto &entities = ecs->get_components<EntityType>();
+
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.killEntity.entityId) {
