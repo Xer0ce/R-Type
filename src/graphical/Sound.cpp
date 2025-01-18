@@ -35,7 +35,7 @@ void Sound::loadSound(const std::string path) {
 
 void Sound::playSound(int loop) {
   if (_sound == NULL) {
-    std::cerr << "Error: sound is not loaded" << std::endl;
+    // std::cerr << "Error: sound is not loaded" << std::endl;
     return;
   }
   _channel = Mix_PlayChannel(-1, _sound, loop);
@@ -43,7 +43,7 @@ void Sound::playSound(int loop) {
 
 void Sound::stopSound() {
   if (_sound == NULL) {
-    std::cerr << "Error: sound is not loaded" << std::endl;
+    // std::cerr << "Error: sound is not loaded" << std::endl;
     return;
   }
   if (_channel == -1) {
@@ -55,7 +55,7 @@ void Sound::stopSound() {
 
 void Sound::setVolume(int volume) {
   if (_sound == NULL) {
-    std::cerr << "Error: sound is not loaded" << std::endl;
+    // std::cerr << "Error: sound is not loaded" << std::endl;
     return;
   }
   Mix_VolumeChunk(_sound, volume);
