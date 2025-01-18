@@ -26,20 +26,20 @@ void Window::init() {
     exit(84);
   }
 
-  if (!SDL_Init(SDL_INIT_AUDIO)) {
-    std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
-    exit(84);
-  }
+  // if (!SDL_Init(SDL_INIT_AUDIO)) {
+  //   std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
+  //   exit(84);
+  // }
 
-  if (Mix_Init(MIX_INIT_MP3) == 0) {
-    std::cerr << "Mix_Init Error: " << SDL_GetError() << std::endl;
-    exit(84);
-  }
+  // if (Mix_Init(MIX_INIT_MP3) == 0) {
+  //   std::cerr << "Mix_Init Error: " << SDL_GetError() << std::endl;
+  //   exit(84);
+  // }
 
-  if (!Mix_OpenAudio(0, NULL)) {
-    std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
-    exit(84);
-  }
+  // if (!Mix_OpenAudio(0, NULL)) {
+  //   std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
+  //   exit(84);
+  // }
 
   if (!TTF_Init()) {
     std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
@@ -76,6 +76,7 @@ void Window::init() {
   _spell = loadTexture("../src/graphical/assets/freezeSpell.png");
   _spellDisable = loadTexture("../src/graphical/assets/freezeSpellDisable.png");
   _freezeOverlay = loadTexture("../src/graphical/assets/freezeOverlay.png");
+  _rectCam = {0, 0, 160, 120};
 
   int cameraCount = 0;
   SDL_CameraID *cameraIDs = SDL_GetCameras(&cameraCount);
@@ -91,8 +92,6 @@ void Window::init() {
     std::cerr << "SDL_OpenCamera Error: " << SDL_GetError() << std::endl;
     exit(84);
   }
-
-  _rectCam = {0, 0, 160, 120};
 
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
@@ -242,9 +241,13 @@ keyType Window::catchKeyOnce() {
   const bool *keyState = SDL_GetKeyboardState(NULL);
 
   std::vector<std::pair<SDL_Scancode, keyType>> keys = {
-      {SDL_SCANCODE_UP, UP},         {SDL_SCANCODE_RIGHT, RIGHT},
-      {SDL_SCANCODE_DOWN, DOWN},     {SDL_SCANCODE_LEFT, LEFT},
-      {SDL_SCANCODE_ESCAPE, ESCAPE}, {SDL_SCANCODE_SPACE, SPACE}};
+      {SDL_SCANCODE_UP, UP},
+      {SDL_SCANCODE_RIGHT, RIGHT},
+      {SDL_SCANCODE_DOWN, DOWN},
+      {SDL_SCANCODE_LEFT, LEFT},
+      {SDL_SCANCODE_ESCAPE, ESCAPE},
+      {SDL_SCANCODE_SPACE, SPACE},
+      {SDL_SCANCODE_C, C}};
 
   for (const auto &key : keys) {
     SDL_Scancode scancode = key.first;
@@ -273,6 +276,8 @@ std::vector<keyType> Window::catchKey() {
     keys.push_back(SPACE);
   if (keyState[SDL_SCANCODE_F])
     keys.push_back(F);
+  if (keyState[SDL_SCANCODE_C])
+    keys.push_back(C);
   if (keys.empty())
     keys.push_back(NONE);
   return keys;
@@ -430,6 +435,8 @@ void Window::changeFreezeStatus(bool enable) { _freezeIsEnable = enable; }
 bool &Window::getFreezeEnable() { return _freezeIsEnable; }
 
 void Window::displayCameraFeed() {
+  if (!_isCameraFeed)
+    return;
   if (!_camera) {
     std::cerr << "Error: Camera not initialized!" << std::endl;
     return;
@@ -449,6 +456,8 @@ void Window::displayCameraFeed() {
   if (!surfaceCamera) {
 
     SDL_RenderTexture(_renderer, _textureCamera, NULL, &_rectCam);
+    SDL_SetRenderDrawColor(_renderer, 0, 255, 0, 255);
+    SDL_RenderRect(_renderer, &_rectCam);
     return;
   }
 
@@ -490,5 +499,7 @@ void Window::displayCameraFeed() {
                     surfaceCamera->pitch);
 
   SDL_RenderTexture(_renderer, _textureCamera, NULL, &_rectCam);
+  SDL_SetRenderDrawColor(_renderer, 0, 255, 0, 255);
+  SDL_RenderRect(_renderer, &_rectCam);
   SDL_ReleaseCameraFrame(_camera, surfaceCamera);
 }
