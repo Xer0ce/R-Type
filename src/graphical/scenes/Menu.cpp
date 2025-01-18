@@ -48,162 +48,190 @@ std::pair<int, int> calculateResponsiveSize(int originalWidth,
 }
 
 void Menu::initMenu() {
-  SDL_Texture *pipeMenuTexture = _window->loadTexture((_assetsPath + "menuPipe.png").c_str());
-  SDL_Texture *hostTexture = _window->loadTexture((_assetsPath + "host.png").c_str());
-  SDL_Texture *selectedhostTexture = _window->loadTexture((_assetsPath + "selectedhost.png").c_str());
-  SDL_Texture *joinTexture = _window->loadTexture((_assetsPath + "join.png").c_str());
-  SDL_Texture *selectedjoinTexture = _window->loadTexture((_assetsPath + "selectedjoin.png").c_str());
-  SDL_Texture *paramsTexture = _window->loadTexture((_assetsPath + "params.png").c_str());
-  SDL_Texture *selectedparamsTexture = _window->loadTexture((_assetsPath + "selectedparams.png").c_str());
-  SDL_Texture *exitTexture = _window->loadTexture((_assetsPath + "exit.png").c_str());
-  SDL_Texture *selectedexitTexture = _window->loadTexture((_assetsPath + "selectedexit.png").c_str());
+  SDL_Texture *pipeMenuTexture =
+      _window->loadTexture((_assetsPath + "menuPipe.png").c_str());
+  SDL_Texture *hostTexture =
+      _window->loadTexture((_assetsPath + "host.png").c_str());
+  SDL_Texture *selectedhostTexture =
+      _window->loadTexture((_assetsPath + "selectedhost.png").c_str());
+  SDL_Texture *joinTexture =
+      _window->loadTexture((_assetsPath + "join.png").c_str());
+  SDL_Texture *selectedjoinTexture =
+      _window->loadTexture((_assetsPath + "selectedjoin.png").c_str());
+  SDL_Texture *paramsTexture =
+      _window->loadTexture((_assetsPath + "params.png").c_str());
+  SDL_Texture *selectedparamsTexture =
+      _window->loadTexture((_assetsPath + "selectedparams.png").c_str());
+  SDL_Texture *exitTexture =
+      _window->loadTexture((_assetsPath + "exit.png").c_str());
+  SDL_Texture *selectedexitTexture =
+      _window->loadTexture((_assetsPath + "selectedexit.png").c_str());
 
   auto join = create_entity<EntityType::Menu>(
       *_ecs, Position(100, 100), Size(100, 300),
-      Draw({0, 0, 0, 0}, {63, 270, 3, 220},
-           pipeMenuTexture),
-      Visibility(true), MenuType::menu,
+      Draw({0, 0, 0, 0}, {63, 270, 3, 220}, pipeMenuTexture), Visibility(true),
+      MenuType::menu,
       MenuElements({
-          Boutton(SDL_Rect{75, 280, 315, 44},
-                  "host", hostTexture, selectedhostTexture, false, false, 1),
-          Boutton(SDL_Rect{75, 330, 315, 44},
-                  "join", joinTexture, selectedjoinTexture, false, false, 1),
-          Boutton(SDL_Rect{75, 380, 315, 44},
-                  "params", paramsTexture, selectedparamsTexture, false, false,
-                  1),
-          Boutton(SDL_Rect{75, 430, 315, 44},
-                  "exit", exitTexture, selectedexitTexture, false, false, 1),
+          Boutton(SDL_Rect{75, 280, 315, 44}, "host", hostTexture,
+                  selectedhostTexture, false, false, 1),
+          Boutton(SDL_Rect{75, 330, 315, 44}, "join", joinTexture,
+                  selectedjoinTexture, false, false, 1),
+          Boutton(SDL_Rect{75, 380, 315, 44}, "params", paramsTexture,
+                  selectedparamsTexture, false, false, 1),
+          Boutton(SDL_Rect{75, 430, 315, 44}, "exit", exitTexture,
+                  selectedexitTexture, false, false, 1),
       }));
 }
 
 void Menu::initHostMenu() {
 
-  SDL_Texture *hostBackgroundTexture = _window->loadTexture((_assetsPath + "hostBackground.png").c_str());
+  SDL_Texture *hostBackgroundTexture =
+      _window->loadTexture((_assetsPath + "hostBackground.png").c_str());
 
-  SDL_Texture *endlessTexture = _window->loadTexture((_assetsPath + "endless.png").c_str());
-  SDL_Texture *selectedendlessTexture = _window->loadTexture((_assetsPath + "selectedendless.png").c_str());
-  SDL_Texture *onevsoneTexture = _window->loadTexture((_assetsPath + "onevsone.png").c_str());
-  SDL_Texture *selectedonevsoneTexture = _window->loadTexture((_assetsPath + "selectedonevsone.png").c_str());
-  SDL_Texture *historyTexture = _window->loadTexture((_assetsPath + "history.png").c_str());
-  SDL_Texture *selectedhistoryTexture = _window->loadTexture((_assetsPath + "selectedhistory.png").c_str());
+  SDL_Texture *endlessTexture =
+      _window->loadTexture((_assetsPath + "endless.png").c_str());
+  SDL_Texture *selectedendlessTexture =
+      _window->loadTexture((_assetsPath + "selectedendless.png").c_str());
+  SDL_Texture *onevsoneTexture =
+      _window->loadTexture((_assetsPath + "onevsone.png").c_str());
+  SDL_Texture *selectedonevsoneTexture =
+      _window->loadTexture((_assetsPath + "selectedonevsone.png").c_str());
+  SDL_Texture *historyTexture =
+      _window->loadTexture((_assetsPath + "history.png").c_str());
+  SDL_Texture *selectedhistoryTexture =
+      _window->loadTexture((_assetsPath + "selectedhistory.png").c_str());
 
-  SDL_Texture *ship1Texture = _window->loadTexture((_assetsPath + "ship1.png").c_str());
-  SDL_Texture *selectedship1Texture = _window->loadTexture((_assetsPath + "selectedship1.png").c_str());
-  SDL_Texture *ship2Texture = _window->loadTexture((_assetsPath + "ship2.png").c_str());
-  SDL_Texture *selectedship2Texture = _window->loadTexture((_assetsPath + "selectedship2.png").c_str());
-  SDL_Texture *ship3Texture = _window->loadTexture((_assetsPath + "ship3.png").c_str());
-  SDL_Texture *selectedship3Texture = _window->loadTexture((_assetsPath + "selectedship3.png").c_str());
-  SDL_Texture *ship4Texture = _window->loadTexture((_assetsPath + "ship4.png").c_str());
-  SDL_Texture *selectedship4Texture = _window->loadTexture((_assetsPath + "selectedship4.png").c_str());
-  SDL_Texture *shoot1Texture = _window->loadTexture((_assetsPath + "shoot1.png").c_str());
-  SDL_Texture *selectedshoot1Texture = _window->loadTexture((_assetsPath + "selectedshoot1.png").c_str());
-  SDL_Texture *shoot2Texture = _window->loadTexture((_assetsPath + "shoot2.png").c_str());
-  SDL_Texture *selectedshoot2Texture = _window->loadTexture((_assetsPath + "selectedshoot2.png").c_str());
-  SDL_Texture *shoot3Texture = _window->loadTexture((_assetsPath + "shoot3.png").c_str());
-  SDL_Texture *selectedshoot3Texture = _window->loadTexture((_assetsPath + "selectedshoot3.png").c_str());
-  SDL_Texture *shoot4Texture = _window->loadTexture((_assetsPath + "shoot4.png").c_str());
-  SDL_Texture *selectedshoot4Texture = _window->loadTexture((_assetsPath + "selectedshoot4.png").c_str());
-  SDL_Texture *createPartyTexture = _window->loadTexture((_assetsPath + "createPartyBtn.png").c_str());
-  SDL_Texture *createPartySelTexture = _window->loadTexture((_assetsPath + "createPartyBtnSel.png").c_str());
+  SDL_Texture *ship1Texture =
+      _window->loadTexture((_assetsPath + "ship1.png").c_str());
+  SDL_Texture *selectedship1Texture =
+      _window->loadTexture((_assetsPath + "selectedship1.png").c_str());
+  SDL_Texture *ship2Texture =
+      _window->loadTexture((_assetsPath + "ship2.png").c_str());
+  SDL_Texture *selectedship2Texture =
+      _window->loadTexture((_assetsPath + "selectedship2.png").c_str());
+  SDL_Texture *ship3Texture =
+      _window->loadTexture((_assetsPath + "ship3.png").c_str());
+  SDL_Texture *selectedship3Texture =
+      _window->loadTexture((_assetsPath + "selectedship3.png").c_str());
+  SDL_Texture *ship4Texture =
+      _window->loadTexture((_assetsPath + "ship4.png").c_str());
+  SDL_Texture *selectedship4Texture =
+      _window->loadTexture((_assetsPath + "selectedship4.png").c_str());
+  SDL_Texture *shoot1Texture =
+      _window->loadTexture((_assetsPath + "shoot1.png").c_str());
+  SDL_Texture *selectedshoot1Texture =
+      _window->loadTexture((_assetsPath + "selectedshoot1.png").c_str());
+  SDL_Texture *shoot2Texture =
+      _window->loadTexture((_assetsPath + "shoot2.png").c_str());
+  SDL_Texture *selectedshoot2Texture =
+      _window->loadTexture((_assetsPath + "selectedshoot2.png").c_str());
+  SDL_Texture *shoot3Texture =
+      _window->loadTexture((_assetsPath + "shoot3.png").c_str());
+  SDL_Texture *selectedshoot3Texture =
+      _window->loadTexture((_assetsPath + "selectedshoot3.png").c_str());
+  SDL_Texture *shoot4Texture =
+      _window->loadTexture((_assetsPath + "shoot4.png").c_str());
+  SDL_Texture *selectedshoot4Texture =
+      _window->loadTexture((_assetsPath + "selectedshoot4.png").c_str());
+  SDL_Texture *createPartyTexture =
+      _window->loadTexture((_assetsPath + "createPartyBtn.png").c_str());
+  SDL_Texture *createPartySelTexture =
+      _window->loadTexture((_assetsPath + "createPartyBtnSel.png").c_str());
 
   auto host = create_entity<EntityType::Menu>(
       *_ecs, Position(100, 100), Size(100, 100),
-      Draw({255, 255, 255, 255},
-           {400, 280, 699, 444},
-           hostBackgroundTexture),
+      Draw({255, 255, 255, 255}, {400, 280, 699, 444}, hostBackgroundTexture),
       Visibility(false), MenuType::host,
       MenuElements(
-          {Boutton(SDL_Rect{449, 345, 129,
-                            55},
-                   "gamemode", endlessTexture, selectedendlessTexture, false,
-                   false, 1),
-           Boutton(SDL_Rect{579, 345, 129,
-                            55},
-                   "gamemode", onevsoneTexture, selectedonevsoneTexture, false,
-                   false, 2),
-           Boutton(SDL_Rect{709, 345, 129,
-                            55},
-                   "gamemode", historyTexture, selectedhistoryTexture, false,
-                   false, 3),
-           Boutton(SDL_Rect{449, 413, 129, 75},
-                   "ship", ship1Texture, selectedship1Texture, false, false, 1),
-           Boutton(SDL_Rect{603, 413, 129, 75},
-                   "ship", ship2Texture, selectedship2Texture, false, false, 2),
-           Boutton(SDL_Rect{758, 413, 129, 75},
-                   "ship", ship3Texture, selectedship3Texture, false, false, 3),
-           Boutton(SDL_Rect{914, 413, 129, 75},
-                   "ship", ship4Texture, selectedship4Texture, false, false, 4),
-           Boutton(SDL_Rect{449, 537, 129, 75},
-                   "shoot", shoot1Texture, selectedshoot1Texture, false, false,
-                   1),
-           Boutton(SDL_Rect{603, 537, 129, 75},
-                   "shoot", shoot2Texture, selectedshoot2Texture, false, false,
-                   2),
-           Boutton(SDL_Rect{758, 537, 129, 75},
-                   "shoot", shoot3Texture, selectedshoot3Texture, false, false,
-                   3),
-           Boutton(SDL_Rect{914, 537, 129, 75},
-                   "shoot", shoot4Texture, selectedshoot4Texture, false, false,
-                   4),
-           Boutton(SDL_Rect{445, 641, 600,
-                            52},
-                   "createParty", createPartyTexture, createPartySelTexture,
-                   0)}));
+          {Boutton(SDL_Rect{449, 345, 129, 55}, "gamemode", endlessTexture,
+                   selectedendlessTexture, false, false, 1),
+           Boutton(SDL_Rect{579, 345, 129, 55}, "gamemode", onevsoneTexture,
+                   selectedonevsoneTexture, false, false, 2),
+           Boutton(SDL_Rect{709, 345, 129, 55}, "gamemode", historyTexture,
+                   selectedhistoryTexture, false, false, 3),
+           Boutton(SDL_Rect{449, 413, 129, 75}, "ship", ship1Texture,
+                   selectedship1Texture, false, false, 1),
+           Boutton(SDL_Rect{603, 413, 129, 75}, "ship", ship2Texture,
+                   selectedship2Texture, false, false, 2),
+           Boutton(SDL_Rect{758, 413, 129, 75}, "ship", ship3Texture,
+                   selectedship3Texture, false, false, 3),
+           Boutton(SDL_Rect{914, 413, 129, 75}, "ship", ship4Texture,
+                   selectedship4Texture, false, false, 4),
+           Boutton(SDL_Rect{449, 537, 129, 75}, "shoot", shoot1Texture,
+                   selectedshoot1Texture, false, false, 1),
+           Boutton(SDL_Rect{603, 537, 129, 75}, "shoot", shoot2Texture,
+                   selectedshoot2Texture, false, false, 2),
+           Boutton(SDL_Rect{758, 537, 129, 75}, "shoot", shoot3Texture,
+                   selectedshoot3Texture, false, false, 3),
+           Boutton(SDL_Rect{914, 537, 129, 75}, "shoot", shoot4Texture,
+                   selectedshoot4Texture, false, false, 4),
+           Boutton(SDL_Rect{445, 641, 600, 52}, "createParty",
+                   createPartyTexture, createPartySelTexture, 0)}));
 }
 
 void Menu::initJoinMenu() {
   SDL_Texture *joinBackgroundTexture =
       _window->loadTexture((_assetsPath + "joinBackground.png").c_str());
 
-  SDL_Texture *ship1Texture = _window->loadTexture((_assetsPath + "ship1.png").c_str());
-  SDL_Texture *selectedship1Texture = _window->loadTexture((_assetsPath + "selectedship1.png").c_str());
-  SDL_Texture *ship2Texture = _window->loadTexture((_assetsPath + "ship2.png").c_str());
-  SDL_Texture *selectedship2Texture = _window->loadTexture((_assetsPath + "selectedship2.png").c_str());
-  SDL_Texture *ship3Texture = _window->loadTexture((_assetsPath + "ship3.png").c_str());
-  SDL_Texture *selectedship3Texture = _window->loadTexture((_assetsPath + "selectedship3.png").c_str());
-  SDL_Texture *ship4Texture = _window->loadTexture((_assetsPath + "ship4.png").c_str());
-  SDL_Texture *selectedship4Texture = _window->loadTexture((_assetsPath + "selectedship4.png").c_str());
-  SDL_Texture *shoot1Texture = _window->loadTexture((_assetsPath + "shoot1.png").c_str());
-  SDL_Texture *selectedshoot1Texture = _window->loadTexture((_assetsPath + "selectedshoot1.png").c_str());
-  SDL_Texture *shoot2Texture = _window->loadTexture((_assetsPath + "shoot2.png").c_str());
-  SDL_Texture *selectedshoot2Texture = _window->loadTexture((_assetsPath + "selectedshoot2.png").c_str());
-  SDL_Texture *shoot3Texture = _window->loadTexture((_assetsPath + "shoot3.png").c_str());
-  SDL_Texture *selectedshoot3Texture = _window->loadTexture((_assetsPath + "selectedshoot3.png").c_str());
-  SDL_Texture *shoot4Texture = _window->loadTexture((_assetsPath + "shoot4.png").c_str());
-  SDL_Texture *selectedshoot4Texture = _window->loadTexture((_assetsPath + "selectedshoot4.png").c_str());
-  SDL_Texture *joinPartyTexture = _window->loadTexture((_assetsPath + "joinPartyBtn.png").c_str());
-  SDL_Texture *joinPartySelTexture = _window->loadTexture((_assetsPath + "joinPartyBtnSel.png").c_str());
+  SDL_Texture *ship1Texture =
+      _window->loadTexture((_assetsPath + "ship1.png").c_str());
+  SDL_Texture *selectedship1Texture =
+      _window->loadTexture((_assetsPath + "selectedship1.png").c_str());
+  SDL_Texture *ship2Texture =
+      _window->loadTexture((_assetsPath + "ship2.png").c_str());
+  SDL_Texture *selectedship2Texture =
+      _window->loadTexture((_assetsPath + "selectedship2.png").c_str());
+  SDL_Texture *ship3Texture =
+      _window->loadTexture((_assetsPath + "ship3.png").c_str());
+  SDL_Texture *selectedship3Texture =
+      _window->loadTexture((_assetsPath + "selectedship3.png").c_str());
+  SDL_Texture *ship4Texture =
+      _window->loadTexture((_assetsPath + "ship4.png").c_str());
+  SDL_Texture *selectedship4Texture =
+      _window->loadTexture((_assetsPath + "selectedship4.png").c_str());
+  SDL_Texture *shoot1Texture =
+      _window->loadTexture((_assetsPath + "shoot1.png").c_str());
+  SDL_Texture *selectedshoot1Texture =
+      _window->loadTexture((_assetsPath + "selectedshoot1.png").c_str());
+  SDL_Texture *shoot2Texture =
+      _window->loadTexture((_assetsPath + "shoot2.png").c_str());
+  SDL_Texture *selectedshoot2Texture =
+      _window->loadTexture((_assetsPath + "selectedshoot2.png").c_str());
+  SDL_Texture *shoot3Texture =
+      _window->loadTexture((_assetsPath + "shoot3.png").c_str());
+  SDL_Texture *selectedshoot3Texture =
+      _window->loadTexture((_assetsPath + "selectedshoot3.png").c_str());
+  SDL_Texture *shoot4Texture =
+      _window->loadTexture((_assetsPath + "shoot4.png").c_str());
+  SDL_Texture *selectedshoot4Texture =
+      _window->loadTexture((_assetsPath + "selectedshoot4.png").c_str());
+  SDL_Texture *joinPartyTexture =
+      _window->loadTexture((_assetsPath + "joinPartyBtn.png").c_str());
+  SDL_Texture *joinPartySelTexture =
+      _window->loadTexture((_assetsPath + "joinPartyBtnSel.png").c_str());
 
   auto join = create_entity<EntityType::Menu>(
       *_ecs, Position(100, 100), Size(400, 300),
-      Draw({0, 0, 0, 0}, {400, 280, 699, 444},
-           joinBackgroundTexture),
+      Draw({0, 0, 0, 0}, {400, 280, 699, 444}, joinBackgroundTexture),
       Visibility(false), MenuType::join,
-      MenuElements({
-            Boutton(SDL_Rect{449, 413, 129, 75},
-                   "ship", ship1Texture, selectedship1Texture, false, false, 1),
-           Boutton(SDL_Rect{603, 413, 129, 75},
-                   "ship", ship2Texture, selectedship2Texture, false, false, 2),
-           Boutton(SDL_Rect{758, 413, 129, 75},
-                   "ship", ship3Texture, selectedship3Texture, false, false, 3),
-           Boutton(SDL_Rect{914, 413, 129, 75},
-                   "ship", ship4Texture, selectedship4Texture, false, false, 4),
-           Boutton(SDL_Rect{449, 537, 129, 75},
-                   "shoot", shoot1Texture, selectedshoot1Texture, false, false,
-                   1),
-           Boutton(SDL_Rect{603, 537, 129, 75},
-                   "shoot", shoot2Texture, selectedshoot2Texture, false, false,
-                   2),
-           Boutton(SDL_Rect{758, 537, 129, 75},
-                   "shoot", shoot3Texture, selectedshoot3Texture, false, false,
-                   3),
-           Boutton(SDL_Rect{914, 537, 129, 75},
-                   "shoot", shoot4Texture, selectedshoot4Texture, false, false,
-                   4),
-           Boutton(SDL_Rect{445, 641, 600,
-                            52},
-                   "joinparty", joinPartyTexture, joinPartySelTexture, 0)
-          }));
+      MenuElements({Boutton(SDL_Rect{449, 413, 129, 75}, "ship", ship1Texture,
+                            selectedship1Texture, false, false, 1),
+                    Boutton(SDL_Rect{603, 413, 129, 75}, "ship", ship2Texture,
+                            selectedship2Texture, false, false, 2),
+                    Boutton(SDL_Rect{758, 413, 129, 75}, "ship", ship3Texture,
+                            selectedship3Texture, false, false, 3),
+                    Boutton(SDL_Rect{914, 413, 129, 75}, "ship", ship4Texture,
+                            selectedship4Texture, false, false, 4),
+                    Boutton(SDL_Rect{449, 537, 129, 75}, "shoot", shoot1Texture,
+                            selectedshoot1Texture, false, false, 1),
+                    Boutton(SDL_Rect{603, 537, 129, 75}, "shoot", shoot2Texture,
+                            selectedshoot2Texture, false, false, 2),
+                    Boutton(SDL_Rect{758, 537, 129, 75}, "shoot", shoot3Texture,
+                            selectedshoot3Texture, false, false, 3),
+                    Boutton(SDL_Rect{914, 537, 129, 75}, "shoot", shoot4Texture,
+                            selectedshoot4Texture, false, false, 4),
+                    Boutton(SDL_Rect{445, 641, 600, 52}, "joinparty",
+                            joinPartyTexture, joinPartySelTexture, 0)}));
 }
 
 void Menu::initSettingsMenu() {
@@ -213,8 +241,7 @@ void Menu::initSettingsMenu() {
 
   auto params = create_entity<EntityType::Menu>(
       *_ecs, Position(100, 100), Size(400, 300),
-      Draw({0, 0, 0, 0}, {400, 280, 699, 444},
-           settingsBackgroundTexture),
+      Draw({0, 0, 0, 0}, {400, 280, 699, 444}, settingsBackgroundTexture),
       Visibility(false), MenuType::settings, MenuElements());
 }
 
