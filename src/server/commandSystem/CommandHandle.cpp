@@ -84,7 +84,7 @@ void CommandHandle::move(std::vector<uint8_t> buffer, IProtocol *protocol,
   cmd.move.positionX = positionX;
   cmd.move.positionY = positionY;
   cmd.id = clientPort;
-  //std::cout << "receive move command" << std::endl;
+  // std::cout << "receive move command" << std::endl;
   queue->pushGameQueue(cmd);
 }
 

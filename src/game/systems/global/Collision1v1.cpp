@@ -56,19 +56,19 @@ void collision_system_1v1(Registry *ecs, Queue *queue) {
                     position[j]->y < position[k]->y + 50 &&
                     position[j]->y + 50 > position[k]->y) {
                   ecs->kill_entity(static_cast<Entities>(k));
-                  //health[i]->hp -= 10;
-                  //cmd.type = HIT;
-                  //cmd.hit.damage = 10;
-                  //cmd.hit.entityHit = i;
-                  //queue->pushTcpQueue(cmd);
-                  //cmd.type = CommandType::KILLENTITY;
-                  //cmd.killEntity.entityId = j;
-                  //queue->pushTcpQueue(cmd);
-                  //if (health[i]->hp <= 0) {
-                    ecs->kill_entity(static_cast<Entities>(k));
-                    cmd.type = CommandType::KILLENTITY;
-                    cmd.killEntity.entityId = k;
-                    queue->pushTcpQueue(cmd);
+                  // health[i]->hp -= 10;
+                  // cmd.type = HIT;
+                  // cmd.hit.damage = 10;
+                  // cmd.hit.entityHit = i;
+                  // queue->pushTcpQueue(cmd);
+                  // cmd.type = CommandType::KILLENTITY;
+                  // cmd.killEntity.entityId = j;
+                  // queue->pushTcpQueue(cmd);
+                  // if (health[i]->hp <= 0) {
+                  ecs->kill_entity(static_cast<Entities>(k));
+                  cmd.type = CommandType::KILLENTITY;
+                  cmd.killEntity.entityId = k;
+                  queue->pushTcpQueue(cmd);
                   //}
                 }
               }
