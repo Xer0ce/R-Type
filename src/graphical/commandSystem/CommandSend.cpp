@@ -92,7 +92,7 @@ void CommandSend::move(Command command, IClient *protocol) {
                     positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
-  std::cout << "sending move command" << std::endl;
+  // std::cout << "sending move command" << std::endl;
   protocol->sendToServer(binaryData);
 }
 

@@ -109,7 +109,7 @@ OneVsOne::loop(eventType event,
       spell_system(keys);
     }
     position_system_graphic(1, *_ecs, _queue);
-    display_infos(_ecs);
+    display_infos(_ecs.get());
   }
   _window->drawBackground();
   _window->drawText();
