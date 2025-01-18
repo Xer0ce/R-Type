@@ -115,6 +115,7 @@ void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.move.entityId = static_cast<int>(buffer[1]);
   cmd.move.positionX = *reinterpret_cast<float *>(&buffer[2]);
   cmd.move.positionY = *reinterpret_cast<float *>(&buffer[6]);
+  std::cout << "receive move command" << std::endl;
   queue->pushGameQueue(cmd);
 }
 
@@ -173,6 +174,7 @@ void CommandHandle::startGame(std::vector<uint8_t> buffer, IClient *protocol,
   Command cmd;
 
   cmd.type = CommandType::STARTGAME;
+  cmd.startGame.gamemode = static_cast<int>(buffer[1]);
   queue->pushGameQueue(cmd);
 }
 

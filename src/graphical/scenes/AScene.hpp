@@ -30,10 +30,13 @@ public:
 
   void setChoosingParams(ChoosingParams *params) override;
 
+  void setGamemode(int gamemode) override;
+
 protected:
   std::string _name;
   Window *_window;
   Registry *_ecs;
   Queue *_queue;
   ChoosingParams *_params;
+  int _gamemode;
 };

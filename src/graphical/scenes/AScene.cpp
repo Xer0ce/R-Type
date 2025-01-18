@@ -20,3 +20,5 @@ void AScene::setEcs(Registry *ecs) { _ecs = ecs; }
 void AScene::setQueue(Queue *queue) { _queue = queue; }
 
 void AScene::setChoosingParams(ChoosingParams *params) { _params = params; }
+
+void AScene::setGamemode(int gamemode) { _gamemode = gamemode; }

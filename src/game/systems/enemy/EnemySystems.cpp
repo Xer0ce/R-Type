@@ -54,12 +54,12 @@ void enemy_shoot_system(Registry *ecs, Queue *queue) {
   int bulletId = 0;
 
   const std::unordered_map<FrequencyType, double> shootFrequencies = {
-    {FrequencyType::Slow, 2.0},
-    {FrequencyType::High, 1.0},
-    {FrequencyType::Turret, 0.5}
-  };
+      {FrequencyType::Slow, 2.0},
+      {FrequencyType::High, 1.0},
+      {FrequencyType::Turret, 0.5}};
 
-  static std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastShootTimes;
+  static std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>
+      lastShootTimes;
 
   auto now = std::chrono::steady_clock::now();
 
@@ -79,7 +79,9 @@ void enemy_shoot_system(Registry *ecs, Queue *queue) {
     }
 
     auto lastShootTime = lastShootTimes[i];
-    auto duration = std::chrono::duration_cast<std::chrono::seconds>(now - lastShootTime).count();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::seconds>(now - lastShootTime)
+            .count();
 
     if (duration >= frequency) {
       command.type = CommandType::SHOOT;
@@ -92,4 +94,3 @@ void enemy_shoot_system(Registry *ecs, Queue *queue) {
     }
   }
 }
-

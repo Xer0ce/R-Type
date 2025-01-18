@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../../game/LaunchServer.hpp"
 #include "AScene.hpp"
 
 class Menu : public AScene {
@@ -20,10 +21,11 @@ public:
   loop(eventType event,
        std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
-
   void resetGameValues();
 
-  bool isGameReady();
+  bool isHostGameReady();
+
+  bool isJoinGameReady();
 
   void hideAllMenu();
 
@@ -33,17 +35,17 @@ public:
 
   void unclickTypeBoutton(Boutton &boutton, std::string type);
 
-  void initMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initMenu();
 
-  void initHostMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initHostMenu();
 
-  void initJoinMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initJoinMenu();
 
-  void initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initSettingsMenu();
 
-  void mouseHandler(float mouseX, float mouseY, eventType event);
+  sceneType mouseHandler(float mouseX, float mouseY, eventType event);
 
-  void buttonSystem(Boutton &boutton);
+  sceneType buttonSystem(Boutton &boutton);
 
 private:
   std::string _selectedButton;
@@ -51,6 +53,7 @@ private:
   float _windowWidth;
   float _windowHeight;
   std::string _nickname;
+  std::string _assetsPath;
   int _gameMode;
   int _spaceshipId;
   int _bulletId;

@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <iostream>
 #include "../game/Components/Components.hpp"
+#include <iostream>
 
 enum CommandType {
   CONNECT,
@@ -139,6 +139,10 @@ struct createMeteorite {
   int meteoriteId;
 };
 
+struct startGame {
+  int gamemode;
+};
+
 struct Command {
   CommandType type;
   struct Connect connect;
@@ -158,5 +162,6 @@ struct Command {
   struct connect1v1 connect1v1;
   struct freezeSpell freezeSpell;
   struct createMeteorite createMeteorite;
+  struct startGame startGame;
   int id;
 };
