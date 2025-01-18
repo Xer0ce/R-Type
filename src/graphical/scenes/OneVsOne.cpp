@@ -128,5 +128,7 @@ OneVsOne::loop(eventType event,
   if (_window->getFreezeEnable()) {
     _window->drawFreezeOverlay();
   }
+
+  _window->displayCameraFeed();
   return sceneType::NO_SWITCH;
 }
