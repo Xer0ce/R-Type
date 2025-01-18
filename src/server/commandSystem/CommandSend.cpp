@@ -67,7 +67,7 @@ void CommandSend::executeCommandSend(Command command, IProtocol *protocol) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
-    std::cout << "Invalid command type! [Send]" << std::endl;
+    std::cout << "[Send] Invalid command type ! Command id : " << command.type << std::endl;
   }
 }
 
@@ -108,8 +108,7 @@ void CommandSend::disconnect(Command command, IProtocol *protocol) {
   std::cout << "Disconnect command" << std::endl;
   std::string response;
 
-  response = "disconnect OK"; // ici faut faire la commande disconnect si un
-                              // joeur dans la partie c'est deconnecté
+  response = "disconnect OK";
 
   // _protocol->sendData(command.id, binaryData);
 }
@@ -132,7 +131,6 @@ void CommandSend::move(Command command, IProtocol *protocol) {
                     positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
-  // std::cout << "sending move command" << std::endl;
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 

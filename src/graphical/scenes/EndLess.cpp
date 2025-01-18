@@ -51,6 +51,8 @@ EndLess::loop(eventType event,
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
+    auto &entityType = _ecs->get_components<EntityType>();
+    
     _window->moveBackground();
     if (_window->getAllowToInteract()) {
       now = std::chrono::steady_clock::now();

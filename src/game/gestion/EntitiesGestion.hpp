@@ -65,27 +65,27 @@ template <EnemyType T> Entities create_enemy(Registry &r, EnemyProperty enemy) {
 
   if constexpr (T == EnemyType::Pion) {
     return create_entity<EntityType::Enemy>(r, Position(random_x, random_y),
-                                            Velocity(0, 10), Health(30),
+                                            Velocity(0, 2), Health(30),
                                             Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::Balourd) {
     return create_entity<EntityType::Enemy>(r, Position(random_x, random_y),
-                                            Velocity(0, 10), Health(50),
+                                            Velocity(0, 2), Health(50),
                                             Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::Zinzolin) {
     return create_entity<EntityType::Enemy>(r, Position(random_x, random_y),
-                                            Velocity(0, 10), Health(25),
+                                            Velocity(0, 2), Health(25),
                                             Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::Boss) {
     return create_entity<EntityType::Enemy>(r, Position(random_x, random_y),
-                                            Velocity(0, 10), Health(100),
+                                            Velocity(0, 2), Health(100),
                                             Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::BigBoss) {
     return create_entity<EntityType::Enemy>(r, Position(1100, random_y),
-                                            Velocity(0, 10), Health(300),
+                                            Velocity(0, 2), Health(300),
                                             Draw({}, {}, nullptr), enemy);
   }
 }

@@ -195,7 +195,6 @@ public:
       _entities.push_back(Entities(id));
       new_entity = _entities.back();
     }
-    std::cout << "J'ai créé l'entité :" << new_entity << std::endl;
     return new_entity;
   };
 
@@ -219,7 +218,12 @@ public:
       return new_entity;
     }
     if (!_available_entities.empty()) {
-      std::size_t id = _available_entities.front();
+      std::size_t newId = 0;
+      if (std::find(_available_entities.begin(), _available_entities.end(),
+                    id) == _available_entities.end()) {
+          newId = id;
+      }
+      newId = _available_entities.front();
       _available_entities.erase(_available_entities.begin());
       _entities[id] = Entities(id);
       new_entity = _entities[id];

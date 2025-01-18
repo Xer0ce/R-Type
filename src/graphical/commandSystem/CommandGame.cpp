@@ -97,7 +97,7 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, queue, ecs, window);
   } else {
-    std::cout << "Invalid command type! [Game]" << std::endl;
+    std::cout << "[Game] Invalid command type! Command id :" << command.type << std::endl;
   }
 }
 
@@ -135,8 +135,6 @@ void CommandGame::connect(Command command, Queue *queue,
       std::optional<LifeBar>(
           LifeBar(100, {(command.repConnect.positionX),
                         (command.repConnect.positionY), 50, 5})));
-  std::cout << "connect " << player << " attendu " << command.repConnect.id
-            << std::endl;
 }
 
 void CommandGame::disconnect(Command command, Queue *queue,
@@ -156,7 +154,6 @@ void CommandGame::move(Command command, Queue *queue,
       positions[i]->y = command.move.positionY;
       draw[i]->rect.x = command.move.positionX;
       draw[i]->rect.y = command.move.positionY;
-      // std::cout << "changing move command" << std::endl;
     }
   }
 }
@@ -167,14 +164,6 @@ void CommandGame::killEntity(Command command, Queue *queue,
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.killEntity.entityId) {
-      if (entities[i] && entities[i] == EntityType::Player) {
-        std::cout << "Player is dead" << std::endl;
-      }
-      if (entities[i] && entities[i] == EntityType::Enemy) {
-        std::cout << "Enemy is dead" << std::endl;
-      }
-      if (entities[i] && entities[i] == EntityType::Projectile) {
-      }
       ecs->kill_entity(static_cast<Entities>(command.killEntity.entityId));
     }
   }
@@ -194,8 +183,6 @@ void CommandGame::createEnemy(Command command, Queue *queue,
   SDL_Texture *enemyTexture =
       window->loadTexture(pathSpaceshipEnemy[textureId].c_str());
 
-  std::cout << "Create Enemy" << std::endl;
-
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
@@ -206,6 +193,7 @@ void CommandGame::createEnemy(Command command, Queue *queue,
            enemyTexture),
       EnemyProperty(command.createEnemy.p_enemy),
       std::optional<std::size_t>(command.createEnemy.enemyId));
+
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue,
@@ -220,6 +208,7 @@ void CommandGame::newPlayer(Command command, Queue *queue,
   SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
 
   int w = (int)(command.newPlayer.Nickname.size() * 10);
+
 
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
@@ -237,8 +226,6 @@ void CommandGame::newPlayer(Command command, Queue *queue,
       Property(command.newPlayer.spaceshipId, command.newPlayer.shootId, 0,
                command.newPlayer.playerNbr),
       std::nullopt, std::optional<std::size_t>(command.newPlayer.id));
-  std::cout << "new player " << player << " attendu " << command.newPlayer.id
-            << std::endl;
 }
 
 void CommandGame::shoot(Command command, Queue *queue,
@@ -281,7 +268,7 @@ void CommandGame::shoot(Command command, Queue *queue,
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, shootTexture),
       PlayerId(command.shoot.playerId),
       std::optional<std::size_t>(command.shoot.bulletId));
-
+  
   window->playSound(BULLET_SOUND, 0);
 }
 

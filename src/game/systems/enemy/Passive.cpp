@@ -12,8 +12,8 @@ void passive_ai(Registry *ecs, std::size_t enemy) {
   auto &position = ecs->get_components<Position>();
 
   velocity[enemy]->y = 0;
-  if (position[enemy]->x < -10) {
+  if (position[enemy]->x < -2) {
     position[enemy]->x = 1300;
   }
-  velocity[enemy]->x = -10;
+  velocity[enemy]->x = -2;
 }

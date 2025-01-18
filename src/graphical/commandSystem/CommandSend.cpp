@@ -47,11 +47,10 @@ CommandSend::CommandSend() {
 CommandSend::~CommandSend() {}
 
 void CommandSend::executeCommandSend(Command command, IClient *protocol) {
-  // std::cout << "Execute command send" << std::endl;
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
-    std::cout << "Invalid command type! [Send] " << command.type << std::endl;
+    std::cout << "[Send] Invalid command type! Command id :" << command.type << command.type << std::endl;
   }
 }
 
@@ -92,7 +91,6 @@ void CommandSend::move(Command command, IClient *protocol) {
                     positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
-  // std::cout << "sending move command" << std::endl;
   protocol->sendToServer(binaryData);
 }
 
