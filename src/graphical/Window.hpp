@@ -141,6 +141,8 @@ public:
 
   void displayCameraFeed();
 
+  void setCameraFeed() { _isCameraFeed = !_isCameraFeed; }
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -165,6 +167,7 @@ private:
   float _windowHeight;
   bool _spellIsEnable = true;
   bool _freezeIsEnable = false;
+  bool _isCameraFeed = false;
   int _textureCamWidth;
   int _textureCamHeight;
 };
