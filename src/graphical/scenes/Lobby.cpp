@@ -35,16 +35,7 @@ Lobby::loop(eventType event,
       _window->deleteTexts();
       _window->deleteButtons();
       for (std::size_t i = 0; i < entityType.size(); ++i) {
-        if (entityType[i].has_value()) {
-          if (entityType[i] && entityType[i] == EntityType::Player) {
-            _ecs->kill_entity(Entities(i));
-          }
-        }
-      }
-      for (std::size_t i = 0; i < entityType.size(); ++i) {
-        if (entityType[i].has_value()) {
-          _ecs->kill_entity(static_cast<Entities>(i));
-        }
+        _ecs->kill_entity(Entities(i));
       }
       _window->stopAllSound();
       if (_gamemode == 1)

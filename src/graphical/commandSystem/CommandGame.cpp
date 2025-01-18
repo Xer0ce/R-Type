@@ -9,55 +9,55 @@
 
 CommandGame::CommandGame() {
   _commandMap[CommandType::REPCONNECT] = [this](Command command, Queue *queue,
-                                                Registry *ecs, Window *window) {
+                                                std::shared_ptr<Registry> ecs, Window *window) {
     connect(command, queue, ecs, window);
   };
   _commandMap[CommandType::DISCONNECT] = [this](Command command, Queue *queue,
-                                                Registry *ecs, Window *window) {
+                                                std::shared_ptr<Registry> ecs, Window *window) {
     disconnect(command, queue, ecs, window);
   };
   _commandMap[CommandType::MOVE] = [this](Command command, Queue *queue,
-                                          Registry *ecs, Window *window) {
+                                          std::shared_ptr<Registry> ecs, Window *window) {
     move(command, queue, ecs, window);
   };
   _commandMap[CommandType::KILLENTITY] = [this](Command command, Queue *queue,
-                                                Registry *ecs, Window *window) {
+                                                std::shared_ptr<Registry> ecs, Window *window) {
     killEntity(command, queue, ecs, window);
   };
   _commandMap[CommandType::CREATEENEMY] =
-      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+      [this](Command command, Queue *queue, std::shared_ptr<Registry> ecs, Window *window) {
         createEnemy(command, queue, ecs, window);
       };
   _commandMap[CommandType::NEWPLAYER] = [this](Command command, Queue *queue,
-                                               Registry *ecs, Window *window) {
+                                               std::shared_ptr<Registry> ecs, Window *window) {
     newPlayer(command, queue, ecs, window);
   };
   _commandMap[CommandType::SHOOT] = [this](Command command, Queue *queue,
-                                           Registry *ecs, Window *window) {
+                                           std::shared_ptr<Registry> ecs, Window *window) {
     shoot(command, queue, ecs, window);
   };
   _commandMap[CommandType::GETUSERSLOBBY] =
-      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+      [this](Command command, Queue *queue, std::shared_ptr<Registry> ecs, Window *window) {
         getUsersLobby(command, queue, ecs, window);
       };
   _commandMap[CommandType::COOLDOWN] = [this](Command command, Queue *queue,
-                                              Registry *ecs, Window *window) {
+                                              std::shared_ptr<Registry> ecs, Window *window) {
     cooldown(command, queue, ecs, window);
   };
   _commandMap[CommandType::WAVE] = [this](Command command, Queue *queue,
-                                          Registry *ecs, Window *window) {
+                                          std::shared_ptr<Registry> ecs, Window *window) {
     wave(command, queue, ecs, window);
   };
   _commandMap[CommandType::HIT] = [this](Command command, Queue *queue,
-                                         Registry *ecs, Window *window) {
+                                         std::shared_ptr<Registry> ecs, Window *window) {
     hit(command, queue, ecs, window);
   };
   _commandMap[CommandType::FREEZESPELL] =
-      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+      [this](Command command, Queue *queue, std::shared_ptr<Registry> ecs, Window *window) {
         freezeSpell(command, queue, ecs, window);
       };
   _commandMap[CommandType::CREATEMETEORITE] =
-      [this](Command command, Queue *queue, Registry *ecs, Window *window) {
+      [this](Command command, Queue *queue, std::shared_ptr<Registry> ecs, Window *window) {
         createMeteorite(command, queue, ecs, window);
       };
 }
@@ -104,7 +104,7 @@ const std::size_t velocityShoot[] = {
 };
 
 void CommandGame::executeCommandGame(Command command, Queue *queue,
-                                     Registry *ecs, Window *window) {
+                                     std::shared_ptr<Registry> ecs, Window *window) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, queue, ecs, window);
   } else {
@@ -112,7 +112,7 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
   }
 }
 
-void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
+void CommandGame::connect(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                           Window *window) {
   std::string texturePath;
 
@@ -150,12 +150,12 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs,
             << std::endl;
 }
 
-void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs,
+void CommandGame::disconnect(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                              Window *window) {
   std::cout << "disconnect command" << std::endl;
 }
 
-void CommandGame::move(Command command, Queue *queue, Registry *ecs,
+void CommandGame::move(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                        Window *window) {
   auto &entities = ecs->get_components<EntityType>();
   auto &positions = ecs->get_components<Position>();
@@ -172,7 +172,7 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs,
   }
 }
 
-void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
+void CommandGame::killEntity(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                              Window *window) {
   auto &entities = ecs->get_components<EntityType>();
 
@@ -191,7 +191,7 @@ void CommandGame::killEntity(Command command, Queue *queue, Registry *ecs,
   }
 }
 
-void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
+void CommandGame::createEnemy(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                               Window *window) {
   int textureId = static_cast<int>(command.createEnemy.p_enemy.enemyType);
   std::random_device rd;
@@ -219,7 +219,7 @@ void CommandGame::createEnemy(Command command, Queue *queue, Registry *ecs,
       std::optional<std::size_t>(command.createEnemy.enemyId));
 }
 
-void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
+void CommandGame::newPlayer(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                             Window *window) {
   std::string texturePath;
 
@@ -252,7 +252,7 @@ void CommandGame::newPlayer(Command command, Queue *queue, Registry *ecs,
             << std::endl;
 }
 
-void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
+void CommandGame::shoot(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                         Window *window) {
   auto &entities = ecs->get_components<EntityType>();
   auto &properties = ecs->get_components<Property>();
@@ -296,7 +296,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs,
   window->playSound(BULLET_SOUND, 0);
 }
 
-void CommandGame::getUsersLobby(Command command, Queue *queue, Registry *ecs,
+void CommandGame::getUsersLobby(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                                 Window *window) {
   int x = 370;
   int y = 180;
@@ -308,7 +308,7 @@ void CommandGame::getUsersLobby(Command command, Queue *queue, Registry *ecs,
                   {255, 255, 255, 255});
 }
 
-void CommandGame::cooldown(Command command, Queue *queue, Registry *ecs,
+void CommandGame::cooldown(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                            Window *window) {
   window->deleteText(std::to_string(command.cooldown.time + 1));
   window->addText(std::to_string(command.cooldown.time), 550, 350, 200, 200,
@@ -329,7 +329,7 @@ void CommandGame::cooldown(Command command, Queue *queue, Registry *ecs,
   }
 }
 
-void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
+void CommandGame::wave(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                        Window *window) {
   auto &entities = ecs->get_components<EntityType>();
 
@@ -359,7 +359,7 @@ void CommandGame::wave(Command command, Queue *queue, Registry *ecs,
   window->setAllowToInteract(false);
 }
 
-void CommandGame::hit(Command command, Queue *queue, Registry *ecs,
+void CommandGame::hit(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                       Window *window) {
   auto &entities = ecs->get_components<EntityType>();
   auto &health = ecs->get_components<Health>();
@@ -377,7 +377,7 @@ void CommandGame::hit(Command command, Queue *queue, Registry *ecs,
   }
 }
 
-void CommandGame::createMeteorite(Command command, Queue *queue, Registry *ecs,
+void CommandGame::createMeteorite(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                                   Window *window) {
   auto entities = create_entity<EntityType::Meteorite>(
       *ecs,
@@ -391,7 +391,7 @@ void CommandGame::createMeteorite(Command command, Queue *queue, Registry *ecs,
       std::optional<std::size_t>(command.createMeteorite.meteoriteId));
 }
 
-void CommandGame::freezeSpell(Command command, Queue *queue, Registry *ecs,
+void CommandGame::freezeSpell(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                               Window *window) {
   window->setAllowToInteract(false);
   window->changeFreezeStatus(true);

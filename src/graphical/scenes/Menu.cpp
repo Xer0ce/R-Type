@@ -516,10 +516,6 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
         auto &entities = _ecs->get_components<EntityType>();
         for (std::size_t i = 0; i != entities.size(); i++)
           _ecs->kill_entity(static_cast<Entities>(i));
-        for (std::size_t i = 0; i != 10; i++)
-          _ecs->kill_entity(static_cast<Entities>(i));
-        _ecs->kill_entity(static_cast<Entities>(0));
-        _ecs->kill_entity(static_cast<Entities>(1));
         return sceneType::LOBBY;
       } else {
         std::cout << "game is not ready" << std::endl;
@@ -534,10 +530,6 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
         auto &entities = _ecs->get_components<EntityType>();
         for (std::size_t i = 0; i != entities.size(); i++)
           _ecs->kill_entity(static_cast<Entities>(i));
-        for (std::size_t i = 0; i != 10; i++)
-          _ecs->kill_entity(static_cast<Entities>(i));
-        _ecs->kill_entity(static_cast<Entities>(0));
-        _ecs->kill_entity(static_cast<Entities>(1));
         return sceneType::LOBBY;
       }
     }
