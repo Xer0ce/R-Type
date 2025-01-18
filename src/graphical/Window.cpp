@@ -447,7 +447,6 @@ void Window::selectTextInput(eventType event) {
   }
 }
 
-void Window::setIsVisible(int menu, bool isVisible)
-{
+void Window::setIsVisible(int menu, bool isVisible) {
   _textInputs[menu]->setIsVisible(isVisible);
 }
