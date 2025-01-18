@@ -120,7 +120,6 @@ eventType Window::updateEvents() {
   return NO_EVENT;
 }
 
-
 void Window::draw(SDL_Texture *texture, SDL_Rect rect) {
   SDL_FRect rec = {static_cast<float>(rect.x), static_cast<float>(rect.y),
                    static_cast<float>(rect.w), static_cast<float>(rect.h)};
@@ -415,7 +414,8 @@ void Window::changeFreezeStatus(bool enable) { _freezeIsEnable = enable; }
 
 bool &Window::getFreezeEnable() { return _freezeIsEnable; }
 
-void Window::addTextInput(std::string text, int x, int y, int size, int backgroundW) {
+void Window::addTextInput(std::string text, int x, int y, int size,
+                          int backgroundW) {
   _textInputs.push_back(
       std::make_unique<TextInput>(text, size, x, y, _renderer, backgroundW));
 }
@@ -432,8 +432,7 @@ void Window::updateTextInput(SDL_Scancode scancode, SDL_Keycode keycode) {
   }
 }
 
-void Window::selectTextInput(eventType event)
-{
+void Window::selectTextInput(eventType event) {
   for (auto &textInput : _textInputs) {
     bool resp = textInput->selectTextInput(event);
     if (resp) {

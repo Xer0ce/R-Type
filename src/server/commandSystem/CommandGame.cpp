@@ -52,7 +52,8 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, queue, ecs);
   } else {
-    std::cout << "Invalid command type! [Game]" << std::endl;
+    std::cout << "[Game] Invalid command type! Command id :" << command.type
+              << std::endl;
   }
 }
 
@@ -130,7 +131,6 @@ void CommandGame::move(Command command, Queue *queue, Registry *ecs) {
         if (command.move.entityId == i) {
           positions[i]->x = command.move.positionX;
           positions[i]->y = command.move.positionY;
-          // std::cout << "changing move command" << std::endl;
           queue->pushUdpQueue(command);
         }
       }
@@ -216,12 +216,10 @@ void CommandGame::connect1v1(Command command, Queue *queue, Registry *ecs) {
     if (entityType[i].has_value()) {
       if (entityType[i] && entityType[i] == EntityType::Player &&
           command.id == property[i]->sockedId) {
-        std::cout << "Player found" << std::endl;
         player = i;
       }
       if (entityType[i] && entityType[i] == EntityType::Player &&
           command.id != property[i]->sockedId) {
-        std::cout << "Other player found" << std::endl;
         otherPlayer = i;
       }
     }

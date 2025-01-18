@@ -7,13 +7,9 @@
 
 #include "Menu.hpp"
 
-Menu::Menu()
-{
-  _name = "Menu";
-}
+Menu::Menu() { _name = "Menu"; }
 
-Menu::~Menu() {
-}
+Menu::~Menu() {}
 
 void Menu::initMenu() {
   SDL_Texture *pipeMenuTexture =
@@ -317,9 +313,7 @@ bool Menu::isHostGameReady() {
   return _spaceshipId != -1 && _bulletId != -1 && _gameMode != -1;
 }
 
-bool Menu::isJoinGameReady() {
-  return _spaceshipId != -1 && _bulletId != -1 && _gameMode != -1;
-}
+bool Menu::isJoinGameReady() { return _spaceshipId != -1 && _bulletId != -1; }
 
 sceneType Menu::buttonSystem(Boutton &boutton) {
   if (boutton.isClicked) {
@@ -357,11 +351,12 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
       }
     }
     if (boutton.label == "joinparty") {
+      std::cout << "join party" << std::endl;
       if (isJoinGameReady()) {
         _params->bulletId = _bulletId;
         _params->spaceshipId = _spaceshipId;
-        _params->gamemode = _gameMode;
         _params->ip = "127.0.0.1";
+        std::cout << "game is ready" << std::endl;
         auto &entities = _ecs->get_components<EntityType>();
         for (std::size_t i = 0; i != entities.size(); i++)
           _ecs->kill_entity(static_cast<Entities>(i));
