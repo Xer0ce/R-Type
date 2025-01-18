@@ -146,6 +146,8 @@ public:
 
   void selectTextInput(eventType event);
 
+  void setIsVisible(int menu, bool isVisible);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
