@@ -37,6 +37,7 @@ public:
   void load_component() {
     _ecs->register_component<Position>();
     _ecs->register_component<Velocity>();
+    _ecs->register_component<FlatVelocity>();
     _ecs->register_component<Draw>();
     _ecs->register_component<Health>();
     _ecs->register_component<Control>();
@@ -59,8 +60,8 @@ public:
 
   void listen(IClient &protocol);
 
-  void init(std::string nickname, ChoosingParams *params);
-  void game(std::string nickname);
+  void init(ChoosingParams *params);
+  void game();
 
 private:
   std::map<sceneType, std::shared_ptr<IScene>> _scenes;

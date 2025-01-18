@@ -16,11 +16,11 @@ void display_infos(Registry *ecs) {
   auto &lifebars = ecs->get_components<LifeBar>();
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
-    if (entities[i] == EntityType::Player && nicknames[i].has_value()) {
+    if (nicknames[i].has_value()) {
       nicknames[i]->rect.x = positions[i]->x - (nicknames[i]->rect.w / 2) + 25;
       nicknames[i]->rect.y = positions[i]->y - 35;
     }
-    if (entities[i] == EntityType::Player && lifebars[i].has_value()) {
+    if (lifebars[i].has_value()) {
       lifebars[i]->bar.x = positions[i]->x;
       lifebars[i]->bar.y = positions[i]->y - 10;
       lifebars[i]->hp = health[i]->hp;

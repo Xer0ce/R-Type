@@ -114,21 +114,21 @@ void Menu::initHostMenu() {
            Boutton(SDL_Rect{709, 345, 129, 55}, "gamemode", historyTexture,
                    selectedhistoryTexture, false, false, 3),
            Boutton(SDL_Rect{449, 413, 129, 75}, "ship", ship1Texture,
-                   selectedship1Texture, false, false, 1),
+                   selectedship1Texture, false, false, 0),
            Boutton(SDL_Rect{603, 413, 129, 75}, "ship", ship2Texture,
-                   selectedship2Texture, false, false, 2),
+                   selectedship2Texture, false, false, 1),
            Boutton(SDL_Rect{758, 413, 129, 75}, "ship", ship3Texture,
-                   selectedship3Texture, false, false, 3),
+                   selectedship3Texture, false, false, 2),
            Boutton(SDL_Rect{914, 413, 129, 75}, "ship", ship4Texture,
-                   selectedship4Texture, false, false, 4),
+                   selectedship4Texture, false, false, 3),
            Boutton(SDL_Rect{449, 537, 129, 75}, "shoot", shoot1Texture,
-                   selectedshoot1Texture, false, false, 1),
+                   selectedshoot1Texture, false, false, 0),
            Boutton(SDL_Rect{603, 537, 129, 75}, "shoot", shoot2Texture,
-                   selectedshoot2Texture, false, false, 2),
+                   selectedshoot2Texture, false, false, 1),
            Boutton(SDL_Rect{758, 537, 129, 75}, "shoot", shoot3Texture,
-                   selectedshoot3Texture, false, false, 3),
+                   selectedshoot3Texture, false, false, 2),
            Boutton(SDL_Rect{914, 537, 129, 75}, "shoot", shoot4Texture,
-                   selectedshoot4Texture, false, false, 4),
+                   selectedshoot4Texture, false, false, 3),
            Boutton(SDL_Rect{445, 641, 600, 52}, "createParty",
                    createPartyTexture, createPartySelTexture, 0)}));
 }
@@ -179,21 +179,21 @@ void Menu::initJoinMenu() {
       Draw({0, 0, 0, 0}, {400, 280, 699, 444}, joinBackgroundTexture),
       Visibility(false), MenuType::join,
       MenuElements({Boutton(SDL_Rect{449, 413, 129, 75}, "ship", ship1Texture,
-                            selectedship1Texture, false, false, 1),
+                            selectedship1Texture, false, false, 0),
                     Boutton(SDL_Rect{603, 413, 129, 75}, "ship", ship2Texture,
-                            selectedship2Texture, false, false, 2),
+                            selectedship2Texture, false, false, 1),
                     Boutton(SDL_Rect{758, 413, 129, 75}, "ship", ship3Texture,
-                            selectedship3Texture, false, false, 3),
+                            selectedship3Texture, false, false, 2),
                     Boutton(SDL_Rect{914, 413, 129, 75}, "ship", ship4Texture,
-                            selectedship4Texture, false, false, 4),
+                            selectedship4Texture, false, false, 3),
                     Boutton(SDL_Rect{449, 537, 129, 75}, "shoot", shoot1Texture,
-                            selectedshoot1Texture, false, false, 1),
+                            selectedshoot1Texture, false, false, 0),
                     Boutton(SDL_Rect{603, 537, 129, 75}, "shoot", shoot2Texture,
-                            selectedshoot2Texture, false, false, 2),
+                            selectedshoot2Texture, false, false, 1),
                     Boutton(SDL_Rect{758, 537, 129, 75}, "shoot", shoot3Texture,
-                            selectedshoot3Texture, false, false, 3),
+                            selectedshoot3Texture, false, false, 2),
                     Boutton(SDL_Rect{914, 537, 129, 75}, "shoot", shoot4Texture,
-                            selectedshoot4Texture, false, false, 4),
+                            selectedshoot4Texture, false, false, 3),
                     Boutton(SDL_Rect{445, 641, 600, 52}, "joinparty",
                             joinPartyTexture, joinPartySelTexture, 0)}));
 }
@@ -210,6 +210,9 @@ void Menu::initSettingsMenu() {
 }
 
 void Menu::init() {
+  _window->addTextInput("Nickname", 840, 345, 27, 200);
+  _window->addTextInput("127.0.0.1", 443, 345, 27, 350);
+
   _assetsPath = "../src/graphical/assets/menu/";
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/menu/menu.png"));
@@ -232,6 +235,8 @@ void Menu::hideAllMenu() {
   for (std::size_t i = 0; i < visibility.size(); ++i) {
     if (visibility[i]->isVisible && menuType[i] != MenuType::menu) {
       visibility[i]->isVisible = false;
+      _window->setIsVisible(0, false);
+      _window->setIsVisible(1, false);
     }
   }
 }
@@ -310,23 +315,17 @@ bool Menu::isHostGameReady() {
   return _spaceshipId != -1 && _bulletId != -1 && _gameMode != -1;
 }
 
-bool Menu::isJoinGameReady() {
-  return _spaceshipId != -1 && _bulletId != -1 && _gameMode != -1;
-}
+bool Menu::isJoinGameReady() { return _spaceshipId != -1 && _bulletId != -1; }
 
 sceneType Menu::buttonSystem(Boutton &boutton) {
   if (boutton.isClicked) {
     if (boutton.label == "ship") {
-      std::cout << "ship value selected id : " << boutton.value << std::endl;
       _spaceshipId = boutton.value;
     }
     if (boutton.label == "shoot") {
-      std::cout << "gamemode value selected id : " << boutton.value
-                << std::endl;
       _bulletId = boutton.value;
     }
     if (boutton.label == "gamemode") {
-      std::cout << "shoot value selected id : " << boutton.value << std::endl;
       _gameMode = boutton.value;
     }
     if (boutton.label == "createParty") {
@@ -336,9 +335,13 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
         _params->spaceshipId = _spaceshipId;
         _params->gamemode = _gameMode;
         _params->ip = "127.0.0.1";
+        _params->nickname = _window->getTextInput(0);
         auto &entities = _ecs->get_components<EntityType>();
         for (std::size_t i = 0; i != entities.size(); i++)
           _ecs->kill_entity(static_cast<Entities>(i));
+        if (_gameMode == 3) {
+          return sceneType::LOBBY_HISTORY;
+        }
         return sceneType::LOBBY;
       } else {
         std::cout << "game is not ready" << std::endl;
@@ -348,8 +351,9 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
       if (isJoinGameReady()) {
         _params->bulletId = _bulletId;
         _params->spaceshipId = _spaceshipId;
-        _params->gamemode = _gameMode;
-        _params->ip = "127.0.0.1";
+        _params->ip = _window->getTextInput(1);
+        _params->nickname = _window->getTextInput(0);
+        std::cout << "game is ready" << std::endl;
         auto &entities = _ecs->get_components<EntityType>();
         for (std::size_t i = 0; i != entities.size(); i++)
           _ecs->kill_entity(static_cast<Entities>(i));
@@ -361,20 +365,26 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
       auto &menuType = _ecs->get_components<MenuType>();
       if (visibility[1]->isVisible) {
         visibility[1]->isVisible = false;
+        _window->setIsVisible(0, false);
       } else {
         hideAllMenu();
         resetGameValues();
         visibility[1]->isVisible = true;
+        _window->setIsVisible(0, true);
       }
     }
     if (boutton.label == "join") {
       auto &visibility = _ecs->get_components<Visibility>();
       if (visibility[2]->isVisible) {
         visibility[2]->isVisible = false;
+        _window->setIsVisible(0, false);
+        _window->setIsVisible(1, false);
       } else {
         hideAllMenu();
         resetGameValues();
         visibility[2]->isVisible = true;
+        _window->setIsVisible(0, true);
+        _window->setIsVisible(1, true);
       }
     }
     if (boutton.label == "params") {
@@ -398,6 +408,21 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
     }
     if (boutton.label == "shoot") {
       _bulletId = -1;
+    }
+    if (boutton.label == "host") {
+      auto &visibility = _ecs->get_components<Visibility>();
+      visibility[1]->isVisible = false;
+      _window->setIsVisible(0, false);
+    }
+    if (boutton.label == "join") {
+      auto &visibility = _ecs->get_components<Visibility>();
+      visibility[2]->isVisible = false;
+      _window->setIsVisible(0, false);
+      _window->setIsVisible(1, false);
+    }
+    if (boutton.label == "params") {
+      auto &visibility = _ecs->get_components<Visibility>();
+      visibility[3]->isVisible = false;
     }
   }
   return sceneType::NO_SWITCH;
@@ -427,12 +452,13 @@ sceneType Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
                 boutton.isClicked = true;
                 auto scene = buttonSystem(boutton);
                 if (scene != sceneType::NO_SWITCH)
-                  return LOBBY;
+                  return scene;
               } else {
+
                 boutton.isClicked = false;
                 auto scene = buttonSystem(boutton);
                 if (scene != sceneType::NO_SWITCH)
-                  return LOBBY;
+                  return scene;
               }
               return NO_SWITCH;
             }
@@ -458,12 +484,12 @@ Menu::loop(eventType event,
   auto &visibility = _ecs->get_components<Visibility>();
   auto &menuType = _ecs->get_components<MenuType>();
 
+  _window->selectTextInput(event);
   _window->drawBackground();
   auto scene = mouseHandler(mouseX, mouseY, event);
   if (scene != sceneType::NO_SWITCH) {
     return scene;
   }
-
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i] == EntityType::Menu && visibility[i]->isVisible) {
       _window->draw(draw[i]->texture, draw[i]->rect);
@@ -473,7 +499,12 @@ Menu::loop(eventType event,
           const auto &boutton = std::get<Boutton>(element);
           if (boutton.texture != nullptr && boutton.rect.w > 0 &&
               boutton.rect.h > 0) {
-            if (boutton.isClicked) {
+            SDL_GetMouseState(&mouseX, &mouseY);
+            if (boutton.isClicked ||
+                (mouseX >= boutton.rect.x &&
+                 mouseX <= boutton.rect.x + boutton.rect.w &&
+                 mouseY >= boutton.rect.y &&
+                 mouseY <= boutton.rect.y + boutton.rect.h)) {
               _window->draw(boutton.selectedTexture, boutton.rect);
             } else {
               _window->draw(boutton.texture, boutton.rect);
@@ -483,6 +514,6 @@ Menu::loop(eventType event,
       }
     }
   }
-
+  _window->drawTextInput();
   return sceneType::NO_SWITCH;
 }

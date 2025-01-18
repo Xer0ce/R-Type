@@ -60,6 +60,7 @@ const std::string pathSpaceship[] = {
 
 const std::string pathSpaceshipEnemy[] = {
     "../src/graphical/assets/enemy/enemy1.png",
+    "../src/graphical/assets/enemy/enemy1.png",
     "../src/graphical/assets/enemy/enemy2.png",
     "../src/graphical/assets/enemy/enemy3.png",
     "../src/graphical/assets/enemy/miniBoss1.png",
@@ -96,7 +97,8 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, queue, ecs, window);
   } else {
-    std::cout << "Invalid command type! [Game]" << std::endl;
+    std::cout << "[Game] Invalid command type! Command id :" << command.type
+              << std::endl;
   }
 }
 
@@ -134,8 +136,6 @@ void CommandGame::connect(Command command, Queue *queue,
       std::optional<LifeBar>(
           LifeBar(100, {(command.repConnect.positionX),
                         (command.repConnect.positionY), 50, 5})));
-  std::cout << "connect " << player << " attendu " << command.repConnect.id
-            << std::endl;
 }
 
 void CommandGame::disconnect(Command command, Queue *queue,
@@ -155,7 +155,6 @@ void CommandGame::move(Command command, Queue *queue,
       positions[i]->y = command.move.positionY;
       draw[i]->rect.x = command.move.positionX;
       draw[i]->rect.y = command.move.positionY;
-      std::cout << "changing move command" << std::endl;
     }
   }
 }
@@ -166,14 +165,6 @@ void CommandGame::killEntity(Command command, Queue *queue,
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.killEntity.entityId) {
-      if (entities[i] && entities[i] == EntityType::Player) {
-        std::cout << "Player is dead" << std::endl;
-      }
-      if (entities[i] && entities[i] == EntityType::Enemy) {
-        std::cout << "Enemy is dead" << std::endl;
-      }
-      if (entities[i] && entities[i] == EntityType::Projectile) {
-      }
       ecs->kill_entity(static_cast<Entities>(command.killEntity.entityId));
     }
   }
@@ -192,19 +183,29 @@ void CommandGame::createEnemy(Command command, Queue *queue,
     textureId = distrib_Boss(gen);
   SDL_Texture *enemyTexture =
       window->loadTexture(pathSpaceshipEnemy[textureId].c_str());
+  std::pair<int, int> enemy_vel_tab[] = {
+      {5, 5}, {2, 2}, {10, 10}, {2, 5}, {0, 1}};
+  int enemy_hp[] = {30, 50, 25, 100, 300};
+  std::pair<int, int> enemy_vel =
+      enemy_vel_tab[static_cast<int>(command.createEnemy.p_enemy.enemyType)];
 
-  std::cout << "Create Enemy" << std::endl;
-
+  std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA : "
+            << enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)]
+            << std::endl;
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
-      Velocity(0, 10), Health(1),
+      Velocity(0, 0), FlatVelocity(enemy_vel.first, enemy_vel.second),
+      Health(1),
       Draw({0, 0, 0, 0},
            {(int)command.createEnemy.positionX,
             (int)command.createEnemy.positionY, 100, 100},
            enemyTexture),
       EnemyProperty(command.createEnemy.p_enemy),
-      std::optional<std::size_t>(command.createEnemy.enemyId));
+      std::optional<std::size_t>(command.createEnemy.enemyId),
+      std::optional<LifeBar>(
+          LifeBar(100, {(command.createEnemy.positionX),
+                        (command.createEnemy.positionY), 50, 5})));
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue,
@@ -236,8 +237,6 @@ void CommandGame::newPlayer(Command command, Queue *queue,
       Property(command.newPlayer.spaceshipId, command.newPlayer.shootId, 0,
                command.newPlayer.playerNbr),
       std::nullopt, std::optional<std::size_t>(command.newPlayer.id));
-  std::cout << "new player " << player << " attendu " << command.newPlayer.id
-            << std::endl;
 }
 
 void CommandGame::shoot(Command command, Queue *queue,
@@ -372,7 +371,7 @@ void CommandGame::createMeteorite(Command command, Queue *queue,
       *ecs,
       Position(command.createMeteorite.positionX,
                command.createMeteorite.positionY),
-      Velocity(-10, 1),
+      Velocity(-10, 0),
       Draw({0, 0, 0, 0},
            {(int)command.createMeteorite.positionX,
             (int)command.createMeteorite.positionY, 100, 100},

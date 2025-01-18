@@ -51,6 +51,8 @@ EndLess::loop(eventType event,
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
+    auto &entityType = _ecs->get_components<EntityType>();
+
     _window->moveBackground();
     if (_window->getAllowToInteract()) {
       now = std::chrono::steady_clock::now();
@@ -74,7 +76,7 @@ EndLess::loop(eventType event,
     if (nicknames[i].has_value() && _window->getAllowToInteract()) {
       _window->draw(nicknames[i]->texture, nicknames[i]->rect);
     }
-    if (lifebars[i].has_value() && control[i].has_value() && _window->getAllowToInteract()) {
+    if (lifebars[i].has_value() && _window->getAllowToInteract()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
   }

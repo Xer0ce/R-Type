@@ -67,7 +67,8 @@ void CommandSend::executeCommandSend(Command command, IProtocol *protocol) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
-    std::cout << "Invalid command type! [Send]" << std::endl;
+    std::cout << "[Send] Invalid command type ! Command id : " << command.type
+              << std::endl;
   }
 }
 
@@ -108,8 +109,7 @@ void CommandSend::disconnect(Command command, IProtocol *protocol) {
   std::cout << "Disconnect command" << std::endl;
   std::string response;
 
-  response = "disconnect OK"; // ici faut faire la commande disconnect si un
-                              // joeur dans la partie c'est deconnecté
+  response = "disconnect OK";
 
   // _protocol->sendData(command.id, binaryData);
 }
@@ -132,7 +132,6 @@ void CommandSend::move(Command command, IProtocol *protocol) {
                     positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
-  std::cout << "sending move command" << std::endl;
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 
@@ -344,7 +343,6 @@ void CommandSend::createMeteorite(Command command, IProtocol *protocol) {
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x14);
-
   binaryData.push_back(
       static_cast<uint8_t>(command.createMeteorite.meteoriteId));
 
@@ -357,6 +355,9 @@ void CommandSend::createMeteorite(Command command, IProtocol *protocol) {
       reinterpret_cast<uint8_t *>(&command.createMeteorite.positionY);
   binaryData.insert(binaryData.end(), positionYBytes,
                     positionYBytes + sizeof(float));
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::hit(Command command, IProtocol *protocol) {

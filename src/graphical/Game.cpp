@@ -77,7 +77,7 @@ void Game::listen(IClient &protocol) {
   }
 }
 
-void Game::init(std::string nickname, ChoosingParams *params) {
+void Game::init(ChoosingParams *params) {
   _tcp = std::make_shared<Tcp>(params->ip, 4243);
   _udp = std::make_shared<Udp>(params->ip, 4242);
 
@@ -94,9 +94,9 @@ void Game::init(std::string nickname, ChoosingParams *params) {
 
   connectLobby.push_back(static_cast<uint8_t>(params->bulletId));
 
-  connectLobby.push_back(static_cast<uint8_t>(nickname.size()));
-  for (size_t i = 0; i < nickname.size(); i++) {
-    connectLobby.push_back(nickname[i]);
+  connectLobby.push_back(static_cast<uint8_t>(params->nickname.size()));
+  for (size_t i = 0; i < params->nickname.size(); i++) {
+    connectLobby.push_back(params->nickname[i]);
   }
 
   _tcp->sendToServer(connectLobby);
@@ -110,7 +110,7 @@ void Game::init(std::string nickname, ChoosingParams *params) {
   delete params;
 }
 
-void Game::game(std::string nickname) {
+void Game::game() {
   std::chrono::time_point<std::chrono::steady_clock> next =
       std::chrono::steady_clock::now() + std::chrono::milliseconds(25);
   bool running = true;
@@ -137,7 +137,7 @@ void Game::game(std::string nickname) {
       next += std::chrono::milliseconds(25);
     if (switchScene != sceneType::NO_SWITCH) {
       if (switchScene == LOBBY || switchScene == LOBBY_HISTORY) {
-        init(nickname, params);
+        init(params);
       }
       _currentScene = switchScene;
       _scenes[_currentScene]->setGamemode(params->gamemode);

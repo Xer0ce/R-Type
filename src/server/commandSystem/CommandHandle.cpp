@@ -47,7 +47,8 @@ void CommandHandle::executeCommandHandle(uint8_t commandType,
   if (_commandMap.find(commandType) != _commandMap.end()) {
     _commandMap[commandType](buffer, protocol, queue);
   } else {
-    std::cout << "Invalid command type! [Handle]" << std::endl;
+    std::cout << "[Handle] Invalid command type! Command id : " << commandType
+              << std::endl;
   }
 }
 
@@ -84,7 +85,6 @@ void CommandHandle::move(std::vector<uint8_t> buffer, IProtocol *protocol,
   cmd.move.positionX = positionX;
   cmd.move.positionY = positionY;
   cmd.id = clientPort;
-  std::cout << "receive move command" << std::endl;
   queue->pushGameQueue(cmd);
 }
 

@@ -117,7 +117,7 @@ void EndLess::createMeteorites(int nbr) {
     std::uniform_int_distribution<> dis(0, 800);
     int random = dis(gen);
     auto entitiesId = create_entity<EntityType::Meteorite>(
-        *_ecs, Position(1200, random), Velocity(-10, 1), Draw({}, {}, nullptr));
+        *_ecs, Position(1200, random), Velocity(-10, 0), Draw({}, {}, nullptr));
     Command cmd;
     cmd.type = CommandType::CREATEMETEORITE;
     cmd.createMeteorite.positionX = 1200;
@@ -154,13 +154,12 @@ void EndLess::waveGestion() {
     int lastDigit = _waveNumber % 10;
 
     if (lastDigit == 5) {
-      killMeteorites();
-      createMeteorites(8);
+      createMeteorites(5);
       loadMiniBoss();
     } else if (lastDigit == 0) {
+      createMeteorites(8);
       loadBoss();
     } else {
-      killMeteorites();
       createMeteorites(3);
       loadClassic();
     }
@@ -192,6 +191,7 @@ EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
 
   if (!_startCooldown) {
     if (_firstRound) {
+      createMeteorites(3);
       _firstRound = false;
       Command cmd;
 
@@ -209,6 +209,7 @@ EndLess::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
       enemy_shoot_system(_ecs, _queue);
       position_system_net(1, _ecs, _queue, _nextCorrectPosition);
       collision_system_1v1(_ecs, _queue);
+      collision_system_meteor(_ecs, _queue);
       if (now > _nextCorrectPosition)
         _nextCorrectPosition =
             std::chrono::steady_clock::now() + std::chrono::seconds(1);

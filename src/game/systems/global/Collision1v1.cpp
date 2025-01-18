@@ -9,10 +9,12 @@
 
 void collision_system_1v1(Registry *ecs, Queue *queue) {
   auto &position = ecs->get_components<Position>();
+  auto &property = ecs->get_components<Property>();
   auto &playerId = ecs->get_components<PlayerId>();
   auto &entityType = ecs->get_components<EntityType>();
   auto &health = ecs->get_components<Health>();
   Command cmd;
+  int bulletDmg[] = {4, 7, 7, 10};
 
   for (std::size_t i = 0; i < position.size(); i++) {
     if (entityType[i] == EntityType::Projectile) {
@@ -45,6 +47,32 @@ void collision_system_1v1(Registry *ecs, Queue *queue) {
                 cmd.type = CommandType::KILLENTITY;
                 cmd.killEntity.entityId = i;
                 queue->pushTcpQueue(cmd);
+              }
+            }
+          }
+          if (i == playerId[j]->id) {
+            for (std::size_t k = 0; k < position.size(); k++) {
+              if (entityType[k] == EntityType::Enemy) {
+                if (position[j]->x < position[k]->x + 50 &&
+                    position[j]->x + 50 > position[k]->x &&
+                    position[j]->y < position[k]->y + 50 &&
+                    position[j]->y + 50 > position[k]->y) {
+                  health[k]->hp -= bulletDmg[property[i]->shootId];
+                  cmd.type = HIT;
+                  cmd.hit.damage = bulletDmg[property[i]->shootId];
+                  cmd.hit.entityHit = k;
+                  queue->pushTcpQueue(cmd);
+                  cmd.type = CommandType::KILLENTITY;
+                  cmd.killEntity.entityId = j;
+                  ecs->kill_entity(static_cast<Entities>(j));
+                  queue->pushTcpQueue(cmd);
+                  if (health[k]->hp <= 0) {
+                    ecs->kill_entity(static_cast<Entities>(k));
+                    cmd.type = CommandType::KILLENTITY;
+                    cmd.killEntity.entityId = k;
+                    queue->pushTcpQueue(cmd);
+                  }
+                }
               }
             }
           }

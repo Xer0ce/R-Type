@@ -20,6 +20,13 @@ enum sceneType {
   NO_SWITCH,
 };
 
+enum eventType { KEY_DOWN, MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT, MOUSE_RELEASE };
+
+struct TextTyping {
+  eventType event;
+  std::string text;
+};
+
 enum keyType {
   UP,
   DOWN,
@@ -32,13 +39,12 @@ enum keyType {
   NONE,
 };
 
-enum eventType { MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT, MOUSE_RELEASE };
-
 struct ChoosingParams {
   std::string ip;
   int spaceshipId;
   int bulletId;
   int gamemode;
+  std::string nickname;
 };
 
 enum soundType {
