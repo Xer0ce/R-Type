@@ -85,6 +85,8 @@ void Window::init() {
   addSound("../src/graphical/assets/sounds/Michou_Elsa_remix_winterzuuko.mp3",
            MICHOU_REMIX_WINTERZUUKO, 100);
   addSound("../src/graphical/assets/sounds/hit.mp3", HURT, 50);
+  addSound("../src/game/config/history/sounds/audio9.mp3", SQUEEZIE, 50);
+  
 }
 
 void Window::destroyWindow() {
@@ -403,3 +405,21 @@ void Window::drawFreezeOverlay() {
 void Window::changeFreezeStatus(bool enable) { _freezeIsEnable = enable; }
 
 bool &Window::getFreezeEnable() { return _freezeIsEnable; }
+
+void Window::createCutscene(std::string soundPath, std::string texturePath, int x,
+                            int y, int width, int height) {
+  _cutscenes.push_back(
+      Cutscene(_renderer, soundPath, texturePath, x, y, width, height));
+}
+
+void Window::playCutscene() {
+  for (auto &cutscene : _cutscenes) {
+    cutscene.playCutscene();
+  }
+}
+
+void Window::setPlayingCutscene() {
+  for (auto &cutscene : _cutscenes) {
+    cutscene.setIsPlaying();
+  }
+}

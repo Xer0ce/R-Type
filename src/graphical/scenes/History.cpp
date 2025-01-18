@@ -12,6 +12,7 @@ History::History() {
   _name = "History";
   commandGame = CommandGame();
   _nextBullet = std::chrono::steady_clock::now() + std::chrono::seconds(1);
+  _clockCutScene = std::chrono::steady_clock::now();
 }
 
 History::~History() {}
@@ -24,6 +25,8 @@ void History::init() {
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
   _window->setBackgroundScrolling(true);
+  _window->createCutscene("../src/game/config/history/caracter/SqueezieTalking.png", "../src/game/config/history/caracter/Squeezie.png", 50, 50, 100, 100);
+  _window->playSound(SQUEEZIE, -1);
 }
 
 sceneType
@@ -62,10 +65,16 @@ History::loop(eventType event,
       position_system_graphic(1, *_ecs, _queue);
       enemy_system(_ecs.get());
       display_infos(_ecs.get());
+
     }
   }
   _window->drawBackground();
   _window->drawText();
+  _window->playCutscene();
+  if (now > _clockCutScene) {
+    _window->setPlayingCutscene();
+    _clockCutScene = now + std::chrono::milliseconds(125);
+  }
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;

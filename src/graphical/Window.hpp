@@ -12,6 +12,7 @@
 #include "Sound.hpp"
 #include "Text.hpp"
 #include "Utils.hpp"
+#include "Cutscene.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -137,6 +138,13 @@ public:
 
   bool &getFreezeEnable();
 
+  void createCutscene(std::string soundPath, std::string texturePath, int x,
+                      int y, int width, int height);
+
+  void playCutscene();
+
+  void setPlayingCutscene();
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -157,4 +165,5 @@ private:
   float _windowHeight;
   bool _spellIsEnable = true;
   bool _freezeIsEnable = false;
+  std::vector<Cutscene> _cutscenes;
 };
