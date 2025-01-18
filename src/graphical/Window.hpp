@@ -151,6 +151,7 @@ private:
   SDL_Texture *_spellDisable;
   SDL_Texture *_freezeOverlay;
   SDL_Texture *_textureCamera;
+  SDL_FRect _rectCam;
   SDL_Camera *_camera;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;

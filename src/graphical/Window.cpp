@@ -92,6 +92,8 @@ void Window::init() {
     exit(84);
   }
 
+  _rectCam = {0, 0, 160, 120};
+
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/un.mp3", WAVE1, 45);
@@ -446,9 +448,7 @@ void Window::displayCameraFeed() {
   SDL_Surface *surfaceCamera = SDL_AcquireCameraFrame(_camera, NULL);
   if (!surfaceCamera) {
 
-    SDL_FRect rect = {0, 0, 160, 120};
-
-    SDL_RenderTexture(_renderer, _textureCamera, NULL, &rect);
+    SDL_RenderTexture(_renderer, _textureCamera, NULL, &_rectCam);
     return;
   }
 
@@ -489,8 +489,6 @@ void Window::displayCameraFeed() {
   SDL_UpdateTexture(_textureCamera, NULL, surfaceCamera->pixels,
                     surfaceCamera->pitch);
 
-  SDL_FRect rect = {0, 0, 160, 120};
-
-  SDL_RenderTexture(_renderer, _textureCamera, NULL, &rect);
+  SDL_RenderTexture(_renderer, _textureCamera, NULL, &_rectCam);
   SDL_ReleaseCameraFrame(_camera, surfaceCamera);
 }
