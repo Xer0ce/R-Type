@@ -23,7 +23,9 @@ public:
 
   void resetGameValues();
 
-  bool isGameReady();
+  bool isHostGameReady();
+
+  bool isJoinGameReady();
 
   void hideAllMenu();
 
@@ -33,16 +35,13 @@ public:
 
   void unclickTypeBoutton(Boutton &boutton, std::string type);
 
-  void initMenu(int responsiveWidth, int responsiveHeight, int posX, int posY);
+  void initMenu();
 
-  void initHostMenu(int responsiveWidth, int responsiveHeight, int posX,
-                    int posY);
+  void initHostMenu();
 
-  void initJoinMenu(int responsiveWidth, int responsiveHeight, int posX,
-                    int posY);
+  void initJoinMenu();
 
-  void initSettingsMenu(int responsiveWidth, int responsiveHeight, int posX,
-                        int posY);
+  void initSettingsMenu();
 
   sceneType mouseHandler(float mouseX, float mouseY, eventType event);
 
@@ -54,6 +53,7 @@ private:
   float _windowWidth;
   float _windowHeight;
   std::string _nickname;
+  std::string _assetsPath;
   int _gameMode;
   int _spaceshipId;
   int _bulletId;

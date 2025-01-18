@@ -11,42 +11,6 @@ Menu::Menu() { _name = "Menu"; }
 
 Menu::~Menu() {}
 
-std::pair<int, int> calculateResponsivePosition(int initialX, int initialY,
-                                                int windowWidth,
-                                                int windowHeight) {
-  int referenceWidth = 1920;
-  int referenceHeight = 1080;
-
-  float widthRatio =
-      static_cast<float>(windowWidth) / static_cast<float>(referenceWidth);
-  float heightRatio =
-      static_cast<float>(windowHeight) / static_cast<float>(referenceHeight);
-
-  int posX = static_cast<int>(initialX * widthRatio);
-  int posY = static_cast<int>(initialY * heightRatio);
-
-  return {posX, posY};
-}
-
-std::pair<int, int> calculateResponsiveSize(int originalWidth,
-                                            int originalHeight, int windowWidth,
-                                            int windowHeight,
-                                            int arbitraryWidth,
-                                            int arbitraryHeight) {
-  float aspectRatio =
-      static_cast<float>(originalWidth) / static_cast<float>(originalHeight);
-
-  int newWidth = arbitraryWidth;
-  int newHeight = static_cast<int>(arbitraryWidth / aspectRatio);
-
-  if (newHeight > arbitraryHeight) {
-    newHeight = arbitraryHeight;
-    newWidth = static_cast<int>(arbitraryHeight * aspectRatio);
-  }
-
-  return {newWidth, newHeight};
-}
-
 void Menu::initMenu() {
   SDL_Texture *pipeMenuTexture = _window->loadTexture((_assetsPath + "menuPipe.png").c_str());
   SDL_Texture *hostTexture = _window->loadTexture((_assetsPath + "host.png").c_str());
@@ -126,25 +90,25 @@ void Menu::initHostMenu() {
                    "gamemode", historyTexture, selectedhistoryTexture, false,
                    false, 3),
            Boutton(SDL_Rect{449, 413, 129, 75},
-                   "ship", ship1Texture, selectedship1Texture, false, false, 1),
+                   "ship", ship1Texture, selectedship1Texture, false, false, 0),
            Boutton(SDL_Rect{603, 413, 129, 75},
-                   "ship", ship2Texture, selectedship2Texture, false, false, 2),
+                   "ship", ship2Texture, selectedship2Texture, false, false, 1),
            Boutton(SDL_Rect{758, 413, 129, 75},
-                   "ship", ship3Texture, selectedship3Texture, false, false, 3),
+                   "ship", ship3Texture, selectedship3Texture, false, false, 2),
            Boutton(SDL_Rect{914, 413, 129, 75},
-                   "ship", ship4Texture, selectedship4Texture, false, false, 4),
+                   "ship", ship4Texture, selectedship4Texture, false, false, 3),
            Boutton(SDL_Rect{449, 537, 129, 75},
                    "shoot", shoot1Texture, selectedshoot1Texture, false, false,
-                   1),
+                   0),
            Boutton(SDL_Rect{603, 537, 129, 75},
                    "shoot", shoot2Texture, selectedshoot2Texture, false, false,
-                   2),
+                   1),
            Boutton(SDL_Rect{758, 537, 129, 75},
                    "shoot", shoot3Texture, selectedshoot3Texture, false, false,
-                   3),
+                   2),
            Boutton(SDL_Rect{914, 537, 129, 75},
                    "shoot", shoot4Texture, selectedshoot4Texture, false, false,
-                   4),
+                   3),
            Boutton(SDL_Rect{445, 641, 600,
                             52},
                    "createParty", createPartyTexture, createPartySelTexture,
@@ -181,25 +145,25 @@ void Menu::initJoinMenu() {
       Visibility(false), MenuType::join,
       MenuElements({
             Boutton(SDL_Rect{449, 413, 129, 75},
-                   "ship", ship1Texture, selectedship1Texture, false, false, 1),
+                   "ship", ship1Texture, selectedship1Texture, false, false, 0),
            Boutton(SDL_Rect{603, 413, 129, 75},
-                   "ship", ship2Texture, selectedship2Texture, false, false, 2),
+                   "ship", ship2Texture, selectedship2Texture, false, false, 1),
            Boutton(SDL_Rect{758, 413, 129, 75},
-                   "ship", ship3Texture, selectedship3Texture, false, false, 3),
+                   "ship", ship3Texture, selectedship3Texture, false, false, 2),
            Boutton(SDL_Rect{914, 413, 129, 75},
-                   "ship", ship4Texture, selectedship4Texture, false, false, 4),
+                   "ship", ship4Texture, selectedship4Texture, false, false, 3),
            Boutton(SDL_Rect{449, 537, 129, 75},
                    "shoot", shoot1Texture, selectedshoot1Texture, false, false,
-                   1),
+                   0),
            Boutton(SDL_Rect{603, 537, 129, 75},
                    "shoot", shoot2Texture, selectedshoot2Texture, false, false,
-                   2),
+                   1),
            Boutton(SDL_Rect{758, 537, 129, 75},
                    "shoot", shoot3Texture, selectedshoot3Texture, false, false,
-                   3),
+                   2),
            Boutton(SDL_Rect{914, 537, 129, 75},
                    "shoot", shoot4Texture, selectedshoot4Texture, false, false,
-                   4),
+                   3),
            Boutton(SDL_Rect{445, 641, 600,
                             52},
                    "joinparty", joinPartyTexture, joinPartySelTexture, 0)
@@ -224,6 +188,10 @@ void Menu::init() {
       _window->loadTexture("../src/graphical/assets/menu/menu.png"));
 
   _window->playSound(MICHOU_ET_ELSA_2, -1);
+
+  _gameMode = -1;
+  _spaceshipId = -1;
+  _bulletId = -1;
 
   initMenu();
   initHostMenu();
