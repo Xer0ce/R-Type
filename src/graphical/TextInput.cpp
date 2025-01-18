@@ -13,10 +13,7 @@ TextInput::TextInput(std::string _initText, int size, int x, int y,
   _rectBackground.x = x;
   _rectBackground.y = y;
   _rectBackground.w = backgroundW;
-  _rectTextureSelected.x = x - 5;
-  _rectTextureSelected.y = y - 5;
-  _rectTextureSelected.w = backgroundW + 10;
-  _rectText.x = x + 10;
+  _rectText.x = x + 20;
   _rectText.y = y + 10;
   int textWidth = 0, textHeight = 0;
   _text = _initText;
@@ -27,16 +24,13 @@ TextInput::TextInput(std::string _initText, int size, int x, int y,
   if (TTF_GetStringSize(_font, _text.c_str(), 0, &textWidth, &textHeight)) {
     _rectText.w = textWidth;
     _rectText.h = textHeight;
-    _rectBackground.h = textHeight + 20;
-    _rectTextureSelected.h = textHeight + 30;
+    _rectBackground.h = textHeight + 30;
   }
   SDL_Surface *surface = TTF_RenderText_Blended(
       _font, _text.c_str(), _text.size(), {255, 255, 255, 255});
   _textTexture = SDL_CreateTextureFromSurface(_renderer, surface);
   _textBackground = IMG_LoadTexture(
       renderer, "../src/graphical/assets/backgroundTextInput.png");
-  _textureSelected = IMG_LoadTexture(
-      renderer, "../src/graphical/assets/backgroundTextInputSelected.png");
 }
 
 TextInput::~TextInput() {}
@@ -48,9 +42,6 @@ bool TextInput::isVisible() const { return _isVisible; }
 void TextInput::drawTextInput(SDL_Renderer *renderer) {
   if (!_isVisible)
     return;
-  if (_isSelected)
-    SDL_RenderTexture(renderer, _textureSelected, nullptr,
-                      &_rectTextureSelected);
   SDL_RenderTexture(renderer, _textBackground, nullptr, &_rectBackground);
   SDL_RenderTexture(renderer, _textTexture, nullptr, &_rectText);
 }
@@ -87,7 +78,7 @@ void TextInput::updateTextInput(SDL_Scancode scancode, SDL_Keycode keycode) {
       }
       int textWidth = 0, textHeight = 0;
       TTF_GetStringSize(_font, _text.c_str(), 0, &textWidth, &textHeight);
-      if (textWidth > _rectBackground.w) {
+      if (textWidth > _rectBackground.w - 30) {
         _text.pop_back();
         _text.pop_back();
         _text.push_back('|');

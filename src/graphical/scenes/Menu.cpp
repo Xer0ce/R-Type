@@ -210,8 +210,8 @@ void Menu::initSettingsMenu() {
 }
 
 void Menu::init() {
-  _window->addTextInput("nickname", 840, 345, 35, 200);
-  _window->addTextInput("ip", 443, 345, 35, 350);
+  _window->addTextInput("Nickname", 840, 345, 27, 200);
+  _window->addTextInput("127.0.0.1", 443, 345, 27, 350);
 
   _assetsPath = "../src/graphical/assets/menu/";
   _window->setBackground(

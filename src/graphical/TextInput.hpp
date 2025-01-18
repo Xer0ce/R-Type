@@ -36,8 +36,6 @@ private:
   std::string _text;
   SDL_Texture *_textBackground;
   SDL_Texture *_textTexture;
-  SDL_Texture *_textureSelected;
-  SDL_FRect _rectTextureSelected;
   SDL_FRect _rectBackground;
   SDL_FRect _rectText;
   TTF_Font *_font;
