@@ -123,7 +123,7 @@ void Game::game(std::string nickname) {
 
   auto ecs = std::make_shared<Registry>(*_ecs);
   _scenes[_currentScene]->setWindow(_window.get());
-  _scenes[_currentScene]->setEcs(ecs.get());
+  _scenes[_currentScene]->setEcs(_ecs);
   _scenes[_currentScene]->init();
   _scenes[_currentScene]->setQueue(_queue.get());
   _scenes[_currentScene]->setChoosingParams(params);
@@ -143,7 +143,7 @@ void Game::game(std::string nickname) {
       _currentScene = switchScene;
       _scenes[_currentScene]->setGamemode(params->gamemode);
       _scenes[_currentScene]->setWindow(_window.get());
-      _scenes[_currentScene]->setEcs(_ecs.get());
+      _scenes[_currentScene]->setEcs(_ecs);
       _scenes[_currentScene]->setQueue(_queue.get());
       _scenes[_currentScene]->init();
     }

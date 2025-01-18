@@ -336,6 +336,9 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
         _params->spaceshipId = _spaceshipId;
         _params->gamemode = _gameMode;
         _params->ip = "127.0.0.1";
+        auto &entities = _ecs->get_components<EntityType>();
+        for (std::size_t i = 0; i != entities.size(); i++)
+          _ecs->kill_entity(static_cast<Entities>(i));
         return sceneType::LOBBY;
       } else {
         std::cout << "game is not ready" << std::endl;
@@ -347,6 +350,9 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
         _params->spaceshipId = _spaceshipId;
         _params->gamemode = _gameMode;
         _params->ip = "127.0.0.1";
+        auto &entities = _ecs->get_components<EntityType>();
+        for (std::size_t i = 0; i != entities.size(); i++)
+          _ecs->kill_entity(static_cast<Entities>(i));
         return sceneType::LOBBY;
       }
     }
