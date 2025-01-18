@@ -183,15 +183,20 @@ void CommandGame::createEnemy(Command command, Queue *queue,
     textureId = distrib_Boss(gen);
   SDL_Texture *enemyTexture =
       window->loadTexture(pathSpaceshipEnemy[textureId].c_str());
-  std::pair<int, int>enemy_vel_tab[] = {{5, 5}, {2, 2}, {10, 10}, {2, 5}, {0, 1}};
+  std::pair<int, int> enemy_vel_tab[] = {
+      {5, 5}, {2, 2}, {10, 10}, {2, 5}, {0, 1}};
   int enemy_hp[] = {30, 50, 25, 100, 300};
-  std::pair<int, int> enemy_vel = enemy_vel_tab[static_cast<int>(command.createEnemy.p_enemy.enemyType)];
+  std::pair<int, int> enemy_vel =
+      enemy_vel_tab[static_cast<int>(command.createEnemy.p_enemy.enemyType)];
 
-  std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA : " << enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)] << std::endl;
+  std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA : "
+            << enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)]
+            << std::endl;
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
-      Velocity(0, 0), FlatVelocity(enemy_vel.first, enemy_vel.second), Health(1),
+      Velocity(0, 0), FlatVelocity(enemy_vel.first, enemy_vel.second),
+      Health(1),
       Draw({0, 0, 0, 0},
            {(int)command.createEnemy.positionX,
             (int)command.createEnemy.positionY, 100, 100},

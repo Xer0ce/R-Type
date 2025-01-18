@@ -22,8 +22,9 @@ Entities create_player_entity(Registry &r, Position position, Velocity velocity,
   return entity;
 }
 
-Entities create_enemy_entity(Registry &r, Position position, Velocity velocity, FlatVelocity flatVelocity,
-                             Health health, Draw draw, EnemyProperty enemy,
+Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
+                             FlatVelocity flatVelocity, Health health,
+                             Draw draw, EnemyProperty enemy,
                              std::optional<std::size_t> id,
                              std::optional<LifeBar> lifeBar) {
   auto entity = id.has_value() ? r.spawn_entity(id.value()) : r.spawn_entity();
