@@ -84,7 +84,8 @@ public:
       return std::any_cast<SparseArray<Component> &>(it->second);
     } else {
       throw std::runtime_error(
-          "Component type not registered in the registry.");
+          std::string("Component type not registered in the registry: ") +
+          typeid(Component).name());
     }
   };
 
@@ -103,7 +104,8 @@ public:
       return std::any_cast<SparseArray<Component> &>(it->second);
     } else {
       throw std::runtime_error(
-          "Component type not registered in the registry.");
+          std::string("Component type not registered in the registry: ") +
+          typeid(Component).name());
     }
   };
   ///@}
@@ -184,8 +186,8 @@ public:
     Entities new_entity(0);
 
     if (!_available_entities.empty()) {
-      std::size_t id = _available_entities.back();
-      _available_entities.pop_back();
+      std::size_t id = _available_entities.front();
+      _available_entities.erase(_available_entities.begin());
       _entities[id] = Entities(id);
       new_entity = _entities[id];
     } else {
@@ -193,6 +195,7 @@ public:
       _entities.push_back(Entities(id));
       new_entity = _entities.back();
     }
+    std::cout << "J'ai créé l'entité :" << new_entity << std::endl;
     return new_entity;
   };
 
@@ -216,8 +219,8 @@ public:
       return new_entity;
     }
     if (!_available_entities.empty()) {
-      std::size_t id = _available_entities.back();
-      _available_entities.pop_back();
+      std::size_t id = _available_entities.front();
+      _available_entities.erase(_available_entities.begin());
       _entities[id] = Entities(id);
       new_entity = _entities[id];
     } else {
@@ -256,7 +259,10 @@ public:
         [&value](const Entities &entity) { return entity == value; });
 
     if (it != _entities.end()) {
-      _available_entities.push_back(value);
+      if (std::find(_available_entities.begin(), _available_entities.end(),
+                    value) == _available_entities.end()) {
+        _available_entities.push_back(value);
+      }
       for (auto &elem : _removal_functions) {
         try {
           elem.second(value);

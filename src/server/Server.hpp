@@ -19,6 +19,7 @@
 #include "scenes/EndLess.hpp"
 #include "scenes/History.hpp"
 #include "scenes/Lobby.hpp"
+#include "scenes/LobbyHistory.hpp"
 #include "scenes/OneVsOne.hpp"
 #include <map>
 #include <memory>
@@ -36,6 +37,8 @@ public:
 
   void game();
 
+  void setGamemode(int gamemode);
+
 private:
   std::map<sceneType, std::shared_ptr<IScene>> _scenes;
   sceneType _currentScene;
@@ -49,4 +52,6 @@ private:
 
   CommandHandle commandHandle;
   CommandSend commandSend;
+
+  int gamemode;
 };

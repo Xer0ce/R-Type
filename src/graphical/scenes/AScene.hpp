@@ -24,16 +24,19 @@ public:
 
   void setWindow(Window *window) override;
 
-  void setEcs(Registry *ecs) override;
+  void setEcs(std::shared_ptr<Registry> ecs) override;
 
   void setQueue(Queue *queue) override;
 
   void setChoosingParams(ChoosingParams *params) override;
 
+  void setGamemode(int gamemode) override;
+
 protected:
   std::string _name;
   Window *_window;
-  Registry *_ecs;
+  std::shared_ptr<Registry> _ecs;
   Queue *_queue;
   ChoosingParams *_params;
+  int _gamemode;
 };

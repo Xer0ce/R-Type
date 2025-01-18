@@ -2,18 +2,22 @@
   "enemies": [
     {
       "type": "Pion",
-      "number": 8,
-      "ia": "Aggressive"
+      "number": 1,
+      "ia": "Passive",
+      "frequency": "Slow"
     },
     {
       "type": "Balourd",
-      "number": 0,
-      "ia": "Aggressive"
+      "number": 2,
+      "ia": "Balzy",
+      "frequency": "Turret",
+      "bullet": "FelixBalls"
     },
     {
       "type": "Zinzolin",
-      "number": 0,
-      "ia": "Aggressive"
+      "number": 2,
+      "ia": "Aggressive",
+      "frequency": "High"
     }
   ]
 }

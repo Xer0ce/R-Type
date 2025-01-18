@@ -101,6 +101,8 @@ public:
 
   void setTextPos(std::string text, int x, int y);
 
+  void setTextContent(std::string text, std::string content);
+
   void setAllowToInteract(bool allow) { _allowToInteract = allow; }
 
   bool getAllowToInteract() { return _allowToInteract; }
@@ -119,12 +121,31 @@ public:
     _isBackgroundScrolling = scrolling;
   }
 
+  float getWindowWidth() { return _windowWidth; }
+
+  float getWindowHeight() { return _windowHeight; }
+
+  void drawSpell();
+
+  void changeSpellStatus(bool enable);
+
+  bool &getSpellEnable();
+
+  void drawFreezeOverlay();
+
+  void changeFreezeStatus(bool enable);
+
+  bool &getFreezeEnable();
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
   SDL_Event _event;
   SDL_Texture *_background;
   SDL_Texture *_background2;
+  SDL_Texture *_spell;
+  SDL_Texture *_spellDisable;
+  SDL_Texture *_freezeOverlay;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
@@ -133,4 +154,8 @@ private:
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;
   bool _isBackgroundScrolling = false;
+  float _windowWidth;
+  float _windowHeight;
+  bool _spellIsEnable = true;
+  bool _freezeIsEnable = false;
 };

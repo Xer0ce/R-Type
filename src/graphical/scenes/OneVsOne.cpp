@@ -15,6 +15,7 @@ OneVsOne::OneVsOne() {
   _backgroundPaths.push_back("../src/graphical/assets/level2.png");
   _backgroundPaths.push_back("../src/graphical/assets/level4.png");
   _backgroundPaths.push_back("../src/graphical/assets/level5.png");
+  _isFirstRoundSpell = true;
   _nextBullet =
       std::chrono::steady_clock::now() + std::chrono::milliseconds(150);
 }
@@ -30,6 +31,35 @@ void OneVsOne::init() {
   command.type = CONNECT1V1;
   command.connect1v1.Nickname = "Player";
   _queue->pushTcpQueue(command);
+  _window->playSound(soundType::ENDLESS_MUSIC, -1);
+}
+
+void OneVsOne::spell_system(std::vector<keyType> keys) {
+  auto now = std::chrono::steady_clock::now();
+  if (now > _nextSpell && !_window->getSpellEnable()) {
+    _window->changeSpellStatus(true);
+  }
+
+  if (_window->getSpellEnable()) {
+    if (keys.empty())
+      return;
+    for (auto &key : keys) {
+      auto &control = _ecs->get_components<Control>();
+      auto &property = _ecs->get_components<Property>();
+      if (key == F) {
+        _window->changeSpellStatus(false);
+        _nextSpell = now + std::chrono::seconds(10);
+        for (std::size_t i = 0; i < control.size(); ++i) {
+          if (control[i].has_value()) {
+            Command command;
+            command.type = FREEZESPELL;
+            command.freezeSpell.playerId = i;
+            _queue->pushTcpQueue(command);
+          }
+        }
+      }
+    }
+  }
 }
 
 sceneType
@@ -57,19 +87,29 @@ OneVsOne::loop(eventType event,
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
+    if (_window->getFreezeEnable()) {
+      if (_isFirstRoundSpell) {
+        _unFreeze = now + std::chrono::seconds(2);
+        _isFirstRoundSpell = false;
+      }
+      if (now > _unFreeze) {
+        _window->changeFreezeStatus(false);
+        _window->setAllowToInteract(true);
+        _isFirstRoundSpell = true;
+      }
+    }
     _window->moveBackground();
     if (_window->getAllowToInteract()) {
       now = std::chrono::steady_clock::now();
       _window->deleteText("0");
       control_system(movementKeys, *_ecs);
       shoot_system(keys, *_ecs, _queue, _nextBullet);
-      if (now >= _nextBullet) {
-        _nextBullet = now + std::chrono::milliseconds(150);
-      }
-      position_system_graphic(1, *_ecs, _queue);
-      enemy_system(_ecs);
-      display_infos(_ecs);
+      if (now >= _nextBullet)
+        _nextBullet = now + std::chrono::milliseconds(500);
+      spell_system(keys);
     }
+    position_system_graphic(1, *_ecs, _queue);
+    display_infos(_ecs.get());
   }
   _window->drawBackground();
   _window->drawText();
@@ -83,6 +123,10 @@ OneVsOne::loop(eventType event,
     if (lifebars[i].has_value() && control[i].has_value()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
+  }
+  _window->drawSpell();
+  if (_window->getFreezeEnable()) {
+    _window->drawFreezeOverlay();
   }
   return sceneType::NO_SWITCH;
 }
