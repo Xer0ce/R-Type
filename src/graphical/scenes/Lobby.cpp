@@ -31,6 +31,7 @@ Lobby::loop(eventType event,
   command = _queue->popGameQueue();
   if (command.type != EMPTY) {
     if (command.type == CommandType::STARTGAME) {
+      _gamemode = command.startGame.gamemode;
       _window->deleteTexts();
       _window->deleteButtons();
       for (std::size_t i = 0; i < entityType.size(); ++i) {
@@ -46,7 +47,12 @@ Lobby::loop(eventType event,
         }
       }
       _window->stopAllSound();
-      return sceneType::ONE_VS_ONE;
+      if (_gamemode == 1)
+        return sceneType::ENDLESS;
+      else if (_gamemode == 2)
+        return sceneType::ONE_VS_ONE;
+      else if (_gamemode == 3)
+        return sceneType::HISTORY;
     }
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
   }

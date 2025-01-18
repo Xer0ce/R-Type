@@ -99,11 +99,6 @@ void Game::init(std::string nickname, ChoosingParams *params) {
     connectLobby.push_back(nickname[i]);
   }
 
-  std::cout << "[PARAMS]" << params->ip << std::endl;
-  std::cout << "[PARAMS]" << params->spaceshipId << std::endl;
-  std::cout << "[PARAMS]" << params->bulletId << std::endl;
-  std::cout << "[PARAMS] Gamemode : " << params->gamemode << std::endl;
-
   _tcp->sendToServer(connectLobby);
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
 
@@ -145,6 +140,7 @@ void Game::game(std::string nickname) {
         init(nickname, params);
       }
       _currentScene = switchScene;
+      _scenes[_currentScene]->setGamemode(params->gamemode);
       _scenes[_currentScene]->setWindow(_window.get());
       _scenes[_currentScene]->setEcs(_ecs.get());
       _scenes[_currentScene]->setQueue(_queue.get());

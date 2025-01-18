@@ -174,6 +174,7 @@ void CommandHandle::startGame(std::vector<uint8_t> buffer, IClient *protocol,
   Command cmd;
 
   cmd.type = CommandType::STARTGAME;
+  cmd.startGame.gamemode = static_cast<int>(buffer[1]);
   queue->pushGameQueue(cmd);
 }
 

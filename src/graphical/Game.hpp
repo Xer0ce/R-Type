@@ -76,4 +76,5 @@ private:
 
   CommandHandle commandHandle;
   CommandSend commandSend;
+
 };

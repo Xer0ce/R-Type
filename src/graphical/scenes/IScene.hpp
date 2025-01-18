@@ -32,5 +32,7 @@ public:
 
   virtual void init() = 0;
 
+  virtual void setGamemode(int gamemode) = 0;
+
 protected:
 };

@@ -34,10 +34,6 @@ CommandSend::CommandSend() {
                                                   IProtocol *protocol) {
     createPlayer(command, protocol);
   };
-  _commandMap[CommandType::STARTGAME] = [this](Command command,
-                                               IProtocol *protocol) {
-    startGame(command, protocol);
-  };
   _commandMap[CommandType::GETUSERSLOBBY] = [this](Command command,
                                                    IProtocol *protocol) {
     getUsersLobby(command, protocol);
@@ -276,16 +272,6 @@ void CommandSend::createPlayer(Command command, IProtocol *protocol) {
   binaryData.push_back(0xFF);
 
   protocol->sendData(command.id, binaryData);
-}
-
-void CommandSend::startGame(Command command, IProtocol *protocol) {
-  std::vector<uint8_t> binaryData;
-
-  binaryData.push_back(0x09);
-
-  binaryData.push_back(0xFF);
-
-  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::getUsersLobby(Command command, IProtocol *protocol) {

@@ -37,6 +37,8 @@ public:
 
   void game();
 
+  void setGamemode(int gamemode);
+
 private:
   std::map<sceneType, std::shared_ptr<IScene>> _scenes;
   sceneType _currentScene;
@@ -50,4 +52,6 @@ private:
 
   CommandHandle commandHandle;
   CommandSend commandSend;
+
+  int gamemode;
 };
