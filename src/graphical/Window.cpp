@@ -451,8 +451,6 @@ void Window::setIsVisible(int menu, bool isVisible) {
   _textInputs[menu]->setIsVisible(isVisible);
 }
 
-std::string Window::getTextInput(int menu)
-{
+std::string Window::getTextInput(int menu) {
   return _textInputs[menu]->getTextInput();
 }
-

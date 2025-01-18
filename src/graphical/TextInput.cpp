@@ -148,8 +148,7 @@ void TextInput::setIsSelected(bool isSelected) {
   _isSelected = isSelected;
 }
 
-std::string TextInput::getTextInput()
-{
+std::string TextInput::getTextInput() {
   std::string returnStr = _text;
   if (returnStr.back() == '|')
     returnStr.pop_back();
