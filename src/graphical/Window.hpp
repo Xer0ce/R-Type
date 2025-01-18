@@ -142,7 +142,6 @@ private:
   SDL_Renderer *_renderer;
   SDL_Event _event;
   SDL_Texture *_background;
-  SDL_Texture *_background2;
   SDL_Texture *_spell;
   SDL_Texture *_spellDisable;
   SDL_Texture *_freezeOverlay;

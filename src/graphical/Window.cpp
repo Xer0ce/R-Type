@@ -177,8 +177,6 @@ SDL_Texture *Window::loadTexture(const char *path) {
 
 void Window::setBackground(SDL_Texture *texture) {
   _background = texture;
-  _background2 = texture;
-  ;
 }
 
 void Window::moveBackground() {
