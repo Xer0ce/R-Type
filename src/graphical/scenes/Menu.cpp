@@ -7,13 +7,9 @@
 
 #include "Menu.hpp"
 
-Menu::Menu()
-{
-  _name = "Menu";
-}
+Menu::Menu() { _name = "Menu"; }
 
-Menu::~Menu() {
-}
+Menu::~Menu() {}
 
 void Menu::initMenu() {
   SDL_Texture *pipeMenuTexture =

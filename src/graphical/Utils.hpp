@@ -9,7 +9,6 @@
 
 #include <iostream>
 
-
 enum sceneType {
   MENU,
   HISTORY,

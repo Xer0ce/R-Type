@@ -7,15 +7,16 @@
 
 #pragma once
 
-#include <SDL3/SDL.h>
-#include <SDL3_ttf/SDL_ttf.h>
-#include <SDL3_image/SDL_image.h>
-#include <iostream>
 #include "Utils.hpp"
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
+#include <iostream>
 
 class TextInput {
 public:
-  TextInput(std::string _initText, int size, int x, int y, SDL_Renderer *renderer, int backgroundW);
+  TextInput(std::string _initText, int size, int x, int y,
+            SDL_Renderer *renderer, int backgroundW);
   ~TextInput();
 
   void setIsVisible(bool isVisible);
