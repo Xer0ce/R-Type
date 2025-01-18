@@ -147,3 +147,10 @@ void TextInput::setIsSelected(bool isSelected) {
   _textTexture = SDL_CreateTextureFromSurface(_renderer, surface);
   _isSelected = isSelected;
 }
+
+std::string TextInput::getTextInput() {
+  std::string returnStr = _text;
+  if (returnStr.back() == '|')
+    returnStr.pop_back();
+  return returnStr;
+}
