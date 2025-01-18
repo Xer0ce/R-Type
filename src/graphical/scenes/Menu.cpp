@@ -235,6 +235,8 @@ void Menu::hideAllMenu() {
   for (std::size_t i = 0; i < visibility.size(); ++i) {
     if (visibility[i]->isVisible && menuType[i] != MenuType::menu) {
       visibility[i]->isVisible = false;
+        _window->setIsVisible(0, false);
+        _window->setIsVisible(1, false);
     }
   }
 }
@@ -405,6 +407,22 @@ sceneType Menu::buttonSystem(Boutton &boutton) {
     if (boutton.label == "shoot") {
       _bulletId = -1;
     }
+    if (boutton.label == "host") {
+      auto &visibility = _ecs->get_components<Visibility>();
+      visibility[1]->isVisible = false;
+      _window->setIsVisible(0, false);
+    }
+    if (boutton.label == "join") {
+      auto &visibility = _ecs->get_components<Visibility>();
+      visibility[2]->isVisible = false;
+      _window->setIsVisible(0, false);
+      _window->setIsVisible(1, false);
+    }
+    if (boutton.label == "params") {
+      auto &visibility = _ecs->get_components<Visibility>();
+      visibility[3]->isVisible = false;
+
+    }
   }
   return sceneType::NO_SWITCH;
 }
@@ -435,6 +453,7 @@ sceneType Menu::mouseHandler(float mouseX, float mouseY, eventType event) {
                 if (scene != sceneType::NO_SWITCH)
                   return scene;
               } else {
+                
                 boutton.isClicked = false;
                 auto scene = buttonSystem(boutton);
                 if (scene != sceneType::NO_SWITCH)
@@ -479,7 +498,11 @@ Menu::loop(eventType event,
           const auto &boutton = std::get<Boutton>(element);
           if (boutton.texture != nullptr && boutton.rect.w > 0 &&
               boutton.rect.h > 0) {
-            if (boutton.isClicked) {
+            SDL_GetMouseState(&mouseX, &mouseY);
+            if (boutton.isClicked || (mouseX >= boutton.rect.x &&
+                                      mouseX <= boutton.rect.x + boutton.rect.w &&
+                                      mouseY >= boutton.rect.y &&
+                                      mouseY <= boutton.rect.y + boutton.rect.h)) {
               _window->draw(boutton.selectedTexture, boutton.rect);
             } else {
               _window->draw(boutton.texture, boutton.rect);
