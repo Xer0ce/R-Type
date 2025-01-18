@@ -148,6 +148,8 @@ public:
 
   void setIsVisible(int menu, bool isVisible);
 
+  std::string getTextInput(int menu);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;

@@ -30,6 +30,8 @@ public:
 
   void setIsSelected(bool isSelected);
 
+  std::string getTextInput();
+
 private:
   std::string _text;
   SDL_Texture *_textBackground;
