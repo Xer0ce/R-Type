@@ -343,7 +343,6 @@ void CommandSend::createMeteorite(Command command, IProtocol *protocol) {
   std::vector<uint8_t> binaryData;
 
   binaryData.push_back(0x14);
-
   binaryData.push_back(
       static_cast<uint8_t>(command.createMeteorite.meteoriteId));
 
@@ -356,6 +355,9 @@ void CommandSend::createMeteorite(Command command, IProtocol *protocol) {
       reinterpret_cast<uint8_t *>(&command.createMeteorite.positionY);
   binaryData.insert(binaryData.end(), positionYBytes,
                     positionYBytes + sizeof(float));
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::hit(Command command, IProtocol *protocol) {
