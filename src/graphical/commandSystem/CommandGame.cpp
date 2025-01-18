@@ -97,7 +97,8 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, queue, ecs, window);
   } else {
-    std::cout << "[Game] Invalid command type! Command id :" << command.type << std::endl;
+    std::cout << "[Game] Invalid command type! Command id :" << command.type
+              << std::endl;
   }
 }
 
@@ -193,7 +194,6 @@ void CommandGame::createEnemy(Command command, Queue *queue,
            enemyTexture),
       EnemyProperty(command.createEnemy.p_enemy),
       std::optional<std::size_t>(command.createEnemy.enemyId));
-
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue,
@@ -208,7 +208,6 @@ void CommandGame::newPlayer(Command command, Queue *queue,
   SDL_Texture *playerTexture = window->loadTexture(texturePath.c_str());
 
   int w = (int)(command.newPlayer.Nickname.size() * 10);
-
 
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
@@ -268,7 +267,7 @@ void CommandGame::shoot(Command command, Queue *queue,
       Draw({0, 255, 0, 255}, {100, 150, 50, 50}, shootTexture),
       PlayerId(command.shoot.playerId),
       std::optional<std::size_t>(command.shoot.bulletId));
-  
+
   window->playSound(BULLET_SOUND, 0);
 }
 

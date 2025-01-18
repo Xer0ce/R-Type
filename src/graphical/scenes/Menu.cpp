@@ -313,9 +313,7 @@ bool Menu::isHostGameReady() {
   return _spaceshipId != -1 && _bulletId != -1 && _gameMode != -1;
 }
 
-bool Menu::isJoinGameReady() {
-  return _spaceshipId != -1 && _bulletId != -1;
-}
+bool Menu::isJoinGameReady() { return _spaceshipId != -1 && _bulletId != -1; }
 
 sceneType Menu::buttonSystem(Boutton &boutton) {
   if (boutton.isClicked) {

@@ -50,7 +50,8 @@ void CommandSend::executeCommandSend(Command command, IClient *protocol) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
-    std::cout << "[Send] Invalid command type! Command id :" << command.type << command.type << std::endl;
+    std::cout << "[Send] Invalid command type! Command id :" << command.type
+              << command.type << std::endl;
   }
 }
 

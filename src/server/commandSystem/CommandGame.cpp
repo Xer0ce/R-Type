@@ -52,7 +52,8 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, queue, ecs);
   } else {
-    std::cout << "[Game] Invalid command type! Command id :" << command.type << std::endl;
+    std::cout << "[Game] Invalid command type! Command id :" << command.type
+              << std::endl;
   }
 }
 

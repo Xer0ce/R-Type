@@ -221,7 +221,7 @@ public:
       std::size_t newId = 0;
       if (std::find(_available_entities.begin(), _available_entities.end(),
                     id) == _available_entities.end()) {
-          newId = id;
+        newId = id;
       }
       newId = _available_entities.front();
       _available_entities.erase(_available_entities.begin());

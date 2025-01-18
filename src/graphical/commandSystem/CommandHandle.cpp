@@ -71,7 +71,8 @@ void CommandHandle::executeCommandHandle(uint8_t commandType,
   if (_commandMap.find(commandType) != _commandMap.end()) {
     _commandMap[commandType](buffer, protocol, queue);
   } else {
-    std::cout << "[Handle] Invalid command type! Command id :" << commandType << std::endl;
+    std::cout << "[Handle] Invalid command type! Command id :" << commandType
+              << std::endl;
   }
 }
 
