@@ -137,6 +137,10 @@ public:
 
   bool &getFreezeEnable();
 
+  SDL_Camera *getCamera() { return _camera; };
+
+  void displayCameraFeed();
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -146,6 +150,8 @@ private:
   SDL_Texture *_spell;
   SDL_Texture *_spellDisable;
   SDL_Texture *_freezeOverlay;
+  SDL_Texture *_textureCamera;
+  SDL_Camera *_camera;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
@@ -158,4 +164,6 @@ private:
   float _windowHeight;
   bool _spellIsEnable = true;
   bool _freezeIsEnable = false;
+  int _textureCamWidth;
+  int _textureCamHeight;
 };
