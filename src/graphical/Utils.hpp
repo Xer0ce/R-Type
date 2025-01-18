@@ -9,6 +9,7 @@
 
 #include <iostream>
 
+
 enum sceneType {
   MENU,
   HISTORY,
@@ -18,6 +19,13 @@ enum sceneType {
   LOBBY1V1,
   LOBBY_HISTORY,
   NO_SWITCH,
+};
+
+enum eventType { KEY_DOWN, MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT, MOUSE_RELEASE };
+
+struct TextTyping {
+  eventType event;
+  std::string text;
 };
 
 enum keyType {
@@ -31,8 +39,6 @@ enum keyType {
   F,
   NONE,
 };
-
-enum eventType { MOUSE_CLICK, CLOSE_WINDOW, NO_EVENT, MOUSE_RELEASE };
 
 struct ChoosingParams {
   std::string ip;

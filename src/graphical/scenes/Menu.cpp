@@ -7,9 +7,13 @@
 
 #include "Menu.hpp"
 
-Menu::Menu() { _name = "Menu"; }
+Menu::Menu()
+{
+  _name = "Menu";
+}
 
-Menu::~Menu() {}
+Menu::~Menu() {
+}
 
 void Menu::initMenu() {
   SDL_Texture *pipeMenuTexture =
@@ -210,6 +214,8 @@ void Menu::initSettingsMenu() {
 }
 
 void Menu::init() {
+  std::string textInputLabel = "TextInput";
+  _window->addTextInput(textInputLabel, 500, 500, 50);
   _assetsPath = "../src/graphical/assets/menu/";
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/menu/menu.png"));
@@ -457,7 +463,6 @@ Menu::loop(eventType event,
   if (scene != sceneType::NO_SWITCH) {
     return scene;
   }
-
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i] == EntityType::Menu && visibility[i]->isVisible) {
       _window->draw(draw[i]->texture, draw[i]->rect);
@@ -477,6 +482,6 @@ Menu::loop(eventType event,
       }
     }
   }
-
+  _window->drawTextInput();
   return sceneType::NO_SWITCH;
 }

@@ -12,6 +12,7 @@
 #include "Sound.hpp"
 #include "Text.hpp"
 #include "Utils.hpp"
+#include "TextInput.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -83,7 +84,7 @@ public:
 
   keyType catchKeyOnce();
 
-  SDL_Event catchEvent();
+  SDL_Event &catchEvent();
 
   SDL_Renderer *getRenderer() { return _renderer; }
 
@@ -137,6 +138,12 @@ public:
 
   bool &getFreezeEnable();
 
+  void addTextInput(std::string text, int x, int y, int size);
+
+  void drawTextInput();
+
+  void updateTextInput(SDL_Scancode scancode, SDL_Keycode keycode);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -150,6 +157,7 @@ private:
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
   std::vector<std::unique_ptr<Sound>> _sounds;
+  std::vector<std::unique_ptr<TextInput>> _textInputs;
   bool _allowToInteract;
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;

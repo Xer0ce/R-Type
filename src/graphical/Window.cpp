@@ -108,9 +108,18 @@ eventType Window::updateEvents() {
     if (_event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
       return MOUSE_RELEASE;
     }
+    if (_event.type == SDL_EVENT_KEY_DOWN) {
+      SDL_Keymod modState = SDL_GetModState();
+      char keycode = static_cast<char>(_event.key.key);
+      if ((modState & SDL_KMOD_SHIFT) || (modState & SDL_KMOD_CAPS))
+        keycode = toupper(keycode);
+      updateTextInput(_event.key.scancode, keycode);
+      return KEY_DOWN;
+    }
   }
   return NO_EVENT;
 }
+
 
 void Window::draw(SDL_Texture *texture, SDL_Rect rect) {
   SDL_FRect rec = {static_cast<float>(rect.x), static_cast<float>(rect.y),
@@ -273,7 +282,7 @@ std::vector<keyType> Window::catchMovementKey() {
   return keys;
 }
 
-SDL_Event Window::catchEvent() { return _event; }
+SDL_Event &Window::catchEvent() { return _event; }
 
 void Window::createMenuPipe() {
   SDL_Renderer *renderer = getRenderer();
@@ -405,3 +414,20 @@ void Window::drawFreezeOverlay() {
 void Window::changeFreezeStatus(bool enable) { _freezeIsEnable = enable; }
 
 bool &Window::getFreezeEnable() { return _freezeIsEnable; }
+
+void Window::addTextInput(std::string text, int x, int y, int size) {
+  _textInputs.push_back(
+      std::make_unique<TextInput>(text, size, x, y, _renderer));
+}
+
+void Window::drawTextInput() {
+  for (auto &textInput : _textInputs) {
+    textInput->drawTextInput(_renderer);
+  }
+}
+
+void Window::updateTextInput(SDL_Scancode scancode, SDL_Keycode keycode) {
+  for (auto &textInput : _textInputs) {
+    textInput->updateTextInput(scancode, keycode);
+  }
+}
