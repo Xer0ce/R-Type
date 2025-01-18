@@ -21,6 +21,8 @@ public:
   loop(eventType event,
        std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
+  void cam_system(keyType key);
+
 private:
   CommandGame commandGame;
   std::chrono::time_point<std::chrono::steady_clock> _nextBullet;
