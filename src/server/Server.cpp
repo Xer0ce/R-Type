@@ -106,6 +106,7 @@ void Server::game() {
 void Server::load_component() {
   _ecs->register_component<Position>();
   _ecs->register_component<Velocity>();
+  _ecs->register_component<FlatVelocity>();
   _ecs->register_component<Draw>();
   _ecs->register_component<Health>();
   _ecs->register_component<EntityType>();
