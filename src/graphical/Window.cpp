@@ -76,7 +76,7 @@ void Window::init() {
   _spell = loadTexture("../src/graphical/assets/freezeSpell.png");
   _spellDisable = loadTexture("../src/graphical/assets/freezeSpellDisable.png");
   _freezeOverlay = loadTexture("../src/graphical/assets/freezeOverlay.png");
-  _rectCam = {0, 0, 160, 120};
+  _rectCam = {1040, 0, 160, 120};
 
   int cameraCount = 0;
   SDL_CameraID *cameraIDs = SDL_GetCameras(&cameraCount);
