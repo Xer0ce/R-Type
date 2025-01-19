@@ -130,6 +130,14 @@ eventType Window::updateEvents() {
     if (_event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
       return MOUSE_RELEASE;
     }
+    if (_event.type == SDL_EVENT_KEY_DOWN) {
+      SDL_Keymod modState = SDL_GetModState();
+      char keycode = static_cast<char>(_event.key.key);
+      if ((modState & SDL_KMOD_SHIFT) || (modState & SDL_KMOD_CAPS))
+        keycode = toupper(keycode);
+      updateTextInput(_event.key.scancode, keycode);
+      return KEY_DOWN;
+    }
   }
   return NO_EVENT;
 }
@@ -301,7 +309,7 @@ std::vector<keyType> Window::catchMovementKey() {
   return keys;
 }
 
-SDL_Event Window::catchEvent() { return _event; }
+SDL_Event &Window::catchEvent() { return _event; }
 
 void Window::createMenuPipe() {
   SDL_Renderer *renderer = getRenderer();
@@ -313,7 +321,7 @@ void Window::createMenuPipe() {
   pipeRect.h = 400;
 
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+  SDL_SetRenderDrawColor(renderer, 37, 37, 37, 70);
   SDL_RenderFillRect(renderer, &pipeRect);
 }
 
@@ -433,6 +441,47 @@ void Window::drawFreezeOverlay() {
 void Window::changeFreezeStatus(bool enable) { _freezeIsEnable = enable; }
 
 bool &Window::getFreezeEnable() { return _freezeIsEnable; }
+
+void Window::addTextInput(std::string text, int x, int y, int size,
+                          int backgroundW) {
+  _textInputs.push_back(
+      std::make_unique<TextInput>(text, size, x, y, _renderer, backgroundW));
+}
+
+void Window::drawTextInput() {
+  for (auto &textInput : _textInputs) {
+    textInput->drawTextInput(_renderer);
+  }
+}
+
+void Window::updateTextInput(SDL_Scancode scancode, SDL_Keycode keycode) {
+  for (auto &textInput : _textInputs) {
+    textInput->updateTextInput(scancode, keycode);
+  }
+}
+
+void Window::selectTextInput(eventType event) {
+  for (auto &textInput : _textInputs) {
+    bool resp = textInput->selectTextInput(event);
+    if (resp) {
+      for (auto &otherTextInput : _textInputs) {
+        if (otherTextInput != textInput) {
+          otherTextInput->setIsSelected(false);
+        }
+      }
+      textInput->setIsSelected(true);
+      break;
+    }
+  }
+}
+
+void Window::setIsVisible(int menu, bool isVisible) {
+  _textInputs[menu]->setIsVisible(isVisible);
+}
+
+std::string Window::getTextInput(int menu) {
+  return _textInputs[menu]->getTextInput();
+}
 
 void Window::displayCameraFeed() {
   if (!_isCameraFeed)

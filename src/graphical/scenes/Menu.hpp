@@ -55,6 +55,7 @@ private:
   float _windowWidth;
   float _windowHeight;
   std::string _nickname;
+  std::string _ip;
   std::string _assetsPath;
   int _gameMode;
   int _spaceshipId;
