@@ -424,7 +424,6 @@ void CommandGame::win(Command command, Queue *queue,
   if (window->getWin()) {
     return;
   }
-  std::cout << "WIN DANS LE GRAOHIQUYE" << std::endl;
   window->setWin(true);
   ecs->kill_entity(static_cast<Entities>(command.win.entityId));
 }

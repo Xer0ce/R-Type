@@ -43,7 +43,6 @@ bool OneVsOne::waveIsClear() {
   }
 
   if (enemyCount == 1) {
-    std::cout << "Wave is clear" << std::endl;
     return true;
   }
   return false;

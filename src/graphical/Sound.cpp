@@ -47,7 +47,6 @@ void Sound::stopSound() {
     return;
   }
   if (_channel == -1) {
-    std::cerr << "Error: sound is not playing" << std::endl;
     return;
   }
   Mix_HaltChannel(_channel);

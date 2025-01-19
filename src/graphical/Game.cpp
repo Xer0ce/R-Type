@@ -143,6 +143,7 @@ void Game::game() {
       _scenes[_currentScene]->setEcs(_ecs);
       _scenes[_currentScene]->setQueue(_queue.get());
       _scenes[_currentScene]->init();
+      _scenes[_currentScene]->setChoosingParams(params);
     }
     _window->render();
     std::this_thread::sleep_for(std::chrono::milliseconds(10));

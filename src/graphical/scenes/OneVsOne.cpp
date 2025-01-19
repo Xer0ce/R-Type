@@ -133,11 +133,20 @@ OneVsOne::loop(eventType event,
         _window->getAllowToInteract()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
-    if (control[i].has_value()) {
-      _window->drawFireAnimation1V1(positions[i]->x, positions[i]->y);
-    }
-    if (nicknames[i].has_value() && !control[i].has_value()) {
-      _window->drawFireAnimation(positions[i]->x, positions[i]->y);
+    if (_params->isHost) {
+      if (control[i].has_value()) {
+        _window->drawFireAnimation(positions[i]->x, positions[i]->y);
+      }
+      if (nicknames[i].has_value() && !control[i].has_value()) {
+        _window->drawFireAnimation1V1(positions[i]->x, positions[i]->y);
+      }
+    } else {
+      if (control[i].has_value()) {
+        _window->drawFireAnimation1V1(positions[i]->x, positions[i]->y);
+      }
+      if (nicknames[i].has_value() && !control[i].has_value()) {
+        _window->drawFireAnimation(positions[i]->x, positions[i]->y);
+      }
     }
   }
   _window->drawSpell();
