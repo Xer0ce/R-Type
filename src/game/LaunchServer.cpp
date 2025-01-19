@@ -8,10 +8,10 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "LaunchServer.hpp"
 #include <iostream>
 #include <string>
 #include <thread>
-#include "LaunchServer.hpp"
 
 void launchServer(int gamemode) {
   std::cout << "Launching server" << std::endl;
