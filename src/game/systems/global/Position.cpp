@@ -19,7 +19,8 @@ void position_system_net(
   for (std::size_t i = 0; i < entityType.size(); i++) {
     position[i]->x += velocity[i]->x;
     position[i]->y += velocity[i]->y;
-    if (entityType[i] == EntityType::Enemy) {
+    if (entityType[i] == EntityType::Enemy ||
+        entityType[i] == EntityType::Meteorite) {
       if (now >= _next) {
         Command command;
         command.type = CommandType::MOVE;
