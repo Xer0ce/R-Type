@@ -173,3 +173,15 @@ void CommandHandle::startGameHistory(std::vector<uint8_t> buffer,
   queue->pushGameQueue(cmd);
   queue->pushTcpQueue(cmd);
 }
+
+void CommandHandle::dialogues(std::vector<uint8_t> buffer, IProtocol *protocol,
+                              Queue *queue) {
+  Command cmd;
+
+  int playloadSize = static_cast<int>(buffer[1]);
+
+  std::string dialogues(buffer.begin() + 2, buffer.begin() + 2 + playloadSize);
+  cmd.type = CommandType::DIALOGUES;
+  cmd.dialogues.dialoguesPath = dialogues;
+  queue->pushGameQueue(cmd);
+}

@@ -121,7 +121,17 @@ History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
       _queue->pushTcpQueue(cmd);
 
       _firstRound = false;
-      std::cout << "Level path : " << _levelPath + _level << std::endl;
+      std::string dialogues = _wave.get_dialogues(_levelPath + _level);
+      std::string character = _wave.get_dialoguesCharacter(_levelPath + _level);
+      std::string characterTalking = _wave.get_dialoguesCharacterTalking(_levelPath + _level);
+      if (dialogues != "" && character != "" && characterTalking != "") {
+        Command command;
+        command.type = CommandType::DIALOGUES;
+        command.dialogues.dialoguesPath = dialogues;
+        command.dialogues.characterPath = character;
+        command.dialogues.characterTalkingPath = characterTalking; 
+        _queue->pushTcpQueue(command);
+      }
       _wave.load((_levelPath + _level), *_queue);
     }
     if (now > deltaTime) {

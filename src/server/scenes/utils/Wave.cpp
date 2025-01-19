@@ -124,6 +124,70 @@ void Wave::load_enemy(const json &enemy, Queue &queue) {
   }
 };
 
+std::string Wave::get_dialogues(std::string path) {
+  std::ifstream file(path);
+  std::string dialogues;
+
+  if (!file.is_open()) {
+    throw std::runtime_error("Impossible d'ouvrir le fichier : " + path);
+  }
+
+  auto parsed_file = json::parse(file);
+  file.close();
+
+  if (parsed_file.contains("dialogues") && parsed_file["dialogues"].is_string()) {
+    dialogues = parsed_file["dialogues"];
+  } else {
+    std::cout << "Le fichier JSON ne contient pas de clé 'dialogues' ou ce n'est pas une chaîne de caractères." << std::endl;
+  }
+
+  std::cout << "Dialogues : " << dialogues << std::endl;
+  return dialogues;
+}
+
+std::string Wave::get_dialoguesCharacter(std::string path) {
+  std::ifstream file(path);
+  std::string dialogues;
+
+  if (!file.is_open()) {
+    throw std::runtime_error("Impossible d'ouvrir le fichier : " + path);
+  }
+
+  auto parsed_file = json::parse(file);
+  file.close();
+
+  if (parsed_file.contains("character") && parsed_file["character"].is_string()) {
+    dialogues = parsed_file["character"];
+  } else {
+    std::cout << "Le fichier JSON ne contient pas de clé 'character' ou ce n'est pas une chaîne de caractères." << std::endl;
+  }
+
+  std::cout << "Dialogues : " << dialogues << std::endl;
+  return dialogues;
+}
+
+std::string Wave::get_dialoguesCharacterTalking(std::string path) {
+  std::ifstream file(path);
+  std::string dialogues;
+
+  if (!file.is_open()) {
+    throw std::runtime_error("Impossible d'ouvrir le fichier : " + path);
+  }
+
+  auto parsed_file = json::parse(file);
+  file.close();
+
+  if (parsed_file.contains("talkingCharacter") && parsed_file["talkingCharacter"].is_string()) {
+    dialogues = parsed_file["talkingCharacter"];
+  } else {
+    std::cout << "Le fichier JSON ne contient pas de clé 'talkingCharacter' ou ce n'est pas une chaîne de caractères." << std::endl;
+  }
+
+  std::cout << "Dialogues : " << dialogues << std::endl;
+  return dialogues;
+}
+
+
 void Wave::load(std::string path, Queue &queue) {
   std::cout << "Loading wave from " << path << std::endl;
   std::ifstream file(path);

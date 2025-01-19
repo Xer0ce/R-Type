@@ -36,6 +36,7 @@ private:
   void createMeteorite(Command command, IProtocol *protocol);
   void hit(Command command, IProtocol *protocol);
   void freezeSpell(Command command, IProtocol *protocol);
+  void dialogues(Command command, IProtocol *protocol);
 
   std::map<CommandType, std::function<void(Command, IProtocol *)>> _commandMap;
 };

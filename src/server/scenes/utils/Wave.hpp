@@ -28,6 +28,10 @@ public:
   void factory_call(const json &enemy, Queue &queue, AiType ai, DamageType dmg,
                     FrequencyType fr, BulletType bullet);
   void load_enemy_properties(const json &enemy, Queue &queue);
+  std::string get_dialogues(std::string path);
+  std::string get_dialoguesCharacter(std::string path);
+  std::string get_dialoguesCharacterTalking(std::string path);
+
 
 private:
   Registry *_ecs;
