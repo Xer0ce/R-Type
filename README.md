@@ -1,25 +1,66 @@
-# R-Type
-2 nd Project of Tek 3
+# How to Clone and Build the Project
 
-## How to clone the repo
-- ### step 1
-    git clone the repository `git clone https://github.com/M0ugou-club/R-Type`
-- ### step 2
-    update the submodules using the command `git submodule update --init --recursive`
+## Project Description
+R-Type is a third-year Epitech project focused on developing a multiplayer shoot-'em-up game inspired by the classic R-Type arcade game.
 
+## Prerequisites
+Before you start, ensure your system has the following installed:
+- **Git**
+- **CMake**
+- **Make**
+- **FreeType library**
 
-## how to build the project ?
-- ### step 1
-   create a folder named build and go in it
-- ### step 2
-    make the command `cmake ..`
-- ### step 3
-    in the same folder `make`
-- ### step 4
-    you'l have 2 binaries !
+### Installing FreeType
+- On **Ubuntu/Debian**: `sudo apt-get install libfreetype6-dev`
+- On **Fedora**: `sudo dnf install freetype-devel`
+- On **Arch Linux**: `sudo pacman -S freetype2`
 
+---
+
+## Steps to Clone and Build the Project
+
+1. **Clone the repository**:
+   ```bash
+   git clone git@github.com:M0ugou-club/R-Type.git
+   cd R-Type
+   ```
+
+2. **Install prerequisites**:
+   Ensure that the required libraries and tools mentioned above are installed.
+
+3. **Update submodules**:
+   ```bash
+   git submodule update --init --recursive
+   ```
+
+4. **Create a build directory**:
+   ```bash
+   mkdir build
+   cd build
+   ```
+
+5. **Run CMake**:
+   ```bash
+   cmake ..
+   ```
+
+6. **Build the project**:
+   ```bash
+   make
+   ```
 
 ## Documentation
 
-https://m0ugou-club.github.io/R-Type/mdbook/book/index.html
-https://m0ugou-club.github.io/R-Type/doxygen/html/
+**User documentation** :
+-
+    https://m0ugou-club.github.io/R-Type/mdbook/book/index.html
+
+**Technical documentation** :
+-
+    https://m0ugou-club.github.io/R-Type/doxygen/html/
+
+**Network documentation**:
+-
+    ```bash
+    cat docs/RFC.txt
+    ```
