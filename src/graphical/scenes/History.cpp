@@ -51,8 +51,14 @@ History::loop(eventType event,
       std::chrono::steady_clock::now();
 
   command = _queue->popGameQueue();
-  if (command.type != EMPTY)
+  if (command.type != EMPTY) {
+    if (command.type == CommandType::DIALOGUES) {
+      // ici lance le song stocker comme ca command.dialogues.dialoguesPath
+      // ici l'ance l'animation non parlant comme ca command.dialogues.characterPath
+      // ici lance l'animation parlant comme ca command.dialogues.characterTalkingPath
+    }
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
+  }
 
   std::vector<keyType> keys = _window->catchKey();
   auto movementKeys = _window->catchMovementKey();

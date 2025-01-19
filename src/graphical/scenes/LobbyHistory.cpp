@@ -19,24 +19,24 @@ void LobbyHistory::init() {
       _window->loadTexture("../src/graphical/assets/lobby.png"));
   fillHistoryLevels();
   addLevelsButtons();
-  _window->addText("Joueurs :", 300, 220, 200, 50, 37,
+  _window->addText("Joueurs :", 350, 250, 200, 50, 37,
                    "../src/graphical/assets/RTypefont.otf",
                    {255, 255, 255, 255});
 
-  _window->addText("Choisir un niveau :", 600, 220, 200, 50, 37,
+  _window->addText("Choisir un niveau :", 550, 250, 200, 50, 37,
                    "../src/graphical/assets/RTypefont.otf",
                    {255, 255, 255, 255});
 }
 
 void LobbyHistory::addLevelsButtons() {
-  _window->addButton(800, 570, 150, 35, "Start");
+  _window->addButton(720, 500, 150, 35, "Start");
   const auto &levels = getHistoryLevels();
 
   for (int i = 0; i < std::min(20, static_cast<int>(levels.size())); ++i) {
     int row = i / 5;
     int col = i % 5;
 
-    int posX = 620 + (col * 60);
+    int posX = 570 + (col * 60);
     int posY = 300 + (row * 60);
 
     _window->addButton(posX, posY, 40, 40, std::to_string(i + 1), levels[i]);
