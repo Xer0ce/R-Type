@@ -29,10 +29,10 @@ void createMeteorites(int nbr, Registry *ecs, Queue *queue) {
     std::uniform_int_distribution<> dis(0, 800);
     int random = dis(gen);
     auto entitiesId = create_entity<EntityType::Meteorite>(
-        *ecs, Position(1200, random), Velocity(-10, 0), Draw({}, {}, nullptr));
+        *ecs, Position(1800, random), Velocity(-10, 0), Draw({}, {}, nullptr));
     Command cmd;
     cmd.type = CommandType::CREATEMETEORITE;
-    cmd.createMeteorite.positionX = 1200;
+    cmd.createMeteorite.positionX = 1800;
     cmd.createMeteorite.positionY = random;
     cmd.createMeteorite.meteoriteId = entitiesId;
     queue->pushTcpQueue(cmd);
