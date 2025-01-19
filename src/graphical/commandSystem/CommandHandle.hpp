@@ -1,9 +1,12 @@
-/*
-** EPITECH PROJECT, 2025
-** R-Type
-** File description:
-** CommandHandle
-*/
+/**
+ * @file CommandHandle.hpp
+ * @brief Declaration of the CommandHandle class for the R-Type project.
+ *
+ * The CommandHandle class processes network commands received from clients,
+ * interpreting and executing them within the game server environment.
+ *
+ * @author EPITECH PROJECT, 2025
+ */
 
 #pragma once
 
@@ -16,11 +19,29 @@
 #include <memory>
 #include <sstream>
 
+/**
+ * @class CommandHandle
+ * @brief Handles execution of network commands received from clients.
+ */
 class CommandHandle {
 public:
+  /**
+   * @brief Constructs a CommandHandle object.
+   */
   CommandHandle();
+
+  /**
+   * @brief Destructor for the CommandHandle class.
+   */
   ~CommandHandle();
 
+  /**
+   * @brief Executes the given command based on its type.
+   * @param commandType The command type identifier.
+   * @param buffer The command data buffer.
+   * @param protocol Pointer to the network protocol interface.
+   * @param queue Pointer to the event queue.
+   */
   void executeCommandHandle(uint8_t commandType, std::vector<uint8_t> buffer,
                             IClient *protocol, Queue *queue);
 
@@ -50,5 +71,6 @@ private:
 
   std::map<uint8_t,
            std::function<void(std::vector<uint8_t>, IClient *, Queue *)>>
-      _commandMap;
+      _commandMap; ///< Maps command types to their corresponding execution
+                   ///< functions.
 };

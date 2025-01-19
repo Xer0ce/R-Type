@@ -1,98 +1,77 @@
 /**
- * @file GlobalSystem.hpp
- * @brief Declaration of global game systems for the R-Type project.
+ * @file EnemySystems.hpp
+ * @brief Declaration of enemy AI behavior and management systems for the R-Type
+ * project.
  *
- * The GlobalSystem module manages various game mechanics, including movement,
- * collision detection, shooting, and meteorite handling.
+ * This file defines AI behavior for different enemy types, including movement,
+ * attack patterns, and interactions with the game environment.
+ *
+ * The enemy AI includes:
+ * - Aggressive AI that chases players
+ * - Passive AI with simple movement
+ * - Boss AI with unique movement patterns
+ * - Balzy AI with unpredictable behavior
  *
  * @author EPITECH PROJECT, 2025
  */
 
-#pragma once
+#ifndef ENEMYSYTEMS_HPP
+#define ENEMYSYTEMS_HPP
 
 #include "../../../ecs/Registry.hpp"
-#include "../../../graphical/Utils.hpp"
-#include "../../../graphical/Window.hpp"
 #include "../../../queue/Queue.hpp"
 #include "../../Components/Components.hpp"
 #include "../../gestion/EntitiesGestion.hpp"
+#include <map>
 
 /**
- * @brief Updates entity positions based on velocity for network
- * synchronization.
- * @param deltaTime Time step for movement calculations.
+ * @brief Defines behavior for aggressive AI, which chases players.
  * @param ecs Pointer to the ECS registry.
- * @param queue Reference to the event queue.
- * @param _next Next update time for network transmission.
+ * @param enemy The enemy entity ID.
  */
-void position_system_net(
-    float deltaTime, Registry *ecs, Queue *queue,
-    std::chrono::time_point<std::chrono::steady_clock> _next);
+void aggresive_ai(Registry *ecs, std::size_t enemy);
 
 /**
- * @brief Updates entity positions for graphical rendering.
- * @param deltaTime Time step for movement calculations.
- * @param ecs Reference to the ECS registry.
- * @param queue Reference to the event queue.
- */
-void position_system_graphic(float deltaTime, Registry &ecs, Queue *queue);
-
-/**
- * @brief Handles player input for movement.
- * @param keys Vector of pressed keys.
- * @param ecs Reference to the ECS registry.
- */
-void control_system(std::vector<keyType> keys, Registry &ecs);
-
-/**
- * @brief Handles shooting mechanics for players.
- * @param keys Vector of pressed keys.
- * @param _ecs Reference to the ECS registry.
- * @param _queue Pointer to the event queue.
- * @param next Next update time for shooting events.
- */
-void shoot_system(std::vector<keyType> keys, Registry &_ecs, Queue *_queue,
-                  std::chrono::time_point<std::chrono::steady_clock> next);
-
-/**
- * @brief Handles collision detection between entities.
+ * @brief Defines behavior for balzy AI, which moves unpredictably.
  * @param ecs Pointer to the ECS registry.
- * @param queue Reference to the event queue.
+ * @param enemy The enemy entity ID.
  */
-void collision_system(Registry *ecs, Queue *queue);
+void balzy_ai(Registry *ecs, std::size_t enemy);
 
 /**
- * @brief Handles collision detection in 1v1 game mode.
+ * @brief Defines behavior for boss AI, which has unique movement and attack
+ * patterns.
  * @param ecs Pointer to the ECS registry.
- * @param queue Reference to the event queue.
- * @param friendlyFire Flag indicating if friendly fire is enabled.
+ * @param enemy The enemy entity ID.
  */
-void collision_system_1v1(Registry *ecs, Queue *queue, bool friendlyFire);
+void boss_ai(Registry *ecs, std::size_t enemy);
 
 /**
- * @brief Displays debug information about entities.
+ * @brief Defines behavior for passive AI, which has simple movement and does
+ * not attack.
+ * @param ecs Pointer to the ECS registry.
+ * @param enemy The enemy entity ID.
+ */
+void passive_ai(Registry *ecs, std::size_t enemy);
+
+/**
+ * @brief Calls the appropriate AI function based on the enemy type.
+ * @param ecs Pointer to the ECS registry.
+ * @param type The AI type to execute.
+ */
+void call_enemy_ai(Registry *ecs, AiType type);
+
+/**
+ * @brief Handles all enemy AI updates each game loop.
  * @param ecs Pointer to the ECS registry.
  */
-void display_infos(Registry *ecs);
+void enemy_system(Registry *ecs);
 
 /**
- * @brief Handles collisions between entities and meteorites.
+ * @brief Handles enemy shooting mechanics.
  * @param ecs Pointer to the ECS registry.
- * @param queue Reference to the event queue.
+ * @param queue Pointer to the event queue.
  */
-void collision_system_meteor(Registry *ecs, Queue *queue);
+void enemy_shoot_system(Registry *ecs, Queue *queue);
 
-/**
- * @brief Removes all meteorites from the game.
- * @param ecs Pointer to the ECS registry.
- * @param queue Reference to the event queue.
- */
-void killMeteorites(Registry *ecs, Queue *queue);
-
-/**
- * @brief Spawns meteorites in the game.
- * @param nbr Number of meteorites to create.
- * @param ecs Pointer to the ECS registry.
- * @param queue Reference to the event queue.
- */
-void createMeteorites(int nbr, Registry *ecs, Queue *queue);
+#endif // ENEMYSYTEMS_HPP
