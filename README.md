@@ -61,7 +61,7 @@ Network documentation :
     cat docs/RFC.txt
     ```
 
-#Credits
+##Credits
 
 - [Xer0ce](https://github.com/Xer0ce)
 - [felixlvu](https://github.com/felixlvu)
