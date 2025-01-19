@@ -23,7 +23,6 @@ void History::init() {
   _wave = Wave(_ecs); 
 }
 
-
 void History::setPlayersPosition(Registry *ecs) {
   auto &position = ecs->get_components<Position>();
   auto &entityType = ecs->get_components<EntityType>();

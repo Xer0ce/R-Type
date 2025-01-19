@@ -139,7 +139,7 @@ void CommandGame::connect(Command command, Queue *queue,
 
 void CommandGame::disconnect(Command command, Queue *queue,
                              std::shared_ptr<Registry> ecs, Window *window) {
-  std::cout << "disconnect command" << std::endl;
+  ecs->kill_entity(static_cast<Entities>(command.disconnect.playerId));
 }
 
 void CommandGame::move(Command command, Queue *queue,

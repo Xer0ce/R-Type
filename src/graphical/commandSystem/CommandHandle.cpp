@@ -104,7 +104,10 @@ void CommandHandle::connect(std::vector<uint8_t> buffer, IClient *protocol,
 
 void CommandHandle::disconnect(std::vector<uint8_t> buffer, IClient *protocol,
                                Queue *queue) {
-  std::cout << "Disconnect command receive" << std::endl;
+  Command cmd;
+  cmd.type = CommandType::DISCONNECT;
+  cmd.disconnect.playerId = static_cast<int>(buffer[1]);
+  queue->pushGameQueue(cmd);
 }
 
 void CommandHandle::move(std::vector<uint8_t> buffer, IClient *protocol,

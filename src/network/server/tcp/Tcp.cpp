@@ -80,7 +80,7 @@ bool Tcp::bindSocket() {
   return true;
 }
 
-bool Tcp::listenSocket(int backlog) {
+bool Tcp::listenSocket(Queue *queue) {
   fd_set tempFds = _readFds;
 
   int activity = select(_maxFd + 1, &tempFds, nullptr, nullptr, &_timeout);
@@ -121,6 +121,10 @@ bool Tcp::listenSocket(int backlog) {
 
       if (bytesReceived <= 0) {
         if (bytesReceived == 0) {
+          Command cmd;
+          cmd.type = CommandType::DISCONNECT;
+          cmd.disconnect.playerId = clientSocket;
+          queue->pushGameQueue(cmd);
           printf("Client disconnected\n");
         } else {
           perror("Recv failed");

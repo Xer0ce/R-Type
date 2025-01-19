@@ -169,5 +169,6 @@ struct Command {
   struct createMeteorite createMeteorite;
   struct startGame startGame;
   struct startGameHistory startGameHistory;
+  struct Disconnect disconnect;
   int id;
 };

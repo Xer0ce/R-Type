@@ -55,7 +55,7 @@ void Server::listen(IProtocol *protocol) {
         protocol->sendDataToAll(binaryData);
       }
     }
-    if (protocol->listenSocket()) {
+    if (protocol->listenSocket(_queue.get())) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
       commandHandle.executeCommandHandle(buffer[0], buffer, protocol,

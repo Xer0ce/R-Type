@@ -6,7 +6,9 @@
 */
 
 #pragma once
+#include "../ecs/Registry.hpp"
+#include "../game/Components/Components.hpp"
 
 void launchServer(int gamemode);
 
-void killAllServer();
+void killAllServer(Registry *ecs);

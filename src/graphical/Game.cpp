@@ -148,7 +148,12 @@ void Game::game() {
     _window->render();
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
+  auto &control = _ecs->get_components<Control>();
+  for (std::size_t i = 0; i < control.size(); i++) {
+    if (control[i].has_value())
+      _ecs->kill_entity(static_cast<Entities>(i));
+  }
   _window->destroyWindow();
-  killAllServer();
+  killAllServer(_ecs.get());
   exit(0);
 }

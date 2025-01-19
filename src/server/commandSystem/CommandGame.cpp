@@ -116,7 +116,18 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
 }
 
 void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs) {
-  std::cout << "disconnect command" << std::endl;
+  auto &entityType = ecs->get_components<EntityType>();
+  auto &properties = ecs->get_components<Property>();
+
+  for (std::size_t i = 0; i < entityType.size(); ++i) {
+    if (entityType[i].has_value() && entityType[i] == EntityType::Player) {
+      if (properties[i]->sockedId == command.disconnect.playerId) {
+        ecs->kill_entity(static_cast<Entities>(i));
+        command.disconnect.playerId = i;
+        queue->pushTcpQueue(command);
+      }
+    }
+  }
 }
 
 void CommandGame::move(Command command, Queue *queue, Registry *ecs) {

@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../../queue/Queue.hpp"
 #include <cstdint>
 #include <iostream>
 #include <vector>
@@ -23,7 +24,7 @@ public:
   virtual bool sendDataToAllExceptOne(std::size_t socketId,
                                       std::vector<uint8_t> binaryData) = 0;
   virtual void closeSocket() = 0;
-  virtual bool listenSocket(int backlog = 5) = 0;
+  virtual bool listenSocket(Queue *queue) = 0;
 
   virtual std::string getType() = 0;
 

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include "LaunchServer.hpp"
 
 void launchServer(int gamemode) {
   std::cout << "Launching server" << std::endl;
@@ -29,7 +30,19 @@ void launchServer(int gamemode) {
   std::cout << "Server launched in background" << std::endl;
 }
 
-void killAllServer() {
-  std::system("pkill r-type_server");
-  std::cout << "KILLING SERVER" << std::endl;
+void killAllServer(Registry *ecs) {
+  bool _player = false;
+  auto &entities = ecs->get_components<EntityType>();
+
+  for (std::size_t i = 0; i < entities.size(); i++) {
+    if (entities[i] == EntityType::Player) {
+      _player = true;
+      break;
+    }
+  }
+
+  if (!_player) {
+    std::system("pkill r-type_server");
+    std::cout << "Server killed" << std::endl;
+  }
 }
