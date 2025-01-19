@@ -24,8 +24,11 @@ Lobby::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
         return sceneType::ENDLESS;
       else if (_gamemode == 2)
         return sceneType::ONE_VS_ONE;
-      else if (_gamemode == 3)
-        return sceneType::HISTORY;
+    }
+    if (command.type == CommandType::STARTGAMEHISTORY) {
+      std::cout << "START HISTORY level : "
+                << command.startGameHistory.level << std::endl;
+      return sceneType::HISTORY;
     }
     _commandGame.executeCommandGame(command, _queue, _ecs);
   }

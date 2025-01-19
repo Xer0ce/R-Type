@@ -28,6 +28,8 @@ public:
 
   void setGamemode(int gamemode) override;
 
+  void setLevel(std::string level) override;
+
 protected:
   std::string _name;
   Registry *_ecs;
@@ -35,4 +37,5 @@ protected:
   Wave _wave;
   std::chrono::time_point<std::chrono::steady_clock> _nextCorrectPosition;
   int _gamemode;
+  std::string _level;
 };

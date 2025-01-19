@@ -44,6 +44,16 @@ void Server::listen(IProtocol *protocol) {
         binaryData.push_back(0xFF);
         protocol->sendDataToAll(binaryData);
       }
+      if (command.type == STARTGAMEHISTORY) {
+        std::cout << "START HISTORY level : "
+                  << command.startGameHistory.level << std::endl;
+        _scenes[sceneType::HISTORY]->setLevel(command.startGameHistory.level);
+        std::vector<uint8_t> binaryData;
+        binaryData.push_back(0x09);
+        binaryData.push_back(static_cast<uint8_t>(gamemode));
+        binaryData.push_back(0xFF);
+        protocol->sendDataToAll(binaryData);
+      }
     }
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();

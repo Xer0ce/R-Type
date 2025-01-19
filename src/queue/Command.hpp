@@ -23,6 +23,7 @@ enum CommandType {
   CREATEENEMY,
   EMPTY,
   STARTGAME,
+  STARTGAMEHISTORY,
   CONNECTLOBBY,
   GETUSERSLOBBY,
   NEWPLAYERLOBBY,
@@ -143,6 +144,10 @@ struct startGame {
   int gamemode;
 };
 
+struct startGameHistory {
+  std::string level;
+};
+
 struct Command {
   CommandType type;
   struct Connect connect;
@@ -163,5 +168,6 @@ struct Command {
   struct freezeSpell freezeSpell;
   struct createMeteorite createMeteorite;
   struct startGame startGame;
+  struct startGameHistory startGameHistory;
   int id;
 };

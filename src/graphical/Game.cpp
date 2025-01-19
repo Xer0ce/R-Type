@@ -87,7 +87,6 @@ void Game::init(ChoosingParams *params) {
   std::vector<uint8_t> connectLobby;
   connectLobby.push_back(0x06);
 
-  std::cout << "[PARAMS]" << params->spaceshipId << std::endl;
   connectLobby.push_back(static_cast<uint8_t>(params->gamemode));
 
   connectLobby.push_back(static_cast<uint8_t>(params->spaceshipId));

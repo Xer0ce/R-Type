@@ -93,11 +93,11 @@ void Window::init() {
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/endless.mp3", ENDLESS_MUSIC, 50);
   addSound("../src/graphical/assets/sounds/Michou_croute_et_Elsa_2.mp3",
-           MICHOU_ET_ELSA_2, 100);
+           MICHOU_ET_ELSA_2, 80);
   addSound("../src/graphical/assets/sounds/Michou_Elsa_remix_winterzuuko.mp3",
-           MICHOU_REMIX_WINTERZUUKO, 100);
+           MICHOU_REMIX_WINTERZUUKO, 80);
   addSound("../src/graphical/assets/sounds/hit.mp3", HURT, 50);
-  addSound("../src/game/config/history/sounds/audio9.mp3", SQUEEZIE, 50);
+  addSound("../src/game/config/history/sounds/audio9.mp3", SQUEEZIE, 100);
 }
 
 void Window::destroyWindow() {

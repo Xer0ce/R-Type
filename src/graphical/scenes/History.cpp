@@ -62,8 +62,7 @@ History::loop(eventType event,
     cam_system(keyOnce);
     _window->moveBackground();
     if (_window->getAllowToInteract()) {
-      std::chrono::time_point<std::chrono::steady_clock> now =
-          std::chrono::steady_clock::now();
+      now = std::chrono::steady_clock::now();
       _window->deleteText("0");
       control_system(movementKeys, *_ecs);
       shoot_system(keys, *_ecs, _queue, _nextBullet);
