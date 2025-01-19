@@ -105,6 +105,7 @@ History::loop(eventType event,
     }
   }
   _window->drawDeathBackground();
+  _window->drawWinBackground();
   _window->drawText();
   _window->displayCameraFeed();
   return sceneType::NO_SWITCH;

@@ -67,6 +67,9 @@ CommandSend::CommandSend() {
                                                IProtocol *protocol) {
     dialogues(command, protocol);
   };
+  _commandMap[CommandType::WIN] = [this](Command command, IProtocol *protocol) {
+    win(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -427,4 +430,14 @@ void CommandSend::dialogues(Command command, IProtocol *protocol) {
   binaryData.push_back(0xFF);
 
   protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::win(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x18);
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendData(command.win.socket, binaryData);
 }

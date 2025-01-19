@@ -35,6 +35,7 @@ enum CommandType {
   FREEZESPELL,
   DIALOGUES,
   CONNECTIONCLOSED,
+  WIN,
 };
 
 struct createEnemy {
@@ -157,6 +158,11 @@ struct dialogues {
   std::string characterTalkingPath;
 };
 
+struct win {
+  int socket;
+  int entityId;
+};
+
 struct Command {
   CommandType type;
   struct Connect connect;
@@ -180,5 +186,6 @@ struct Command {
   struct startGameHistory startGameHistory;
   struct Disconnect disconnect;
   struct dialogues dialogues;
+  struct win win;
   int id;
 };

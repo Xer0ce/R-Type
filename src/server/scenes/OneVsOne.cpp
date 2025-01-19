@@ -32,6 +32,40 @@ void OneVsOne::init() {
   }
 }
 
+bool OneVsOne::waveIsClear() {
+  auto &entityType = _ecs->get_components<EntityType>();
+  std::size_t enemyCount = 0;
+
+  for (std::size_t i = 0; i < entityType.size(); i++) {
+    if (entityType[i] == EntityType::Player) {
+      enemyCount++;
+    }
+  }
+
+  if (enemyCount == 1) {
+    std::cout << "Wave is clear" << std::endl;
+    return true;
+  }
+  return false;
+}
+
+bool OneVsOne::waveGestion() {
+  if (waveIsClear()) {
+    auto &entityType = _ecs->get_components<EntityType>();
+    auto &properties = _ecs->get_components<Property>();
+    Command cmd;
+
+    cmd.type = CommandType::WIN;
+    for (std::size_t i = 0; i < entityType.size(); i++) {
+      if (entityType[i] == EntityType::Player) {
+        cmd.win.socket = properties[i]->sockedId;
+        cmd.win.entityId = i;
+        _queue->pushTcpQueue(cmd);
+      }
+    }
+  }
+}
+
 sceneType
 OneVsOne::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
 
@@ -57,6 +91,7 @@ OneVsOne::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
     _coolDown--;
   }
   if (now > deltaTime) {
+    waveGestion();
     position_system_net(1, _ecs, _queue, _nextCorrectPosition);
     collision_system_1v1(_ecs, _queue, true);
     if (now > _nextCorrectPosition)
