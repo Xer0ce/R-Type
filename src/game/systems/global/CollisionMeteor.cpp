@@ -19,9 +19,9 @@ void collision_system_meteor(Registry *ecs, Queue *queue) {
       for (std::size_t j = 0; j < position.size(); j++) {
         if (entityType[j] == EntityType::Meteorite) {
           if (position[i]->x < position[j]->x + 100 &&
-              position[i]->x + 100 > position[j]->x &&
+              position[i]->x + 50 > position[j]->x &&
               position[i]->y < position[j]->y + 100 &&
-              position[i]->y + 100 > position[j]->y) {
+              position[i]->y + 50 > position[j]->y) {
             ecs->kill_entity(static_cast<Entities>(j));
             health[i]->hp -= 50;
             cmd.type = HIT;
