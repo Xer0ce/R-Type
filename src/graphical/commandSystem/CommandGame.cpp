@@ -60,7 +60,6 @@ const std::string pathSpaceship[] = {
 
 const std::string pathSpaceshipEnemy[] = {
     "../src/graphical/assets/enemy/enemy1.png",
-    "../src/graphical/assets/enemy/enemy1.png",
     "../src/graphical/assets/enemy/enemy2.png",
     "../src/graphical/assets/enemy/enemy3.png",
     "../src/graphical/assets/enemy/miniBoss1.png",
