@@ -35,7 +35,7 @@ CommandSend::CommandSend() {
     startGame(command, protocol);
   };
   _commandMap[CommandType::STARTGAMEHISTORY] = [this](Command command,
-                                               IClient *protocol) {
+                                                      IClient *protocol) {
     startGameHistory(command, protocol);
   };
   _commandMap[CommandType::CONNECT1V1] = [this](Command command,
@@ -150,7 +150,8 @@ void CommandSend::startGameHistory(Command command, IClient *protocol) {
 
   binaryData.push_back(0x09);
 
-  binaryData.push_back(static_cast<uint8_t>(command.startGameHistory.level.size()));
+  binaryData.push_back(
+      static_cast<uint8_t>(command.startGameHistory.level.size()));
   std::string level = command.startGameHistory.level;
 
   for (auto &c : level)

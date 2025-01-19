@@ -18,9 +18,9 @@ History::History() {
 
 History::~History() {}
 
-void History::init() { 
+void History::init() {
   setPlayersPosition(_ecs);
-  _wave = Wave(_ecs); 
+  _wave = Wave(_ecs);
 }
 
 void History::setPlayersPosition(Registry *ecs) {
@@ -80,7 +80,6 @@ void History::createMeteorites(int nbr) {
   }
 }
 
-
 void History::waveGestion() {
   if (waveIsClear()) {
     std::cout << "WAVE finit" << std::endl;
@@ -120,7 +119,7 @@ History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
       cmd.wave.time = 3;
       _queue->pushTcpQueue(cmd);
       _queue->pushTcpQueue(cmd);
-  
+
       _firstRound = false;
       std::cout << "Level path : " << _levelPath + _level << std::endl;
       _wave.load((_levelPath + _level), *_queue);

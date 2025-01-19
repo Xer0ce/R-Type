@@ -45,8 +45,8 @@ void Server::listen(IProtocol *protocol) {
         protocol->sendDataToAll(binaryData);
       }
       if (command.type == STARTGAMEHISTORY) {
-        std::cout << "START HISTORY level : "
-                  << command.startGameHistory.level << std::endl;
+        std::cout << "START HISTORY level : " << command.startGameHistory.level
+                  << std::endl;
         _scenes[sceneType::HISTORY]->setLevel(command.startGameHistory.level);
         std::vector<uint8_t> binaryData;
         binaryData.push_back(0x09);
