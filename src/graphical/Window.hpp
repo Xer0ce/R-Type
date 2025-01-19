@@ -156,6 +156,12 @@ public:
 
   void drawDeathBackground();
 
+  void setWin(bool win);
+
+  bool getWin();
+
+  void drawWinBackground();
+
   SDL_Camera *getCamera() { return _camera; };
 
   void displayCameraFeed();
@@ -193,7 +199,9 @@ private:
   SDL_Texture *_spellDisable;
   SDL_Texture *_freezeOverlay;
   SDL_Texture *_deathBackground;
+  SDL_Texture *_winBackground;
   bool _death;
+  bool _win;
   SDL_Texture *_textureCamera;
   SDL_FRect _rectCam;
   SDL_Camera *_camera;

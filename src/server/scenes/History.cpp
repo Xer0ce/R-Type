@@ -45,6 +45,7 @@ bool History::waveIsClear() {
       return false;
     }
   }
+
   return true;
 }
 
@@ -80,9 +81,20 @@ void History::createMeteorites(int nbr) {
   }
 }
 
-void History::waveGestion() {
+bool History::waveGestion() {
   if (waveIsClear()) {
-    std::cout << "WAVE finit" << std::endl;
+    auto &entityType = _ecs->get_components<EntityType>();
+    auto &properties = _ecs->get_components<Property>();
+    Command cmd;
+
+    cmd.type = CommandType::WIN;
+    for (std::size_t i = 0; i < entityType.size(); i++) {
+      if (entityType[i] == EntityType::Player) {
+        cmd.win.socket = properties[i]->sockedId;
+        cmd.win.entityId = i;
+        _queue->pushTcpQueue(cmd);
+      }
+    }
   }
 }
 
