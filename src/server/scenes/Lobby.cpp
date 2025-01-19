@@ -26,8 +26,8 @@ Lobby::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
         return sceneType::ONE_VS_ONE;
     }
     if (command.type == CommandType::STARTGAMEHISTORY) {
-      std::cout << "START HISTORY level : "
-                << command.startGameHistory.level << std::endl;
+      std::cout << "START HISTORY level : " << command.startGameHistory.level
+                << std::endl;
       return sceneType::HISTORY;
     }
     _commandGame.executeCommandGame(command, _queue, _ecs);

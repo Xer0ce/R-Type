@@ -38,7 +38,7 @@ CommandHandle::CommandHandle() {
     freezeSpell(buffer, protocol, queue);
   };
   _commandMap[0x9] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
-                             Queue *queue) {
+                            Queue *queue) {
     startGameHistory(buffer, protocol, queue);
   };
 }
@@ -161,8 +161,8 @@ void CommandHandle::freezeSpell(std::vector<uint8_t> buffer,
   queue->pushGameQueue(cmd);
 }
 
-void CommandHandle::startGameHistory(std::vector<uint8_t> buffer, IProtocol *protocol,
-                      Queue *queue) {
+void CommandHandle::startGameHistory(std::vector<uint8_t> buffer,
+                                     IProtocol *protocol, Queue *queue) {
   Command cmd;
 
   int playloadSize = static_cast<int>(buffer[1]);
