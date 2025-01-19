@@ -42,19 +42,35 @@ void collision_system_meteor(Registry *ecs, Queue *queue) {
       }
     }
     if (entityType[i] == EntityType::Meteorite) {
-      if (position[i]->x < -20) {
+      std::cout << "Meteorite pos x: " << position[i]->x << std::endl;
+      if (position[i]->x < -100) {
         static std::random_device rd;
         static std::mt19937 gen(rd());
         std::uniform_int_distribution<> dis(0, 800);
         int random = dis(gen);
         position[i]->y = random;
-        position[i]->x = 1200;
+        position[i]->x = 1800;
         Command command;
         command.type = CommandType::MOVE;
         command.move.entityId = i;
         command.move.positionX = position[i]->x;
         command.move.positionY = position[i]->y;
         queue->pushUdpQueue(command);
+      }
+    }
+    if (entityType[i] == EntityType::Projectile) {
+      for (std::size_t j = 0; j < position.size(); j++) {
+        if (entityType[j] == EntityType::Meteorite) {
+          if (position[i]->x < position[j]->x + 100 &&
+              position[i]->x + 50 > position[j]->x &&
+              position[i]->y < position[j]->y + 100 &&
+              position[i]->y + 50 > position[j]->y) {
+            ecs->kill_entity(static_cast<Entities>(i));
+            cmd.type = CommandType::KILLENTITY;
+            cmd.killEntity.entityId = i;
+            queue->pushTcpQueue(cmd);
+          }
+        }
       }
     }
   }
