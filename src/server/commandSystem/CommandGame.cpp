@@ -24,10 +24,6 @@ CommandGame::CommandGame() {
                                            Registry *ecs) {
     shoot(command, queue, ecs);
   };
-  _commandMap[CommandType::HIT] = [this](Command command, Queue *queue,
-                                         Registry *ecs) {
-    hit(command, queue, ecs);
-  };
   _commandMap[CommandType::CONNECTLOBBY] = [this](Command command, Queue *queue,
                                                   Registry *ecs) {
     connectLobby(command, queue, ecs);
@@ -35,6 +31,10 @@ CommandGame::CommandGame() {
   _commandMap[CommandType::CONNECT1V1] = [this](Command command, Queue *queue,
                                                 Registry *ecs) {
     connect1v1(command, queue, ecs);
+  };
+  _commandMap[CommandType::FREEZESPELL] = [this](Command command, Queue *queue,
+                                                 Registry *ecs) {
+    freezeSpell(command, queue, ecs);
   };
 }
 
@@ -52,7 +52,8 @@ void CommandGame::executeCommandGame(Command command, Queue *queue,
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, queue, ecs);
   } else {
-    std::cout << "Invalid command type! [Game]" << std::endl;
+    std::cout << "[Game] Invalid command type! Command id :" << command.type
+              << std::endl;
   }
 }
 
@@ -60,6 +61,7 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   auto &entityType = ecs->get_components<EntityType>();
   auto &nicknames = ecs->get_components<Nickname>();
   auto &property = ecs->get_components<Property>();
+  auto &enemies_property = ecs->get_components<EnemyProperty>();
   auto &position = ecs->get_components<Position>();
   Command commandRepConnect;
   Command commandNewPlayer;
@@ -99,11 +101,13 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
   for (std::size_t i = 0; i < entityType.size(); ++i) {
     if (entityType[i].has_value() && position[i].has_value()) {
       if (entityType[i] && entityType[i] == EntityType::Enemy) {
+        EnemyProperty p_enemy = enemies_property[i].value();
         Command newCommandEnemy;
         newCommandEnemy.type = CommandType::CREATEENEMY;
         newCommandEnemy.createEnemy.positionX = position[i]->x;
         newCommandEnemy.createEnemy.positionY = position[i]->y;
         newCommandEnemy.createEnemy.enemyId = i;
+        newCommandEnemy.createEnemy.p_enemy = p_enemy;
         newCommandEnemy.id = command.id;
         queue->pushTcpQueue(newCommandEnemy);
       }
@@ -160,24 +164,11 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
 
   auto bullet = create_entity<EntityType::Projectile>(
       *ecs, Position(command.shoot.positionX, command.shoot.positionY),
-      Velocity(velocity, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}));
+      Velocity(velocity, 0), Draw({0, 255, 0, 255}, {100, 150, 50, 50}),
+      PlayerId(command.shoot.playerId));
 
   command.shoot.bulletId = bullet;
   queue->pushTcpQueue(command);
-}
-
-void CommandGame::hit(Command command, Queue *queue, Registry *ecs) {
-  auto &health = ecs->get_components<Health>();
-  auto &entityType = ecs->get_components<EntityType>();
-  Command cmd;
-
-  health[command.hit.entityHit]->hp -= command.hit.damage;
-  if (health[command.hit.entityHit]->hp <= 0) {
-    ecs->kill_entity(Entities(command.hit.entityHit));
-    cmd.type = CommandType::KILLENTITY;
-    cmd.killEntity.entityId = command.hit.entityHit;
-    queue->pushTcpQueue(cmd);
-  }
 }
 
 void CommandGame::connectLobby(Command command, Queue *queue, Registry *ecs) {
@@ -225,12 +216,10 @@ void CommandGame::connect1v1(Command command, Queue *queue, Registry *ecs) {
     if (entityType[i].has_value()) {
       if (entityType[i] && entityType[i] == EntityType::Player &&
           command.id == property[i]->sockedId) {
-        std::cout << "Player found" << std::endl;
         player = i;
       }
       if (entityType[i] && entityType[i] == EntityType::Player &&
           command.id != property[i]->sockedId) {
-        std::cout << "Other player found" << std::endl;
         otherPlayer = i;
       }
     }
@@ -265,4 +254,20 @@ void CommandGame::connect1v1(Command command, Queue *queue, Registry *ecs) {
   cmd.id = property[player]->sockedId;
 
   queue->pushTcpQueue(cmd);
+}
+
+void CommandGame::freezeSpell(Command command, Queue *queue, Registry *ecs) {
+  auto &entityType = ecs->get_components<EntityType>();
+  auto &properties = ecs->get_components<Property>();
+
+  for (std::size_t i = 0; i < entityType.size(); ++i) {
+    if (entityType[i].has_value() && entityType[i] == EntityType::Player) {
+      if (i == command.freezeSpell.playerId) {
+        Command cmd;
+        cmd.type = CommandType::FREEZESPELL;
+        cmd.freezeSpell.playerId = properties[i]->sockedId;
+        queue->pushTcpQueue(cmd);
+      }
+    }
+  }
 }

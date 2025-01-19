@@ -11,6 +11,7 @@
 #include "Dropdown.hpp"
 #include "Sound.hpp"
 #include "Text.hpp"
+#include "TextInput.hpp"
 #include "Utils.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -83,7 +84,7 @@ public:
 
   keyType catchKeyOnce();
 
-  SDL_Event catchEvent();
+  SDL_Event &catchEvent();
 
   SDL_Renderer *getRenderer() { return _renderer; }
 
@@ -100,6 +101,8 @@ public:
   int getNumberText() { return _texts.size(); }
 
   void setTextPos(std::string text, int x, int y);
+
+  void setTextContent(std::string text, std::string content);
 
   void setAllowToInteract(bool allow) { _allowToInteract = allow; }
 
@@ -119,18 +122,54 @@ public:
     _isBackgroundScrolling = scrolling;
   }
 
+  float getWindowWidth() { return _windowWidth; }
+
+  float getWindowHeight() { return _windowHeight; }
+
+  void drawSpell();
+
+  void changeSpellStatus(bool enable);
+
+  bool &getSpellEnable();
+
+  void drawFreezeOverlay();
+
+  void changeFreezeStatus(bool enable);
+
+  bool &getFreezeEnable();
+
+  void addTextInput(std::string text, int x, int y, int size, int backgroundW);
+
+  void drawTextInput();
+
+  void updateTextInput(SDL_Scancode scancode, SDL_Keycode keycode);
+
+  void selectTextInput(eventType event);
+
+  void setIsVisible(int menu, bool isVisible);
+
+  std::string getTextInput(int menu);
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
   SDL_Event _event;
   SDL_Texture *_background;
   SDL_Texture *_background2;
+  SDL_Texture *_spell;
+  SDL_Texture *_spellDisable;
+  SDL_Texture *_freezeOverlay;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
   std::vector<std::unique_ptr<Sound>> _sounds;
+  std::vector<std::unique_ptr<TextInput>> _textInputs;
   bool _allowToInteract;
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;
   bool _isBackgroundScrolling = false;
+  float _windowWidth;
+  float _windowHeight;
+  bool _spellIsEnable = true;
+  bool _freezeIsEnable = false;
 };

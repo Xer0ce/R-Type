@@ -33,6 +33,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     connect1v1(buffer, protocol, queue);
   };
+  _commandMap[0x08] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                             Queue *queue) {
+    freezeSpell(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -43,7 +47,8 @@ void CommandHandle::executeCommandHandle(uint8_t commandType,
   if (_commandMap.find(commandType) != _commandMap.end()) {
     _commandMap[commandType](buffer, protocol, queue);
   } else {
-    std::cout << "Invalid command type! [Handle]" << std::endl;
+    std::cout << "[Handle] Invalid command type! Command id : " << commandType
+              << std::endl;
   }
 }
 
@@ -141,3 +146,13 @@ void CommandHandle::connect1v1(std::vector<uint8_t> buffer, IProtocol *protocol,
   cmd.id = static_cast<int>(buffer.back());
   queue->pushGameQueue(cmd);
 };
+
+void CommandHandle::freezeSpell(std::vector<uint8_t> buffer,
+                                IProtocol *protocol, Queue *queue) {
+  Command cmd;
+
+  int playerId = static_cast<int>(buffer[1]);
+  cmd.type = CommandType::FREEZESPELL;
+  cmd.freezeSpell.playerId = playerId;
+  queue->pushGameQueue(cmd);
+}

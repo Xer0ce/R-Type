@@ -15,9 +15,6 @@ CommandSend::CommandSend() {
   _commandMap[CommandType::SHOOT] = [this](Command command, IClient *protocol) {
     shoot(command, protocol);
   };
-  _commandMap[CommandType::HIT] = [this](Command command, IClient *protocol) {
-    hit(command, protocol);
-  };
   _commandMap[CommandType::MOVE] = [this](Command command, IClient *protocol) {
     move(command, protocol);
   };
@@ -41,16 +38,20 @@ CommandSend::CommandSend() {
                                                 IClient *protocol) {
     connect1v1(command, protocol);
   };
+  _commandMap[CommandType::FREEZESPELL] = [this](Command command,
+                                                 IClient *protocol) {
+    freezeSpell(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
 
 void CommandSend::executeCommandSend(Command command, IClient *protocol) {
-  // std::cout << "Execute command send" << std::endl;
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
-    std::cout << "Invalid command type! [Send]" << std::endl;
+    std::cout << "[Send] Invalid command type! Command id :" << command.type
+              << command.type << std::endl;
   }
 }
 
@@ -91,7 +92,6 @@ void CommandSend::move(Command command, IClient *protocol) {
                     positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
-
   protocol->sendToServer(binaryData);
 }
 
@@ -117,10 +117,6 @@ void CommandSend::shoot(Command command, IClient *protocol) {
   binaryData.push_back(0xFF);
 
   protocol->sendToServer(binaryData);
-}
-
-void CommandSend::hit(Command command, IClient *protocol) {
-  std::cout << "Hit command" << std::endl;
 }
 
 void CommandSend::createEnemy(Command command, IClient *protocol) {
@@ -155,6 +151,18 @@ void CommandSend::connect1v1(Command command, IClient *protocol) {
 
   for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
+
+  protocol->sendToServer(binaryData);
+}
+
+void CommandSend::freezeSpell(Command command, IClient *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x08);
+
+  binaryData.push_back(static_cast<uint8_t>(command.freezeSpell.playerId));
+
+  binaryData.push_back(0xFF);
 
   protocol->sendToServer(binaryData);
 }

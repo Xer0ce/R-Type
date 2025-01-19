@@ -15,7 +15,7 @@ Lobby::Lobby() {
 Lobby::~Lobby() {}
 
 void Lobby::init() {
-  _window->addButton(700, 500, 150, 35, "Start");
+  _window->addButton(800, 570, 150, 35, "Start");
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/lobby.png"));
 }
@@ -31,22 +31,19 @@ Lobby::loop(eventType event,
   command = _queue->popGameQueue();
   if (command.type != EMPTY) {
     if (command.type == CommandType::STARTGAME) {
+      _gamemode = command.startGame.gamemode;
       _window->deleteTexts();
       _window->deleteButtons();
       for (std::size_t i = 0; i < entityType.size(); ++i) {
-        if (entityType[i].has_value()) {
-          if (entityType[i] && entityType[i] == EntityType::Player) {
-            _ecs->kill_entity(Entities(i));
-          }
-        }
-      }
-      for (std::size_t i = 0; i < entityType.size(); ++i) {
-        if (entityType[i].has_value()) {
-          _ecs->kill_entity(static_cast<Entities>(i));
-        }
+        _ecs->kill_entity(Entities(i));
       }
       _window->stopAllSound();
-      return sceneType::ENDLESS;
+      if (_gamemode == 1)
+        return sceneType::ENDLESS;
+      else if (_gamemode == 2)
+        return sceneType::ONE_VS_ONE;
+      else if (_gamemode == 3)
+        return sceneType::HISTORY;
     }
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
   }

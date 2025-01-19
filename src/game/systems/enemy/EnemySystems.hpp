@@ -7,6 +7,7 @@
 #ifndef ENEMYSYTEMS_HPP
 #define ENEMYSYTEMS_HPP
 #include "../../../ecs/Registry.hpp"
+#include "../../../queue/Queue.hpp"
 #include "../../Components/Components.hpp"
 #include "../../gestion/EntitiesGestion.hpp"
 #include <map>
@@ -18,5 +19,6 @@ void passive_ai(Registry *ecs, std::size_t enemy);
 
 void call_enemy_ai(Registry *ecs, AiType type);
 void enemy_system(Registry *ecs);
+void enemy_shoot_system(Registry *_ecs, Queue *_queue);
 
 #endif // ENEMYSYTEMS_HPP

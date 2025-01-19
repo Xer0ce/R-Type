@@ -26,10 +26,13 @@ public:
 
   void setQueue(Queue *queue) override;
 
+  void setGamemode(int gamemode) override;
+
 protected:
   std::string _name;
   Registry *_ecs;
   Queue *_queue;
   Wave _wave;
   std::chrono::time_point<std::chrono::steady_clock> _nextCorrectPosition;
+  int _gamemode;
 };

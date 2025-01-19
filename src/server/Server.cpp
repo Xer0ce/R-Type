@@ -12,7 +12,7 @@ Server::Server() {
   _scenes[sceneType::ENDLESS] = std::make_shared<EndLess>();
   _scenes[sceneType::HISTORY] = std::make_shared<History>();
   _scenes[sceneType::LOBBY] = std::make_shared<Lobby>();
-
+  _scenes[sceneType::LOBBY_HISTORY] = std::make_shared<LobbyHistory>();
   _currentScene = sceneType::LOBBY;
 
   _tcp = std::make_shared<Tcp>(4243, "0.0.0.0");
@@ -37,6 +37,13 @@ void Server::listen(IProtocol *protocol) {
     }
     if (command.type != EMPTY) {
       commandSend.executeCommandSend(command, protocol);
+      if (command.type == STARTGAME) {
+        std::vector<uint8_t> binaryData;
+        binaryData.push_back(0x09);
+        binaryData.push_back(static_cast<uint8_t>(gamemode));
+        binaryData.push_back(0xFF);
+        protocol->sendDataToAll(binaryData);
+      }
     }
     if (protocol->listenSocket()) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
@@ -62,8 +69,8 @@ void Server::init() {
   std::thread udpThread([this]() { listen(_udp.get()); });
   std::thread gameThread([this]() { game(); });
 
-  tcpThread.join();
-  udpThread.join();
+  tcpThread.detach();
+  udpThread.detach();
   gameThread.join();
 }
 
@@ -74,6 +81,7 @@ void Server::game() {
   _scenes[_currentScene]->setEcs(_ecs.get());
   _scenes[_currentScene]->setQueue(_queue.get());
   _scenes[_currentScene]->init();
+  _scenes[_currentScene]->setGamemode(gamemode);
 
   while (true) {
     std::chrono::time_point<std::chrono::steady_clock> now =
@@ -88,19 +96,25 @@ void Server::game() {
       _scenes[_currentScene]->setEcs(_ecs.get());
       _scenes[_currentScene]->setQueue(_queue.get());
       _scenes[_currentScene]->init();
+      _scenes[_currentScene]->setGamemode(gamemode);
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
+  exit(0);
 }
 
 void Server::load_component() {
   _ecs->register_component<Position>();
   _ecs->register_component<Velocity>();
+  _ecs->register_component<FlatVelocity>();
   _ecs->register_component<Draw>();
   _ecs->register_component<Health>();
   _ecs->register_component<EntityType>();
   _ecs->register_component<Control>();
-  _ecs->register_component<AiType>();
+  _ecs->register_component<EnemyProperty>();
   _ecs->register_component<Nickname>();
   _ecs->register_component<Property>();
+  _ecs->register_component<PlayerId>();
 }
+
+void Server::setGamemode(int gamemode) { this->gamemode = gamemode; }

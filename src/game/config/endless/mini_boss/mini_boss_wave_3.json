@@ -1,29 +1,33 @@
 {
   "enemies": [
     {
-      "type": "Pion",
-      "number": 20,
-      "ia": "Aggressive"
+      "type": "Zinzolin",
+      "number": 2,
+      "ia": "Aggressive",
+      "frequency": "High",
+      "bullet": "Missile"
     },
     {
       "type": "Balourd",
-      "number": 5,
-      "ia": "Aggressive"
-    },
-    {
-      "type": "Zinzolin",
-      "number": 10,
-      "ia": "Aggressive"
-    },
-    {
-      "type": "Boss",
-      "number": 2,
-      "ia": "Aggressive"
-    },
-    {
-      "type": "BigBoss",
       "number": 1,
-      "ia": "Boss"
+      "ia": "Balzy",
+      "frequency": "Turret",
+      "damage": "Punch"
+    },
+    {
+      "type": "Pion",
+      "number": 2,
+      "ia": "Passive",
+      "frequency": "Slow",
+      "damage": "Poke"
+    },
+    {
+      "type": "MiniBoss",
+      "number": 1,
+      "ia": "Boss",
+      "frequency": "High",
+      "damage": "Marmite",
+      "bullet": "Obus"
     }
   ]
 }

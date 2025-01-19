@@ -49,6 +49,9 @@ void Window::init() {
   int windowWidth = 1200;
   int windowHeight = 800;
 
+  _windowWidth = windowWidth;
+  _windowHeight = windowHeight;
+
   _window = SDL_CreateWindow("R-Type", windowWidth, windowHeight, 0);
   if (!_window) {
     std::cerr << "Erreur lors de la création de la fenêtre : " << SDL_GetError()
@@ -65,6 +68,10 @@ void Window::init() {
     exit(84);
   }
 
+  _spell = loadTexture("../src/graphical/assets/freezeSpell.png");
+  _spellDisable = loadTexture("../src/graphical/assets/freezeSpellDisable.png");
+  _freezeOverlay = loadTexture("../src/graphical/assets/freezeOverlay.png");
+
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/un.mp3", WAVE1, 45);
@@ -77,6 +84,7 @@ void Window::init() {
            MICHOU_ET_ELSA_2, 100);
   addSound("../src/graphical/assets/sounds/Michou_Elsa_remix_winterzuuko.mp3",
            MICHOU_REMIX_WINTERZUUKO, 100);
+  addSound("../src/graphical/assets/sounds/hit.mp3", HURT, 50);
 }
 
 void Window::destroyWindow() {
@@ -96,6 +104,17 @@ eventType Window::updateEvents() {
     }
     if (_event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
       return MOUSE_CLICK;
+    }
+    if (_event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+      return MOUSE_RELEASE;
+    }
+    if (_event.type == SDL_EVENT_KEY_DOWN) {
+      SDL_Keymod modState = SDL_GetModState();
+      char keycode = static_cast<char>(_event.key.key);
+      if ((modState & SDL_KMOD_SHIFT) || (modState & SDL_KMOD_CAPS))
+        keycode = toupper(keycode);
+      updateTextInput(_event.key.scancode, keycode);
+      return KEY_DOWN;
     }
   }
   return NO_EVENT;
@@ -237,6 +256,8 @@ std::vector<keyType> Window::catchKey() {
     keys.push_back(ESCAPE);
   if (keyState[SDL_SCANCODE_SPACE])
     keys.push_back(SPACE);
+  if (keyState[SDL_SCANCODE_F])
+    keys.push_back(F);
   if (keys.empty())
     keys.push_back(NONE);
   return keys;
@@ -260,7 +281,7 @@ std::vector<keyType> Window::catchMovementKey() {
   return keys;
 }
 
-SDL_Event Window::catchEvent() { return _event; }
+SDL_Event &Window::catchEvent() { return _event; }
 
 void Window::createMenuPipe() {
   SDL_Renderer *renderer = getRenderer();
@@ -272,7 +293,7 @@ void Window::createMenuPipe() {
   pipeRect.h = 400;
 
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+  SDL_SetRenderDrawColor(renderer, 37, 37, 37, 70);
   SDL_RenderFillRect(renderer, &pipeRect);
 }
 
@@ -319,6 +340,14 @@ void Window::setTextPos(std::string text, int x, int y) {
   }
 }
 
+void Window::setTextContent(std::string text, std::string content) {
+  for (auto &t : _texts) {
+    if (t.getText() == text) {
+      t.setText(content);
+    }
+  }
+}
+
 void Window::playSound(soundType type, int loop) {
   for (auto &sound : _sounds) {
     if (sound->getSoundType() == type) {
@@ -361,4 +390,67 @@ SDL_Texture *Window::loadText(std::string text, int size, std::string fontPath,
 void Window::drawRect(SDL_FRect rect, SDL_Color color) {
   SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a);
   SDL_RenderFillRect(_renderer, &rect);
+}
+
+void Window::drawSpell() {
+  SDL_FRect spellRect = {550, 675, 100, 100};
+  if (_spellIsEnable)
+    SDL_RenderTexture(_renderer, _spell, nullptr, &spellRect);
+  else
+    SDL_RenderTexture(_renderer, _spellDisable, nullptr, &spellRect);
+}
+
+void Window::changeSpellStatus(bool enable) { _spellIsEnable = enable; }
+
+bool &Window::getSpellEnable() { return _spellIsEnable; }
+
+void Window::drawFreezeOverlay() {
+  SDL_FRect freezeRect = {0, 0, 1200, 800};
+  if (_freezeIsEnable)
+    SDL_RenderTexture(_renderer, _freezeOverlay, nullptr, &freezeRect);
+}
+
+void Window::changeFreezeStatus(bool enable) { _freezeIsEnable = enable; }
+
+bool &Window::getFreezeEnable() { return _freezeIsEnable; }
+
+void Window::addTextInput(std::string text, int x, int y, int size,
+                          int backgroundW) {
+  _textInputs.push_back(
+      std::make_unique<TextInput>(text, size, x, y, _renderer, backgroundW));
+}
+
+void Window::drawTextInput() {
+  for (auto &textInput : _textInputs) {
+    textInput->drawTextInput(_renderer);
+  }
+}
+
+void Window::updateTextInput(SDL_Scancode scancode, SDL_Keycode keycode) {
+  for (auto &textInput : _textInputs) {
+    textInput->updateTextInput(scancode, keycode);
+  }
+}
+
+void Window::selectTextInput(eventType event) {
+  for (auto &textInput : _textInputs) {
+    bool resp = textInput->selectTextInput(event);
+    if (resp) {
+      for (auto &otherTextInput : _textInputs) {
+        if (otherTextInput != textInput) {
+          otherTextInput->setIsSelected(false);
+        }
+      }
+      textInput->setIsSelected(true);
+      break;
+    }
+  }
+}
+
+void Window::setIsVisible(int menu, bool isVisible) {
+  _textInputs[menu]->setIsVisible(isVisible);
+}
+
+std::string Window::getTextInput(int menu) {
+  return _textInputs[menu]->getTextInput();
 }

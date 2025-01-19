@@ -13,6 +13,7 @@
 
 void aggresive_ai(Registry *ecs, std::size_t enemy) {
   auto &velocity = ecs->get_components<Velocity>();
+  auto &flatVelocity = ecs->get_components<FlatVelocity>();
   auto &position = ecs->get_components<Position>();
   auto &entityType = ecs->get_components<EntityType>();
   std::vector<std::size_t> playerId;
@@ -41,7 +42,7 @@ void aggresive_ai(Registry *ecs, std::size_t enemy) {
       lastChangeTime = now;
     }
   } else {
-    std::cout << "No players found." << std::endl;
+    // std::cout << "No players found." << std::endl;
     return;
   }
 
@@ -49,12 +50,12 @@ void aggresive_ai(Registry *ecs, std::size_t enemy) {
       (position[randomPlayerId]->y + 10 >= position[enemy]->y)) {
     velocity[enemy]->y = 0;
   } else if (position[enemy]->y > position[randomPlayerId]->y) {
-    velocity[enemy]->y = -6.5;
+    velocity[enemy]->y = -(flatVelocity[enemy]->y);
   } else if (position[enemy]->y < position[randomPlayerId]->y) {
-    velocity[enemy]->y = 6.5;
+    velocity[enemy]->y = flatVelocity[enemy]->y;
   }
   if (position[enemy]->x < -10) {
     position[enemy]->x = 1300;
   }
-  velocity[enemy]->x = -17;
+  velocity[enemy]->x = -(flatVelocity[enemy]->x);
 }

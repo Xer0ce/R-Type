@@ -44,6 +44,16 @@ void position_system_graphic(float deltaTime, Registry &ecs, Queue *queue) {
       continue;
     if (velocities[i]->x == 0 && velocities[i]->y == 0)
       continue;
+    if (entities[i] == EntityType::Player) {
+      if (positions[i]->x + velocities[i]->x <= 0)
+        velocities[i]->x = 0;
+      if (positions[i]->x + velocities[i]->x >= 1175)
+        velocities[i]->x = 0;
+      if (positions[i]->y + velocities[i]->y <= 0)
+        velocities[i]->y = 0;
+      if (positions[i]->y + velocities[i]->y >= 775)
+        velocities[i]->y = 0;
+    }
     positions[i]->x += velocities[i]->x;
     positions[i]->y += velocities[i]->y;
     draw[i]->rect.x = positions[i]->x;
