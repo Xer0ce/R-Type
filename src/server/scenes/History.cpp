@@ -129,7 +129,7 @@ History::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
       enemy_system(_ecs);
       enemy_shoot_system(_ecs, _queue);
       position_system_net(1, _ecs, _queue, _nextCorrectPosition);
-      collision_system_1v1(_ecs, _queue);
+      collision_system_1v1(_ecs, _queue, false);
       collision_system_meteor(_ecs, _queue);
       if (now > _nextCorrectPosition)
         _nextCorrectPosition =

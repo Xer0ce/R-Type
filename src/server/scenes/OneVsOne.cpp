@@ -58,7 +58,7 @@ OneVsOne::loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
   }
   if (now > deltaTime) {
     position_system_net(1, _ecs, _queue, _nextCorrectPosition);
-    collision_system_1v1(_ecs, _queue);
+    collision_system_1v1(_ecs, _queue, true);
     if (now > _nextCorrectPosition)
       _nextCorrectPosition =
           std::chrono::steady_clock::now() + std::chrono::seconds(1);
