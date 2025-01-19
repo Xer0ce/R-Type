@@ -62,8 +62,8 @@ void Sound::setVolume(int volume) {
 }
 
 bool Sound::isFinished() {
-    if (_channel == -1) {
-        return true;
-    }
-    return !Mix_Playing(_channel);
+  if (_channel == -1) {
+    return true;
+  }
+  return !Mix_Playing(_channel);
 }

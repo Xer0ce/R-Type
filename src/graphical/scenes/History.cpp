@@ -50,10 +50,11 @@ History::loop(eventType event,
   command = _queue->popGameQueue();
   if (command.type != EMPTY) {
     if (command.type == CommandType::DIALOGUES) {
-      _window->createCutscene(
-      command.dialogues.characterTalkingPath,
-      command.dialogues.characterPath, 50, 550, 300, 300);
-      _window->addSound(command.dialogues.dialoguesPath, soundType::HISTORY_SOUND, 100);
+      _window->createCutscene(command.dialogues.characterTalkingPath,
+                              command.dialogues.characterPath, 50, 550, 300,
+                              300);
+      _window->addSound(command.dialogues.dialoguesPath,
+                        soundType::HISTORY_SOUND, 100);
       _window->playSound(soundType::HISTORY_SOUND, 0);
     }
     commandGame.executeCommandGame(command, _queue, _ecs, _window);

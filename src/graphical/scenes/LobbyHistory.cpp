@@ -49,10 +49,12 @@ void LobbyHistory::fillHistoryLevels() {
   std::vector<std::string> levelsDouble;
   try {
     for (const auto &entry : std::filesystem::directory_iterator(path)) {
-      if (entry.is_regular_file() && entry.path().extension() == ".json" && entry.path().filename().string().length() == 14) {
+      if (entry.is_regular_file() && entry.path().extension() == ".json" &&
+          entry.path().filename().string().length() == 14) {
         levels.push_back(entry.path().filename().string());
       }
-      if (entry.is_regular_file() && entry.path().extension() == ".json" && entry.path().filename().string().length() == 15) {
+      if (entry.is_regular_file() && entry.path().extension() == ".json" &&
+          entry.path().filename().string().length() == 15) {
         levelsDouble.push_back(entry.path().filename().string());
       }
     }

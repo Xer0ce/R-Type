@@ -28,4 +28,7 @@ void Cutscene::playCutscene() {
     SDL_RenderTexture(_renderer, _texture, nullptr, &rect);
 }
 
-void Cutscene::stopCutscene() { SDL_DestroyTexture(_texture); _isStopped = true; }
+void Cutscene::stopCutscene() {
+  SDL_DestroyTexture(_texture);
+  _isStopped = true;
+}
