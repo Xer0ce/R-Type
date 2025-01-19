@@ -2,13 +2,14 @@
 
 #### This is the user documentation about our engine.
 
-#### For the developer documentation with all the precise about classes click [here]()
+#### For the developer documentation with all the precise about classes click [here](https://m0ugou-club.github.io/R-Type/doxygen/html/dir_ddca5f149c4ce13074f28b270e950ba9.html)
 
 ---
 
 We've decided to go with the architecture of an ECS (Entity Component System) because it provides a modular, flexible, and highly efficient framework for managing game entities and their behaviors. This approach allows us to separate concerns effectively, enabling developers to manage entities, components, and systems independently while ensuring scalability for complex game logic.
 
 In this documentation, we will break down the implementation of each part of the ECS, including:
+
 - Entities: The core identifiers for game objects.
 - Components: The data associated with entities.
 - Systems: The logic that operates on components to bring the game to life.
@@ -138,7 +139,7 @@ struct Position {
 
 int main() {
     Registry registry;
-    
+
     registry.register_component<Position>();
     registry.register_component<Velocity>();
     size_t entity = registry.create_entity();
@@ -171,9 +172,9 @@ struct Position {
 
 int main() {
     Registry registry;
-    
+
     registry.register_component<Position>();
-    
+
     size_t entity = registry.create_entity();
 
     registry.add_component<Position>(entity, {100, 200});
@@ -274,9 +275,9 @@ int main() {
     registry.add_component<Position>(entity, {50, 100});
 
     registry.kill_entity(entity);
-    
+
     registry.remove_component<Position>(entity);
-    
+
     std::cout << "Entity and its components have been removed." << std::endl;
 
     return 0;
