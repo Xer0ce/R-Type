@@ -39,4 +39,5 @@ private:
   SDL_Renderer *_renderer;
   bool _isPlaying;
   float _time;
+  bool _isStopped = false;
 };

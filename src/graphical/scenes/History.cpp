@@ -24,10 +24,7 @@ void History::init() {
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
   _window->setBackgroundScrolling(true);
-  _window->createCutscene(
-      "../src/game/config/history/caracter/SqueezieTalking.png",
-      "../src/game/config/history/caracter/Squeezie.png", 50, 50, 100, 100);
-  _window->playSound(SQUEEZIE, -1);
+  //_window->playSound(SQUEEZIE, -1);
 }
 
 void History::cam_system(keyType key) {
@@ -53,10 +50,11 @@ History::loop(eventType event,
   command = _queue->popGameQueue();
   if (command.type != EMPTY) {
     if (command.type == CommandType::DIALOGUES) {
-      // ici lance le song stocker comme ca command.dialogues.dialoguesPath
-      // ici l'ance l'animation non parlant comme ca
-      // command.dialogues.characterPath ici lance l'animation parlant comme ca
-      // command.dialogues.characterTalkingPath
+      _window->createCutscene(
+      command.dialogues.characterTalkingPath,
+      command.dialogues.characterPath, 50, 550, 300, 300);
+      _window->addSound(command.dialogues.dialoguesPath, soundType::HISTORY_SOUND, 100);
+      _window->playSound(soundType::HISTORY_SOUND, 0);
     }
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
   }
@@ -83,7 +81,11 @@ History::loop(eventType event,
   }
   _window->drawBackground();
   _window->drawText();
-  _window->playCutscene();
+  if (_window->isSoundFinished(HISTORY_SOUND)) {
+    _window->stopCutScenes();
+  } else {
+    _window->playCutscene();
+  }
   if (now > _clockCutScene) {
     _window->setPlayingCutscene();
     _clockCutScene = now + std::chrono::milliseconds(125);

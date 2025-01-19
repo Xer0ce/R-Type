@@ -28,6 +28,10 @@ public:
 
   void setVolume(int volume);
 
+  int getChannel() { return _channel; }
+
+  bool isFinished();
+
 private:
   soundType _type;
   std::string _path;

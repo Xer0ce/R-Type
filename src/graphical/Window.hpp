@@ -118,6 +118,8 @@ public:
 
   void stopSound(soundType type);
 
+  bool isSoundFinished(soundType type);
+
   bool isBackgroundScrolling() { return _isBackgroundScrolling; }
 
   void setBackgroundScrolling(bool scrolling) {
@@ -168,6 +170,8 @@ public:
   void playCutscene();
 
   void setPlayingCutscene();
+
+  void stopCutScenes();
 
   void initFireAnimation(bool is1V1 = false);
 

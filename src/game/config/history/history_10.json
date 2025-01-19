@@ -37,7 +37,7 @@
       "frequency": "Slow"
     }
   ],
-  "dialogues": "src/game/config/history/sounds/audio10.mp3",
-  "character": "src/game/config/history/caracter/Michou.png",
-  "talkingCharacter": "src/game/config/history/caracter/MichouTalking.png"
+  "dialogues": "../src/game/config/history/sounds/audio13.mp3",
+  "character": "../src/game/config/history/caracter/Oiia.png",
+  "talkingCharacter": "../src/game/config/history/caracter/OiiaTalking.png"
 }
