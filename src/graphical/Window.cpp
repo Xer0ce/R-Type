@@ -552,3 +552,45 @@ void Window::displayCameraFeed() {
   SDL_RenderRect(_renderer, &_rectCam);
   SDL_ReleaseCameraFrame(_camera, surfaceCamera);
 }
+
+void Window::initFireAnimation(bool is1V1) {
+  FireAnimation fireAnimation(_renderer, is1V1);
+
+  if (is1V1) {
+    _fireAnimations1V1.push_back(fireAnimation);
+  } else {
+    _fireAnimations.push_back(fireAnimation);
+  }
+}
+
+void Window::drawFireAnimation(float x, float y) {
+  for (auto &fireAnimation : _fireAnimations) {
+    fireAnimation.drawFireAnimation(x, y);
+  }
+}
+
+void Window::drawFireAnimation1V1(float x, float y) {
+  for (auto &fireAnimation : _fireAnimations1V1) {
+    fireAnimation.drawFireAnimation(x, y);
+  }
+}
+
+void Window::destroyFireAnimation() {
+  for (auto &fireAnimation : _fireAnimations) {
+    fireAnimation.destroyFireAnimation();
+  }
+  for (auto &fireAnimation : _fireAnimations1V1) {
+    fireAnimation.destroyFireAnimation();
+  }
+  _fireAnimations.clear();
+  _fireAnimations1V1.clear();
+}
+
+void Window::changeFireAnimation() {
+  for (auto &fireAnimation : _fireAnimations) {
+    fireAnimation.changeFireAnimation();
+  }
+  for (auto &fireAnimation : _fireAnimations1V1) {
+    fireAnimation.changeFireAnimation();
+  }
+}

@@ -12,6 +12,7 @@
 #include "Sound.hpp"
 #include "Text.hpp"
 #include "TextInput.hpp"
+#include "FireAnimation.hpp"
 #include "Utils.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -156,6 +157,16 @@ public:
 
   void setCameraFeed() { _isCameraFeed = !_isCameraFeed; }
 
+  void initFireAnimation(bool is1V1 = false);
+
+  void drawFireAnimation(float x, float y);
+
+  void drawFireAnimation1V1(float x, float y);
+
+  void destroyFireAnimation();
+
+  void changeFireAnimation();
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -173,6 +184,8 @@ private:
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
   std::vector<std::unique_ptr<Sound>> _sounds;
   std::vector<std::unique_ptr<TextInput>> _textInputs;
+  std::vector<FireAnimation> _fireAnimations;
+  std::vector<FireAnimation> _fireAnimations1V1;
   bool _allowToInteract;
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;

@@ -24,6 +24,7 @@ void EndLess::init() {
   _queue->pushTcpQueue(command);
   _window->playSound(MICHOU_REMIX_WINTERZUUKO, -1);
   _window->setBackgroundScrolling(true);
+  _window->initFireAnimation(false);
 }
 
 void EndLess::cam_system(keyType key) {
@@ -73,6 +74,7 @@ EndLess::loop(eventType event,
       enemy_system(_ecs.get());
       display_infos(_ecs.get());
     }
+    _window->changeFireAnimation();
   }
   _window->drawBackground();
   _window->drawText();
@@ -81,6 +83,7 @@ EndLess::loop(eventType event,
       continue;
     _window->draw(draw[i]->texture, draw[i]->rect);
     if (nicknames[i].has_value()) {
+      _window->drawFireAnimation(positions[i]->x, positions[i]->y);
       _window->draw(nicknames[i]->texture, nicknames[i]->rect);
     }
     if (lifebars[i].has_value()) {
