@@ -11,7 +11,7 @@ Before you start, ensure your system has the following installed:
 - **FreeType library**
 
 ### Installing FreeType
-- On **Ubuntu/Debian**: `sudo apt-get install libfreetype6-dev`
+- On **Ubuntu/Debian**: `sudo apt-get install libfreetype-dev`
 - On **Fedora**: `sudo dnf install freetype-devel`
 - On **Arch Linux**: `sudo pacman -S freetype2`
 
