@@ -14,7 +14,15 @@ Text::Text(std::string text, int x, int y, int w, int h, SDL_Renderer *renderer,
   _rect.y = y;
   _rect.w = w;
   _rect.h = h;
-  _font = TTF_OpenFont(fontPath.c_str(), size);
+  try {
+    _font = TTF_OpenFont(fontPath.c_str(), size);
+    if (!_font) {
+      throw std::runtime_error("Error: " + std::string(SDL_GetError()));
+    }
+  } catch (const std::runtime_error &e) {
+    std::cerr << e.what() << std::endl;
+    exit(84);
+  }
 }
 
 Text::~Text() {

@@ -58,4 +58,5 @@ enum soundType {
   NEWWAVE,
   MICHOU_REMIX_WINTERZUUKO,
   HURT,
+  SQUEEZIE,
 };

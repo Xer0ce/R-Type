@@ -13,4 +13,9 @@ struct Health {
   Health(int hp = 100) : hp(hp) {}
 };
 
+struct MaxHealth {
+  int hp;
+  MaxHealth(int hp = 100) : hp(hp) {}
+};
+
 #endif // HEALTH_HPP

@@ -16,6 +16,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include "Cutscene.hpp"
 #include <cstddef>
 #include <memory>
 #include <vector>
@@ -160,6 +161,13 @@ public:
 
   void setCameraFeed() { _isCameraFeed = !_isCameraFeed; }
 
+  void createCutscene(std::string soundPath, std::string texturePath, int x,
+                            int y, int width, int height);
+
+  void playCutscene();
+
+  void setPlayingCutscene();
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -187,6 +195,7 @@ private:
   float _windowHeight;
   bool _spellIsEnable = true;
   bool _freezeIsEnable = false;
+  std::vector<Cutscene> _cutscenes;
   bool _isCameraFeed = false;
   int _textureCamWidth;
   int _textureCamHeight;
