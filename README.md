@@ -51,17 +51,16 @@ Before you start, ensure your system has the following installed:
 
 ## Documentation
 
-[User documentation (Click)](https://m0ugou-club.github.io/R-Type/mdbook/book/index.html)
+- ### [User documentation (Click)](https://m0ugou-club.github.io/R-Type/mdbook/book/index.html)
 
-[Technical documentation (Click)](https://m0ugou-club.github.io/R-Type/doxygen/html/)
+- ### [Technical documentation (Click)](https://m0ugou-club.github.io/R-Type/doxygen/html/)
 
-Network documentation :
-
+- ### Network documentation :
     ```bash
     cat docs/RFC.txt
     ```
 
-##Credits
+## Credits
 
 - [Xer0ce](https://github.com/Xer0ce)
 - [felixlvu](https://github.com/felixlvu)
