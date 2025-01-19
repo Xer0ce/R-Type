@@ -34,6 +34,7 @@ enum CommandType {
   CREATEMETEORITE,
   FREEZESPELL,
   DIALOGUES,
+  CONNECTIONCLOSED,
 };
 
 struct createEnemy {

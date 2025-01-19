@@ -47,6 +47,9 @@ CommandGame::CommandGame() {
   _commandMap[CommandType::CREATEMETEORITE] =
       [this](Command command, Queue *queue, std::shared_ptr<Registry> ecs,
              Window *window) { createMeteorite(command, queue, ecs, window); };
+  _commandMap[CommandType::CONNECTIONCLOSED] =
+      [this](Command command, Queue *queue, std::shared_ptr<Registry> ecs,
+             Window *window) { connectionClosed(command, queue, ecs, window); };
 }
 
 CommandGame::~CommandGame() {}
@@ -399,4 +402,13 @@ void CommandGame::freezeSpell(Command command, Queue *queue,
                               std::shared_ptr<Registry> ecs, Window *window) {
   window->setAllowToInteract(false);
   window->changeFreezeStatus(true);
+}
+
+void CommandGame::connectionClosed(Command command, Queue *queue,
+                              std::shared_ptr<Registry> ecs, Window *window) {
+  window->addText("Connection lost.", 200, 350, 50, 50, 100,
+                  "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
+    window->addText("Please quit the game.", 215, 450, 50, 50, 75,
+                  "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
+  window->setAllowToInteract(false);
 }

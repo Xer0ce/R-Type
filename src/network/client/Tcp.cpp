@@ -40,7 +40,7 @@ void Tcp::sendToServer(std::vector<uint8_t> data) {
   send(_socket, data.data(), data.size(), 0);
 }
 
-bool Tcp::receiveFromServer() {
+bool Tcp::receiveFromServer(Queue *queue) {
   fd_set readfds;
   struct timeval timeout;
 
@@ -62,6 +62,9 @@ bool Tcp::receiveFromServer() {
     char buffer[1024] = {0};
     int valread = read(_socket, buffer, 1024);
     if (valread == 0) {
+      Command cmd;
+      cmd.type = CommandType::CONNECTIONCLOSED;
+      queue->pushGameQueue(cmd);
       return false;
     }
     _buffer = std::vector<uint8_t>(buffer, buffer + valread);

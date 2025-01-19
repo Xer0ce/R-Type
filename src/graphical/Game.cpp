@@ -63,7 +63,7 @@ void Game::listen(IClient &protocol) {
       commandSend.executeCommandSend(command, &protocol);
     }
 
-    if (protocol.receiveFromServer()) {
+    if (protocol.receiveFromServer(_queue.get())) {
       std::vector<std::vector<uint8_t>> buffer =
           divideBuffer(protocol.getBuffer());
 

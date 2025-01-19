@@ -179,6 +179,10 @@ public:
 
   void changeFireAnimation();
 
+  void setConnectionClosed(bool connectionClosed) {
+    _connectionClosed = connectionClosed;
+  }
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -212,4 +216,5 @@ private:
   bool _isCameraFeed = false;
   int _textureCamWidth;
   int _textureCamHeight;
+  bool _connectionClosed = false;
 };

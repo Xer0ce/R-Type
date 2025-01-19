@@ -50,6 +50,8 @@ private:
            Window *window);
   void freezeSpell(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
                    Window *window);
+  void connectionClosed(Command command, Queue *queue,
+                        std::shared_ptr<Registry> ecs, Window *window);
 
   std::map<CommandType,
            std::function<void(Command, Queue *, std::shared_ptr<Registry>,

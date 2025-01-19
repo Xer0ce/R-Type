@@ -167,6 +167,11 @@ void Window::drawDropdown() {
 
 void Window::addText(std::string text, int x, int y, int w, int h, int size,
                      std::string fontPath, SDL_Color color) {
+  for (auto &t : _texts) {
+    if (t.getText() == text && text != "Nickname") {
+      return;
+    }
+  }
   _texts.emplace_back(text, x, y, w, h, _renderer, size, fontPath, color);
   _texts.back().init();
 }
