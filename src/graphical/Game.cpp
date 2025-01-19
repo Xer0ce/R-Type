@@ -87,7 +87,6 @@ void Game::init(ChoosingParams *params) {
   std::vector<uint8_t> connectLobby;
   connectLobby.push_back(0x06);
 
-  std::cout << "[PARAMS]" << params->spaceshipId << std::endl;
   connectLobby.push_back(static_cast<uint8_t>(params->gamemode));
 
   connectLobby.push_back(static_cast<uint8_t>(params->spaceshipId));
@@ -95,9 +94,9 @@ void Game::init(ChoosingParams *params) {
   connectLobby.push_back(static_cast<uint8_t>(params->bulletId));
 
   connectLobby.push_back(static_cast<uint8_t>(params->nickname.size()));
-  for (size_t i = 0; i < params->nickname.size(); i++) {
+
+  for (size_t i = 0; i < params->nickname.size(); i++)
     connectLobby.push_back(params->nickname[i]);
-  }
 
   _tcp->sendToServer(connectLobby);
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
@@ -107,7 +106,6 @@ void Game::init(ChoosingParams *params) {
 
   tcpThread.detach();
   udpThread.detach();
-  delete params;
 }
 
 void Game::game() {
@@ -149,7 +147,13 @@ void Game::game() {
     _window->render();
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
+  auto &control = _ecs->get_components<Control>();
+  for (std::size_t i = 0; i < control.size(); i++) {
+    if (control[i].has_value())
+      _ecs->kill_entity(static_cast<Entities>(i));
+  }
   _window->destroyWindow();
-  killAllServer();
+  killAllServer(params->isHost);
+  delete params;
   exit(0);
 }

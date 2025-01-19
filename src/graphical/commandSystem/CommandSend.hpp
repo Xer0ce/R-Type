@@ -29,6 +29,7 @@ private:
   void newPlayer(Command command, IClient *protocol);
   void createPlayer(Command command, IClient *protocol);
   void startGame(Command command, IClient *protocol);
+  void startGameHistory(Command command, IClient *protocol);
   void connect1v1(Command command, IClient *protocol);
   void freezeSpell(Command command, IClient *protocol);
 

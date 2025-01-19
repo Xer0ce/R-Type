@@ -30,5 +30,7 @@ public:
 
   virtual void setGamemode(int gamemode) = 0;
 
+  virtual void setLevel(std::string level) = 0;
+
 protected:
 };

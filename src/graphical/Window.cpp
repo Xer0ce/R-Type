@@ -28,17 +28,14 @@ void Window::init() {
 
   if (!SDL_Init(SDL_INIT_AUDIO)) {
     std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
-    exit(84);
   }
 
   if (Mix_Init(MIX_INIT_MP3) == 0) {
     std::cerr << "Mix_Init Error: " << SDL_GetError() << std::endl;
-    exit(84);
   }
 
   if (!Mix_OpenAudio(0, NULL)) {
     std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
-    exit(84);
   }
 
   if (!TTF_Init()) {
@@ -48,16 +45,10 @@ void Window::init() {
   SDL_DisplayID displayID = SDL_GetPrimaryDisplay();
   const SDL_DisplayMode *currentMode = SDL_GetCurrentDisplayMode(displayID);
 
-  // int windowWidth = static_cast<int>(currentMode->w * 0.9);
-  // int windowHeight = static_cast<int>(currentMode->h * 0.8);
+  _windowWidth = 1200;
+  _windowHeight = 800;
 
-  int windowWidth = 1200;
-  int windowHeight = 800;
-
-  _windowWidth = windowWidth;
-  _windowHeight = windowHeight;
-
-  _window = SDL_CreateWindow("R-Type", windowWidth, windowHeight, 0);
+  _window = SDL_CreateWindow("R-Type", _windowWidth, _windowHeight, 0);
   if (!_window) {
     std::cerr << "Erreur lors de la création de la fenêtre : " << SDL_GetError()
               << std::endl;
@@ -76,6 +67,8 @@ void Window::init() {
   _spell = loadTexture("../src/graphical/assets/freezeSpell.png");
   _spellDisable = loadTexture("../src/graphical/assets/freezeSpellDisable.png");
   _freezeOverlay = loadTexture("../src/graphical/assets/freezeOverlay.png");
+  _deathBackground = loadTexture("../src/graphical/assets/deathBackground.png");
+  _death = false;
   _rectCam = {1040, 0, 160, 120};
 
   int cameraCount = 0;
@@ -83,14 +76,12 @@ void Window::init() {
 
   if (!cameraIDs || cameraCount == 0) {
     std::cerr << "No available cameras found!" << std::endl;
-    exit(84);
   }
 
   SDL_CameraID cameraID = cameraIDs[0];
   _camera = SDL_OpenCamera(cameraID, NULL);
   if (!_camera) {
     std::cerr << "SDL_OpenCamera Error: " << SDL_GetError() << std::endl;
-    exit(84);
   }
 
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
@@ -102,14 +93,14 @@ void Window::init() {
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/endless.mp3", ENDLESS_MUSIC, 50);
   addSound("../src/graphical/assets/sounds/Michou_croute_et_Elsa_2.mp3",
-           MICHOU_ET_ELSA_2, 100);
+           MICHOU_ET_ELSA_2, 80);
   addSound("../src/graphical/assets/sounds/Michou_Elsa_remix_winterzuuko.mp3",
-           MICHOU_REMIX_WINTERZUUKO, 100);
+           MICHOU_REMIX_WINTERZUUKO, 80);
   addSound("../src/graphical/assets/sounds/hit.mp3", HURT, 50);
+  addSound("../src/game/config/history/sounds/audio9.mp3", SQUEEZIE, 100);
 }
 
 void Window::destroyWindow() {
-  SDL_CloseCamera(_camera);
   SDL_DestroyWindow(_window);
   Mix_CloseAudio();
   TTF_Quit();
@@ -483,6 +474,15 @@ std::string Window::getTextInput(int menu) {
   return _textInputs[menu]->getTextInput();
 }
 
+void Window::setDeath(bool death) { _death = death; }
+
+void Window::drawDeathBackground() {
+  if (_death) {
+    SDL_FRect deathRect = {0, 0, 1200, 800};
+    SDL_RenderTexture(_renderer, _deathBackground, nullptr, &deathRect);
+  }
+}
+
 void Window::displayCameraFeed() {
   if (!_isCameraFeed)
     return;
@@ -552,6 +552,24 @@ void Window::displayCameraFeed() {
   SDL_RenderRect(_renderer, &_rectCam);
   SDL_ReleaseCameraFrame(_camera, surfaceCamera);
 }
+void Window::createCutscene(std::string soundPath, std::string texturePath,
+                            int x, int y, int width, int height) {
+  _cutscenes.push_back(
+      Cutscene(_renderer, soundPath, texturePath, x, y, width, height));
+}
+
+void Window::playCutscene() {
+  for (auto &cutscene : _cutscenes) {
+    cutscene.playCutscene();
+  }
+}
+
+void Window::setPlayingCutscene() {
+  for (auto &cutscene : _cutscenes) {
+    cutscene.setIsPlaying();
+  }
+}
+
 
 void Window::initFireAnimation(bool is1V1) {
   FireAnimation fireAnimation(_renderer, is1V1);

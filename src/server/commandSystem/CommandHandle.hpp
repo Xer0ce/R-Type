@@ -32,6 +32,8 @@ private:
   void shoot(std::vector<uint8_t> buffer, IProtocol *protocol, Queue *queue);
   void startGame(std::vector<uint8_t> buffer, IProtocol *protocol,
                  Queue *queue);
+  void startGameHistory(std::vector<uint8_t> buffer, IProtocol *protocol,
+                        Queue *queue);
   void connectLobby(std::vector<uint8_t> buffer, IProtocol *protocol,
                     Queue *queue);
   void connect1v1(std::vector<uint8_t> buffer, IProtocol *protocol,

@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Button.hpp"
+#include "Cutscene.hpp"
 #include "Dropdown.hpp"
 #include "Sound.hpp"
 #include "Text.hpp"
@@ -151,11 +152,22 @@ public:
 
   std::string getTextInput(int menu);
 
+  void setDeath(bool death);
+
+  void drawDeathBackground();
+
   SDL_Camera *getCamera() { return _camera; };
 
   void displayCameraFeed();
 
   void setCameraFeed() { _isCameraFeed = !_isCameraFeed; }
+
+  void createCutscene(std::string soundPath, std::string texturePath, int x,
+                      int y, int width, int height);
+
+  void playCutscene();
+
+  void setPlayingCutscene();
 
   void initFireAnimation(bool is1V1 = false);
 
@@ -176,6 +188,8 @@ private:
   SDL_Texture *_spell;
   SDL_Texture *_spellDisable;
   SDL_Texture *_freezeOverlay;
+  SDL_Texture *_deathBackground;
+  bool _death;
   SDL_Texture *_textureCamera;
   SDL_FRect _rectCam;
   SDL_Camera *_camera;
@@ -194,6 +208,7 @@ private:
   float _windowHeight;
   bool _spellIsEnable = true;
   bool _freezeIsEnable = false;
+  std::vector<Cutscene> _cutscenes;
   bool _isCameraFeed = false;
   int _textureCamWidth;
   int _textureCamHeight;

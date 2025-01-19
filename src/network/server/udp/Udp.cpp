@@ -104,7 +104,7 @@ bool UDP::sendDataToAllExceptOne(std::size_t socketId,
   return true;
 }
 
-bool UDP::listenSocket(int backlog) {
+bool UDP::listenSocket(Queue *queue) {
   _clientAddrLen = sizeof(_clientAddr);
   std::vector<uint8_t> completeMessage;
 

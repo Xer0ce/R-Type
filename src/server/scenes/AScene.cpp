@@ -18,3 +18,5 @@ void AScene::setEcs(Registry *ecs) { _ecs = ecs; }
 void AScene::setQueue(Queue *queue) { _queue = queue; }
 
 void AScene::setGamemode(int gamemode) { _gamemode = gamemode; }
+
+void AScene::setLevel(std::string level) { _level = level; }

@@ -84,7 +84,7 @@ sceneType LobbyHistory::loop(
         }
       }
       _window->stopAllSound();
-      return sceneType::ENDLESS;
+      return sceneType::HISTORY;
     }
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
   }
@@ -96,7 +96,8 @@ sceneType LobbyHistory::loop(
         if (button.getText() == "Start") {
           Command command;
           std::cout << "Start game" << std::endl;
-          command.type = CommandType::STARTGAME;
+          command.type = CommandType::STARTGAMEHISTORY;
+          command.startGameHistory.level = _selectedLevel;
           _queue->pushTcpQueue(command);
         }
         _selectedLevel = button.getTag();

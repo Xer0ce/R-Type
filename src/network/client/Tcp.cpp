@@ -62,7 +62,6 @@ bool Tcp::receiveFromServer() {
     char buffer[1024] = {0};
     int valread = read(_socket, buffer, 1024);
     if (valread == 0) {
-      std::cerr << "Error: connection closed" << std::endl;
       return false;
     }
     _buffer = std::vector<uint8_t>(buffer, buffer + valread);

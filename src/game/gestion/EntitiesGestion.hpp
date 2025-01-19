@@ -7,15 +7,16 @@
 #include <random>
 
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
-                              Health health, Draw draw, Nickname nickname,
-                              Property property,
+                              Health health, MaxHealth maxHealth, Draw draw,
+                              Nickname nickname, Property property,
                               std::optional<Control> control = std::nullopt,
                               std::optional<std::size_t> id = std::nullopt,
                               std::optional<LifeBar> lifeBar = std::nullopt);
 
 Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
                              FlatVelocity flatVelocity, Health health,
-                             Draw draw, EnemyProperty enemy,
+                             MaxHealth maxHealth, Draw draw,
+                             EnemyProperty enemy,
                              std::optional<std::size_t> id = std::nullopt,
                              std::optional<LifeBar> lifeBar = std::nullopt);
 
@@ -68,27 +69,27 @@ template <EnemyType T> Entities create_enemy(Registry &r, EnemyProperty enemy) {
   if constexpr (T == EnemyType::Pion) {
     return create_entity<EntityType::Enemy>(
         r, Position(random_x, random_y), Velocity(0, 0), FlatVelocity(5, 5),
-        Health(30), Draw({}, {}, nullptr), enemy);
+        Health(30), MaxHealth(30), Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::Balourd) {
     return create_entity<EntityType::Enemy>(
         r, Position(random_x, random_y), Velocity(0, 0), FlatVelocity(2, 2),
-        Health(50), Draw({}, {}, nullptr), enemy);
+        Health(50), MaxHealth(30), Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::Zinzolin) {
     return create_entity<EntityType::Enemy>(
         r, Position(random_x, random_y), Velocity(0, 0), FlatVelocity(10, 10),
-        Health(25), Draw({}, {}, nullptr), enemy);
+        Health(25), MaxHealth(30), Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::Boss) {
     return create_entity<EntityType::Enemy>(
         r, Position(random_x, random_y), Velocity(0, 0), FlatVelocity(2, 5),
-        Health(100), Draw({}, {}, nullptr), enemy);
+        Health(100), MaxHealth(30), Draw({}, {}, nullptr), enemy);
   }
   if constexpr (T == EnemyType::BigBoss) {
     return create_entity<EntityType::Enemy>(
         r, Position(750, random_y), Velocity(0, 0), FlatVelocity(0, 2),
-        Health(300), Draw({}, {}, nullptr), enemy);
+        Health(300), MaxHealth(30), Draw({}, {}, nullptr), enemy);
   }
 }
 

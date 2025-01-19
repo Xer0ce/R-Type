@@ -59,8 +59,6 @@ EndLess::loop(eventType event,
 
   if (now > deltaTime) {
     cam_system(keyOnce);
-    auto &entityType = _ecs->get_components<EntityType>();
-
     _window->moveBackground();
     if (_window->getAllowToInteract()) {
       now = std::chrono::steady_clock::now();
@@ -77,19 +75,20 @@ EndLess::loop(eventType event,
     _window->changeFireAnimation();
   }
   _window->drawBackground();
-  _window->drawText();
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
     _window->draw(draw[i]->texture, draw[i]->rect);
-    if (nicknames[i].has_value()) {
+    if (nicknames[i].has_value() && _window->getAllowToInteract()) {
       _window->drawFireAnimation(positions[i]->x, positions[i]->y);
       _window->draw(nicknames[i]->texture, nicknames[i]->rect);
     }
-    if (lifebars[i].has_value()) {
+    if (lifebars[i].has_value() && _window->getAllowToInteract()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
   }
+  _window->drawDeathBackground();
+  _window->drawText();
   _window->displayCameraFeed();
   return sceneType::NO_SWITCH;
 }

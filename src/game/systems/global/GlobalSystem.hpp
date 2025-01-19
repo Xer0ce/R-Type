@@ -25,3 +25,5 @@ void collision_system(Registry *ecs, Queue *queue);
 void collision_system_1v1(Registry *ecs, Queue *queue);
 void display_infos(Registry *ecs);
 void collision_system_meteor(Registry *ecs, Queue *queue);
+void killMeteorites(Registry *ecs, Queue *queue);
+void createMeteorites(int nbr, Registry *ecs, Queue *queue);

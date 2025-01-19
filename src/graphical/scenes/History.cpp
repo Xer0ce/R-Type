@@ -24,6 +24,10 @@ void History::init() {
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
   _window->setBackgroundScrolling(true);
+  _window->createCutscene(
+      "../src/game/config/history/caracter/SqueezieTalking.png",
+      "../src/game/config/history/caracter/Squeezie.png", 50, 50, 100, 100);
+  _window->playSound(SQUEEZIE, -1);
 }
 
 void History::cam_system(keyType key) {
@@ -58,8 +62,7 @@ History::loop(eventType event,
     cam_system(keyOnce);
     _window->moveBackground();
     if (_window->getAllowToInteract()) {
-      std::chrono::time_point<std::chrono::steady_clock> now =
-          std::chrono::steady_clock::now();
+      now = std::chrono::steady_clock::now();
       _window->deleteText("0");
       control_system(movementKeys, *_ecs);
       shoot_system(keys, *_ecs, _queue, _nextBullet);
@@ -73,17 +76,24 @@ History::loop(eventType event,
   }
   _window->drawBackground();
   _window->drawText();
+  _window->playCutscene();
+  if (now > _clockCutScene) {
+    _window->setPlayingCutscene();
+    _clockCutScene = now + std::chrono::milliseconds(125);
+  }
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
     _window->draw(draw[i]->texture, draw[i]->rect);
-    if (nicknames[i].has_value()) {
+    if (nicknames[i].has_value() && _window->getAllowToInteract()) {
       _window->draw(nicknames[i]->texture, nicknames[i]->rect);
     }
-    if (lifebars[i].has_value() && control[i].has_value()) {
+    if (lifebars[i].has_value() && _window->getAllowToInteract()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
   }
+  _window->drawDeathBackground();
+  _window->drawText();
   _window->displayCameraFeed();
   return sceneType::NO_SWITCH;
 }

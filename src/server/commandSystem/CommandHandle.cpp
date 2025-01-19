@@ -37,6 +37,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     freezeSpell(buffer, protocol, queue);
   };
+  _commandMap[0x9] = [this](std::vector<uint8_t> buffer, IProtocol *protocol,
+                            Queue *queue) {
+    startGameHistory(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -155,4 +159,17 @@ void CommandHandle::freezeSpell(std::vector<uint8_t> buffer,
   cmd.type = CommandType::FREEZESPELL;
   cmd.freezeSpell.playerId = playerId;
   queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::startGameHistory(std::vector<uint8_t> buffer,
+                                     IProtocol *protocol, Queue *queue) {
+  Command cmd;
+
+  int playloadSize = static_cast<int>(buffer[1]);
+
+  std::string level(buffer.begin() + 2, buffer.begin() + 2 + playloadSize);
+  cmd.type = CommandType::STARTGAMEHISTORY;
+  cmd.startGameHistory.level = level;
+  queue->pushGameQueue(cmd);
+  queue->pushTcpQueue(cmd);
 }

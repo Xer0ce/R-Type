@@ -59,6 +59,10 @@ CommandSend::CommandSend() {
                                                  IProtocol *protocol) {
     freezeSpell(command, protocol);
   };
+  _commandMap[CommandType::DISCONNECT] = [this](Command command,
+                                                IProtocol *protocol) {
+    disconnect(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -106,12 +110,15 @@ void CommandSend::connect(Command command, IProtocol *protocol) {
 }
 
 void CommandSend::disconnect(Command command, IProtocol *protocol) {
-  std::cout << "Disconnect command" << std::endl;
-  std::string response;
+  std::vector<uint8_t> binaryData;
 
-  response = "disconnect OK";
+  binaryData.push_back(0x02);
 
-  // _protocol->sendData(command.id, binaryData);
+  binaryData.push_back(static_cast<uint8_t>(command.disconnect.playerId));
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::move(Command command, IProtocol *protocol) {

@@ -116,7 +116,18 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
 }
 
 void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs) {
-  std::cout << "disconnect command" << std::endl;
+  auto &entityType = ecs->get_components<EntityType>();
+  auto &properties = ecs->get_components<Property>();
+
+  for (std::size_t i = 0; i < entityType.size(); ++i) {
+    if (entityType[i].has_value() && entityType[i] == EntityType::Player) {
+      if (properties[i]->sockedId == command.disconnect.playerId) {
+        ecs->kill_entity(static_cast<Entities>(i));
+        command.disconnect.playerId = i;
+        queue->pushTcpQueue(command);
+      }
+    }
+  }
 }
 
 void CommandGame::move(Command command, Queue *queue, Registry *ecs) {
@@ -176,7 +187,7 @@ void CommandGame::connectLobby(Command command, Queue *queue, Registry *ecs) {
   auto &nicknames = ecs->get_components<Nickname>();
 
   auto player = create_entity<EntityType::Player>(
-      *ecs, Position(0, 0), Velocity(), Health(),
+      *ecs, Position(0, 0), Velocity(), Health(), MaxHealth(),
       Draw({0, 0, 0, 0}, {0, 0, 0, 0}),
       Nickname(command.connectLobby.Nickname, {0, 0, 0, 0}, nullptr),
       Property(command.connectLobby.spaceshipId, command.connectLobby.shootId,

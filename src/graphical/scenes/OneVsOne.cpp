@@ -122,15 +122,15 @@ OneVsOne::loop(eventType event,
     _window->changeFireAnimation();
   }
   _window->drawBackground();
-  _window->drawText();
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
     _window->draw(draw[i]->texture, draw[i]->rect);
-    if (nicknames[i].has_value()) {
+    if (nicknames[i].has_value() && _window->getAllowToInteract()) {
       _window->draw(nicknames[i]->texture, nicknames[i]->rect);
     }
-    if (lifebars[i].has_value() && control[i].has_value()) {
+    if (lifebars[i].has_value() && control[i].has_value() &&
+        _window->getAllowToInteract()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
     if (control[i].has_value()) {
@@ -144,7 +144,8 @@ OneVsOne::loop(eventType event,
   if (_window->getFreezeEnable()) {
     _window->drawFreezeOverlay();
   }
-
+  _window->drawDeathBackground();
+  _window->drawText();
   _window->displayCameraFeed();
   return sceneType::NO_SWITCH;
 }
