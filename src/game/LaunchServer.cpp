@@ -30,19 +30,10 @@ void launchServer(int gamemode) {
   std::cout << "Server launched in background" << std::endl;
 }
 
-void killAllServer(Registry *ecs) {
-  bool _player = false;
-  auto &entities = ecs->get_components<EntityType>();
+void killAllServer(bool isHost) {
+  if (!isHost)
+    return;
 
-  for (std::size_t i = 0; i < entities.size(); i++) {
-    if (entities[i] == EntityType::Player) {
-      _player = true;
-      break;
-    }
-  }
-
-  if (!_player) {
-    std::system("pkill r-type_server");
-    std::cout << "Server killed" << std::endl;
-  }
+  std::system("pkill r-type_server");
+  std::cout << "Server killed" << std::endl;
 }

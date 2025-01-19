@@ -94,9 +94,9 @@ void Game::init(ChoosingParams *params) {
   connectLobby.push_back(static_cast<uint8_t>(params->bulletId));
 
   connectLobby.push_back(static_cast<uint8_t>(params->nickname.size()));
-  for (size_t i = 0; i < params->nickname.size(); i++) {
+
+  for (size_t i = 0; i < params->nickname.size(); i++)
     connectLobby.push_back(params->nickname[i]);
-  }
 
   _tcp->sendToServer(connectLobby);
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
@@ -106,7 +106,6 @@ void Game::init(ChoosingParams *params) {
 
   tcpThread.detach();
   udpThread.detach();
-  delete params;
 }
 
 void Game::game() {
@@ -154,6 +153,7 @@ void Game::game() {
       _ecs->kill_entity(static_cast<Entities>(i));
   }
   _window->destroyWindow();
-  killAllServer(_ecs.get());
+  killAllServer(params->isHost);
+  delete params;
   exit(0);
 }

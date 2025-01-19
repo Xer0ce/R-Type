@@ -46,6 +46,7 @@ struct ChoosingParams {
   int bulletId;
   int gamemode;
   std::string nickname;
+  bool isHost;
 };
 
 enum soundType {

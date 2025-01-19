@@ -11,4 +11,4 @@
 
 void launchServer(int gamemode);
 
-void killAllServer(Registry *ecs);
+void killAllServer(bool isHost);
