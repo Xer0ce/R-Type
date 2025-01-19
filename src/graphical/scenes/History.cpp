@@ -65,7 +65,6 @@ History::loop(eventType event,
     }
   }
   _window->drawBackground();
-  _window->drawText();
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
@@ -77,5 +76,7 @@ History::loop(eventType event,
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
   }
+  _window->drawDeathBackground();
+  _window->drawText();
   return sceneType::NO_SWITCH;
 }

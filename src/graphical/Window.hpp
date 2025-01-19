@@ -150,6 +150,10 @@ public:
 
   std::string getTextInput(int menu);
 
+  void setDeath(bool death);
+
+  void drawDeathBackground();
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -159,6 +163,8 @@ private:
   SDL_Texture *_spell;
   SDL_Texture *_spellDisable;
   SDL_Texture *_freezeOverlay;
+  SDL_Texture *_deathBackground;
+  bool _death;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;

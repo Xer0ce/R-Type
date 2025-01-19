@@ -112,7 +112,6 @@ OneVsOne::loop(eventType event,
     display_infos(_ecs.get());
   }
   _window->drawBackground();
-  _window->drawText();
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
@@ -128,5 +127,7 @@ OneVsOne::loop(eventType event,
   if (_window->getFreezeEnable()) {
     _window->drawFreezeOverlay();
   }
+  _window->drawDeathBackground();
+  _window->drawText();
   return sceneType::NO_SWITCH;
 }

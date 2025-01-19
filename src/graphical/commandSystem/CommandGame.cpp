@@ -162,9 +162,16 @@ void CommandGame::move(Command command, Queue *queue,
 void CommandGame::killEntity(Command command, Queue *queue,
                              std::shared_ptr<Registry> ecs, Window *window) {
   auto &entities = ecs->get_components<EntityType>();
+  auto &control = ecs->get_components<Control>();
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.killEntity.entityId) {
+      if (control[i].has_value()) {
+        window->addText("You are dead", 300, 350, 50, 50, 100,
+                        "../src/graphical/assets/RTypefont.otf",
+                        {170, 0, 0, 0});
+        window->setDeath(true);
+      }
       ecs->kill_entity(static_cast<Entities>(command.killEntity.entityId));
     }
   }

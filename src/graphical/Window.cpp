@@ -71,6 +71,8 @@ void Window::init() {
   _spell = loadTexture("../src/graphical/assets/freezeSpell.png");
   _spellDisable = loadTexture("../src/graphical/assets/freezeSpellDisable.png");
   _freezeOverlay = loadTexture("../src/graphical/assets/freezeOverlay.png");
+  _deathBackground = loadTexture("../src/graphical/assets/deathBackground.png");
+  _death = false;
 
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
@@ -453,4 +455,13 @@ void Window::setIsVisible(int menu, bool isVisible) {
 
 std::string Window::getTextInput(int menu) {
   return _textInputs[menu]->getTextInput();
+}
+
+void Window::setDeath(bool death) { _death = death; }
+
+void Window::drawDeathBackground() {
+  if (_death) {
+    SDL_FRect deathRect = {0, 0, 1200, 800};
+    SDL_RenderTexture(_renderer, _deathBackground, nullptr, &deathRect);
+  }
 }
