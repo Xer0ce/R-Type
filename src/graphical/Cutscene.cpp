@@ -19,6 +19,8 @@ Cutscene::Cutscene(SDL_Renderer *renderer, std::string textureTalkingPath,
 Cutscene::~Cutscene() {}
 
 void Cutscene::playCutscene() {
+  if (_isStopped)
+    return;
   SDL_FRect rect = {_x, _y, _width, _height};
   if (_isPlaying)
     SDL_RenderTexture(_renderer, _textureTalking, nullptr, &rect);
@@ -26,4 +28,7 @@ void Cutscene::playCutscene() {
     SDL_RenderTexture(_renderer, _texture, nullptr, &rect);
 }
 
-void Cutscene::stopCutscene() { SDL_DestroyTexture(_texture); }
+void Cutscene::stopCutscene() {
+  SDL_DestroyTexture(_texture);
+  _isStopped = true;
+}

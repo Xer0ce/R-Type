@@ -20,7 +20,7 @@ public:
 
   void init() override;
   bool waveIsClear();
-  bool waveGestion();
+  void waveGestion();
 
 private:
   CommandGame commandGame;

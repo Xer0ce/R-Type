@@ -60,4 +60,5 @@ enum soundType {
   MICHOU_REMIX_WINTERZUUKO,
   HURT,
   SQUEEZIE,
+  HISTORY_SOUND,
 };

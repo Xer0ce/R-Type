@@ -400,6 +400,15 @@ void Window::stopSound(soundType type) {
   }
 }
 
+bool Window::isSoundFinished(soundType type) {
+  for (auto &sound : _sounds) {
+    if (sound->getSoundType() == type) {
+      return sound->isFinished();
+    }
+  }
+  return false;
+}
+
 SDL_Texture *Window::loadText(std::string text, int size, std::string fontPath,
                               SDL_Color color) {
   TTF_Font *font = TTF_OpenFont(fontPath.c_str(), size);
@@ -585,6 +594,12 @@ void Window::playCutscene() {
 void Window::setPlayingCutscene() {
   for (auto &cutscene : _cutscenes) {
     cutscene.setIsPlaying();
+  }
+}
+
+void Window::stopCutScenes() {
+  for (auto &cutscene : _cutscenes) {
+    cutscene.stopCutscene();
   }
 }
 

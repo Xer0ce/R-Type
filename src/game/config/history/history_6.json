@@ -25,7 +25,7 @@
       "frequency": "Turret"
     }
   ],
-  "dialogues": "src/game/config/history/sounds/audio6.mp3",
-  "character": "src/game/config/history/caracter/Michou.png",
-  "talkingCharacter": "src/game/config/history/caracter/MichouTalking.png"
+  "dialogues": "../src/game/config/history/sounds/audio6.mp3",
+  "character": "../src/game/config/history/caracter/Inoxtag.png",
+  "talkingCharacter": "../src/game/config/history/caracter/InoxtagTalking.png"
 }

@@ -1,0 +1,524 @@
+RFC: myTeams Collaborative Communication Application Protocol
+
+1. Introduction
+    This document outlines the development process and technical
+    specifications for the R-Type game project, part of the Advanced C++
+    knowledge unit. The project aims to provide students with hands-on
+    experience in networked video game development while exploring advanced
+    programming techniques and adhering to best practices in software
+    engineering.
+
+    The R-Type project consists of two main binaries: r-type_server and
+    r-type_client. Both are written in C++ and built using CMake. Third-
+    party dependencies are managed using Git submodules.
+
+    Inspired by the classic 90s game R-Type, this project challenges
+    developers to create a multi-threaded server and a graphical client
+    capable of hosting and rendering a networked gaming experience. Beyond
+    emulating the original gameplay, additional requirements ensure a modern
+    design approach and implementation of essential game engine features.
+
+2. Terminology
+    Here is the revised terminology with a maximum of 75 characters per line:
+
+    This section defines the key terminology used throughout 
+    the R-Type project.
+    The project consists of two main components: 
+    a graphical client (r-type_client) and a game server (r-type_server).
+
+    r-type_client:
+        The r-type_client binary is responsible for launching the graphical
+        interface of the game. It allows players to interact with the game
+        visually, connect to a server, and experience the gameplay. The client
+        also includes functionality to start the r-type_server directly from
+        its menu, enabling users to host the game server locally.
+
+    r-type_server:
+        The r-type_server binary is responsible for running the backend server
+        that hosts the game. It handles all game logic, networking, and
+        communication between multiple clients. The server operates in different
+        game modes, such as:
+
+    One vs. One: A competitive mode between two players.
+
+    Endless: A survival mode with continuous waves of enemies.
+    
+    History: A story-driven game mode.
+
+    When launched, the server sets up the networking infrastructure and
+    maintains authoritative control over game events to ensure consistency
+    across connected clients
+
+3. Protocol Overview
+    The R-Type project uses two communication protocols: 
+    TCP and UDP, each serving different purposes based on the nature and
+    importance of the messages being sent between the client and server.
+
+    TCP Protocol:
+        The TCP protocol is used for important commands where it is crucial 
+        to ensure the delivery of the message to its destination. 
+        These commands include critical game actions such as player 
+        connection, shooting, entity death, and disconnection. 
+        TCP guarantees reliable transmission,
+        which is necessary for these essential game events that must be 
+        synchronized across all clients.
+
+    UDP Protocol:
+        The UDP protocol is used for non-essential, 
+        real-time messages that can tolerate occasional packet loss 
+        without impacting gameplay.
+        This includes entity movement, position updates, and other less 
+        critical commands. UDP offers lower latency compared to TCP, 
+        making it suitable for fast-paced updates where occasional 
+        loss of data does not affect the overall game experience.
+
+3.1 Connection Establishment
+    Clients establish a TCP connection to the server using the server's
+    IP address and port number.
+    Upon successful connection, the client can send commands to the server,
+    which responds accordingly.
+
+3.2 Command Structure
+    Commands are sent between the client and the server using a binary format.
+    Each command is associated with a unique identifier (byte), 
+    followed by the required data. 
+    The client prepares the command by packing the necessary information
+    into a vector of bytes, which is then sent to the server.
+
+    Sending Commands: 
+
+        The client sends commands by pushing thecommand type
+        and associated data into a binary packet. 
+        The packet is then transmitted to the server using 
+        the appropriate protocol (TCP or UDP).
+
+    Receiving Commands: 
+
+        The server receives the binary packet,
+        extracts the command type, and processes the associated data.
+        The server then executes the corresponding action and 
+        may send a response back to the client.
+
+    The server and client use this structure to send and receive all commands,
+    ensuring efficient communication and proper synchronization.
+
+4. Commands and Responses
+    4.1 Client Commands
+        /login ["user_name"]: Logs the user into the system.
+        /logout: Logs the user out of the system.
+        /users: Retrieves a list of all users.
+        /send [“user_uuid”] [“message_body”] : send a message to specific user
+        /messages [“user_uuid”] : list all messages exchanged with the specified user
+        /subscribe ["team_uuid"]: Subscribes to a team's events.
+        /subscribed ?[“team_uuid”] : list all subscribed teams or list all users subscribed to a team
+        /unsubscribe ["team_uuid"]: Unsubscribes from a team's events.
+        /use  ?[“team_uuid”] ?[“channel_uuid”] ?[“thread_uuid”]: Sets the context for subsequent commands.
+        /create: Creates a team, channel, thread, or comment, depending on the context.
+        /list: Lists teams, channels, threads, or comments, depending on the context.
+        /info: Displays details of the user, team, channel, or thread, depending on the context.
+
+        All command are translated into packet and then sent to the server.
+
+    4.2 Server Responses
+        The server responds to each command with packets, using predefined formats to convey information about users,
+        teams, channels, threads, and messages.
+
+5. Data Model
+    5.1 User
+        UUID: Unique identifier for the user.
+        Name: The user's name.
+    5.2 Team
+        UUID: Unique identifier for the team.
+        Name: Name of the team.
+        Description: Description of the team's purpose.
+    5.3 Channel
+        UUID: Unique identifier for the channel.
+        Name: Name of the channel.
+        Description: Description of the channel's topic.
+    5.4 Thread
+        UUID: Unique identifier for the thread.
+        Creator UUID: UUID of the user who created the thread.
+        Title: Title of the thread.
+        Body: Initial post of the thread.
+    5.5 Message
+        UUID: Unique identifier for the message.
+        Sender UUID: UUID of the user who sent the message.
+        Body: Content of the message.
+
+6. Security Considerations
+    While password authentication is not required, the protocol includes measures to ensure users
+    can only access information and perform actions they are authorized to.
+    For example, users must be subscribed to a team to create threads or receive team-related notifications.
+
+7. Implementation Notes
+    Implementers must ensure that all command arguments are properly quoted and adhere to predefined length limits.
+    The use of TCP sockets must be managed carefully to handle multiple concurrent connections efficiently,
+    without the use of fork or threads.
+
+8. Packet
+    8.1 Format
+        Every packet are composed of two part, the header and the content.
+
+        The header is a structure containing an unsigned short, that will be interpreted
+        by both server and client as the id of the packet.
+
+        The content is all the data that need to be sent within the packet.
+
+        The header is a common part of every packet that allow the client and the server
+        to find the type and size of the packet that it is reading to then interpret them correctly.
+
+        +-------------------------+
+        |         header          |  \
+        |           ID            |   | read first
+        +-------------------------+  /
+        |         content         |  \
+        |          Name           |   |
+        |          UUID           |   | size deduced with the id in the header
+        |          ...            |   |
+        +-------------------------+  /
+
+    8.2 Type
+        ID: 1 byte long number used to identify packet
+        Name: 32 byte long array of ascii character containing the name of an element
+        UUID: 37 byte long array of ascii character containing the id of an element
+        Description: 255 byte long array of ascii character containing the description of an element
+        Message: 512 byte long array of ascii character containg a message to be sent in athread or to a user
+
+    8.3 Client to server packet
+        8.3.1 Login
+            This packet is sent when the user input successfully the "/login" command client side.
+            It tells the server to log the client with the given username.
+
+            +-----------+------------+------------+----------------------------------+
+            | Packet ID | Field name | Field type |               Note               |
+            +-----------+------------+------------+----------------------------------+
+            |   0x00    | user name  |    Name    | the name the user whant to log as|
+            +-----------+------------+------------+----------------------------------+
+
+        8.3.2 Logout
+            This packet is sent when the user input successfully the "/logout" command client side.
+            It tells the server to logout the client from it's current user.
+
+            +-----------+------------+------------+------+
+            | Packet ID | Field name | Field type | Note |
+            +-----------+------------+------------+------+
+            |   0x01    |            |            |      |
+            +-----------+------------+------------+------+
+
+        8.3.3 Users
+            This packet is sent when the user input successfully the "/users" command client side
+            It tells the server to send back a list of all the users and their status.
+
+            +-----------+------------+------------+------+
+            | Packet ID | Field name | Field type | Note |
+            +-----------+------------+------------+------+
+            |   0x02    |            |            |      |
+            +-----------+------------+------------+------+
+
+        8.3.4 User
+            This packet is sent when the user input successfully the "/user" command client side.
+            It tells the server to send back the information of a user.
+
+            +-----------+------------+------------+-------------------------------+
+            | Packet ID | Field name | Field type |              Note             |
+            +-----------+------------+------------+-------------------------------+
+            |   0x03    | user uuid  |    UUID    | the uuid of the searched user |
+            +-----------+------------+------------+-------------------------------+
+
+        8.3.5 Send
+            This packet is sent when the user input successfully the "/send" command client side.
+            It tells the server to send a private message to a user.
+
+            +-----------+--------------+------------+-------------------------------+
+            | Packet ID |  Field name  | Field type |             Note              |
+            +-----------+--------------+------------+-------------------------------+
+            |           |  user uuid   |    UUID    | the uuid of the targeted user |
+            |   0x04    |--------------+------------+-------------------------------+
+            |           | message body |  Message   |      the message to send      |
+            +-----------+--------------+------------+-------------------------------+
+
+        8.3.6 Messages
+            This packet is sent when the user input successfully the "/messages" command client side.
+            It tells the server to send back all the message in a conversation
+            between the client user and another user.
+
+            +-----------+------------+------------+-------------------------------+
+            | Packet ID | Field name | Field type |              Note             |
+            +-----------+------------+------------+-------------------------------+
+            |   0x05    | user uuid  |    UUID    | the uuid of the targeted user |
+            +-----------+------------+------------+-------------------------------+
+
+        8.3.7 Subscribe
+            This packet is sent when the user input successfully the "/subscribe" command client side.
+            It tells the server to subscribe the curent user to a team.
+
+            +-----------+------------+------------+-------------------------------+
+            | Packet ID | Field name | Field type |              Note             |
+            +-----------+------------+------------+-------------------------------+
+            |   0x06    | team uuid  |    UUID    | the uuid of the targeted team |
+            +-----------+------------+------------+-------------------------------+
+
+        8.3.8 Subscribed
+            This packet is sent when the user input successfully the "/subscribed" command client side.
+            It tells the server to either the send all teams to wich the user is subscribed,
+            or all the users subscribed to a team.
+
+            +-----------+------------+------------+---------------------------------------+
+            | Packet ID | Field name | Field type |                  Note                 |
+            +-----------+------------+------------+---------------------------------------+
+            |           |            |            |    the uuid of the targeted team.     |
+            |   0x07    | team uuid  |    UUID    | if empty send back subscription list, |
+            |           |            |            |   else send back all user subscribed  |
+            |           |            |            |             to the team.              |
+            +-----------+------------+------------+---------------------------------------+
+
+        8.3.9 Unsubscribe
+            This packet is sent when the user input successfully the "/unsubscribe" command client side.
+            It tells the server to unsubscribe the curent user to a team.
+
+            +-----------+------------+------------+-------------------------------+
+            | Packet ID | Field name | Field type |              Note             |
+            +-----------+------------+------------+-------------------------------+
+            |   0x08    | team uuid  |    UUID    | the uuid of the targeted team |
+            +-----------+------------+------------+-------------------------------+
+
+        8.3.10 Use
+            This packet is sent when the user input successfully the "/use" command client side.
+            It tells the server to set the user to the given context.
+
+            If one of the following field is empty, all the field after him will be considered empty.
+
+            +-----------+--------------+------------+----------------------------------+
+            | Packet ID |  Field name  | Field type |               Note               |
+            +-----------+--------------+------------+----------------------------------+
+            |           |  team uuid   |    UUID    |  the uuid of the targeted team   |
+            |           |--------------+------------+----------------------------------+
+            |   0x09    | channel uuid |    UUID    | the uuid of the targeted channel |
+            |           |--------------+------------+----------------------------------+
+            |           | thread uuid  |    UUID    | the uuid of the targeted thread  |
+            +-----------+--------------+------------+----------------------------------+
+
+        8.3.11 Create
+            This packet is sent when the user input successfully the "/create" command client side when the
+            context is set to nothing or to a teams.
+            It tells the server to create a teams when the context is empty,
+            and a channel when the context is set to a team.
+
+            +-----------+-------------+----------------+----------------------------------------+
+            | Packet ID | Field name  |   Field type   |                 Note                   |
+            +-----------+-------------+----------------+----------------------------------------+
+            |           |    name     |      Name      |    the name of the created element     |
+            |   0x10    |-------------+----------------+----------------------------------------+
+            |           | description |  Description   | the description of the created element |
+            +-----------+-------------+----------------+----------------------------------------+
+
+        8.3.12 Create thread
+            This packet is sent when the user input successfully the "/create" command client side when the
+            context is set to a channel.
+            It tells the server to create a thread.
+
+            +-----------+------------+------------+-----------------------------------------+
+            | Packet ID | Field name | Field type |                 Note                    |
+            +-----------+------------+------------+-----------------------------------------+
+            |           |    name    |    Name    |     the name of the created thread      |
+            |   0x11    |------------+------------+-----------------------------------------+
+            |           |  message   |  Message   | the first message of the created thread |
+            +-----------+------------+------------+-----------------------------------------+
+
+        8.3.13 Create message
+            This packet is sent when the user input successfully the "/create" command client side when the
+            context is set to a thread.
+            It tells the server to send a message in a thread.
+
+            +-----------+------------+------------+---------------------+
+            | Packet ID | Field name | Field type |        Note         |
+            +-----------+------------+------------+---------------------+
+            |   0x12    |  message   |  Message   | the message to send |
+            +-----------+------------+------------+---------------------+
+
+        8.3.14 List
+            This packet is sent when the user input successfully the "/list" command client side
+            It tells the server to send back the list of all element contained in the current context,
+            for example all teams when context is set to nothing or all channel if the context is set to a team.
+
+            +-----------+------------+------------+------+
+            | Packet ID | Field name | Field type | Note |
+            +-----------+------------+------------+------+
+            |   0x13    |            |            |      |
+            +-----------+------------+------------+------+
+
+        8.3.15 Info
+            This packet is sent when the user input successfully the "/info" command client side
+            It tells the server to send back details about the current context if it isn't set to nothing.
+            If it is set to nothing it then display info about the user
+
+            +-----------+------------+------------+------+
+            | Packet ID | Field name | Field type | Note |
+            +-----------+------------+------------+------+
+            |   0x14    |            |            |      |
+            +-----------+------------+------------+------+
+
+    8.4 Server to client packet
+        8.4.1 Login
+            This packet tell the client that he is now connected, with the login in the packet.
+            This is after the user inputed the command "/login"
+
+            +-----------+------------+------------+----------------------------------+
+            | Packet ID | Field name | Field type |               Note               |
+            +-----------+------------+------------+----------------------------------+
+            |   0x00    | user name  |    Name    | the name the user whant to log as|
+            +-----------+------------+------------+----------------------------------+
+
+        8.4.2 Logout
+            This packet tell the client that he is now disconnected
+            This is after the user inputed the command "/logout"
+
+            +-----------+------------+------------+------+
+            | Packet ID | Field name | Field type | Note |
+            +-----------+------------+------------+------+
+            |   0x01    |            |            |      |
+            +-----------+------------+------------+------+
+
+        8.4.3 Users
+            This packet is sent when the server succesfully executed the "/users" command server side
+            This is after the user inputed the command "/users"
+
+            +-----------+------------+------------+------+
+            | Packet ID | Field name | Field type | Note |
+            +-----------+------------+------------+------+
+            |   0x02    |            |            |      |
+            +-----------+------------+------------+------+
+
+        8.4.4 User
+            This packet is sent when the server succesfully executed the "/user" command server side
+            This is after the user inputed the command "/user"
+
+            +-----------+------------+------------+-------------------------------+
+            | Packet ID | Field name | Field type |              Note             |
+            +-----------+------------+------------+-------------------------------+
+            |   0x03    | user uuid  |    UUID    | the uuid of the searched user |
+            +-----------+------------+------------+-------------------------------+
+
+        8.4.5 Send
+            This packet is sent when the server succesfully executed the "/send" command server side
+            This is after the user inputed the command "/send"
+
+            +-----------+--------------+------------+-------------------------------+
+            | Packet ID |  Field name  | Field type |             Note              |
+            +-----------+--------------+------------+-------------------------------+
+            |           |  user uuid   |    UUID    | the uuid of the targeted user |
+            |   0x04    |--------------+------------+-------------------------------+
+            |           | message body |  Message   |      the message to send      |
+            +-----------+--------------+------------+-------------------------------+
+
+        8.4.6 Messages
+            This packet is sent when the server successfully executed the "/messages" command server side.
+
+            +-----------+------------+------------+-------------------------------+
+            | Packet ID | Field name | Field type |              Note             |
+            +-----------+------------+------------+-------------------------------+
+            |   0x05    | user uuid  |    UUID    | the uuid of the targeted user |
+            +-----------+------------+------------+-------------------------------+
+
+        8.4.7 Subscribe
+            This packet is sent when the server successfully executed the "/subscribe" command server side.
+            It tells the client that the server subscribed the current user to a team.
+
+            +-----------+------------+------------+-------------------------------+
+            | Packet ID | Field name | Field type |              Note             |
+            +-----------+------------+------------+-------------------------------+
+            |   0x06    | team uuid  |    UUID    | the uuid of the targeted team |
+            +-----------+------------+------------+-------------------------------+
+
+        8.4.8 Subscribed
+            This packet is sent when the server successfully executed the "/subscribed" command server side.
+            It tell that the server succesfully sent all teams to wich the user is subscribed,
+            or all the users subscribed to a team.
+
+            +-----------+------------+------------+---------------------------------------+
+            | Packet ID | Field name | Field type |                  Note                 |
+            +-----------+------------+------------+---------------------------------------+
+            |           |            |            |    the uuid of the targeted team.     |
+            |   0x07    | team uuid  |    UUID    | if empty send back subscription list, |
+            |           |            |            |   else send back all user subscribed  |
+            |           |            |            |             to the team.              |
+            +-----------+------------+------------+---------------------------------------+
+
+        8.4.9 Unsubscribe
+            This packet tell the client that he is now unsubscribe to the team in the packet.
+
+            +-----------+------------+------------+-------------------------------+
+            | Packet ID | Field name | Field type |              Note             |
+            +-----------+------------+------------+-------------------------------+
+            |   0x08    | team uuid  |    UUID    | the uuid of the targeted team |
+            +-----------+------------+------------+-------------------------------+
+
+        8.4.10 Use
+            This packet tell the client that the context is now set to the given context
+
+            +-----------+--------------+------------+----------------------------------+
+            | Packet ID |  Field name  | Field type |               Note               |
+            +-----------+--------------+------------+----------------------------------+
+            |           |  team uuid   |    UUID    |  the uuid of the targeted team   |
+            |           |--------------+------------+----------------------------------+
+            |   0x09    | channel uuid |    UUID    | the uuid of the targeted channel |
+            |           |--------------+------------+----------------------------------+
+            |           | thread uuid  |    UUID    | the uuid of the targeted thread  |
+            +-----------+--------------+------------+----------------------------------+
+
+        8.4.11 Create
+            This packet tell the client that the server succesfully creted either a team, a channel or a thread
+            depending on the context set by the "/use" command
+
+            +-----------+-------------+----------------+----------------------------------------+
+            | Packet ID | Field name  |   Field type   |                 Note                   |
+            +-----------+-------------+----------------+----------------------------------------+
+            |           |    name     |      Name      |    the name of the created element     |
+            |   0x10    |-------------+----------------+----------------------------------------+
+            |           | description |  Description   | the description of the created element |
+            +-----------+-------------+----------------+----------------------------------------+
+
+        8.4.12 Create thread
+            This packet tell the client that a new thread was succesfully created,
+            with the name and the first message
+
+            +-----------+------------+------------+-----------------------------------------+
+            | Packet ID | Field name | Field type |                 Note                    |
+            +-----------+------------+------------+-----------------------------------------+
+            |           |    name    |    Name    |     the name of the created thread      |
+            |   0x11    |------------+------------+-----------------------------------------+
+            |           |  message   |  Message   | the first message of the created thread |
+            +-----------+------------+------------+-----------------------------------------+
+
+        8.4.13 Create message
+            This packet tell the client that a new thread was succesfully created
+            (only when the conext is set to thread),
+            with the message to send.
+
+            +-----------+------------+------------+---------------------+
+            | Packet ID | Field name | Field type |        Note         |
+            +-----------+------------+------------+---------------------+
+            |   0x12    |  message   |  Message   | the message to send |
+            +-----------+------------+------------+---------------------+
+
+        8.4.14 List
+            This packet tell the client that he send the list of all the elements contained in the current context
+            for example all teams when context is set to nothing or all channel if the context is set to a team.
+
+            +-----------+------------+------------+------+
+            | Packet ID | Field name | Field type | Note |
+            +-----------+------------+------------+------+
+            |   0x13    |            |            |      |
+            +-----------+------------+------------+------+
+
+        8.4.15 Info
+            This packet tell the client about current context if it isn't set to nothing.
+            If it is set to nothing it then display info about the user
+
+            +-----------+------------+------------+------+
+            | Packet ID | Field name | Field type | Note |
+            +-----------+------------+------------+------+
+            |   0x14    |            |            |      |
+            +-----------+------------+------------+------+
+
+    8.5 Packet sequencing

@@ -81,7 +81,7 @@ void History::createMeteorites(int nbr) {
   }
 }
 
-bool History::waveGestion() {
+void History::waveGestion() {
   if (waveIsClear()) {
     auto &entityType = _ecs->get_components<EntityType>();
     auto &properties = _ecs->get_components<Property>();
