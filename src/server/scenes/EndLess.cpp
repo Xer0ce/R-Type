@@ -114,7 +114,6 @@ void EndLess::waveGestion() {
       }
     }
     _queue->removeCommandByType(CommandType::SHOOT);
-    std::this_thread::sleep_for(std::chrono::seconds(3));
     cmd.type = CommandType::WAVE;
     cmd.wave.wave = _waveNumber;
     cmd.wave.time = 3;
@@ -123,12 +122,15 @@ void EndLess::waveGestion() {
     int lastDigit = _waveNumber % 10;
 
     if (lastDigit == 5) {
+      killMeteorites(_ecs, _queue);
       createMeteorites(5, _ecs, _queue);
       loadMiniBoss();
     } else if (lastDigit == 0) {
+      killMeteorites(_ecs, _queue);
       createMeteorites(8, _ecs, _queue);
       loadBoss();
     } else {
+      killMeteorites(_ecs, _queue);
       createMeteorites(3, _ecs, _queue);
       loadClassic();
     }
