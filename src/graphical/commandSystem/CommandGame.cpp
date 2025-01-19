@@ -180,7 +180,7 @@ void CommandGame::killEntity(Command command, Queue *queue,
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.killEntity.entityId) {
       if (control[i].has_value()) {
-        window->addText("TU ES MORT", 280, 350, 50, 50, 100,
+        window->addText("You are dead", 280, 350, 50, 50, 100,
                         "../src/graphical/assets/RTypefont.otf",
                         {170, 0, 0, 0});
         window->setDeath(true);
