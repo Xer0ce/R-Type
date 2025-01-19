@@ -1,9 +1,12 @@
-/*
-** EPITECH PROJECT, 2025
-** R-Type
-** File description:
-** Server
-*/
+/**
+ * @file Server.hpp
+ * @brief Declaration of the Server class for the R-Type project.
+ *
+ * The Server class manages the game server, handling communication, game logic,
+ * and networking with TCP and UDP protocols.
+ *
+ * @author EPITECH PROJECT, 2025
+ */
 
 #pragma once
 
@@ -24,19 +27,48 @@
 #include <map>
 #include <memory>
 
+/**
+ * @class Server
+ * @brief Represents the game server that manages scenes, networking, and game
+ * state.
+ */
 class Server {
 public:
+  /**
+   * @brief Constructs the Server object.
+   */
   Server();
+
+  /**
+   * @brief Destructor for the Server class.
+   */
   ~Server();
 
+  /**
+   * @brief Loads necessary ECS components for the game.
+   */
   void load_component();
 
+  /**
+   * @brief Initializes the server, setting up sockets and starting threads.
+   */
   void init();
 
+  /**
+   * @brief Starts listening for incoming commands from clients.
+   * @param protocol Pointer to the protocol (TCP/UDP) being used.
+   */
   void listen(IProtocol *protocol);
 
+  /**
+   * @brief Runs the game loop, updating the scene and handling game events.
+   */
   void game();
 
+  /**
+   * @brief Sets the game mode for the server.
+   * @param gamemode The game mode to set.
+   */
   void setGamemode(int gamemode);
 
 private:
