@@ -34,10 +34,6 @@ CommandSend::CommandSend() {
                                                   IProtocol *protocol) {
     createPlayer(command, protocol);
   };
-  _commandMap[CommandType::STARTGAME] = [this](Command command,
-                                               IProtocol *protocol) {
-    startGame(command, protocol);
-  };
   _commandMap[CommandType::GETUSERSLOBBY] = [this](Command command,
                                                    IProtocol *protocol) {
     getUsersLobby(command, protocol);
@@ -50,6 +46,19 @@ CommandSend::CommandSend() {
                                               IProtocol *protocol) {
     cooldown(command, protocol);
   };
+  _commandMap[CommandType::WAVE] =
+      [this](Command command, IProtocol *protocol) { wave(command, protocol); };
+  _commandMap[CommandType::CREATEMETEORITE] = [this](Command command,
+                                                     IProtocol *protocol) {
+    createMeteorite(command, protocol);
+  };
+  _commandMap[CommandType::HIT] = [this](Command command, IProtocol *protocol) {
+    hit(command, protocol);
+  };
+  _commandMap[CommandType::FREEZESPELL] = [this](Command command,
+                                                 IProtocol *protocol) {
+    freezeSpell(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -58,7 +67,8 @@ void CommandSend::executeCommandSend(Command command, IProtocol *protocol) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
     _commandMap[command.type](command, protocol);
   } else {
-    std::cout << "Invalid command type! [Send]" << std::endl;
+    std::cout << "[Send] Invalid command type ! Command id : " << command.type
+              << std::endl;
   }
 }
 
@@ -67,6 +77,8 @@ void CommandSend::connect(Command command, IProtocol *protocol) {
   binaryData.push_back(0x01);
 
   binaryData.push_back(static_cast<uint8_t>(command.repConnect.id));
+
+  binaryData.push_back(static_cast<uint8_t>(command.repConnect.playerNbr));
 
   binaryData.push_back(static_cast<uint8_t>(command.repConnect.spaceshipId));
 
@@ -88,9 +100,6 @@ void CommandSend::connect(Command command, IProtocol *protocol) {
   for (auto &c : playerName)
     binaryData.push_back(static_cast<uint8_t>(c));
 
-  std::cout << "Nickname command send : " << command.repConnect.Nickname
-            << std::endl;
-
   binaryData.push_back(0xFF);
 
   protocol->sendData(command.id, binaryData);
@@ -100,8 +109,7 @@ void CommandSend::disconnect(Command command, IProtocol *protocol) {
   std::cout << "Disconnect command" << std::endl;
   std::string response;
 
-  response = "disconnect OK"; // ici faut faire la commande disconnect si un
-                              // joeur dans la partie c'est deconnecté
+  response = "disconnect OK";
 
   // _protocol->sendData(command.id, binaryData);
 }
@@ -124,7 +132,6 @@ void CommandSend::move(Command command, IProtocol *protocol) {
                     positionYBytes + sizeof(float));
 
   binaryData.push_back(0xFF);
-
   protocol->sendDataToAllExceptOne(command.id, binaryData);
 }
 
@@ -135,6 +142,8 @@ void CommandSend::shoot(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.shoot.playerId));
 
+  binaryData.push_back(static_cast<uint8_t>(command.shoot.bulletId));
+
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.shoot.positionX);
   binaryData.insert(binaryData.end(), positionXBytes,
@@ -144,6 +153,8 @@ void CommandSend::shoot(Command command, IProtocol *protocol) {
       reinterpret_cast<uint8_t *>(&command.shoot.positionY);
   binaryData.insert(binaryData.end(), positionYBytes,
                     positionYBytes + sizeof(float));
+
+  binaryData.push_back(static_cast<uint8_t>(command.shoot.direction));
 
   binaryData.push_back(0xFF);
 
@@ -156,6 +167,21 @@ void CommandSend::createEnemy(Command command, IProtocol *protocol) {
   binaryData.push_back(0x06);
 
   binaryData.push_back(static_cast<uint8_t>(command.createEnemy.enemyId));
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createEnemy.p_enemy.enemyType));
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createEnemy.p_enemy.aiType));
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createEnemy.p_enemy.damageType));
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createEnemy.p_enemy.frequencyType));
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createEnemy.p_enemy.bulletType));
 
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.createEnemy.positionX);
@@ -191,6 +217,12 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
 
   binaryData.push_back(static_cast<uint8_t>(command.newPlayer.id));
 
+  binaryData.push_back(static_cast<uint8_t>(command.repConnect.playerNbr));
+
+  binaryData.push_back(static_cast<uint8_t>(command.newPlayer.spaceshipId));
+
+  binaryData.push_back(static_cast<uint8_t>(command.newPlayer.shootId));
+
   uint8_t *positionXBytes =
       reinterpret_cast<uint8_t *>(&command.newPlayer.positionX);
   binaryData.insert(binaryData.end(), positionXBytes,
@@ -201,8 +233,6 @@ void CommandSend::newPlayer(Command command, IProtocol *protocol) {
   binaryData.insert(binaryData.end(), positionYBytes,
                     positionYBytes + sizeof(float));
 
-  std::cout << "Nickname command send : " << command.newPlayer.Nickname
-            << std::endl;
   binaryData.push_back(static_cast<uint8_t>(command.newPlayer.Nickname.size()));
   std::string playerName = command.newPlayer.Nickname;
   for (auto &c : playerName)
@@ -240,19 +270,7 @@ void CommandSend::createPlayer(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0xFF);
 
-  std::cout << "PAS CONTROLABLE je créé un player" << std::endl;
-
   protocol->sendData(command.id, binaryData);
-}
-
-void CommandSend::startGame(Command command, IProtocol *protocol) {
-  std::vector<uint8_t> binaryData;
-
-  binaryData.push_back(0x09);
-
-  binaryData.push_back(0xFF);
-
-  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::getUsersLobby(Command command, IProtocol *protocol) {
@@ -272,8 +290,6 @@ void CommandSend::getUsersLobby(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0xFF);
 
-  std::cout << "Get users lobby command send" << std::endl;
-
   protocol->sendData(command.id, binaryData);
 }
 
@@ -286,9 +302,6 @@ void CommandSend::newPlayerLobby(Command command, IProtocol *protocol) {
 
   std::string playerName = command.newPlayerLobby.Nickname;
 
-  std::cout << "Nickname command send : " << command.newPlayerLobby.Nickname
-            << std::endl;
-
   binaryData.push_back(
       static_cast<uint8_t>(command.newPlayerLobby.Nickname.size()));
 
@@ -296,8 +309,6 @@ void CommandSend::newPlayerLobby(Command command, IProtocol *protocol) {
     binaryData.push_back(static_cast<uint8_t>(c));
 
   binaryData.push_back(0xFF);
-
-  std::cout << "New player lobby command send" << std::endl;
 
   protocol->sendDataToAll(binaryData);
 }
@@ -312,4 +323,63 @@ void CommandSend::cooldown(Command command, IProtocol *protocol) {
   binaryData.push_back(0xFF);
 
   protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::wave(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x13);
+
+  binaryData.push_back(static_cast<uint8_t>(command.wave.wave));
+
+  binaryData.push_back(static_cast<uint8_t>(command.wave.time));
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::createMeteorite(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x14);
+  binaryData.push_back(
+      static_cast<uint8_t>(command.createMeteorite.meteoriteId));
+
+  uint8_t *positionXBytes =
+      reinterpret_cast<uint8_t *>(&command.createMeteorite.positionX);
+  binaryData.insert(binaryData.end(), positionXBytes,
+                    positionXBytes + sizeof(float));
+
+  uint8_t *positionYBytes =
+      reinterpret_cast<uint8_t *>(&command.createMeteorite.positionY);
+  binaryData.insert(binaryData.end(), positionYBytes,
+                    positionYBytes + sizeof(float));
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::hit(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x15);
+
+  binaryData.push_back(static_cast<uint8_t>(command.hit.entityHit));
+
+  binaryData.push_back(static_cast<uint8_t>(command.hit.damage));
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::freezeSpell(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x16);
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAllExceptOne(command.freezeSpell.playerId, binaryData);
 }

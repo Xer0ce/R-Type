@@ -7,21 +7,27 @@
 
 #include "GlobalSystem.hpp"
 
-void position_system_net(float deltaTime, Registry *ecs, Queue *queue) {
+void position_system_net(
+    float deltaTime, Registry *ecs, Queue *queue,
+    std::chrono::time_point<std::chrono::steady_clock> _next) {
   auto &velocity = ecs->get_components<Velocity>();
   auto &position = ecs->get_components<Position>();
   auto &entityType = ecs->get_components<EntityType>();
 
+  auto now = std::chrono::steady_clock::now();
+
   for (std::size_t i = 0; i < entityType.size(); i++) {
-    position[i]->x += velocity[i]->x * deltaTime;
-    position[i]->y += velocity[i]->y * deltaTime;
+    position[i]->x += velocity[i]->x;
+    position[i]->y += velocity[i]->y;
     if (entityType[i] == EntityType::Enemy) {
-      Command command;
-      command.type = CommandType::MOVE;
-      command.move.positionX = position[i]->x;
-      command.move.positionY = position[i]->y;
-      command.move.entityId = i;
-      queue->pushUdpQueue(command);
+      if (now >= _next) {
+        Command command;
+        command.type = CommandType::MOVE;
+        command.move.positionX = position[i]->x;
+        command.move.positionY = position[i]->y;
+        command.move.entityId = i;
+        queue->pushUdpQueue(command);
+      }
     }
   }
 }
@@ -38,8 +44,18 @@ void position_system_graphic(float deltaTime, Registry &ecs, Queue *queue) {
       continue;
     if (velocities[i]->x == 0 && velocities[i]->y == 0)
       continue;
-    positions[i]->x += velocities[i]->x * deltaTime;
-    positions[i]->y += velocities[i]->y * deltaTime;
+    if (entities[i] == EntityType::Player) {
+      if (positions[i]->x + velocities[i]->x <= 0)
+        velocities[i]->x = 0;
+      if (positions[i]->x + velocities[i]->x >= 1175)
+        velocities[i]->x = 0;
+      if (positions[i]->y + velocities[i]->y <= 0)
+        velocities[i]->y = 0;
+      if (positions[i]->y + velocities[i]->y >= 775)
+        velocities[i]->y = 0;
+    }
+    positions[i]->x += velocities[i]->x;
+    positions[i]->y += velocities[i]->y;
     draw[i]->rect.x = positions[i]->x;
     draw[i]->rect.y = positions[i]->y;
     if (entities[i] == EntityType::Player && control[i].has_value()) {

@@ -1,0 +1,31 @@
+{
+  "enemies": [
+    {
+      "type": "Pion",
+      "number": 2,
+      "ia": "Passive",
+      "frequency": "Slow"
+    },
+    {
+      "type": "Zinzolin",
+      "number": 1,
+      "ia": "Aggressive",
+      "frequency": "High",
+      "bullet": "Missile"
+    },
+    {
+      "type": "Balourd",
+      "number": 2,
+      "ia": "Balzy",
+      "frequency": "Turret"
+    },
+    {
+      "type": "MiniBoss",
+      "number": 1,
+      "ia": "Boss",
+      "frequency": "Slow",
+      "damage": "Punch",
+      "bullet": "FelixBalls"
+    }
+  ]
+}

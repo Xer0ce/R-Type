@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../game/Components/Components.hpp"
 #include <iostream>
 
 enum CommandType {
@@ -26,12 +27,18 @@ enum CommandType {
   GETUSERSLOBBY,
   NEWPLAYERLOBBY,
   COOLDOWN,
+  WAVE,
+  NEXTWAVE,
+  CONNECT1V1,
+  CREATEMETEORITE,
+  FREEZESPELL,
 };
 
 struct createEnemy {
   float positionX;
   float positionY;
   int enemyId;
+  EnemyProperty p_enemy;
 };
 
 struct repConnect {
@@ -40,6 +47,7 @@ struct repConnect {
   int id;
   int spaceshipId;
   int shootId;
+  int playerNbr;
   std::string Nickname;
 };
 
@@ -55,6 +63,9 @@ struct NewPlayer {
   float positionX;
   float positionY;
   int id;
+  int spaceshipId;
+  int shootId;
+  int playerNbr;
   std::string Nickname;
 };
 
@@ -66,16 +77,15 @@ struct Move {
 
 struct Shoot {
   int playerId;
+  int bulletId;
   float positionX;
   float positionY;
+  int direction;
 };
 
 struct Hit {
   int entityHit;
-  int bulletId;
   int damage;
-  float positionX;
-  float positionY;
 };
 
 struct killEntity {
@@ -93,6 +103,7 @@ struct ConnectLobby {
   std::string Nickname;
   int spaceshipId;
   int shootId;
+  int gamemode;
 };
 
 struct getUsersLobby {
@@ -107,6 +118,29 @@ struct newPlayerLobby {
 
 struct cooldown {
   int time;
+};
+
+struct wave {
+  int wave;
+  int time;
+};
+
+struct connect1v1 {
+  std::string Nickname;
+};
+
+struct freezeSpell {
+  int playerId;
+};
+
+struct createMeteorite {
+  float positionX;
+  float positionY;
+  int meteoriteId;
+};
+
+struct startGame {
+  int gamemode;
 };
 
 struct Command {
@@ -124,5 +158,10 @@ struct Command {
   struct getUsersLobby getUsersLobby;
   struct newPlayerLobby newPlayerLobby;
   struct cooldown cooldown;
+  struct wave wave;
+  struct connect1v1 connect1v1;
+  struct freezeSpell freezeSpell;
+  struct createMeteorite createMeteorite;
+  struct startGame startGame;
   int id;
 };

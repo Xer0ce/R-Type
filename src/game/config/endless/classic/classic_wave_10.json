@@ -1,0 +1,24 @@
+{
+  "enemies": [
+    {
+      "type": "Pion",
+      "number": 1,
+      "ia": "Balzy",
+      "frequency": "Slow",
+      "damage": "Poke"
+    },
+    {
+      "type": "Balourd",
+      "number": 2,
+      "ia": "Passive",
+      "frequency": "High",
+      "bullet": "Missile"
+    },
+    {
+      "type": "Zinzolin",
+      "number": 2,
+      "ia": "Aggressive",
+      "frequency": "Turret"
+    }
+  ]
+}

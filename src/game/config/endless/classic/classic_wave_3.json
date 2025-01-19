@@ -1,0 +1,22 @@
+{
+  "enemies": [
+    {
+      "type": "Zinzolin",
+      "number": 3,
+      "ia": "Aggressive",
+      "frequency": "High"
+    },
+    {
+      "type": "Balourd",
+      "number": 1,
+      "ia": "Passive",
+      "frequency": "Slow"
+    },
+    {
+      "type": "Pion",
+      "number": 1,
+      "ia": "Balzy",
+      "frequency": "Turret"
+    }
+  ]
+}

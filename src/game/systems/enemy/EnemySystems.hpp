@@ -7,16 +7,18 @@
 #ifndef ENEMYSYTEMS_HPP
 #define ENEMYSYTEMS_HPP
 #include "../../../ecs/Registry.hpp"
+#include "../../../queue/Queue.hpp"
 #include "../../Components/Components.hpp"
 #include "../../gestion/EntitiesGestion.hpp"
 #include <map>
 
-void aggresive_ai(Registry *ecs);
-void balzy_ai(Registry *ecs);
-void boss_ai(Registry *ecs);
-void passive_ai(Registry *ecs);
+void aggresive_ai(Registry *ecs, std::size_t enemy);
+void balzy_ai(Registry *ecs, std::size_t enemy);
+void boss_ai(Registry *ecs, std::size_t enemy);
+void passive_ai(Registry *ecs, std::size_t enemy);
 
 void call_enemy_ai(Registry *ecs, AiType type);
 void enemy_system(Registry *ecs);
+void enemy_shoot_system(Registry *_ecs, Queue *_queue);
 
 #endif // ENEMYSYTEMS_HPP

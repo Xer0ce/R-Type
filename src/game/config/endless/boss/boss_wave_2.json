@@ -1,0 +1,42 @@
+{
+  "enemies": [
+    {
+      "type": "Pion",
+      "number": 3,
+      "ia": "Aggressive",
+      "frequency": "Slow",
+      "damage": "Poke"
+    },
+    {
+      "type": "Balourd",
+      "number": 1,
+      "ia": "Passive",
+      "frequency": "Turret",
+      "damage": "Punch",
+      "bullet": "FelixBalls"
+    },
+    {
+      "type": "Zinzolin",
+      "number": 1,
+      "ia": "Balzy",
+      "frequency": "High",
+      "bullet": "Missile"
+    },
+    {
+      "type": "MiniBoss",
+      "number": 2,
+      "ia": "Passive",
+      "frequency": "High",
+      "damage": "Punch",
+      "bullet": "FelixBalls"
+    },
+    {
+      "type": "Boss",
+      "number": 1,
+      "ia": "Boss",
+      "frequency": "Turret",
+      "damage": "Marmite",
+      "bullet": "Obus"
+    }
+  ]
+}

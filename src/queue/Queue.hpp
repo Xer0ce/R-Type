@@ -16,6 +16,8 @@ public:
   Queue();
   ~Queue();
 
+  void removeCommandByType(CommandType type);
+
   void pushUdpQueue(Command command);
   Command popUdpQueue();
   void popUdpQueueEnemy(int id);

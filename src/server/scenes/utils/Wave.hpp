@@ -9,6 +9,7 @@
 #define WAVE_HPP
 
 #include "../../../ecs/Registry.hpp"
+#include "../../../game/gestion/EntitiesGestion.hpp"
 #include "../../../queue/Queue.hpp"
 #include "nlohmann/json.hpp"
 #include <iostream>
@@ -24,7 +25,9 @@ public:
   void start() {};
   void load(std::string path, Queue &queue);
   void load_enemy(const json &enemy, Queue &queue);
-  void factory_call(const json &enemy, Queue &queue);
+  void factory_call(const json &enemy, Queue &queue, AiType ai, DamageType dmg,
+                    FrequencyType fr, BulletType bullet);
+  void load_enemy_properties(const json &enemy, Queue &queue);
 
 private:
   Registry *_ecs;

@@ -14,6 +14,7 @@ Game::Game() {
   _scenes[sceneType::ENDLESS] = std::make_shared<EndLess>();
   _scenes[sceneType::ONE_VS_ONE] = std::make_shared<OneVsOne>();
   _scenes[sceneType::LOBBY] = std::make_shared<Lobby>();
+  _scenes[sceneType::LOBBY_HISTORY] = std::make_shared<LobbyHistory>();
 
   _currentScene = sceneType::MENU;
 
@@ -76,7 +77,7 @@ void Game::listen(IClient &protocol) {
   }
 }
 
-void Game::init(std::string nickname, ChoosingParams *params) {
+void Game::init(ChoosingParams *params) {
   _tcp = std::make_shared<Tcp>(params->ip, 4243);
   _udp = std::make_shared<Udp>(params->ip, 4242);
 
@@ -87,18 +88,16 @@ void Game::init(std::string nickname, ChoosingParams *params) {
   connectLobby.push_back(0x06);
 
   std::cout << "[PARAMS]" << params->spaceshipId << std::endl;
+  connectLobby.push_back(static_cast<uint8_t>(params->gamemode));
+
   connectLobby.push_back(static_cast<uint8_t>(params->spaceshipId));
 
   connectLobby.push_back(static_cast<uint8_t>(params->bulletId));
 
-  connectLobby.push_back(static_cast<uint8_t>(nickname.size()));
-  for (size_t i = 0; i < nickname.size(); i++) {
-    connectLobby.push_back(nickname[i]);
+  connectLobby.push_back(static_cast<uint8_t>(params->nickname.size()));
+  for (size_t i = 0; i < params->nickname.size(); i++) {
+    connectLobby.push_back(params->nickname[i]);
   }
-
-  std::cout << "[PARAMS]" << params->ip << std::endl;
-  std::cout << "[PARAMS]" << params->spaceshipId << std::endl;
-  std::cout << "[PARAMS]" << params->bulletId << std::endl;
 
   _tcp->sendToServer(connectLobby);
   _udp->sendToServer({0x03, '0', '.', '0', ' ', '0', '.', '0'});
@@ -111,9 +110,9 @@ void Game::init(std::string nickname, ChoosingParams *params) {
   delete params;
 }
 
-void Game::game(std::string nickname) {
+void Game::game() {
   std::chrono::time_point<std::chrono::steady_clock> next =
-      std::chrono::steady_clock::now() + std::chrono::milliseconds(100);
+      std::chrono::steady_clock::now() + std::chrono::milliseconds(25);
   bool running = true;
   eventType event = NO_EVENT;
   ChoosingParams *params = new ChoosingParams();
@@ -123,7 +122,7 @@ void Game::game(std::string nickname) {
       _window->loadTexture("../src/graphical/assets/level1.png"));
 
   _scenes[_currentScene]->setWindow(_window.get());
-  _scenes[_currentScene]->setEcs(_ecs.get());
+  _scenes[_currentScene]->setEcs(_ecs);
   _scenes[_currentScene]->init();
   _scenes[_currentScene]->setQueue(_queue.get());
   _scenes[_currentScene]->setChoosingParams(params);
@@ -137,12 +136,13 @@ void Game::game(std::string nickname) {
     if (now > next)
       next += std::chrono::milliseconds(25);
     if (switchScene != sceneType::NO_SWITCH) {
-      if (switchScene == LOBBY) {
-        init(nickname, params);
+      if (switchScene == LOBBY || switchScene == LOBBY_HISTORY) {
+        init(params);
       }
       _currentScene = switchScene;
+      _scenes[_currentScene]->setGamemode(params->gamemode);
       _scenes[_currentScene]->setWindow(_window.get());
-      _scenes[_currentScene]->setEcs(_ecs.get());
+      _scenes[_currentScene]->setEcs(_ecs);
       _scenes[_currentScene]->setQueue(_queue.get());
       _scenes[_currentScene]->init();
     }
@@ -150,5 +150,6 @@ void Game::game(std::string nickname) {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
   _window->destroyWindow();
+  killAllServer();
   exit(0);
 }

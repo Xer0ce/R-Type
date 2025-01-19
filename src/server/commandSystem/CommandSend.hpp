@@ -29,10 +29,13 @@ private:
   void createEnemy(Command command, IProtocol *protocol);
   void newPlayer(Command command, IProtocol *protocol);
   void createPlayer(Command command, IProtocol *protocol);
-  void startGame(Command command, IProtocol *protocol);
   void getUsersLobby(Command command, IProtocol *protocol);
   void newPlayerLobby(Command command, IProtocol *protocol);
   void cooldown(Command command, IProtocol *protocol);
+  void wave(Command command, IProtocol *protocol);
+  void createMeteorite(Command command, IProtocol *protocol);
+  void hit(Command command, IProtocol *protocol);
+  void freezeSpell(Command command, IProtocol *protocol);
 
   std::map<CommandType, std::function<void(Command, IProtocol *)>> _commandMap;
 };

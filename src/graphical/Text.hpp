@@ -23,7 +23,8 @@ public:
   void destroyText();
   void setColor(SDL_Color color);
   std::string getText();
-  void setPos(int x, int y);
+  void setPos(float x, float y);
+  void setText(std::string text) { _text = text; };
 
 private:
   std::string _text;

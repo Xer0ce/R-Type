@@ -22,6 +22,7 @@
 #include "scenes/History.hpp"
 #include "scenes/IScene.hpp"
 #include "scenes/Lobby.hpp"
+#include "scenes/LobbyHistory.hpp"
 #include "scenes/Menu.hpp"
 #include "scenes/OneVsOne.hpp"
 #include <iostream>
@@ -36,13 +37,22 @@ public:
   void load_component() {
     _ecs->register_component<Position>();
     _ecs->register_component<Velocity>();
+    _ecs->register_component<FlatVelocity>();
     _ecs->register_component<Draw>();
     _ecs->register_component<Health>();
     _ecs->register_component<Control>();
     _ecs->register_component<EntityType>();
-    _ecs->register_component<AiType>();
+    _ecs->register_component<EnemyProperty>();
     _ecs->register_component<Nickname>();
     _ecs->register_component<Property>();
+    _ecs->register_component<LifeBar>();
+    _ecs->register_component<Visibility>();
+    _ecs->register_component<Size>();
+    _ecs->register_component<Background>();
+    _ecs->register_component<Boutton>();
+    _ecs->register_component<MenuElements>();
+    _ecs->register_component<PlayerId>();
+    _ecs->register_component<MenuType>();
   };
 
   void loadScene(sceneType sceneName);
@@ -50,8 +60,8 @@ public:
 
   void listen(IClient &protocol);
 
-  void init(std::string nickname, ChoosingParams *params);
-  void game(std::string nickname);
+  void init(ChoosingParams *params);
+  void game();
 
 private:
   std::map<sceneType, std::shared_ptr<IScene>> _scenes;
