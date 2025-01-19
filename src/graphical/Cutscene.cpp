@@ -14,6 +14,7 @@ Cutscene::Cutscene(SDL_Renderer *renderer, std::string textureTalkingPath,
       _y(y), _width(width), _height(height), _renderer(renderer) {
   _texture = IMG_LoadTexture(_renderer, _texturePath.c_str());
   _textureTalking = IMG_LoadTexture(_renderer, _textureTalkingPath.c_str());
+  _isPlaying = false;
 }
 
 Cutscene::~Cutscene() {}
