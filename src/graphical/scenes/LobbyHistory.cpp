@@ -19,24 +19,24 @@ void LobbyHistory::init() {
       _window->loadTexture("../src/graphical/assets/lobby.png"));
   fillHistoryLevels();
   addLevelsButtons();
-  _window->addText("Joueurs :", 300, 220, 200, 50, 37,
+  _window->addText("Joueurs :", 350, 250, 200, 50, 37,
                    "../src/graphical/assets/RTypefont.otf",
                    {255, 255, 255, 255});
 
-  _window->addText("Choisir un niveau :", 600, 220, 200, 50, 37,
+  _window->addText("Choisir un niveau :", 550, 250, 200, 50, 37,
                    "../src/graphical/assets/RTypefont.otf",
                    {255, 255, 255, 255});
 }
 
 void LobbyHistory::addLevelsButtons() {
-  _window->addButton(800, 570, 150, 35, "Start");
+  _window->addButton(720, 500, 150, 35, "Start");
   const auto &levels = getHistoryLevels();
 
   for (int i = 0; i < std::min(20, static_cast<int>(levels.size())); ++i) {
     int row = i / 5;
     int col = i % 5;
 
-    int posX = 620 + (col * 60);
+    int posX = 570 + (col * 60);
     int posY = 300 + (row * 60);
 
     _window->addButton(posX, posY, 40, 40, std::to_string(i + 1), levels[i]);
@@ -46,15 +46,24 @@ void LobbyHistory::addLevelsButtons() {
 void LobbyHistory::fillHistoryLevels() {
   std::string path = "../src/game/config/history";
   std::vector<std::string> levels;
+  std::vector<std::string> levelsDouble;
   try {
     for (const auto &entry : std::filesystem::directory_iterator(path)) {
-      if (entry.is_regular_file()) {
+      if (entry.is_regular_file() && entry.path().extension() == ".json" &&
+          entry.path().filename().string().length() == 14) {
         levels.push_back(entry.path().filename().string());
+      }
+      if (entry.is_regular_file() && entry.path().extension() == ".json" &&
+          entry.path().filename().string().length() == 15) {
+        levelsDouble.push_back(entry.path().filename().string());
       }
     }
   } catch (const std::exception &ex) {
     std::cerr << "Erreur : " << ex.what() << std::endl;
   }
+  std::sort(levels.begin(), levels.end());
+  std::sort(levelsDouble.begin(), levelsDouble.end());
+  levels.insert(levels.end(), levelsDouble.begin(), levelsDouble.end());
   setHistoryLevels(levels);
 }
 
@@ -84,7 +93,7 @@ sceneType LobbyHistory::loop(
         }
       }
       _window->stopAllSound();
-      return sceneType::ENDLESS;
+      return sceneType::HISTORY;
     }
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
   }
@@ -95,8 +104,8 @@ sceneType LobbyHistory::loop(
       if (button.isClicked(mouseX, mouseY)) {
         if (button.getText() == "Start") {
           Command command;
-          std::cout << "Start game" << std::endl;
-          command.type = CommandType::STARTGAME;
+          command.type = CommandType::STARTGAMEHISTORY;
+          command.startGameHistory.level = _selectedLevel;
           _queue->pushTcpQueue(command);
         }
         _selectedLevel = button.getTag();

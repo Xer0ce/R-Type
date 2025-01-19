@@ -2,18 +2,18 @@
   "enemies": [
     {
       "type": "Pion",
-      "number": 10,
-      "ia": "Aggressive"
-    },
-    {
-      "type": "Balourd",
-      "number": 0,
-      "ia": "Aggressive"
+      "number": 3,
+      "ia": "Passive",
+      "frequency": "Slow"
     },
     {
       "type": "Zinzolin",
-      "number": 0,
-      "ia": "Aggressive"
+      "number": 2,
+      "ia": "Aggressive",
+      "frequency": "High"
     }
-  ]
+  ],
+  "dialogues": "../src/game/config/history/sounds/audio2.mp3",
+  "character": "../src/game/config/history/caracter/Michou.png",
+  "talkingCharacter": "../src/game/config/history/caracter/MichouTalking.png"
 }

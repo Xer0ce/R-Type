@@ -16,6 +16,8 @@ void balzy_ai(Registry *ecs, std::size_t enemy) {
     velocity[enemy]->y = flatVelocity[enemy]->y;
   } else if (position[enemy]->y >= 750) {
     velocity[enemy]->y = -(flatVelocity[enemy]->y);
+  } else if (velocity[enemy]->y == 0) {
+    velocity[enemy]->y = flatVelocity[enemy]->y;
   }
   if (position[enemy]->x < -10) {
     position[enemy]->x = 1300;

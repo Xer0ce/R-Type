@@ -59,6 +59,17 @@ CommandSend::CommandSend() {
                                                  IProtocol *protocol) {
     freezeSpell(command, protocol);
   };
+  _commandMap[CommandType::DISCONNECT] = [this](Command command,
+                                                IProtocol *protocol) {
+    disconnect(command, protocol);
+  };
+  _commandMap[CommandType::DIALOGUES] = [this](Command command,
+                                               IProtocol *protocol) {
+    dialogues(command, protocol);
+  };
+  _commandMap[CommandType::WIN] = [this](Command command, IProtocol *protocol) {
+    win(command, protocol);
+  };
 }
 
 CommandSend::~CommandSend() {}
@@ -106,12 +117,15 @@ void CommandSend::connect(Command command, IProtocol *protocol) {
 }
 
 void CommandSend::disconnect(Command command, IProtocol *protocol) {
-  std::cout << "Disconnect command" << std::endl;
-  std::string response;
+  std::vector<uint8_t> binaryData;
 
-  response = "disconnect OK";
+  binaryData.push_back(0x02);
 
-  // _protocol->sendData(command.id, binaryData);
+  binaryData.push_back(static_cast<uint8_t>(command.disconnect.playerId));
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
 }
 
 void CommandSend::move(Command command, IProtocol *protocol) {
@@ -382,4 +396,48 @@ void CommandSend::freezeSpell(Command command, IProtocol *protocol) {
   binaryData.push_back(0xFF);
 
   protocol->sendDataToAllExceptOne(command.freezeSpell.playerId, binaryData);
+}
+
+void CommandSend::dialogues(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x17);
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.dialogues.dialoguesPath.size()));
+
+  std::string dialogues = command.dialogues.dialoguesPath;
+
+  for (auto &c : dialogues)
+    binaryData.push_back(static_cast<uint8_t>(c));
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.dialogues.characterPath.size()));
+
+  std::string character = command.dialogues.characterPath;
+
+  for (auto &c : character)
+    binaryData.push_back(static_cast<uint8_t>(c));
+
+  binaryData.push_back(
+      static_cast<uint8_t>(command.dialogues.characterTalkingPath.size()));
+
+  std::string characterTalking = command.dialogues.characterTalkingPath;
+
+  for (auto &c : characterTalking)
+    binaryData.push_back(static_cast<uint8_t>(c));
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendDataToAll(binaryData);
+}
+
+void CommandSend::win(Command command, IProtocol *protocol) {
+  std::vector<uint8_t> binaryData;
+
+  binaryData.push_back(0x18);
+
+  binaryData.push_back(0xFF);
+
+  protocol->sendData(command.win.socket, binaryData);
 }

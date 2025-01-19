@@ -2,18 +2,30 @@
   "enemies": [
     {
       "type": "Pion",
-      "number": 10,
-      "ia": "Aggressive"
-    },
-    {
-      "type": "Balourd",
-      "number": 0,
-      "ia": "Aggressive"
+      "number": 6,
+      "ia": "Passive",
+      "frequency": "Slow"
     },
     {
       "type": "Zinzolin",
-      "number": 0,
-      "ia": "Aggressive"
+      "number": 3,
+      "ia": "Aggressive",
+      "frequency": "High"
+    },
+    {
+      "type": "Balourd",
+      "number": 3,
+      "ia": "Balzy",
+      "frequency": "Turret"
+    },
+    {
+      "type": "Boss",
+      "number": 2,
+      "ia": "Boss",
+      "frequency": "High"
     }
-  ]
+  ],
+  "dialogues": "../src/game/config/history/sounds/audio9.mp3",
+  "character": "../src/game/config/history/caracter/Gims.png",
+  "talkingCharacter": "../src/game/config/history/caracter/GimsTalking.png"
 }

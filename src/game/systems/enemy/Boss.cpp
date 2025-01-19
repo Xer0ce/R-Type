@@ -18,4 +18,8 @@ void boss_ai(Registry *ecs, std::size_t enemy) {
   } else if (position[enemy]->y >= 800) {
     velocity[enemy]->y = -(flatVelocity[enemy]->y);
   }
+  velocity[enemy]->x = -1;
+  if (position[enemy]->x < -10) {
+    position[enemy]->x = 1300;
+  }
 }

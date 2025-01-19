@@ -4,24 +4,28 @@
         {
             "type": "Pion",
             "number": 1,
-            "ia": "Aggressive",
-            "frequency": "Slow"
+            "ia": "Passive",
+            "frequency": "Slow",
+            "damage": "Punch"
         },
         {
             "type": "Balourd",
             "number": 1,
-            "ia": "Balzy",
-            "frequency": "Turret"
+            "ia": "Passive",
+            "frequency": "Turret",
+            "damage": "Poke"
         },
         {
             "type": "Zinzolin",
             "number": 1,
-            "ia": "Passive"
+            "ia": "Passive",
+            "damage": "Marmite"
         },
         {
             "type": "BigBoss",
             "number": 1,
-            "ia": "Boss"
+            "ia": "Boss",
+            "damage": "Marmite"
         }
     ]
 }

@@ -60,3 +60,10 @@ void Sound::setVolume(int volume) {
   }
   Mix_VolumeChunk(_sound, volume);
 }
+
+bool Sound::isFinished() {
+  if (_channel == -1) {
+    return true;
+  }
+  return !Mix_Playing(_channel);
+}

@@ -18,7 +18,12 @@ public:
   sceneType
   loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
+  bool waveIsClear();
+  void waveGestion();
   void init() override;
+  void setPlayersPosition(Registry *ecs);
+  void killMeteorites();
+  void createMeteorites(int nbr);
 
 private:
   CommandGame _commandGame;
@@ -26,4 +31,5 @@ private:
   int _coolDown;
   bool _firstRound;
   std::chrono::time_point<std::chrono::steady_clock> _next;
+  std::string _levelPath;
 };

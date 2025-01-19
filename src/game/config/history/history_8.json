@@ -2,18 +2,36 @@
   "enemies": [
     {
       "type": "Pion",
-      "number": 10,
-      "ia": "Aggressive"
+      "number": 2,
+      "ia": "Passive",
+      "frequency": "Slow"
     },
     {
-      "type": "Balourd",
-      "number": 0,
-      "ia": "Aggressive"
+      "type": "Pion",
+      "number": 3,
+      "ia": "Balzy",
+      "frequency": "Slow"
     },
     {
       "type": "Zinzolin",
-      "number": 0,
-      "ia": "Aggressive"
+      "number": 4,
+      "ia": "Balzy",
+      "frequency": "High"
+    },
+    {
+      "type": "Balourd",
+      "number": 2,
+      "ia": "Aggressive",
+      "frequency": "Turret"
+    },
+    {
+      "type": "Boss",
+      "number": 2,
+      "ia": "Passive",
+      "frequency": "High"
     }
-  ]
+  ],
+  "dialogues": "../src/game/config/history/sounds/audio8.mp3",
+  "character": "../src/game/config/history/caracter/Squeezie.png",
+  "talkingCharacter": "../src/game/config/history/caracter/SqueezieTalking.png"
 }

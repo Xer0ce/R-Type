@@ -1,0 +1,39 @@
+@startuml
+
+class IClient {
+    + IClient() = default
+    + ~IClient() = default
+    * virtual void connectToServer() = 0
+    * virtual void receiveFromServer() = 0
+    * virtual buffer getBuffer() = 0
+}
+
+class AClient{
+    + AClient()
+    + ~AClient()
+    * void buffer getBuffer() override
+    - int _port
+    - string _ip
+    - buffer _buffer
+    - int _socket
+}
+
+class TCP {
+    + TCP()
+    + ~TCP()
+    * void connectToServer() override
+    * void receiveFromServer() override
+}
+
+class UDP {
+    + UDP()
+    + ~UDP()
+    * void connectToServer() override
+    * void receiveFromServer() override
+}
+
+IClient --|> AClient
+AClient --|> TCP
+AClient --|> UDP
+
+@enduml

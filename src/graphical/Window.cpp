@@ -21,19 +21,21 @@ void Window::init() {
     exit(84);
   }
 
-  if (!SDL_Init(SDL_INIT_AUDIO)) {
+  if (!SDL_Init(SDL_INIT_CAMERA)) {
     std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
     exit(84);
   }
 
+  if (!SDL_Init(SDL_INIT_AUDIO)) {
+    std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
+  }
+
   if (Mix_Init(MIX_INIT_MP3) == 0) {
     std::cerr << "Mix_Init Error: " << SDL_GetError() << std::endl;
-    exit(84);
   }
 
   if (!Mix_OpenAudio(0, NULL)) {
     std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
-    exit(84);
   }
 
   if (!TTF_Init()) {
@@ -43,16 +45,10 @@ void Window::init() {
   SDL_DisplayID displayID = SDL_GetPrimaryDisplay();
   const SDL_DisplayMode *currentMode = SDL_GetCurrentDisplayMode(displayID);
 
-  // int windowWidth = static_cast<int>(currentMode->w * 0.9);
-  // int windowHeight = static_cast<int>(currentMode->h * 0.8);
+  _windowWidth = 1200;
+  _windowHeight = 800;
 
-  int windowWidth = 1200;
-  int windowHeight = 800;
-
-  _windowWidth = windowWidth;
-  _windowHeight = windowHeight;
-
-  _window = SDL_CreateWindow("R-Type", windowWidth, windowHeight, 0);
+  _window = SDL_CreateWindow("R-Type", _windowWidth, _windowHeight, 0);
   if (!_window) {
     std::cerr << "Erreur lors de la création de la fenêtre : " << SDL_GetError()
               << std::endl;
@@ -71,19 +67,36 @@ void Window::init() {
   _spell = loadTexture("../src/graphical/assets/freezeSpell.png");
   _spellDisable = loadTexture("../src/graphical/assets/freezeSpellDisable.png");
   _freezeOverlay = loadTexture("../src/graphical/assets/freezeOverlay.png");
+  _deathBackground = loadTexture("../src/graphical/assets/deathBackground.png");
+  _winBackground = loadTexture("../src/graphical/assets/winBackground.png");
+  _death = false;
+  _win = false;
+  _rectCam = {1040, 0, 160, 120};
 
-  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
-  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
+  int cameraCount = 0;
+  SDL_CameraID *cameraIDs = SDL_GetCameras(&cameraCount);
+
+  if (!cameraIDs || cameraCount == 0) {
+    std::cerr << "No available cameras found!" << std::endl;
+  }
+
+  SDL_CameraID cameraID = cameraIDs[0];
+  _camera = SDL_OpenCamera(cameraID, NULL);
+  if (!_camera) {
+    std::cerr << "SDL_OpenCamera Error: " << SDL_GetError() << std::endl;
+  }
+
+  addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 5);
   addSound("../src/graphical/assets/sounds/un.mp3", WAVE1, 45);
   addSound("../src/graphical/assets/sounds/deux.mp3", WAVE2, 45);
   addSound("../src/graphical/assets/sounds/trois.mp3", WAVE3, 45);
   addSound("../src/graphical/assets/sounds/nouvelleVague.mp3", NEWWAVE, 45);
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
-  addSound("../src/graphical/assets/sounds/endless.mp3", ENDLESS_MUSIC, 50);
+  addSound("../src/graphical/assets/sounds/endless.mp3", ENDLESS_MUSIC, 70);
   addSound("../src/graphical/assets/sounds/Michou_croute_et_Elsa_2.mp3",
-           MICHOU_ET_ELSA_2, 100);
+           MICHOU_ET_ELSA_2, 70);
   addSound("../src/graphical/assets/sounds/Michou_Elsa_remix_winterzuuko.mp3",
-           MICHOU_REMIX_WINTERZUUKO, 100);
+           MICHOU_REMIX_WINTERZUUKO, 70);
   addSound("../src/graphical/assets/sounds/hit.mp3", HURT, 50);
 }
 
@@ -154,6 +167,11 @@ void Window::drawDropdown() {
 
 void Window::addText(std::string text, int x, int y, int w, int h, int size,
                      std::string fontPath, SDL_Color color) {
+  for (auto &t : _texts) {
+    if (t.getText() == text && text != "Nickname") {
+      return;
+    }
+  }
   _texts.emplace_back(text, x, y, w, h, _renderer, size, fontPath, color);
   _texts.back().init();
 }
@@ -227,9 +245,13 @@ keyType Window::catchKeyOnce() {
   const bool *keyState = SDL_GetKeyboardState(NULL);
 
   std::vector<std::pair<SDL_Scancode, keyType>> keys = {
-      {SDL_SCANCODE_UP, UP},         {SDL_SCANCODE_RIGHT, RIGHT},
-      {SDL_SCANCODE_DOWN, DOWN},     {SDL_SCANCODE_LEFT, LEFT},
-      {SDL_SCANCODE_ESCAPE, ESCAPE}, {SDL_SCANCODE_SPACE, SPACE}};
+      {SDL_SCANCODE_UP, UP},
+      {SDL_SCANCODE_RIGHT, RIGHT},
+      {SDL_SCANCODE_DOWN, DOWN},
+      {SDL_SCANCODE_LEFT, LEFT},
+      {SDL_SCANCODE_ESCAPE, ESCAPE},
+      {SDL_SCANCODE_SPACE, SPACE},
+      {SDL_SCANCODE_C, C}};
 
   for (const auto &key : keys) {
     SDL_Scancode scancode = key.first;
@@ -258,6 +280,8 @@ std::vector<keyType> Window::catchKey() {
     keys.push_back(SPACE);
   if (keyState[SDL_SCANCODE_F])
     keys.push_back(F);
+  if (keyState[SDL_SCANCODE_C])
+    keys.push_back(C);
   if (keys.empty())
     keys.push_back(NONE);
   return keys;
@@ -374,6 +398,15 @@ void Window::stopSound(soundType type) {
   }
 }
 
+bool Window::isSoundFinished(soundType type) {
+  for (auto &sound : _sounds) {
+    if (sound->getSoundType() == type) {
+      return sound->isFinished();
+    }
+  }
+  return false;
+}
+
 SDL_Texture *Window::loadText(std::string text, int size, std::string fontPath,
                               SDL_Color color) {
   TTF_Font *font = TTF_OpenFont(fontPath.c_str(), size);
@@ -453,4 +486,159 @@ void Window::setIsVisible(int menu, bool isVisible) {
 
 std::string Window::getTextInput(int menu) {
   return _textInputs[menu]->getTextInput();
+}
+
+void Window::setDeath(bool death) { _death = death; }
+
+void Window::drawDeathBackground() {
+  if (_death) {
+    SDL_FRect deathRect = {0, 0, 1200, 800};
+    SDL_RenderTexture(_renderer, _deathBackground, nullptr, &deathRect);
+  }
+}
+
+void Window::setWin(bool win) { _win = win; }
+
+bool Window::getWin() { return _win; }
+
+void Window::drawWinBackground() {
+  if (_win) {
+    SDL_FRect winRect = {0, 0, 1200, 800};
+    SDL_RenderTexture(_renderer, _winBackground, nullptr, &winRect);
+  }
+}
+
+void Window::displayCameraFeed() {
+  if (!_isCameraFeed)
+    return;
+  if (!_camera) {
+    std::cerr << "Error: Camera not initialized!" << std::endl;
+    return;
+  }
+
+  int permission = SDL_GetCameraPermissionState(_camera);
+  if (permission == 0) {
+    std::cerr << "Waiting for camera permission..." << std::endl;
+    return;
+  }
+  if (permission == -1) {
+    std::cerr << "Camera access denied!" << std::endl;
+    return;
+  }
+
+  SDL_Surface *surfaceCamera = SDL_AcquireCameraFrame(_camera, NULL);
+  if (!surfaceCamera) {
+
+    SDL_RenderTexture(_renderer, _textureCamera, NULL, &_rectCam);
+    SDL_SetRenderDrawColor(_renderer, 0, 255, 0, 255);
+    SDL_RenderRect(_renderer, &_rectCam);
+    return;
+  }
+
+  static bool logOnce = true;
+  if (logOnce) {
+    std::cout << "Camera Frame: " << surfaceCamera->w << "x" << surfaceCamera->h
+              << " Format: " << SDL_GetPixelFormatName(surfaceCamera->format)
+              << std::endl;
+    logOnce = false;
+  }
+
+  static int frameDropCount = 0;
+  if (frameDropCount < 10) {
+    frameDropCount++;
+    SDL_ReleaseCameraFrame(_camera, surfaceCamera);
+    return;
+  }
+
+  if (!_textureCamera || surfaceCamera->w != _textureCamWidth ||
+      surfaceCamera->h != _textureCamHeight) {
+    if (_textureCamera) {
+      SDL_DestroyTexture(_textureCamera);
+    }
+    _textureCamera = SDL_CreateTexture(_renderer, surfaceCamera->format,
+                                       SDL_TEXTUREACCESS_STREAMING,
+                                       surfaceCamera->w, surfaceCamera->h);
+    if (!_textureCamera) {
+      std::cerr << "Error: Failed to create camera texture: " << SDL_GetError()
+                << std::endl;
+      SDL_ReleaseCameraFrame(_camera, surfaceCamera);
+      return;
+    }
+
+    _textureCamWidth = surfaceCamera->w;
+    _textureCamHeight = surfaceCamera->h;
+  }
+
+  SDL_UpdateTexture(_textureCamera, NULL, surfaceCamera->pixels,
+                    surfaceCamera->pitch);
+
+  SDL_RenderTexture(_renderer, _textureCamera, NULL, &_rectCam);
+  SDL_SetRenderDrawColor(_renderer, 0, 255, 0, 255);
+  SDL_RenderRect(_renderer, &_rectCam);
+  SDL_ReleaseCameraFrame(_camera, surfaceCamera);
+}
+void Window::createCutscene(std::string soundPath, std::string texturePath,
+                            int x, int y, int width, int height) {
+  _cutscenes.push_back(
+      Cutscene(_renderer, soundPath, texturePath, x, y, width, height));
+}
+
+void Window::playCutscene() {
+  for (auto &cutscene : _cutscenes) {
+    cutscene.playCutscene();
+  }
+}
+
+void Window::setPlayingCutscene() {
+  for (auto &cutscene : _cutscenes) {
+    cutscene.setIsPlaying();
+  }
+}
+
+void Window::stopCutScenes() {
+  for (auto &cutscene : _cutscenes) {
+    cutscene.stopCutscene();
+  }
+}
+
+void Window::initFireAnimation(bool is1V1) {
+  FireAnimation fireAnimation(_renderer, is1V1);
+
+  if (is1V1) {
+    _fireAnimations1V1.push_back(fireAnimation);
+  } else {
+    _fireAnimations.push_back(fireAnimation);
+  }
+}
+
+void Window::drawFireAnimation(float x, float y) {
+  for (auto &fireAnimation : _fireAnimations) {
+    fireAnimation.drawFireAnimation(x, y);
+  }
+}
+
+void Window::drawFireAnimation1V1(float x, float y) {
+  for (auto &fireAnimation : _fireAnimations1V1) {
+    fireAnimation.drawFireAnimation(x, y);
+  }
+}
+
+void Window::destroyFireAnimation() {
+  for (auto &fireAnimation : _fireAnimations) {
+    fireAnimation.destroyFireAnimation();
+  }
+  for (auto &fireAnimation : _fireAnimations1V1) {
+    fireAnimation.destroyFireAnimation();
+  }
+  _fireAnimations.clear();
+  _fireAnimations1V1.clear();
+}
+
+void Window::changeFireAnimation() {
+  for (auto &fireAnimation : _fireAnimations) {
+    fireAnimation.changeFireAnimation();
+  }
+  for (auto &fireAnimation : _fireAnimations1V1) {
+    fireAnimation.changeFireAnimation();
+  }
 }

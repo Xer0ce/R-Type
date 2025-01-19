@@ -36,6 +36,7 @@ enum keyType {
   ENTER,
   ESCAPE,
   F,
+  C,
   NONE,
 };
 
@@ -45,6 +46,7 @@ struct ChoosingParams {
   int bulletId;
   int gamemode;
   std::string nickname;
+  bool isHost;
 };
 
 enum soundType {
@@ -57,4 +59,6 @@ enum soundType {
   NEWWAVE,
   MICHOU_REMIX_WINTERZUUKO,
   HURT,
+  SQUEEZIE,
+  HISTORY_SOUND,
 };

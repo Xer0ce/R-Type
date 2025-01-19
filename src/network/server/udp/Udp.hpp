@@ -24,7 +24,7 @@ public:
   bool sendDataToAllExceptOne(std::size_t socketId,
                               std::vector<uint8_t> binaryData) override;
   void closeSocket() override;
-  bool listenSocket(int backlog = 5) override;
+  bool listenSocket(Queue *queue) override;
   std::vector<uint8_t> &getBuffer() override;
   bool isClientAddressPresent(const sockaddr_in &clientAddr);
 

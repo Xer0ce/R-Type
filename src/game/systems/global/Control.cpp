@@ -9,9 +9,9 @@
 
 const float velocitySpaceship[] = {
     10.0f,
+    5.0f,
     15.0f,
     20.0f,
-    25.0f,
 };
 
 void control_system(std::vector<keyType> keys, Registry &ecs) {
