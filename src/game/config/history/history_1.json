@@ -2,18 +2,9 @@
   "enemies": [
     {
       "type": "Pion",
-      "number": 10,
-      "ia": "Aggressive"
-    },
-    {
-      "type": "Balourd",
-      "number": 0,
-      "ia": "Aggressive"
-    },
-    {
-      "type": "Zinzolin",
-      "number": 0,
-      "ia": "Aggressive"
+      "number": 3,
+      "ia": "Passive",
+      "frequency": "Slow"
     }
   ],
   "dialogues": "src/game/config/history/sounds/audio1.mp3",
