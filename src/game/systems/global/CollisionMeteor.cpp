@@ -42,7 +42,6 @@ void collision_system_meteor(Registry *ecs, Queue *queue) {
       }
     }
     if (entityType[i] == EntityType::Meteorite) {
-      std::cout << "Meteorite pos x: " << position[i]->x << std::endl;
       if (position[i]->x < -100) {
         static std::random_device rd;
         static std::mt19937 gen(rd());

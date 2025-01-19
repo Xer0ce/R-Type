@@ -153,6 +153,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
 
   auto &entityType = ecs->get_components<EntityType>();
   auto &properties = ecs->get_components<Property>();
+  auto &enemyproperty = ecs->get_components<EnemyProperty>();
   int shootId = -1;
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
@@ -161,6 +162,13 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
         if (i == command.shoot.playerId) {
           if (properties[i].has_value()) {
             shootId = properties[i]->shootId;
+          }
+        }
+      }
+      if (entityType[i] && entityType[i] == EntityType::Enemy) {
+        if (i == command.shoot.playerId) {
+          if (enemyproperty[i].has_value()) {
+            shootId = static_cast<int>(enemyproperty[i]->enemyType);
           }
         }
       }
