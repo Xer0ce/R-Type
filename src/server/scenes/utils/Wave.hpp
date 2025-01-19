@@ -46,7 +46,7 @@ public:
   /**
    * @brief Starts the wave processing.
    */
-  void start(){};
+  void start() {};
 
   /**
    * @brief Loads enemy waves from a JSON file.

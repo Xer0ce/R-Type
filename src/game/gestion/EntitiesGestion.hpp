@@ -20,7 +20,7 @@
 
 /**
  * @brief Creates a player entity.
- * 
+ *
  * @param r Reference to the registry managing entities and components.
  * @param position Initial position of the player.
  * @param velocity Initial velocity of the player.
@@ -43,7 +43,7 @@ Entities create_player_entity(Registry &r, Position position, Velocity velocity,
 
 /**
  * @brief Creates an enemy entity.
- * 
+ *
  * @param r Reference to the registry managing entities and components.
  * @param position Initial position of the enemy.
  * @param velocity Initial velocity of the enemy.
@@ -65,7 +65,7 @@ Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
 
 /**
  * @brief Creates a projectile entity.
- * 
+ *
  * @param r Reference to the registry managing entities and components.
  * @param position Initial position of the projectile.
  * @param velocity Initial velocity of the projectile.
@@ -81,7 +81,7 @@ Entities create_projectile_entity(Registry &r, Position position,
 
 /**
  * @brief Creates a meteorite entity.
- * 
+ *
  * @param r Reference to the registry managing entities and components.
  * @param position Initial position of the meteorite.
  * @param velocity Initial velocity of the meteorite.
@@ -95,7 +95,7 @@ Entities create_meteorite_entity(Registry &r, Position position,
 
 /**
  * @brief Creates a menu entity.
- * 
+ *
  * @param r Reference to the registry managing entities and components.
  * @param position Position of the menu.
  * @param size Size of the menu.
@@ -113,7 +113,7 @@ Entities create_menu_entity(Registry &r, Position position, Size size,
 
 /**
  * @brief Creates an entity of a specific type.
- * 
+ *
  * @tparam T The type of the entity (e.g., Player, Enemy).
  * @param r Reference to the registry managing entities and components.
  * @param args Arguments required for creating the entity.
@@ -140,7 +140,7 @@ Entities create_entity(Registry &r, Args &&...args) {
 
 /**
  * @brief Creates an enemy entity of a specific type.
- * 
+ *
  * @tparam T The specific type of the enemy (e.g., Pion, Balourd).
  * @param r Reference to the registry managing entities and components.
  * @param enemy Enemy-specific properties.
