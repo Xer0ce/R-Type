@@ -31,15 +31,18 @@ void collision_system_1v1(Registry *ecs, Queue *queue, bool freindlyFire) {
       for (std::size_t j = 0; j < position.size(); j++) {
         if (entityType[j] == EntityType::Projectile) {
           if (i != playerId[j]->id) {
-            if (entityType[playerId[j]->id] == EntityType::Player && !freindlyFire)
+            if (entityType[playerId[j]->id] == EntityType::Player &&
+                !freindlyFire)
               continue;
             if (position[i]->x < position[j]->x + 50 &&
                 position[i]->x + 50 > position[j]->x &&
                 position[i]->y < position[j]->y + 50 &&
                 position[i]->y + 50 > position[j]->y) {
-              health[i]->hp -= enemybulletDmg[static_cast<int>(enemyProperty[i]->damageType)];
+              health[i]->hp -= enemybulletDmg[static_cast<int>(
+                  enemyProperty[i]->damageType)];
               cmd.type = HIT;
-              cmd.hit.damage = enemybulletDmg[static_cast<int>(enemyProperty[i]->damageType)];
+              cmd.hit.damage = enemybulletDmg[static_cast<int>(
+                  enemyProperty[i]->damageType)];
               cmd.hit.entityHit = i;
               queue->pushTcpQueue(cmd);
               cmd.type = CommandType::KILLENTITY;
