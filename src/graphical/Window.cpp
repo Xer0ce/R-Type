@@ -85,14 +85,12 @@ void Window::init() {
 
   if (!cameraIDs || cameraCount == 0) {
     std::cerr << "No available cameras found!" << std::endl;
-    exit(84);
   }
 
   SDL_CameraID cameraID = cameraIDs[0];
   _camera = SDL_OpenCamera(cameraID, NULL);
   if (!_camera) {
     std::cerr << "SDL_OpenCamera Error: " << SDL_GetError() << std::endl;
-    exit(84);
   }
 
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
