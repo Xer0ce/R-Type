@@ -103,422 +103,359 @@ RFC: myTeams Collaborative Communication Application Protocol
     ensuring efficient communication and proper synchronization.
 
 4. Commands and Responses
-    4.1 Client Commands
-        /login ["user_name"]: Logs the user into the system.
-        /logout: Logs the user out of the system.
-        /users: Retrieves a list of all users.
-        /send [“user_uuid”] [“message_body”] : send a message to specific user
-        /messages [“user_uuid”] : list all messages exchanged with the specified user
-        /subscribe ["team_uuid"]: Subscribes to a team's events.
-        /subscribed ?[“team_uuid”] : list all subscribed teams or list all users subscribed to a team
-        /unsubscribe ["team_uuid"]: Unsubscribes from a team's events.
-        /use  ?[“team_uuid”] ?[“channel_uuid”] ?[“thread_uuid”]: Sets the context for subsequent commands.
-        /create: Creates a team, channel, thread, or comment, depending on the context.
-        /list: Lists teams, channels, threads, or comments, depending on the context.
-        /info: Displays details of the user, team, channel, or thread, depending on the context.
+    4.1 Client Handle Commands
+        - connect: Connects the client to the server with a username.
+        - disconnect: Disconnects the client from the server.
+        - move: Moves a player or entity.
+        - shoot: Fires a projectile.
+        - killentity: Removes an entity (e.g., enemy).
+        - createenemy: Creates a new enemy.
+        - newplayer: Adds a new player to the game.
+        - createplayer: Creates a player in the lobby.
+        - startgame: Starts the game with the selected mode.
+        - startgamehistory: Starts the game with history mode.
+        - connect1v1: Connects a player for a 1v1 match.
+        - freezespell: Casts a freeze spell.
+        - dialogues: Sends dialogues during the game.
+        - win: Declares a player as the winner.
 
-        All command are translated into packet and then sent to the server.
 
-    4.2 Server Responses
-        The server responds to each command with packets, using predefined formats to convey information about users,
-        teams, channels, threads, and messages.
+    4.2 Client Send Commands
+        - connect: Sends a connection request to the server with the username.
+        - disconnect: Sends a disconnection request to the server.
+        - move: Sends information about the movement of an entity.
+        - shoot: Sends information to fire a projectile.
+        - killentity: Sends a request to remove an entity.
+        - createenemy: Sends a request to create an enemy.
+        - newplayer: Sends information to add a new player.
+        - createplayer: Sends information to create a player in the lobby.
+        - startgame: Sends a request to start the game.
+        - startgamehistory: Sends information related to starting a game with history mode.
+        - connect1v1: Sends a request to connect to a 1v1 match.
+        - freezespell: Sends a request to cast a freeze spell.
+        - dialogues: Sends dialogue messages in the game.
 
-5. Data Model
-    5.1 User
-        UUID: Unique identifier for the user.
-        Name: The user's name.
-    5.2 Team
-        UUID: Unique identifier for the team.
-        Name: Name of the team.
-        Description: Description of the team's purpose.
-    5.3 Channel
-        UUID: Unique identifier for the channel.
-        Name: Name of the channel.
-        Description: Description of the channel's topic.
-    5.4 Thread
-        UUID: Unique identifier for the thread.
-        Creator UUID: UUID of the user who created the thread.
-        Title: Title of the thread.
-        Body: Initial post of the thread.
-    5.5 Message
-        UUID: Unique identifier for the message.
-        Sender UUID: UUID of the user who sent the message.
-        Body: Content of the message.
+    4.3 Server Handle Commands
+        - connect: Handles the connection request from the client with a username.
+        - disconnect: Handles the disconnection request from the client.
+        - move: Handles movement information sent by the client.
+        - shoot: Handles information about projectile firing.
+        - killentity: Handles the removal of entities.
+        - createenemy: Creates an enemy based on the sent information.
+        - newplayer: Adds a new player to the game.
+        - createplayer: Adds a player to the lobby.
+        - startgame: Handles the start of the game with the selected mode.
+        - startgamehistory: Handles the start of the game with history mode.
+        - connect1v1: Handles the connection for a 1v1 match.
+        - freezespell: Handles the freeze spell casting.
+        - dialogues: Handles dialogue sending during the game.
+        - win: Handles the victory declaration of a player.
 
-6. Security Considerations
-    While password authentication is not required, the protocol includes measures to ensure users
-    can only access information and perform actions they are authorized to.
-    For example, users must be subscribed to a team to create threads or receive team-related notifications.
+    4.4 Server Send Commands
+        - connect: Sends a connection confirmation to the client.
+        - disconnect: Sends a disconnection confirmation to the client.
+        - move: Sends updates on entity positions.
+        - shoot: Sends information about fired projectiles.
+        - killentity: Sends information to remove an entity.
+        - createenemy: Sends information about enemy creation.
+        - newplayer: Sends information to add a new player.
+        - createplayer: Sends information to add a player to the lobby.
+        - startgame: Sends a game start confirmation.
+        - startgamehistory: Sends information about the history mode of the game.
+        - connect1v1: Sends a confirmation for 1v1 match connection.
+        - freezespell: Sends confirmation of a freeze spell cast.
+        - dialogues: Sends dialogues during the game.
+        - win: Sends confirmation of the player's victory.
 
-7. Implementation Notes
-    Implementers must ensure that all command arguments are properly quoted and adhere to predefined length limits.
-    The use of TCP sockets must be managed carefully to handle multiple concurrent connections efficiently,
-    without the use of fork or threads.
 
-8. Packet
-    8.1 Format
-        Every packet are composed of two part, the header and the content.
+5. Security Considerations
+    While password authentication is not required, 
+    the protocol includes robust security measures to ensure that users can
+    only perform actions and access information they are authorized to.
+    
+    In this system, the client serves only as an interface for displaying 
+    information and interacting with AI,
+    while the server is the ultimate authority in all aspects of the game.
 
-        The header is a structure containing an unsigned short, that will be interpreted
-        by both server and client as the id of the packet.
+    To prevent cheating, all critical game actions—such as movement, shooting,
+    and the type of shots—are recalibrated and validated by the server.
+    
+    The server recalculates:
 
-        The content is all the data that need to be sent within the packet.
+        Movement: The server ensures all player movements are valid,
+        preventing unauthorized movements or cheats.
 
-        The header is a common part of every packet that allow the client and the server
-        to find the type and size of the packet that it is reading to then interpret them correctly.
+        Shooting: The server checks that all shooting actions are
+        legitimate and in accordance with game rules.
+    
+        Shot Types: The server validates the type of shots being made,
+        ensuring that no invalid or modified shots
+        are triggered from the client.
+    
+    The client does not have the power to directly affect game mechanics or
+    the state of the game. 
+    It can only display data and handle interactions with AI.
+    Any attempt to manipulate game behavior or circumvent rules is countered
+    by the server’s authoritative control over the game state.
+
+    This server-client separation ensures that the integrity of 
+    the game is maintained, preventing any form of cheating or
+    unauthorized manipulation from the client.
+
+6. Packet
+    6.1 Format
+        Each packet is composed of two parts: the header and the content.
+
+        The header is a structure that contains a unique identifier,
+        interpreted by both the server and the client. 
+        This identifier helps both parties understand the type and structure
+        of the packet they are handling. 
+        The header is always the first part of the packet and allows 
+        the client and server to identify the size and type of the packet
+        to interpret the data accordingly.
+
+        The content of the packet contains all the necessary data 
+        that needs to be transmitted. 
+        This can include various parameters and values required by the server
+        or client to process the packet correctly.
+
+        A typical packet layout is as follows:
 
         +-------------------------+
-        |         header          |  \
-        |           ID            |   | read first
-        +-------------------------+  /
-        |         content         |  \
-        |          Name           |   |
-        |          UUID           |   | size deduced with the id in the header
-        |          ...            |   |
-        +-------------------------+  /
+        |         header           |  
+        |      Packet Type (ID)    |  <-- Read first
+        +-------------------------+  
+        |         content          |  
+        |   Parameter(s)           |  <-- Size depends on the ID
+        |   Additional Data        |  
+        |   ...                    |  
+        +-------------------------+ 
+        |       End of Packet      |  
+        |          0xFF            |  <-- To signify the end of the message
+        +-------------------------+  
 
-    8.2 Type
-        ID: 1 byte long number used to identify packet
-        Name: 32 byte long array of ascii character containing the name of an element
-        UUID: 37 byte long array of ascii character containing the id of an element
-        Description: 255 byte long array of ascii character containing the description of an element
-        Message: 512 byte long array of ascii character containg a message to be sent in athread or to a user
+    6.2 Client to server packet
+        6.2.1 Connect
+            This packet is sent when the client initiates a connection 
+            with the server by sending a "connect" command.
+            It includes the player's chosen nickname for the connection.
 
-    8.3 Client to server packet
-        8.3.1 Login
-            This packet is sent when the user input successfully the "/login" command client side.
-            It tells the server to log the client with the given username.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x00    | Nickname   |    Name    | the name of the player to log in|
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+------------+------------+----------------------------------+
-            | Packet ID | Field name | Field type |               Note               |
-            +-----------+------------+------------+----------------------------------+
-            |   0x00    | user name  |    Name    | the name the user whant to log as|
-            +-----------+------------+------------+----------------------------------+
+        6.2.2 Move
+            This packet is sent when the player moves in the game. 
+            It includes the entityId and the new position coordinates.
 
-        8.3.2 Logout
-            This packet is sent when the user input successfully the "/logout" command client side.
-            It tells the server to logout the client from it's current user.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x03    | entityId   |   Integer  | the ID of the entity to move   |
+    |           | positionX  |   Float    | the new X coordinate of the entity|
+    |           | positionY  |   Float    | the new Y coordinate of the entity|
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+------------+------------+------+
-            | Packet ID | Field name | Field type | Note |
-            +-----------+------------+------------+------+
-            |   0x01    |            |            |      |
-            +-----------+------------+------------+------+
 
-        8.3.3 Users
-            This packet is sent when the user input successfully the "/users" command client side
-            It tells the server to send back a list of all the users and their status.
+        6.2.4 Shoot
+            This packet is sent when a player shoots a projectile. 
+            It includes the playerId, bulletId, 
+            and the position and direction of the shot.
 
-            +-----------+------------+------------+------+
-            | Packet ID | Field name | Field type | Note |
-            +-----------+------------+------------+------+
-            |   0x02    |            |            |      |
-            +-----------+------------+------------+------+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x04    | playerId   |   Integer  | the ID of the player shooting  |
+    |           | bulletId   |   Integer  | the ID of the bullet fired     |
+    |           | positionX  |   Float    | the X coordinate of the bullet |
+    |           | positionY  |   Float    | the Y coordinate of the bullet |
+    |           | direction  |   Integer  | the direction of the shot      |
+    +-----------+------------+------------+--------------------------------+
 
-        8.3.4 User
-            This packet is sent when the user input successfully the "/user" command client side.
-            It tells the server to send back the information of a user.
 
-            +-----------+------------+------------+-------------------------------+
-            | Packet ID | Field name | Field type |              Note             |
-            +-----------+------------+------------+-------------------------------+
-            |   0x03    | user uuid  |    UUID    | the uuid of the searched user |
-            +-----------+------------+------------+-------------------------------+
+        6.2.8 Start Game
+            This packet is sent when the game is starting. 
+            It includes the game mode that the server should start.
 
-        8.3.5 Send
-            This packet is sent when the user input successfully the "/send" command client side.
-            It tells the server to send a private message to a user.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x05    | gamemode   |   Integer  | the selected game mode         |
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+--------------+------------+-------------------------------+
-            | Packet ID |  Field name  | Field type |             Note              |
-            +-----------+--------------+------------+-------------------------------+
-            |           |  user uuid   |    UUID    | the uuid of the targeted user |
-            |   0x04    |--------------+------------+-------------------------------+
-            |           | message body |  Message   |      the message to send      |
-            +-----------+--------------+------------+-------------------------------+
+        6.2.9 Start Game History
+            This packet is sent when the game history is started, 
+            including level and dialog information.
 
-        8.3.6 Messages
-            This packet is sent when the user input successfully the "/messages" command client side.
-            It tells the server to send back all the message in a conversation
-            between the client user and another user.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x09    | level      |    Name    | the level to start the game    |
+    |           | dialog     |    Name    | the dialog to display          |
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+------------+------------+-------------------------------+
-            | Packet ID | Field name | Field type |              Note             |
-            +-----------+------------+------------+-------------------------------+
-            |   0x05    | user uuid  |    UUID    | the uuid of the targeted user |
-            +-----------+------------+------------+-------------------------------+
 
-        8.3.7 Subscribe
-            This packet is sent when the user input successfully the "/subscribe" command client side.
-            It tells the server to subscribe the curent user to a team.
+        6.2.10 Connect 1v1
+            This packet is sent when the player wants to connect 
+            to a 1v1 game mode. 
+            It includes the player's nickname.
 
-            +-----------+------------+------------+-------------------------------+
-            | Packet ID | Field name | Field type |              Note             |
-            +-----------+------------+------------+-------------------------------+
-            |   0x06    | team uuid  |    UUID    | the uuid of the targeted team |
-            +-----------+------------+------------+-------------------------------+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0X07    | Nickname   |    Name    | the player's nickname to connect |
+    +-----------+------------+------------+--------------------------------+
 
-        8.3.8 Subscribed
-            This packet is sent when the user input successfully the "/subscribed" command client side.
-            It tells the server to either the send all teams to wich the user is subscribed,
-            or all the users subscribed to a team.
 
-            +-----------+------------+------------+---------------------------------------+
-            | Packet ID | Field name | Field type |                  Note                 |
-            +-----------+------------+------------+---------------------------------------+
-            |           |            |            |    the uuid of the targeted team.     |
-            |   0x07    | team uuid  |    UUID    | if empty send back subscription list, |
-            |           |            |            |   else send back all user subscribed  |
-            |           |            |            |             to the team.              |
-            +-----------+------------+------------+---------------------------------------+
+        6.2.11 Freeze Spell
+            This packet is sent when the player casts a freeze spell. 
+            It includes the player's ID.
 
-        8.3.9 Unsubscribe
-            This packet is sent when the user input successfully the "/unsubscribe" command client side.
-            It tells the server to unsubscribe the curent user to a team.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x08    | playerId   |   Integer  | the ID of the player use spell |
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+------------+------------+-------------------------------+
-            | Packet ID | Field name | Field type |              Note             |
-            +-----------+------------+------------+-------------------------------+
-            |   0x08    | team uuid  |    UUID    | the uuid of the targeted team |
-            +-----------+------------+------------+-------------------------------+
+    6.3 server to client Packet
+        6.2.1 Connection
+            This packet is sent when the server responds to a connection 
+            request from a client.
+            It includes details such as the player's ID,
+            the number of players, and spaceship information.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x01    | id         | Integer    | Unique ID assigned to player  |
+    |           | playerNbr  | Integer    | Number of players in session  |
+    |           | spaceshipId| Integer    | ID of the assigned spaceship  |
+    |           | shootId    | Integer    | ID of the player's shoot type |
+    |           | positionX  | Float      | Player's initial X position   |
+    |           | positionY  | Float      | Player's initial Y position   |
+    |           | Nickname   | String     | Player's chosen nickname      |
+    +-----------+------------+------------+--------------------------------+
 
-        8.3.10 Use
-            This packet is sent when the user input successfully the "/use" command client side.
-            It tells the server to set the user to the given context.
+        6.2.2 Disconnection
+            This packet is sent when a player disconnects from the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x02    | playerId   | Integer    | ID of the disconnected player  |
+    +-----------+------------+------------+--------------------------------+
 
-            If one of the following field is empty, all the field after him will be considered empty.
+        6.2.3 Move Update
+            This packet is sent when the player’s position updates.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x03    | entityId   | Integer    | ID of the moving entity        |
+    |           | positionX  | Float      | Updated X coordinate           |
+    |           | positionY  | Float      | Updated Y coordinate           |
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+--------------+------------+----------------------------------+
-            | Packet ID |  Field name  | Field type |               Note               |
-            +-----------+--------------+------------+----------------------------------+
-            |           |  team uuid   |    UUID    |  the uuid of the targeted team   |
-            |           |--------------+------------+----------------------------------+
-            |   0x09    | channel uuid |    UUID    | the uuid of the targeted channel |
-            |           |--------------+------------+----------------------------------+
-            |           | thread uuid  |    UUID    | the uuid of the targeted thread  |
-            +-----------+--------------+------------+----------------------------------+
+    6.2.4 Shooting
+        This packet is sent when a player fires a projectile.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x04    | playerId   | Integer    | ID of the shooting player     |
+    |           | bulletId   | Integer    | ID of the bullet fired        |
+    |           | positionX  | Float      | X coordinate of the shot      |
+    |           | positionY  | Float      | Y coordinate of the shot      |
+    |           | direction  | Integer    | Direction of the shot         |
+    +-----------+------------+------------+--------------------------------+
 
-        8.3.11 Create
-            This packet is sent when the user input successfully the "/create" command client side when the
-            context is set to nothing or to a teams.
-            It tells the server to create a teams when the context is empty,
-            and a channel when the context is set to a team.
+    6.2.5 Enemy Creation
+        This packet is sent when a new enemy is spawned in the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x06    | enemyId    | Integer    | ID of the new enemy          |
+    |           | enemyType  | Integer    | Type of enemy spawned        |
+    |           | aiType     | Integer    | AI behavior type             |
+    |           | damageType | Integer    | Damage model                 |
+    |           | frequencyType | Integer | Frequency of attack          |
+    |           | bulletType | Integer    | Type of bullet used          |
+    |           | positionX  | Float      | X coordinate of enemy        |
+    |           | positionY  | Float      | Y coordinate of enemy        |
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+-------------+----------------+----------------------------------------+
-            | Packet ID | Field name  |   Field type   |                 Note                   |
-            +-----------+-------------+----------------+----------------------------------------+
-            |           |    name     |      Name      |    the name of the created element     |
-            |   0x10    |-------------+----------------+----------------------------------------+
-            |           | description |  Description   | the description of the created element |
-            +-----------+-------------+----------------+----------------------------------------+
+    6.2.6 Entity Destruction
+        This packet is sent when an entity (enemy or player) is destroyed.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x07    | entityId   | Integer    | ID of the destroyed entity    |
+    +-----------+------------+------------+--------------------------------+
 
-        8.3.12 Create thread
-            This packet is sent when the user input successfully the "/create" command client side when the
-            context is set to a channel.
-            It tells the server to create a thread.
+    6.2.7 Player Join Notification
+        This packet is sent when a new player joins the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x08    | id        | Integer     | ID of the new player          |
+    |           | playerNbr | Integer     | Updated number of players     |
+    |           | spaceshipId | Integer   | ID of the spaceship assigned  |
+    |           | shootId   | Integer     | ID of the shooting type       |
+    |           | positionX | Float       | Initial X position            |
+    |           | positionY | Float       | Initial Y position            |
+    |           | Nickname  | String      | Nickname of the player        |
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+------------+------------+-----------------------------------------+
-            | Packet ID | Field name | Field type |                 Note                    |
-            +-----------+------------+------------+-----------------------------------------+
-            |           |    name    |    Name    |     the name of the created thread      |
-            |   0x11    |------------+------------+-----------------------------------------+
-            |           |  message   |  Message   | the first message of the created thread |
-            +-----------+------------+------------+-----------------------------------------+
+    6.2.8 Game Lobby Players List
+        This packet contains the list of players in the game lobby.
 
-        8.3.13 Create message
-            This packet is sent when the user input successfully the "/create" command client side when the
-            context is set to a thread.
-            It tells the server to send a message in a thread.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x10    | id        | Integer     | ID of the player              |
+    |           | Nickname  | String      | Player's nickname             |
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+------------+------------+---------------------+
-            | Packet ID | Field name | Field type |        Note         |
-            +-----------+------------+------------+---------------------+
-            |   0x12    |  message   |  Message   | the message to send |
-            +-----------+------------+------------+---------------------+
+    6.2.9 New Player in Lobby
+        This packet is sent when a new player joins the game lobby.
 
-        8.3.14 List
-            This packet is sent when the user input successfully the "/list" command client side
-            It tells the server to send back the list of all element contained in the current context,
-            for example all teams when context is set to nothing or all channel if the context is set to a team.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x11    | id        | Integer     | ID of the new player          |
+    |           | Nickname  | String      | Player's nickname             |
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+------------+------------+------+
-            | Packet ID | Field name | Field type | Note |
-            +-----------+------------+------------+------+
-            |   0x13    |            |            |      |
-            +-----------+------------+------------+------+
+    6.2.10 Wave Information
+        This packet provides information about enemy waves in the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x13    | wave      | Integer     | Current wave number           |
+    |           | time      | Integer     | Time until next wave          |
+    +-----------+------------+------------+--------------------------------+
 
-        8.3.15 Info
-            This packet is sent when the user input successfully the "/info" command client side
-            It tells the server to send back details about the current context if it isn't set to nothing.
-            If it is set to nothing it then display info about the user
+     6.2.11 Meteorite Spawn
+        This packet is sent when a meteorite is spawned in the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x14    | meteoriteId | Integer   | ID of the meteorite           |
+    |           | positionX  | Float      | X coordinate                  |
+    |           | positionY  | Float      | Y coordinate                  |
+    +-----------+------------+------------+--------------------------------+
 
-            +-----------+------------+------------+------+
-            | Packet ID | Field name | Field type | Note |
-            +-----------+------------+------------+------+
-            |   0x14    |            |            |      |
-            +-----------+------------+------------+------+
+    6.2.12 Hit Event
+        This packet is sent when an entity takes damage.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x15    | entityHit  | Integer    | ID of the entity hit          |
+    |           | damage     | Integer    | Amount of damage taken        |
+    +-----------+------------+------------+--------------------------------+
 
-    8.4 Server to client packet
-        8.4.1 Login
-            This packet tell the client that he is now connected, with the login in the packet.
-            This is after the user inputed the command "/login"
-
-            +-----------+------------+------------+----------------------------------+
-            | Packet ID | Field name | Field type |               Note               |
-            +-----------+------------+------------+----------------------------------+
-            |   0x00    | user name  |    Name    | the name the user whant to log as|
-            +-----------+------------+------------+----------------------------------+
-
-        8.4.2 Logout
-            This packet tell the client that he is now disconnected
-            This is after the user inputed the command "/logout"
-
-            +-----------+------------+------------+------+
-            | Packet ID | Field name | Field type | Note |
-            +-----------+------------+------------+------+
-            |   0x01    |            |            |      |
-            +-----------+------------+------------+------+
-
-        8.4.3 Users
-            This packet is sent when the server succesfully executed the "/users" command server side
-            This is after the user inputed the command "/users"
-
-            +-----------+------------+------------+------+
-            | Packet ID | Field name | Field type | Note |
-            +-----------+------------+------------+------+
-            |   0x02    |            |            |      |
-            +-----------+------------+------------+------+
-
-        8.4.4 User
-            This packet is sent when the server succesfully executed the "/user" command server side
-            This is after the user inputed the command "/user"
-
-            +-----------+------------+------------+-------------------------------+
-            | Packet ID | Field name | Field type |              Note             |
-            +-----------+------------+------------+-------------------------------+
-            |   0x03    | user uuid  |    UUID    | the uuid of the searched user |
-            +-----------+------------+------------+-------------------------------+
-
-        8.4.5 Send
-            This packet is sent when the server succesfully executed the "/send" command server side
-            This is after the user inputed the command "/send"
-
-            +-----------+--------------+------------+-------------------------------+
-            | Packet ID |  Field name  | Field type |             Note              |
-            +-----------+--------------+------------+-------------------------------+
-            |           |  user uuid   |    UUID    | the uuid of the targeted user |
-            |   0x04    |--------------+------------+-------------------------------+
-            |           | message body |  Message   |      the message to send      |
-            +-----------+--------------+------------+-------------------------------+
-
-        8.4.6 Messages
-            This packet is sent when the server successfully executed the "/messages" command server side.
-
-            +-----------+------------+------------+-------------------------------+
-            | Packet ID | Field name | Field type |              Note             |
-            +-----------+------------+------------+-------------------------------+
-            |   0x05    | user uuid  |    UUID    | the uuid of the targeted user |
-            +-----------+------------+------------+-------------------------------+
-
-        8.4.7 Subscribe
-            This packet is sent when the server successfully executed the "/subscribe" command server side.
-            It tells the client that the server subscribed the current user to a team.
-
-            +-----------+------------+------------+-------------------------------+
-            | Packet ID | Field name | Field type |              Note             |
-            +-----------+------------+------------+-------------------------------+
-            |   0x06    | team uuid  |    UUID    | the uuid of the targeted team |
-            +-----------+------------+------------+-------------------------------+
-
-        8.4.8 Subscribed
-            This packet is sent when the server successfully executed the "/subscribed" command server side.
-            It tell that the server succesfully sent all teams to wich the user is subscribed,
-            or all the users subscribed to a team.
-
-            +-----------+------------+------------+---------------------------------------+
-            | Packet ID | Field name | Field type |                  Note                 |
-            +-----------+------------+------------+---------------------------------------+
-            |           |            |            |    the uuid of the targeted team.     |
-            |   0x07    | team uuid  |    UUID    | if empty send back subscription list, |
-            |           |            |            |   else send back all user subscribed  |
-            |           |            |            |             to the team.              |
-            +-----------+------------+------------+---------------------------------------+
-
-        8.4.9 Unsubscribe
-            This packet tell the client that he is now unsubscribe to the team in the packet.
-
-            +-----------+------------+------------+-------------------------------+
-            | Packet ID | Field name | Field type |              Note             |
-            +-----------+------------+------------+-------------------------------+
-            |   0x08    | team uuid  |    UUID    | the uuid of the targeted team |
-            +-----------+------------+------------+-------------------------------+
-
-        8.4.10 Use
-            This packet tell the client that the context is now set to the given context
-
-            +-----------+--------------+------------+----------------------------------+
-            | Packet ID |  Field name  | Field type |               Note               |
-            +-----------+--------------+------------+----------------------------------+
-            |           |  team uuid   |    UUID    |  the uuid of the targeted team   |
-            |           |--------------+------------+----------------------------------+
-            |   0x09    | channel uuid |    UUID    | the uuid of the targeted channel |
-            |           |--------------+------------+----------------------------------+
-            |           | thread uuid  |    UUID    | the uuid of the targeted thread  |
-            +-----------+--------------+------------+----------------------------------+
-
-        8.4.11 Create
-            This packet tell the client that the server succesfully creted either a team, a channel or a thread
-            depending on the context set by the "/use" command
-
-            +-----------+-------------+----------------+----------------------------------------+
-            | Packet ID | Field name  |   Field type   |                 Note                   |
-            +-----------+-------------+----------------+----------------------------------------+
-            |           |    name     |      Name      |    the name of the created element     |
-            |   0x10    |-------------+----------------+----------------------------------------+
-            |           | description |  Description   | the description of the created element |
-            +-----------+-------------+----------------+----------------------------------------+
-
-        8.4.12 Create thread
-            This packet tell the client that a new thread was succesfully created,
-            with the name and the first message
-
-            +-----------+------------+------------+-----------------------------------------+
-            | Packet ID | Field name | Field type |                 Note                    |
-            +-----------+------------+------------+-----------------------------------------+
-            |           |    name    |    Name    |     the name of the created thread      |
-            |   0x11    |------------+------------+-----------------------------------------+
-            |           |  message   |  Message   | the first message of the created thread |
-            +-----------+------------+------------+-----------------------------------------+
-
-        8.4.13 Create message
-            This packet tell the client that a new thread was succesfully created
-            (only when the conext is set to thread),
-            with the message to send.
-
-            +-----------+------------+------------+---------------------+
-            | Packet ID | Field name | Field type |        Note         |
-            +-----------+------------+------------+---------------------+
-            |   0x12    |  message   |  Message   | the message to send |
-            +-----------+------------+------------+---------------------+
-
-        8.4.14 List
-            This packet tell the client that he send the list of all the elements contained in the current context
-            for example all teams when context is set to nothing or all channel if the context is set to a team.
-
-            +-----------+------------+------------+------+
-            | Packet ID | Field name | Field type | Note |
-            +-----------+------------+------------+------+
-            |   0x13    |            |            |      |
-            +-----------+------------+------------+------+
-
-        8.4.15 Info
-            This packet tell the client about current context if it isn't set to nothing.
-            If it is set to nothing it then display info about the user
-
-            +-----------+------------+------------+------+
-            | Packet ID | Field name | Field type | Note |
-            +-----------+------------+------------+------+
-            |   0x14    |            |            |      |
-            +-----------+------------+------------+------+
-
-    8.5 Packet sequencing
+    6.2.13 Game Win Notification
+        This packet is sent when a player wins the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x18    | -         | -          | Indicates the game is won     |
+    +-----------+------------+------------+--------------------------------+
