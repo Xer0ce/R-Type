@@ -66,7 +66,7 @@ EndLess::loop(eventType event,
       control_system(movementKeys, *_ecs);
       shoot_system(keys, *_ecs, _queue, _nextBullet);
       if (now >= _nextBullet) {
-        _nextBullet = now + std::chrono::milliseconds(150);
+        _nextBullet = now + std::chrono::milliseconds(500);
       }
       position_system_graphic(1, *_ecs, _queue);
       enemy_system(_ecs.get());
