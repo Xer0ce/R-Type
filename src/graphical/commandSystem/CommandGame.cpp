@@ -53,8 +53,8 @@ CommandGame::~CommandGame() {}
 
 const std::string pathSpaceship[] = {
     "../src/graphical/assets/spaceship/michou.png",
-    "../src/graphical/assets/spaceship/inox.png",
     "../src/graphical/assets/spaceship/valouz.png",
+    "../src/graphical/assets/spaceship/inox.png",
     "../src/graphical/assets/spaceship/bouzi.png",
 };
 
@@ -90,6 +90,13 @@ const std::size_t velocityShoot[] = {
     40,
 };
 
+const std::size_t playerHealth[] = {
+    100,
+    200,
+    75,
+    125,
+};
+
 void CommandGame::executeCommandGame(Command command, Queue *queue,
                                      std::shared_ptr<Registry> ecs,
                                      Window *window) {
@@ -117,7 +124,7 @@ void CommandGame::connect(Command command, Queue *queue,
   auto player = create_entity<EntityType::Player>(
       *ecs,
       Position(command.repConnect.positionX, command.repConnect.positionY),
-      Velocity(), Health(100), MaxHealth(100),
+      Velocity(), Health(playerHealth[command.repConnect.spaceshipId]), MaxHealth(playerHealth[command.repConnect.spaceshipId]),
       Draw({0, 255, 0, 255},
            {(int)command.repConnect.positionX,
             (int)command.repConnect.positionY, 50, 50},
@@ -230,7 +237,7 @@ void CommandGame::newPlayer(Command command, Queue *queue,
 
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
-      Velocity(), Health(100), MaxHealth(100),
+      Velocity(), Health(playerHealth[command.newPlayer.spaceshipId]), MaxHealth(playerHealth[command.newPlayer.spaceshipId]),
       Draw({0, 255, 0, 255},
            {(int)command.newPlayer.positionX, (int)command.newPlayer.positionY,
             50, 50},
