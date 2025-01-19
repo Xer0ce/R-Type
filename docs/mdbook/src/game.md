@@ -116,6 +116,42 @@ To succeed, players must:
     Adapt to different enemy behaviors and attack patterns.
     Survive waves while collecting points and progressing through the game.
 
+#### Example JSON Configuration
+
+
+Below is an example JSON file for a single level in **Adventure Mode**:
+
+```json
+{
+  "enemies": [
+    {
+      "type": "Boss",
+      "number": 2,
+      "ia": "Boss",
+      "frequency": "High"
+    }
+  ],
+  "dialogues": "../src/game/config/history/sounds/audio3.mp3",
+  "character": "../src/game/config/history/caracter/Hero.png",
+  "talkingCharacter": "../src/game/config/history/caracter/HeroTalking.png"
+}
+```
+dialogues (Optional): Path to the audio file (e.g., .mp3, .wav) that will be played at the start of the level.
+
+character (Optional): Path to the image representing the speaker (static sprite).
+
+talkingCharacter (Optional): Path to the image representing the speaker talking (e.g., mouth open).
+
+#### How the Dialogue and Animation Work
+
+Level Start: The game checks if dialogues is present in the level’s JSON. If it exists, the audio file is loaded and played.
+
+Sprite Animation:
+If both character and talkingCharacter are defined, the game alternates between them in a short, repeating cycle to simulate talking.
+This continues until the audio track specified by dialogues finishes playing.
+End of Dialogue: Once the audio has ended, both sprites are removed from the screen.
+Wave Gameplay: The normal wave gameplay then proceeds, spawning the enemies defined in the enemies array.
+
 ### Duel Mode
 
 In Duel Mode, you can engage in a 1v1 battle with your friend. Each player has the ability to use a special ability or spell every 10 seconds. The goal is simple: defeat your opponent by strategically using your abilities and attacks. The player who successfully destroys the other first wins the match. This mode focuses on fast-paced, strategic gameplay where timing and skillful use of your special abilities are key to victory.

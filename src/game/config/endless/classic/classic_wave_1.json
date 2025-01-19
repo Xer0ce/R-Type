@@ -20,12 +20,6 @@
             "number": 1,
             "ia": "Passive",
             "damage": "Marmite"
-        },
-        {
-            "type": "BigBoss",
-            "number": 1,
-            "ia": "Boss",
-            "damage": "Marmite"
         }
     ]
 }

@@ -55,6 +55,8 @@ Before you start, ensure your system has the following installed:
 
 - ### [Technical documentation (Click)](https://m0ugou-club.github.io/R-Type/doxygen/html/)
 
+- ### [Benchmark (Click)](https://www.notion.so/Benchmark-1491a0af1da780618df0fb8a91c43f66)
+
 - ### Network documentation :
     ```bash
     cat docs/RFC.txt
