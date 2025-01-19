@@ -33,6 +33,7 @@ enum CommandType {
   CONNECT1V1,
   CREATEMETEORITE,
   FREEZESPELL,
+  DIALOGUES,
 };
 
 struct createEnemy {
@@ -146,6 +147,13 @@ struct startGame {
 
 struct startGameHistory {
   std::string level;
+  std::string dialog;
+};
+
+struct dialogues {
+  std::string dialoguesPath;
+  std::string characterPath;
+  std::string characterTalkingPath;
 };
 
 struct Command {
@@ -170,5 +178,6 @@ struct Command {
   struct startGame startGame;
   struct startGameHistory startGameHistory;
   struct Disconnect disconnect;
+  struct dialogues dialogues;
   int id;
 };
