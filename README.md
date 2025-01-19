@@ -51,19 +51,19 @@ Before you start, ensure your system has the following installed:
 
 ## Documentation
 
-- ###[User documentation](https://m0ugou-club.github.io/R-Type/mdbook/book/index.html)
+###[User documentation (Click)](https://m0ugou-club.github.io/R-Type/mdbook/book/index.html)
 
-- ###[Technical documentation](https://m0ugou-club.github.io/R-Type/doxygen/html/)
+###[Technical documentation (Click)](https://m0ugou-club.github.io/R-Type/doxygen/html/)
 
-- ### Network documentation
+### Network documentation :
     ```bash
     cat docs/RFC.txt
     ```
 
 #Credits
 
-- ###[Xer0ce](https://github.com/Xer0ce)
-- ###[felixlvu](https://github.com/felixlvu)
-- ###[albe2](https://github.com/albe2)
-- ###[antonincmp](https://github.com/antonincmp)
-- ###[Klaiveft](https://github.com/Klaiveft)
+- [Xer0ce](https://github.com/Xer0ce)
+- [felixlvu](https://github.com/felixlvu)
+- [albe2](https://github.com/albe2)
+- [antonincmp](https://github.com/antonincmp)
+- [Klaiveft](https://github.com/Klaiveft)
