@@ -36,7 +36,6 @@ void Window::init() {
     exit(84);
   }
 
-
   if (!Mix_OpenAudio(0, NULL)) {
     std::cerr << "Mix_OpenAudio Error: " << SDL_GetError() << std::endl;
     exit(84);
