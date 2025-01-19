@@ -15,5 +15,8 @@
       "number": 0,
       "ia": "Aggressive"
     }
-  ]
+  ],
+  "dialogues": "src/game/config/history/sounds/audio7.mp3",
+  "character": "src/game/config/history/caracter/Michou.png",
+  "talkingCharacter": "src/game/config/history/caracter/MichouTalking.png"
 }
