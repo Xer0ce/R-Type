@@ -24,10 +24,13 @@ void display_infos(Registry *ecs) {
       lifebars[i]->bar.x = positions[i]->x;
       lifebars[i]->bar.y = positions[i]->y - 10;
       lifebars[i]->hp = health[i]->hp;
-      lifebars[i]->bar.w = health[i]->hp * 0.5;
-      if (health[i]->hp >= 60) {
+
+      float hp_ratio = static_cast<float>(health[i]->hp) / health[i]->max_hp;
+      lifebars[i]->bar.w = hp_ratio * lifebars[i]->bar.w;
+
+      if (hp_ratio >= 0.6f) {
         lifebars[i]->color = {0, 255, 0, 255};
-      } else if (health[i]->hp >= 30) {
+      } else if (hp_ratio >= 0.3f) {
         lifebars[i]->color = {255, 255, 0, 255};
       } else {
         lifebars[i]->color = {255, 0, 0, 255};
