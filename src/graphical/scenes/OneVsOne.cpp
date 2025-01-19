@@ -32,6 +32,8 @@ void OneVsOne::init() {
   command.connect1v1.Nickname = "Player";
   _queue->pushTcpQueue(command);
   _window->playSound(soundType::ENDLESS_MUSIC, -1);
+  _window->initFireAnimation(true);
+  _window->initFireAnimation(false);
 }
 
 void OneVsOne::spell_system(std::vector<keyType> keys) {
@@ -117,6 +119,7 @@ OneVsOne::loop(eventType event,
     }
     position_system_graphic(1, *_ecs, _queue);
     display_infos(_ecs.get());
+    _window->changeFireAnimation();
   }
   _window->drawBackground();
   _window->drawText();
@@ -129,6 +132,12 @@ OneVsOne::loop(eventType event,
     }
     if (lifebars[i].has_value() && control[i].has_value()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
+    }
+    if (control[i].has_value()) {
+      _window->drawFireAnimation1V1(positions[i]->x, positions[i]->y);
+    }
+    if (nicknames[i].has_value() && !control[i].has_value()) {
+      _window->drawFireAnimation(positions[i]->x, positions[i]->y);
     }
   }
   _window->drawSpell();
