@@ -54,8 +54,9 @@ History::loop(eventType event,
   if (command.type != EMPTY) {
     if (command.type == CommandType::DIALOGUES) {
       // ici lance le song stocker comme ca command.dialogues.dialoguesPath
-      // ici l'ance l'animation non parlant comme ca command.dialogues.characterPath
-      // ici lance l'animation parlant comme ca command.dialogues.characterTalkingPath
+      // ici l'ance l'animation non parlant comme ca
+      // command.dialogues.characterPath ici lance l'animation parlant comme ca
+      // command.dialogues.characterTalkingPath
     }
     commandGame.executeCommandGame(command, _queue, _ecs, _window);
   }

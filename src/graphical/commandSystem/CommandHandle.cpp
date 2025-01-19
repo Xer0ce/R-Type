@@ -276,12 +276,14 @@ void CommandHandle::dialogues(std::vector<uint8_t> buffer, IClient *protocol,
   std::string dialogues(buffer.begin() + 2, buffer.begin() + 2 + playloadSize);
   int playloadSizeCharacter = static_cast<int>(buffer[2 + playloadSize]);
   std::string character(buffer.begin() + 3 + playloadSize,
-                        buffer.begin() + 3 + playloadSize + playloadSizeCharacter);
+                        buffer.begin() + 3 + playloadSize +
+                            playloadSizeCharacter);
   int playloadSizeCharacterTalking =
       static_cast<int>(buffer[3 + playloadSize + playloadSizeCharacter]);
-  std::string characterTalking(buffer.begin() + 4 + playloadSize + playloadSizeCharacter,
-                               buffer.begin() + 4 + playloadSize + playloadSizeCharacter + playloadSizeCharacterTalking);
-  
+  std::string characterTalking(
+      buffer.begin() + 4 + playloadSize + playloadSizeCharacter,
+      buffer.begin() + 4 + playloadSize + playloadSizeCharacter +
+          playloadSizeCharacterTalking);
 
   cmd.dialogues.dialoguesPath = dialogues;
   cmd.dialogues.characterPath = character;

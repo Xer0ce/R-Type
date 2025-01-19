@@ -400,21 +400,24 @@ void CommandSend::dialogues(Command command, IProtocol *protocol) {
 
   binaryData.push_back(0x17);
 
-  binaryData.push_back(static_cast<uint8_t>(command.dialogues.dialoguesPath.size()));
+  binaryData.push_back(
+      static_cast<uint8_t>(command.dialogues.dialoguesPath.size()));
 
   std::string dialogues = command.dialogues.dialoguesPath;
 
   for (auto &c : dialogues)
     binaryData.push_back(static_cast<uint8_t>(c));
 
-  binaryData.push_back(static_cast<uint8_t>(command.dialogues.characterPath.size()));
+  binaryData.push_back(
+      static_cast<uint8_t>(command.dialogues.characterPath.size()));
 
   std::string character = command.dialogues.characterPath;
 
   for (auto &c : character)
     binaryData.push_back(static_cast<uint8_t>(c));
 
-  binaryData.push_back(static_cast<uint8_t>(command.dialogues.characterTalkingPath.size()));
+  binaryData.push_back(
+      static_cast<uint8_t>(command.dialogues.characterTalkingPath.size()));
 
   std::string characterTalking = command.dialogues.characterTalkingPath;
 

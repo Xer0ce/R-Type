@@ -32,7 +32,6 @@ public:
   std::string get_dialoguesCharacter(std::string path);
   std::string get_dialoguesCharacterTalking(std::string path);
 
-
 private:
   Registry *_ecs;
 };
