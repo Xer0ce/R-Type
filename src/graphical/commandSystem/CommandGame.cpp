@@ -419,11 +419,11 @@ void CommandGame::connectionClosed(Command command, Queue *queue,
   window->setAllowToInteract(false);
 }
 
-void CommandGame::win(Command command, Queue *queue, std::shared_ptr<Registry> ecs,
-                      Window *window) {
+void CommandGame::win(Command command, Queue *queue,
+                      std::shared_ptr<Registry> ecs, Window *window) {
   if (window->getWin()) {
     return;
-  }                 
+  }
   window->setWin(true);
   ecs->kill_entity(static_cast<Entities>(command.win.entityId));
 }

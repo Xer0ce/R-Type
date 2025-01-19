@@ -494,7 +494,6 @@ void Window::setWin(bool win) { _win = win; }
 
 bool Window::getWin() { return _win; }
 
-
 void Window::drawWinBackground() {
   if (_win) {
     SDL_FRect winRect = {0, 0, 1200, 800};

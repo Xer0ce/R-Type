@@ -67,8 +67,7 @@ CommandSend::CommandSend() {
                                                IProtocol *protocol) {
     dialogues(command, protocol);
   };
-  _commandMap[CommandType::WIN] = [this](Command command,
-                                               IProtocol *protocol) {
+  _commandMap[CommandType::WIN] = [this](Command command, IProtocol *protocol) {
     win(command, protocol);
   };
 }

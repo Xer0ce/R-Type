@@ -161,7 +161,6 @@ struct dialogues {
 struct win {
   int socket;
   int entityId;
-
 };
 
 struct Command {
