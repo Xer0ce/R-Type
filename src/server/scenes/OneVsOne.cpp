@@ -49,7 +49,7 @@ bool OneVsOne::waveIsClear() {
   return false;
 }
 
-bool OneVsOne::waveGestion() {
+void OneVsOne::waveGestion() {
   if (waveIsClear()) {
     auto &entityType = _ecs->get_components<EntityType>();
     auto &properties = _ecs->get_components<Property>();

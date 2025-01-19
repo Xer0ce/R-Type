@@ -19,7 +19,7 @@ public:
   loop(std::chrono::time_point<std::chrono::steady_clock> deltaTime) override;
 
   bool waveIsClear();
-  bool waveGestion();
+  void waveGestion();
   void init() override;
   void setPlayersPosition(Registry *ecs);
   void killMeteorites();
