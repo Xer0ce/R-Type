@@ -1,7 +1,7 @@
 #include "EntitiesGestion.hpp"
 
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
-                              Health health, Draw draw, Nickname nickname,
+                              Health health, MaxHealth maxHealth, Draw draw, Nickname nickname,
                               Property property, std::optional<Control> control,
                               std::optional<std::size_t> id,
                               std::optional<LifeBar> lifeBar) {
@@ -9,6 +9,7 @@ Entities create_player_entity(Registry &r, Position position, Velocity velocity,
   r.add_component<Position>(entity, std::move(position));
   r.add_component<Velocity>(entity, std::move(velocity));
   r.add_component<Health>(entity, std::move(health));
+  r.add_component<MaxHealth>(entity, std::move(maxHealth));
   r.add_component<Draw>(entity, std::move(draw));
   r.add_component<Nickname>(entity, std::move(nickname));
   r.add_component<Property>(entity, std::move(property));
@@ -23,7 +24,7 @@ Entities create_player_entity(Registry &r, Position position, Velocity velocity,
 }
 
 Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
-                             FlatVelocity flatVelocity, Health health,
+                             FlatVelocity flatVelocity, Health health, MaxHealth maxHealth,
                              Draw draw, EnemyProperty enemy,
                              std::optional<std::size_t> id,
                              std::optional<LifeBar> lifeBar) {
@@ -32,6 +33,7 @@ Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
   r.add_component<Velocity>(entity, std::move(velocity));
   r.add_component<FlatVelocity>(entity, std::move(flatVelocity));
   r.add_component<Health>(entity, std::move(health));
+  r.add_component<MaxHealth>(entity, std::move(maxHealth));
   r.add_component<Draw>(entity, std::move(draw));
   r.add_component<EntityType>(entity, EntityType::Enemy);
   r.add_component<EnemyProperty>(entity, std::move(enemy));

@@ -176,7 +176,7 @@ void CommandGame::connectLobby(Command command, Queue *queue, Registry *ecs) {
   auto &nicknames = ecs->get_components<Nickname>();
 
   auto player = create_entity<EntityType::Player>(
-      *ecs, Position(0, 0), Velocity(), Health(),
+      *ecs, Position(0, 0), Velocity(), Health(), MaxHealth(),
       Draw({0, 0, 0, 0}, {0, 0, 0, 0}),
       Nickname(command.connectLobby.Nickname, {0, 0, 0, 0}, nullptr),
       Property(command.connectLobby.spaceshipId, command.connectLobby.shootId,

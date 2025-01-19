@@ -109,6 +109,7 @@ void Server::load_component() {
   _ecs->register_component<FlatVelocity>();
   _ecs->register_component<Draw>();
   _ecs->register_component<Health>();
+  _ecs->register_component<MaxHealth>();
   _ecs->register_component<EntityType>();
   _ecs->register_component<Control>();
   _ecs->register_component<EnemyProperty>();
