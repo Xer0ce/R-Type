@@ -294,7 +294,7 @@ void CommandGame::shoot(Command command, Queue *queue,
 void CommandGame::getUsersLobby(Command command, Queue *queue,
                                 std::shared_ptr<Registry> ecs, Window *window) {
   int x = 370;
-  int y = 180;
+  int y = 280;
 
   y += window->getNumberText() * 60;
 
