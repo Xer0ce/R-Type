@@ -137,7 +137,6 @@ struct killEntity {
   int entityId;
 };
 
-
 struct CreatePlayer {
   float positionX;
   float positionY;
