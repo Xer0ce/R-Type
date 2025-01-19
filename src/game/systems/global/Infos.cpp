@@ -6,6 +6,7 @@ void display_infos(Registry *ecs) {
   auto &maxHealth = ecs->get_components<MaxHealth>();
   auto &nicknames = ecs->get_components<Nickname>();
   auto &lifebars = ecs->get_components<LifeBar>();
+  auto &entityType = ecs->get_components<EntityType>();
 
   for (std::size_t i = 0; i < lifebars.size(); ++i) {
     if (nicknames[i].has_value()) {
@@ -13,7 +14,10 @@ void display_infos(Registry *ecs) {
       nicknames[i]->rect.y = positions[i]->y - 35;
     }
     if (lifebars[i].has_value()) {
-      lifebars[i]->bar.x = positions[i]->x + 10;
+      if (entityType[i] == EntityType::Player)
+        lifebars[i]->bar.x = positions[i]->x - (lifebars[i]->bar.w / 2) + 25;
+      else
+        lifebars[i]->bar.x = positions[i]->x + 10;
       lifebars[i]->bar.y = positions[i]->y - 10;
       lifebars[i]->hp = health[i]->hp;
 
