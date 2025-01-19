@@ -61,6 +61,10 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     freezeSpell(buffer, protocol, queue);
   };
+  _commandMap[0x17] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) {
+    dialogues(buffer, protocol, queue);
+  };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -260,5 +264,27 @@ void CommandHandle::freezeSpell(std::vector<uint8_t> buffer, IClient *protocol,
   Command cmd;
 
   cmd.type = CommandType::FREEZESPELL;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::dialogues(std::vector<uint8_t> buffer, IClient *protocol,
+                              Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::DIALOGUES;
+  int playloadSize = static_cast<int>(buffer[1]);
+  std::string dialogues(buffer.begin() + 2, buffer.begin() + 2 + playloadSize);
+  int playloadSizeCharacter = static_cast<int>(buffer[2 + playloadSize]);
+  std::string character(buffer.begin() + 3 + playloadSize,
+                        buffer.begin() + 3 + playloadSize + playloadSizeCharacter);
+  int playloadSizeCharacterTalking =
+      static_cast<int>(buffer[3 + playloadSize + playloadSizeCharacter]);
+  std::string characterTalking(buffer.begin() + 4 + playloadSize + playloadSizeCharacter,
+                               buffer.begin() + 4 + playloadSize + playloadSizeCharacter + playloadSizeCharacterTalking);
+  
+
+  cmd.dialogues.dialoguesPath = dialogues;
+  cmd.dialogues.characterPath = character;
+  cmd.dialogues.characterTalkingPath = characterTalking;
   queue->pushGameQueue(cmd);
 }
