@@ -7,11 +7,11 @@
 
 #pragma once
 
+#include "../../queue/Command.hpp"
+#include "../../queue/Queue.hpp"
 #include <cstdint>
 #include <iostream>
 #include <vector>
-#include "../../queue/Queue.hpp"
-#include "../../queue/Command.hpp"
 
 class IClient {
 public:

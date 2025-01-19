@@ -405,10 +405,13 @@ void CommandGame::freezeSpell(Command command, Queue *queue,
 }
 
 void CommandGame::connectionClosed(Command command, Queue *queue,
-                              std::shared_ptr<Registry> ecs, Window *window) {
+                                   std::shared_ptr<Registry> ecs,
+                                   Window *window) {
   window->addText("Connection lost.", 200, 350, 50, 50, 100,
-                  "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
-    window->addText("Please quit the game.", 215, 450, 50, 50, 75,
-                  "../src/graphical/assets/RTypefont.otf", {255, 255, 255, 255});
+                  "../src/graphical/assets/RTypefont.otf",
+                  {255, 255, 255, 255});
+  window->addText("Please quit the game.", 215, 450, 50, 50, 75,
+                  "../src/graphical/assets/RTypefont.otf",
+                  {255, 255, 255, 255});
   window->setAllowToInteract(false);
 }
