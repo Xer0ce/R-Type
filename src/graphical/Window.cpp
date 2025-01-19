@@ -68,7 +68,9 @@ void Window::init() {
   _spellDisable = loadTexture("../src/graphical/assets/freezeSpellDisable.png");
   _freezeOverlay = loadTexture("../src/graphical/assets/freezeOverlay.png");
   _deathBackground = loadTexture("../src/graphical/assets/deathBackground.png");
+  _winBackground = loadTexture("../src/graphical/assets/winBackground.png");
   _death = false;
+  _win = false;
   _rectCam = {1040, 0, 160, 120};
 
   int cameraCount = 0;
@@ -485,6 +487,18 @@ void Window::drawDeathBackground() {
   if (_death) {
     SDL_FRect deathRect = {0, 0, 1200, 800};
     SDL_RenderTexture(_renderer, _deathBackground, nullptr, &deathRect);
+  }
+}
+
+void Window::setWin(bool win) { _win = win; }
+
+bool Window::getWin() { return _win; }
+
+
+void Window::drawWinBackground() {
+  if (_win) {
+    SDL_FRect winRect = {0, 0, 1200, 800};
+    SDL_RenderTexture(_renderer, _winBackground, nullptr, &winRect);
   }
 }
 

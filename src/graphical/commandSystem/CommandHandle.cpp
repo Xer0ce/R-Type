@@ -65,6 +65,8 @@ CommandHandle::CommandHandle() {
                              Queue *queue) {
     dialogues(buffer, protocol, queue);
   };
+  _commandMap[0x18] = [this](std::vector<uint8_t> buffer, IClient *protocol,
+                             Queue *queue) { win(buffer, protocol, queue); };
 }
 
 CommandHandle::~CommandHandle() {}
@@ -288,5 +290,13 @@ void CommandHandle::dialogues(std::vector<uint8_t> buffer, IClient *protocol,
   cmd.dialogues.dialoguesPath = dialogues;
   cmd.dialogues.characterPath = character;
   cmd.dialogues.characterTalkingPath = characterTalking;
+  queue->pushGameQueue(cmd);
+}
+
+void CommandHandle::win(std::vector<uint8_t> buffer, IClient *protocol,
+                        Queue *queue) {
+  Command cmd;
+
+  cmd.type = CommandType::WIN;
   queue->pushGameQueue(cmd);
 }
