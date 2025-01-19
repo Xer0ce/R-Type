@@ -154,12 +154,15 @@ void EndLess::waveGestion() {
     int lastDigit = _waveNumber % 10;
 
     if (lastDigit == 5) {
+      killMeteorites();
       createMeteorites(5);
       loadMiniBoss();
     } else if (lastDigit == 0) {
+      killMeteorites();
       createMeteorites(8);
       loadBoss();
     } else {
+      killMeteorites();
       createMeteorites(3);
       loadClassic();
     }

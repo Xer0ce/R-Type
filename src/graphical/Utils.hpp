@@ -36,6 +36,7 @@ enum keyType {
   ENTER,
   ESCAPE,
   F,
+  C,
   NONE,
 };
 

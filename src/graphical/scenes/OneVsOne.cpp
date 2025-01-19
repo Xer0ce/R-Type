@@ -62,6 +62,12 @@ void OneVsOne::spell_system(std::vector<keyType> keys) {
   }
 }
 
+void OneVsOne::cam_system(keyType key) {
+  if (key == C) {
+    _window->setCameraFeed();
+  }
+}
+
 sceneType
 OneVsOne::loop(eventType event,
                std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
@@ -87,6 +93,7 @@ OneVsOne::loop(eventType event,
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
+    cam_system(keyOnce);
     if (_window->getFreezeEnable()) {
       if (_isFirstRoundSpell) {
         _unFreeze = now + std::chrono::seconds(2);
@@ -129,5 +136,6 @@ OneVsOne::loop(eventType event,
   }
   _window->drawDeathBackground();
   _window->drawText();
+  _window->displayCameraFeed();
   return sceneType::NO_SWITCH;
 }

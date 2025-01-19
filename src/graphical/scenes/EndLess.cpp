@@ -26,6 +26,12 @@ void EndLess::init() {
   _window->setBackgroundScrolling(true);
 }
 
+void EndLess::cam_system(keyType key) {
+  if (key == C) {
+    _window->setCameraFeed();
+  }
+}
+
 sceneType
 EndLess::loop(eventType event,
               std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
@@ -51,6 +57,7 @@ EndLess::loop(eventType event,
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
+    cam_system(keyOnce);
     auto &entityType = _ecs->get_components<EntityType>();
 
     _window->moveBackground();
@@ -81,5 +88,6 @@ EndLess::loop(eventType event,
   }
   _window->drawDeathBackground();
   _window->drawText();
+  _window->displayCameraFeed();
   return sceneType::NO_SWITCH;
 }

@@ -21,6 +21,11 @@ void Window::init() {
     exit(84);
   }
 
+  if (!SDL_Init(SDL_INIT_CAMERA)) {
+    std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
+
   if (!SDL_Init(SDL_INIT_AUDIO)) {
     std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
     exit(84);
@@ -73,6 +78,22 @@ void Window::init() {
   _freezeOverlay = loadTexture("../src/graphical/assets/freezeOverlay.png");
   _deathBackground = loadTexture("../src/graphical/assets/deathBackground.png");
   _death = false;
+  _rectCam = {1040, 0, 160, 120};
+
+  int cameraCount = 0;
+  SDL_CameraID *cameraIDs = SDL_GetCameras(&cameraCount);
+
+  if (!cameraIDs || cameraCount == 0) {
+    std::cerr << "No available cameras found!" << std::endl;
+    exit(84);
+  }
+
+  SDL_CameraID cameraID = cameraIDs[0];
+  _camera = SDL_OpenCamera(cameraID, NULL);
+  if (!_camera) {
+    std::cerr << "SDL_OpenCamera Error: " << SDL_GetError() << std::endl;
+    exit(84);
+  }
 
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
   addSound("../src/graphical/assets/sounds/shot.mp3", BULLET_SOUND, 15);
@@ -90,6 +111,7 @@ void Window::init() {
 }
 
 void Window::destroyWindow() {
+  SDL_CloseCamera(_camera);
   SDL_DestroyWindow(_window);
   Mix_CloseAudio();
   TTF_Quit();
@@ -229,9 +251,13 @@ keyType Window::catchKeyOnce() {
   const bool *keyState = SDL_GetKeyboardState(NULL);
 
   std::vector<std::pair<SDL_Scancode, keyType>> keys = {
-      {SDL_SCANCODE_UP, UP},         {SDL_SCANCODE_RIGHT, RIGHT},
-      {SDL_SCANCODE_DOWN, DOWN},     {SDL_SCANCODE_LEFT, LEFT},
-      {SDL_SCANCODE_ESCAPE, ESCAPE}, {SDL_SCANCODE_SPACE, SPACE}};
+      {SDL_SCANCODE_UP, UP},
+      {SDL_SCANCODE_RIGHT, RIGHT},
+      {SDL_SCANCODE_DOWN, DOWN},
+      {SDL_SCANCODE_LEFT, LEFT},
+      {SDL_SCANCODE_ESCAPE, ESCAPE},
+      {SDL_SCANCODE_SPACE, SPACE},
+      {SDL_SCANCODE_C, C}};
 
   for (const auto &key : keys) {
     SDL_Scancode scancode = key.first;
@@ -260,6 +286,8 @@ std::vector<keyType> Window::catchKey() {
     keys.push_back(SPACE);
   if (keyState[SDL_SCANCODE_F])
     keys.push_back(F);
+  if (keyState[SDL_SCANCODE_C])
+    keys.push_back(C);
   if (keys.empty())
     keys.push_back(NONE);
   return keys;
@@ -464,4 +492,74 @@ void Window::drawDeathBackground() {
     SDL_FRect deathRect = {0, 0, 1200, 800};
     SDL_RenderTexture(_renderer, _deathBackground, nullptr, &deathRect);
   }
+}
+
+void Window::displayCameraFeed() {
+  if (!_isCameraFeed)
+    return;
+  if (!_camera) {
+    std::cerr << "Error: Camera not initialized!" << std::endl;
+    return;
+  }
+
+  int permission = SDL_GetCameraPermissionState(_camera);
+  if (permission == 0) {
+    std::cerr << "Waiting for camera permission..." << std::endl;
+    return;
+  }
+  if (permission == -1) {
+    std::cerr << "Camera access denied!" << std::endl;
+    return;
+  }
+
+  SDL_Surface *surfaceCamera = SDL_AcquireCameraFrame(_camera, NULL);
+  if (!surfaceCamera) {
+
+    SDL_RenderTexture(_renderer, _textureCamera, NULL, &_rectCam);
+    SDL_SetRenderDrawColor(_renderer, 0, 255, 0, 255);
+    SDL_RenderRect(_renderer, &_rectCam);
+    return;
+  }
+
+  static bool logOnce = true;
+  if (logOnce) {
+    std::cout << "Camera Frame: " << surfaceCamera->w << "x" << surfaceCamera->h
+              << " Format: " << SDL_GetPixelFormatName(surfaceCamera->format)
+              << std::endl;
+    logOnce = false;
+  }
+
+  static int frameDropCount = 0;
+  if (frameDropCount < 10) {
+    frameDropCount++;
+    SDL_ReleaseCameraFrame(_camera, surfaceCamera);
+    return;
+  }
+
+  if (!_textureCamera || surfaceCamera->w != _textureCamWidth ||
+      surfaceCamera->h != _textureCamHeight) {
+    if (_textureCamera) {
+      SDL_DestroyTexture(_textureCamera);
+    }
+    _textureCamera = SDL_CreateTexture(_renderer, surfaceCamera->format,
+                                       SDL_TEXTUREACCESS_STREAMING,
+                                       surfaceCamera->w, surfaceCamera->h);
+    if (!_textureCamera) {
+      std::cerr << "Error: Failed to create camera texture: " << SDL_GetError()
+                << std::endl;
+      SDL_ReleaseCameraFrame(_camera, surfaceCamera);
+      return;
+    }
+
+    _textureCamWidth = surfaceCamera->w;
+    _textureCamHeight = surfaceCamera->h;
+  }
+
+  SDL_UpdateTexture(_textureCamera, NULL, surfaceCamera->pixels,
+                    surfaceCamera->pitch);
+
+  SDL_RenderTexture(_renderer, _textureCamera, NULL, &_rectCam);
+  SDL_SetRenderDrawColor(_renderer, 0, 255, 0, 255);
+  SDL_RenderRect(_renderer, &_rectCam);
+  SDL_ReleaseCameraFrame(_camera, surfaceCamera);
 }

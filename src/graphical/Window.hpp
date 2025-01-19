@@ -154,6 +154,12 @@ public:
 
   void drawDeathBackground();
 
+  SDL_Camera *getCamera() { return _camera; };
+
+  void displayCameraFeed();
+
+  void setCameraFeed() { _isCameraFeed = !_isCameraFeed; }
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -165,6 +171,9 @@ private:
   SDL_Texture *_freezeOverlay;
   SDL_Texture *_deathBackground;
   bool _death;
+  SDL_Texture *_textureCamera;
+  SDL_FRect _rectCam;
+  SDL_Camera *_camera;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
@@ -178,4 +187,7 @@ private:
   float _windowHeight;
   bool _spellIsEnable = true;
   bool _freezeIsEnable = false;
+  bool _isCameraFeed = false;
+  int _textureCamWidth;
+  int _textureCamHeight;
 };
