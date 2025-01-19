@@ -10,10 +10,10 @@
 #include "Button.hpp"
 #include "Cutscene.hpp"
 #include "Dropdown.hpp"
+#include "FireAnimation.hpp"
 #include "Sound.hpp"
 #include "Text.hpp"
 #include "TextInput.hpp"
-#include "FireAnimation.hpp"
 #include "Utils.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>

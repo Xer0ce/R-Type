@@ -570,7 +570,6 @@ void Window::setPlayingCutscene() {
   }
 }
 
-
 void Window::initFireAnimation(bool is1V1) {
   FireAnimation fireAnimation(_renderer, is1V1);
 
