@@ -65,6 +65,7 @@ bool EndLess::waveIsClear() {
       return false;
     }
   }
+  killMeteorites();
   return true;
 }
 
@@ -102,7 +103,7 @@ void EndLess::killMeteorites() {
 
   for (std::size_t i = 0; i < entityType.size(); i++) {
     if (entityType[i] == EntityType::Meteorite) {
-      _ecs->kill_entity(Entities(i));
+      _ecs->kill_entity(static_cast<Entities>(i));
       cmd.type = CommandType::KILLENTITY;
       cmd.killEntity.entityId = i;
       _queue->pushTcpQueue(cmd);
@@ -154,15 +155,12 @@ void EndLess::waveGestion() {
     int lastDigit = _waveNumber % 10;
 
     if (lastDigit == 5) {
-      killMeteorites();
       createMeteorites(5);
       loadMiniBoss();
     } else if (lastDigit == 0) {
-      killMeteorites();
       createMeteorites(8);
       loadBoss();
     } else {
-      killMeteorites();
       createMeteorites(3);
       loadClassic();
     }
