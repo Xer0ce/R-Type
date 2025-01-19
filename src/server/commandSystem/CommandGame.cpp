@@ -48,10 +48,10 @@ const std::size_t velocityShoot[] = {
 };
 
 const std::size_t playerHealth[] = {
-  100,
-  200,
-  75,
-  125,
+    100,
+    200,
+    75,
+    125,
 };
 
 void CommandGame::executeCommandGame(Command command, Queue *queue,
@@ -194,7 +194,9 @@ void CommandGame::connectLobby(Command command, Queue *queue, Registry *ecs) {
   auto &nicknames = ecs->get_components<Nickname>();
 
   auto player = create_entity<EntityType::Player>(
-      *ecs, Position(0, 0), Velocity(), Health(playerHealth[command.connectLobby.spaceshipId]), MaxHealth(playerHealth[command.connectLobby.spaceshipId]),
+      *ecs, Position(0, 0), Velocity(),
+      Health(playerHealth[command.connectLobby.spaceshipId]),
+      MaxHealth(playerHealth[command.connectLobby.spaceshipId]),
       Draw({0, 0, 0, 0}, {0, 0, 0, 0}),
       Nickname(command.connectLobby.Nickname, {0, 0, 0, 0}, nullptr),
       Property(command.connectLobby.spaceshipId, command.connectLobby.shootId,
