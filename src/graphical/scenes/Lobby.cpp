@@ -15,7 +15,7 @@ Lobby::Lobby() {
 Lobby::~Lobby() {}
 
 void Lobby::init() {
-  _window->addButton(800, 570, 150, 35, "Start");
+  _window->addButton(710, 510, 150, 35, "Start");
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/lobby.png"));
 }
@@ -65,5 +65,6 @@ Lobby::loop(eventType event,
   _window->drawBackground();
   _window->drawButton();
   _window->drawText();
+
   return sceneType::NO_SWITCH;
 }

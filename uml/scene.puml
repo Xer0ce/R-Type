@@ -1,0 +1,60 @@
+@startuml
+
+class IScene {
+    + IScene() = default
+    + ~IScene() = default
+    * virtual loop() = 0
+    * virtual setEcs(Registry *ecs) = 0
+    * virtual setWindow(Window *window) = 0
+    * virtual setQueue(Queue *queue) = 0
+}
+
+class AScene {
+    + AScene() = default
+    + ~AScene() = default
+    * void setEcs(Registry *ecs) override
+    * void setWindow(Window *window) override
+    * void setQueue(Queue *queue) override
+    - Window *_window
+    - Queue *_qeueu
+    - Registry *_ecs
+}
+
+class Menu {
+    + Menu()
+    + ~Menu()
+    * void loop() override
+}
+
+class Lobby {
+    + Lobby()
+    + ~Lobby()
+    * void loop() override
+}
+
+class OneVsOne {
+    + OneVsOne()
+    + ~OneVsOne()
+    * void loop() override
+}
+
+class Endless {
+    + Endless()
+    + ~Endless()
+    * void loop() override
+}
+
+class History {
+    + History()
+    + ~History()
+    * void loop() override
+}
+
+IScene --|> AScene
+AScene --|> Menu
+AScene --|> Lobby
+AScene --|> OneVsOne
+AScene --|> Endless
+AScene --|> History
+
+@enduml

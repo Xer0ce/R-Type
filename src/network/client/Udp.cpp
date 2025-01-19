@@ -42,7 +42,7 @@ void Udp::sendToServer(std::vector<uint8_t> data) {
   }
 }
 
-bool Udp::receiveFromServer() {
+bool Udp::receiveFromServer(Queue *queue) {
   FD_ZERO(&_readfds);
   FD_SET(_socket, &_readfds);
 

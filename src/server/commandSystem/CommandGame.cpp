@@ -47,6 +47,13 @@ const std::size_t velocityShoot[] = {
     40,
 };
 
+const std::size_t playerHealth[] = {
+    100,
+    200,
+    75,
+    125,
+};
+
 void CommandGame::executeCommandGame(Command command, Queue *queue,
                                      Registry *ecs) {
   if (_commandMap.find(command.type) != _commandMap.end()) {
@@ -116,7 +123,18 @@ void CommandGame::connect(Command command, Queue *queue, Registry *ecs) {
 }
 
 void CommandGame::disconnect(Command command, Queue *queue, Registry *ecs) {
-  std::cout << "disconnect command" << std::endl;
+  auto &entityType = ecs->get_components<EntityType>();
+  auto &properties = ecs->get_components<Property>();
+
+  for (std::size_t i = 0; i < entityType.size(); ++i) {
+    if (entityType[i].has_value() && entityType[i] == EntityType::Player) {
+      if (properties[i]->sockedId == command.disconnect.playerId) {
+        ecs->kill_entity(static_cast<Entities>(i));
+        command.disconnect.playerId = i;
+        queue->pushTcpQueue(command);
+      }
+    }
+  }
 }
 
 void CommandGame::move(Command command, Queue *queue, Registry *ecs) {
@@ -142,6 +160,7 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
 
   auto &entityType = ecs->get_components<EntityType>();
   auto &properties = ecs->get_components<Property>();
+  auto &enemyproperty = ecs->get_components<EnemyProperty>();
   int shootId = -1;
 
   for (std::size_t i = 0; i < entityType.size(); ++i) {
@@ -150,6 +169,13 @@ void CommandGame::shoot(Command command, Queue *queue, Registry *ecs) {
         if (i == command.shoot.playerId) {
           if (properties[i].has_value()) {
             shootId = properties[i]->shootId;
+          }
+        }
+      }
+      if (entityType[i] && entityType[i] == EntityType::Enemy) {
+        if (i == command.shoot.playerId) {
+          if (enemyproperty[i].has_value()) {
+            shootId = static_cast<int>(enemyproperty[i]->enemyType);
           }
         }
       }
@@ -176,7 +202,9 @@ void CommandGame::connectLobby(Command command, Queue *queue, Registry *ecs) {
   auto &nicknames = ecs->get_components<Nickname>();
 
   auto player = create_entity<EntityType::Player>(
-      *ecs, Position(0, 0), Velocity(), Health(),
+      *ecs, Position(0, 0), Velocity(),
+      Health(playerHealth[command.connectLobby.spaceshipId]),
+      MaxHealth(playerHealth[command.connectLobby.spaceshipId]),
       Draw({0, 0, 0, 0}, {0, 0, 0, 0}),
       Nickname(command.connectLobby.Nickname, {0, 0, 0, 0}, nullptr),
       Property(command.connectLobby.spaceshipId, command.connectLobby.shootId,

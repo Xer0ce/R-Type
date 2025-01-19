@@ -24,6 +24,13 @@ void EndLess::init() {
   _queue->pushTcpQueue(command);
   _window->playSound(MICHOU_REMIX_WINTERZUUKO, -1);
   _window->setBackgroundScrolling(true);
+  _window->initFireAnimation(false);
+}
+
+void EndLess::cam_system(keyType key) {
+  if (key == C) {
+    _window->setCameraFeed();
+  }
 }
 
 sceneType
@@ -51,8 +58,7 @@ EndLess::loop(eventType event,
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
-    auto &entityType = _ecs->get_components<EntityType>();
-
+    cam_system(keyOnce);
     _window->moveBackground();
     if (_window->getAllowToInteract()) {
       now = std::chrono::steady_clock::now();
@@ -60,25 +66,29 @@ EndLess::loop(eventType event,
       control_system(movementKeys, *_ecs);
       shoot_system(keys, *_ecs, _queue, _nextBullet);
       if (now >= _nextBullet) {
-        _nextBullet = now + std::chrono::milliseconds(150);
+        _nextBullet = now + std::chrono::milliseconds(300);
       }
       position_system_graphic(1, *_ecs, _queue);
       enemy_system(_ecs.get());
       display_infos(_ecs.get());
     }
+    _window->changeFireAnimation();
   }
   _window->drawBackground();
-  _window->drawText();
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
     _window->draw(draw[i]->texture, draw[i]->rect);
-    if (nicknames[i].has_value()) {
+    if (nicknames[i].has_value() && _window->getAllowToInteract()) {
+      _window->drawFireAnimation(positions[i]->x, positions[i]->y);
       _window->draw(nicknames[i]->texture, nicknames[i]->rect);
     }
-    if (lifebars[i].has_value()) {
+    if (lifebars[i].has_value() && _window->getAllowToInteract()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
   }
+  _window->drawDeathBackground();
+  _window->drawText();
+  _window->displayCameraFeed();
   return sceneType::NO_SWITCH;
 }

@@ -7,14 +7,16 @@
 
 #include "GlobalSystem.hpp"
 
-void collision_system_1v1(Registry *ecs, Queue *queue) {
+void collision_system_1v1(Registry *ecs, Queue *queue, bool freindlyFire) {
   auto &position = ecs->get_components<Position>();
   auto &property = ecs->get_components<Property>();
+  auto &enemyProperty = ecs->get_components<EnemyProperty>();
   auto &playerId = ecs->get_components<PlayerId>();
   auto &entityType = ecs->get_components<EntityType>();
   auto &health = ecs->get_components<Health>();
   Command cmd;
   int bulletDmg[] = {4, 7, 7, 10};
+  int enemybulletDmg[] = {10, 30, 50};
 
   for (std::size_t i = 0; i < position.size(); i++) {
     if (entityType[i] == EntityType::Projectile) {
@@ -29,19 +31,24 @@ void collision_system_1v1(Registry *ecs, Queue *queue) {
       for (std::size_t j = 0; j < position.size(); j++) {
         if (entityType[j] == EntityType::Projectile) {
           if (i != playerId[j]->id) {
+            if (entityType[playerId[j]->id] == EntityType::Player &&
+                !freindlyFire)
+              continue;
             if (position[i]->x < position[j]->x + 50 &&
                 position[i]->x + 50 > position[j]->x &&
                 position[i]->y < position[j]->y + 50 &&
                 position[i]->y + 50 > position[j]->y) {
-              ecs->kill_entity(static_cast<Entities>(j));
-              health[i]->hp -= 10;
+              health[i]->hp -= enemybulletDmg[static_cast<int>(
+                  enemyProperty[i]->damageType)];
               cmd.type = HIT;
-              cmd.hit.damage = 10;
+              cmd.hit.damage = enemybulletDmg[static_cast<int>(
+                  enemyProperty[i]->damageType)];
               cmd.hit.entityHit = i;
               queue->pushTcpQueue(cmd);
               cmd.type = CommandType::KILLENTITY;
               cmd.killEntity.entityId = j;
               queue->pushTcpQueue(cmd);
+              ecs->kill_entity(static_cast<Entities>(j));
               if (health[i]->hp <= 0) {
                 ecs->kill_entity(static_cast<Entities>(i));
                 cmd.type = CommandType::KILLENTITY;

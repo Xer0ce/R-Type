@@ -32,6 +32,8 @@ void OneVsOne::init() {
   command.connect1v1.Nickname = "Player";
   _queue->pushTcpQueue(command);
   _window->playSound(soundType::ENDLESS_MUSIC, -1);
+  _window->initFireAnimation(true);
+  _window->initFireAnimation(false);
 }
 
 void OneVsOne::spell_system(std::vector<keyType> keys) {
@@ -62,6 +64,12 @@ void OneVsOne::spell_system(std::vector<keyType> keys) {
   }
 }
 
+void OneVsOne::cam_system(keyType key) {
+  if (key == C) {
+    _window->setCameraFeed();
+  }
+}
+
 sceneType
 OneVsOne::loop(eventType event,
                std::chrono::time_point<std::chrono::steady_clock> deltaTime) {
@@ -87,6 +95,7 @@ OneVsOne::loop(eventType event,
   keyType keyOnce = _window->catchKeyOnce();
 
   if (now > deltaTime) {
+    cam_system(keyOnce);
     if (_window->getFreezeEnable()) {
       if (_isFirstRoundSpell) {
         _unFreeze = now + std::chrono::seconds(2);
@@ -110,23 +119,34 @@ OneVsOne::loop(eventType event,
     }
     position_system_graphic(1, *_ecs, _queue);
     display_infos(_ecs.get());
+    _window->changeFireAnimation();
   }
   _window->drawBackground();
-  _window->drawText();
   for (std::size_t i = 0; i < draw.size(); ++i) {
     if (!draw[i].has_value())
       continue;
     _window->draw(draw[i]->texture, draw[i]->rect);
-    if (nicknames[i].has_value()) {
+    if (nicknames[i].has_value() && _window->getAllowToInteract()) {
       _window->draw(nicknames[i]->texture, nicknames[i]->rect);
     }
-    if (lifebars[i].has_value() && control[i].has_value()) {
+    if (lifebars[i].has_value() && control[i].has_value() &&
+        _window->getAllowToInteract()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
+    }
+    if (control[i].has_value()) {
+      _window->drawFireAnimation1V1(positions[i]->x, positions[i]->y);
+    }
+    if (nicknames[i].has_value() && !control[i].has_value()) {
+      _window->drawFireAnimation(positions[i]->x, positions[i]->y);
     }
   }
   _window->drawSpell();
   if (_window->getFreezeEnable()) {
     _window->drawFreezeOverlay();
   }
+  _window->drawDeathBackground();
+  _window->drawWinBackground();
+  _window->drawText();
+  _window->displayCameraFeed();
   return sceneType::NO_SWITCH;
 }

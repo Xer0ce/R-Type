@@ -23,6 +23,7 @@ enum CommandType {
   CREATEENEMY,
   EMPTY,
   STARTGAME,
+  STARTGAMEHISTORY,
   CONNECTLOBBY,
   GETUSERSLOBBY,
   NEWPLAYERLOBBY,
@@ -32,6 +33,9 @@ enum CommandType {
   CONNECT1V1,
   CREATEMETEORITE,
   FREEZESPELL,
+  DIALOGUES,
+  CONNECTIONCLOSED,
+  WIN,
 };
 
 struct createEnemy {
@@ -143,6 +147,22 @@ struct startGame {
   int gamemode;
 };
 
+struct startGameHistory {
+  std::string level;
+  std::string dialog;
+};
+
+struct dialogues {
+  std::string dialoguesPath;
+  std::string characterPath;
+  std::string characterTalkingPath;
+};
+
+struct win {
+  int socket;
+  int entityId;
+};
+
 struct Command {
   CommandType type;
   struct Connect connect;
@@ -163,5 +183,9 @@ struct Command {
   struct freezeSpell freezeSpell;
   struct createMeteorite createMeteorite;
   struct startGame startGame;
+  struct startGameHistory startGameHistory;
+  struct Disconnect disconnect;
+  struct dialogues dialogues;
+  struct win win;
   int id;
 };

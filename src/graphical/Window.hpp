@@ -8,7 +8,9 @@
 #pragma once
 
 #include "Button.hpp"
+#include "Cutscene.hpp"
 #include "Dropdown.hpp"
+#include "FireAnimation.hpp"
 #include "Sound.hpp"
 #include "Text.hpp"
 #include "TextInput.hpp"
@@ -116,6 +118,8 @@ public:
 
   void stopSound(soundType type);
 
+  bool isSoundFinished(soundType type);
+
   bool isBackgroundScrolling() { return _isBackgroundScrolling; }
 
   void setBackgroundScrolling(bool scrolling) {
@@ -150,6 +154,45 @@ public:
 
   std::string getTextInput(int menu);
 
+  void setDeath(bool death);
+
+  void drawDeathBackground();
+
+  void setWin(bool win);
+
+  bool getWin();
+
+  void drawWinBackground();
+
+  SDL_Camera *getCamera() { return _camera; };
+
+  void displayCameraFeed();
+
+  void setCameraFeed() { _isCameraFeed = !_isCameraFeed; }
+
+  void createCutscene(std::string soundPath, std::string texturePath, int x,
+                      int y, int width, int height);
+
+  void playCutscene();
+
+  void setPlayingCutscene();
+
+  void stopCutScenes();
+
+  void initFireAnimation(bool is1V1 = false);
+
+  void drawFireAnimation(float x, float y);
+
+  void drawFireAnimation1V1(float x, float y);
+
+  void destroyFireAnimation();
+
+  void changeFireAnimation();
+
+  void setConnectionClosed(bool connectionClosed) {
+    _connectionClosed = connectionClosed;
+  }
+
 private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
@@ -159,11 +202,20 @@ private:
   SDL_Texture *_spell;
   SDL_Texture *_spellDisable;
   SDL_Texture *_freezeOverlay;
+  SDL_Texture *_deathBackground;
+  SDL_Texture *_winBackground;
+  bool _death;
+  bool _win;
+  SDL_Texture *_textureCamera;
+  SDL_FRect _rectCam;
+  SDL_Camera *_camera;
   std::vector<Text> _texts;
   std::vector<Button> _buttons;
   std::vector<std::unique_ptr<Dropdown>> _dropdowns;
   std::vector<std::unique_ptr<Sound>> _sounds;
   std::vector<std::unique_ptr<TextInput>> _textInputs;
+  std::vector<FireAnimation> _fireAnimations;
+  std::vector<FireAnimation> _fireAnimations1V1;
   bool _allowToInteract;
   float _bgOffset = 0;
   float _bgScrollSpeed = 5.0f;
@@ -172,4 +224,9 @@ private:
   float _windowHeight;
   bool _spellIsEnable = true;
   bool _freezeIsEnable = false;
+  std::vector<Cutscene> _cutscenes;
+  bool _isCameraFeed = false;
+  int _textureCamWidth;
+  int _textureCamHeight;
+  bool _connectionClosed = false;
 };

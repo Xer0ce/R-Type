@@ -2,18 +2,30 @@
   "enemies": [
     {
       "type": "Pion",
-      "number": 10,
-      "ia": "Aggressive"
-    },
-    {
-      "type": "Balourd",
-      "number": 0,
-      "ia": "Aggressive"
+      "number": 4,
+      "ia": "Passive",
+      "frequency": "Slow"
     },
     {
       "type": "Zinzolin",
-      "number": 0,
-      "ia": "Aggressive"
+      "number": 3,
+      "ia": "Aggressive",
+      "frequency": "High"
+    },
+    {
+      "type": "Balourd",
+      "number": 2,
+      "ia": "Balzy",
+      "frequency": "Turret"
+    },
+    {
+      "type": "Boss",
+      "number": 2,
+      "ia": "Balzy",
+      "frequency": "Turret"
     }
-  ]
+  ],
+  "dialogues": "../src/game/config/history/sounds/audio6.mp3",
+  "character": "../src/game/config/history/caracter/Inoxtag.png",
+  "talkingCharacter": "../src/game/config/history/caracter/InoxtagTalking.png"
 }

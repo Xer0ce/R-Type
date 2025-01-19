@@ -44,8 +44,16 @@ void Server::listen(IProtocol *protocol) {
         binaryData.push_back(0xFF);
         protocol->sendDataToAll(binaryData);
       }
+      if (command.type == STARTGAMEHISTORY) {
+        _scenes[sceneType::HISTORY]->setLevel(command.startGameHistory.level);
+        std::vector<uint8_t> binaryData;
+        binaryData.push_back(0x09);
+        binaryData.push_back(static_cast<uint8_t>(gamemode));
+        binaryData.push_back(0xFF);
+        protocol->sendDataToAll(binaryData);
+      }
     }
-    if (protocol->listenSocket()) {
+    if (protocol->listenSocket(_queue.get())) {
       std::vector<uint8_t> buffer = protocol->getBuffer();
 
       commandHandle.executeCommandHandle(buffer[0], buffer, protocol,
@@ -109,6 +117,7 @@ void Server::load_component() {
   _ecs->register_component<FlatVelocity>();
   _ecs->register_component<Draw>();
   _ecs->register_component<Health>();
+  _ecs->register_component<MaxHealth>();
   _ecs->register_component<EntityType>();
   _ecs->register_component<Control>();
   _ecs->register_component<EnemyProperty>();

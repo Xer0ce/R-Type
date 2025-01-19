@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "LaunchServer.hpp"
 #include <iostream>
 #include <string>
 #include <thread>
@@ -29,7 +30,10 @@ void launchServer(int gamemode) {
   std::cout << "Server launched in background" << std::endl;
 }
 
-void killAllServer() {
+void killAllServer(bool isHost) {
+  if (!isHost)
+    return;
+
   std::system("pkill r-type_server");
-  std::cout << "KILLING SERVER" << std::endl;
+  std::cout << "Server killed" << std::endl;
 }

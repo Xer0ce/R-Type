@@ -47,19 +47,24 @@ CommandGame::CommandGame() {
   _commandMap[CommandType::CREATEMETEORITE] =
       [this](Command command, Queue *queue, std::shared_ptr<Registry> ecs,
              Window *window) { createMeteorite(command, queue, ecs, window); };
+  _commandMap[CommandType::CONNECTIONCLOSED] =
+      [this](Command command, Queue *queue, std::shared_ptr<Registry> ecs,
+             Window *window) { connectionClosed(command, queue, ecs, window); };
+  _commandMap[CommandType::WIN] =
+      [this](Command command, Queue *queue, std::shared_ptr<Registry> ecs,
+             Window *window) { win(command, queue, ecs, window); };
 }
 
 CommandGame::~CommandGame() {}
 
 const std::string pathSpaceship[] = {
     "../src/graphical/assets/spaceship/michou.png",
-    "../src/graphical/assets/spaceship/inox.png",
     "../src/graphical/assets/spaceship/valouz.png",
+    "../src/graphical/assets/spaceship/inox.png",
     "../src/graphical/assets/spaceship/bouzi.png",
 };
 
 const std::string pathSpaceshipEnemy[] = {
-    "../src/graphical/assets/enemy/enemy1.png",
     "../src/graphical/assets/enemy/enemy1.png",
     "../src/graphical/assets/enemy/enemy2.png",
     "../src/graphical/assets/enemy/enemy3.png",
@@ -91,6 +96,13 @@ const std::size_t velocityShoot[] = {
     40,
 };
 
+const std::size_t playerHealth[] = {
+    100,
+    200,
+    75,
+    125,
+};
+
 void CommandGame::executeCommandGame(Command command, Queue *queue,
                                      std::shared_ptr<Registry> ecs,
                                      Window *window) {
@@ -118,7 +130,8 @@ void CommandGame::connect(Command command, Queue *queue,
   auto player = create_entity<EntityType::Player>(
       *ecs,
       Position(command.repConnect.positionX, command.repConnect.positionY),
-      Velocity(), Health(100),
+      Velocity(), Health(playerHealth[command.repConnect.spaceshipId]),
+      MaxHealth(playerHealth[command.repConnect.spaceshipId]),
       Draw({0, 255, 0, 255},
            {(int)command.repConnect.positionX,
             (int)command.repConnect.positionY, 50, 50},
@@ -140,7 +153,7 @@ void CommandGame::connect(Command command, Queue *queue,
 
 void CommandGame::disconnect(Command command, Queue *queue,
                              std::shared_ptr<Registry> ecs, Window *window) {
-  std::cout << "disconnect command" << std::endl;
+  ecs->kill_entity(static_cast<Entities>(command.disconnect.playerId));
 }
 
 void CommandGame::move(Command command, Queue *queue,
@@ -162,9 +175,16 @@ void CommandGame::move(Command command, Queue *queue,
 void CommandGame::killEntity(Command command, Queue *queue,
                              std::shared_ptr<Registry> ecs, Window *window) {
   auto &entities = ecs->get_components<EntityType>();
+  auto &control = ecs->get_components<Control>();
 
   for (std::size_t i = 0; i < entities.size(); ++i) {
     if (i == command.killEntity.entityId) {
+      if (control[i].has_value()) {
+        window->addText("You are dead", 280, 350, 50, 50, 100,
+                        "../src/graphical/assets/RTypefont.otf",
+                        {170, 0, 0, 0});
+        window->setDeath(true);
+      }
       ecs->kill_entity(static_cast<Entities>(command.killEntity.entityId));
     }
   }
@@ -186,26 +206,27 @@ void CommandGame::createEnemy(Command command, Queue *queue,
   std::pair<int, int> enemy_vel_tab[] = {
       {5, 5}, {2, 2}, {10, 10}, {2, 5}, {0, 1}};
   int enemy_hp[] = {30, 50, 25, 100, 300};
+  std::pair<float, float> lifebarPos[] = {
+      {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}};
   std::pair<int, int> enemy_vel =
       enemy_vel_tab[static_cast<int>(command.createEnemy.p_enemy.enemyType)];
 
-  std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA : "
-            << enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)]
-            << std::endl;
   auto enemy = create_entity<EntityType::Enemy>(
       *ecs,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
       Velocity(0, 0), FlatVelocity(enemy_vel.first, enemy_vel.second),
-      Health(1),
+      Health(enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)]),
+      MaxHealth(
+          enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)]),
       Draw({0, 0, 0, 0},
            {(int)command.createEnemy.positionX,
             (int)command.createEnemy.positionY, 100, 100},
            enemyTexture),
       EnemyProperty(command.createEnemy.p_enemy),
       std::optional<std::size_t>(command.createEnemy.enemyId),
-      std::optional<LifeBar>(
-          LifeBar(100, {(command.createEnemy.positionX),
-                        (command.createEnemy.positionY), 50, 5})));
+      std::optional<LifeBar>(LifeBar(
+          enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)],
+          {0, 0, 50, 5})));
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue,
@@ -223,7 +244,8 @@ void CommandGame::newPlayer(Command command, Queue *queue,
 
   auto player = create_entity<EntityType::Player>(
       *ecs, Position(command.newPlayer.positionX, command.newPlayer.positionY),
-      Velocity(), Health(100),
+      Velocity(), Health(playerHealth[command.newPlayer.spaceshipId]),
+      MaxHealth(playerHealth[command.newPlayer.spaceshipId]),
       Draw({0, 255, 0, 255},
            {(int)command.newPlayer.positionX, (int)command.newPlayer.positionY,
             50, 50},
@@ -286,7 +308,7 @@ void CommandGame::shoot(Command command, Queue *queue,
 void CommandGame::getUsersLobby(Command command, Queue *queue,
                                 std::shared_ptr<Registry> ecs, Window *window) {
   int x = 370;
-  int y = 180;
+  int y = 280;
 
   y += window->getNumberText() * 60;
 
@@ -383,4 +405,26 @@ void CommandGame::freezeSpell(Command command, Queue *queue,
                               std::shared_ptr<Registry> ecs, Window *window) {
   window->setAllowToInteract(false);
   window->changeFreezeStatus(true);
+}
+
+void CommandGame::connectionClosed(Command command, Queue *queue,
+                                   std::shared_ptr<Registry> ecs,
+                                   Window *window) {
+  window->addText("Connection lost.", 200, 350, 50, 50, 100,
+                  "../src/graphical/assets/RTypefont.otf",
+                  {255, 255, 255, 255});
+  window->addText("Please quit the game.", 215, 450, 50, 50, 75,
+                  "../src/graphical/assets/RTypefont.otf",
+                  {255, 255, 255, 255});
+  window->setAllowToInteract(false);
+}
+
+void CommandGame::win(Command command, Queue *queue,
+                      std::shared_ptr<Registry> ecs, Window *window) {
+  if (window->getWin()) {
+    return;
+  }
+  std::cout << "WIN DANS LE GRAOHIQUYE" << std::endl;
+  window->setWin(true);
+  ecs->kill_entity(static_cast<Entities>(command.win.entityId));
 }

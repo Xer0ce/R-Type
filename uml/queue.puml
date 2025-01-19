@@ -1,0 +1,21 @@
+@startuml
+
+class Queue {
+    + Queue()
+    + ~Queue()
+
+    - std::queue<argument> _gameQueue
+    - std::queue<argument> _tcpQueue
+    - std::queue<argument> _udpQueue
+
+    * void pushGameQueue(argument)
+    * argument popGameQueue()
+
+    * void pushTcpQueue(argument)
+    * argument popTcpQueue()
+
+    * void pushUdpQueue(argument)
+    * argument popUdpQueue()
+}
+
+@enduml
