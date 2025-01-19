@@ -102,13 +102,11 @@ sceneType LobbyHistory::loop(
       if (button.isClicked(mouseX, mouseY)) {
         if (button.getText() == "Start") {
           Command command;
-          std::cout << "Start game" << std::endl;
           command.type = CommandType::STARTGAMEHISTORY;
           command.startGameHistory.level = _selectedLevel;
           _queue->pushTcpQueue(command);
         }
         _selectedLevel = button.getTag();
-        std::cout << "Selected level: " << _selectedLevel << std::endl;
         _window->deleteButtons();
         addLevelsButtons();
         if (button.getTag() == _selectedLevel) {

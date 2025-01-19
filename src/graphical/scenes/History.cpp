@@ -24,7 +24,7 @@ void History::init() {
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
   _window->setBackgroundScrolling(true);
-  //_window->playSound(SQUEEZIE, -1);
+  _window->initFireAnimation(false);
 }
 
 void History::cam_system(keyType key) {
@@ -78,9 +78,11 @@ History::loop(eventType event,
       enemy_system(_ecs.get());
       display_infos(_ecs.get());
     }
+    _window->changeFireAnimation();
   }
   _window->drawBackground();
   _window->drawText();
+
   if (_window->isSoundFinished(HISTORY_SOUND)) {
     _window->stopCutScenes();
   } else {
@@ -95,6 +97,7 @@ History::loop(eventType event,
       continue;
     _window->draw(draw[i]->texture, draw[i]->rect);
     if (nicknames[i].has_value() && _window->getAllowToInteract()) {
+      _window->drawFireAnimation(positions[i]->x, positions[i]->y);
       _window->draw(nicknames[i]->texture, nicknames[i]->rect);
     }
     if (lifebars[i].has_value() && _window->getAllowToInteract()) {
