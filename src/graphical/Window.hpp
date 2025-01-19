@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Button.hpp"
+#include "Cutscene.hpp"
 #include "Dropdown.hpp"
 #include "Sound.hpp"
 #include "Text.hpp"
@@ -16,7 +17,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
-#include "Cutscene.hpp"
 #include <cstddef>
 #include <memory>
 #include <vector>
@@ -162,7 +162,7 @@ public:
   void setCameraFeed() { _isCameraFeed = !_isCameraFeed; }
 
   void createCutscene(std::string soundPath, std::string texturePath, int x,
-                            int y, int width, int height);
+                      int y, int width, int height);
 
   void playCutscene();
 

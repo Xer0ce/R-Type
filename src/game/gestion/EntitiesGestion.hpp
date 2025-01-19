@@ -7,15 +7,16 @@
 #include <random>
 
 Entities create_player_entity(Registry &r, Position position, Velocity velocity,
-                              Health health, MaxHealth maxHealth, Draw draw, Nickname nickname,
-                              Property property,
+                              Health health, MaxHealth maxHealth, Draw draw,
+                              Nickname nickname, Property property,
                               std::optional<Control> control = std::nullopt,
                               std::optional<std::size_t> id = std::nullopt,
                               std::optional<LifeBar> lifeBar = std::nullopt);
 
 Entities create_enemy_entity(Registry &r, Position position, Velocity velocity,
-                             FlatVelocity flatVelocity, Health health, MaxHealth maxHealth,
-                             Draw draw, EnemyProperty enemy,
+                             FlatVelocity flatVelocity, Health health,
+                             MaxHealth maxHealth, Draw draw,
+                             EnemyProperty enemy,
                              std::optional<std::size_t> id = std::nullopt,
                              std::optional<LifeBar> lifeBar = std::nullopt);
 

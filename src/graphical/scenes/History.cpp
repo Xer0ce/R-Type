@@ -24,7 +24,9 @@ void History::init() {
   _window->setBackground(
       _window->loadTexture("../src/graphical/assets/level1.png"));
   _window->setBackgroundScrolling(true);
-  _window->createCutscene("../src/game/config/history/caracter/SqueezieTalking.png", "../src/game/config/history/caracter/Squeezie.png", 50, 50, 100, 100);
+  _window->createCutscene(
+      "../src/game/config/history/caracter/SqueezieTalking.png",
+      "../src/game/config/history/caracter/Squeezie.png", 50, 50, 100, 100);
   _window->playSound(SQUEEZIE, -1);
 }
 

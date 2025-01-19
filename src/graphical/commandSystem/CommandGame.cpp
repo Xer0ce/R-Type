@@ -193,7 +193,8 @@ void CommandGame::createEnemy(Command command, Queue *queue,
   std::pair<int, int> enemy_vel_tab[] = {
       {5, 5}, {2, 2}, {10, 10}, {2, 5}, {0, 1}};
   int enemy_hp[] = {30, 50, 25, 100, 300};
-  std::pair<float, float> lifebarPos[] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}};
+  std::pair<float, float> lifebarPos[] = {
+      {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}};
   std::pair<int, int> enemy_vel =
       enemy_vel_tab[static_cast<int>(command.createEnemy.p_enemy.enemyType)];
 
@@ -202,15 +203,17 @@ void CommandGame::createEnemy(Command command, Queue *queue,
       Position(command.createEnemy.positionX, command.createEnemy.positionY),
       Velocity(0, 0), FlatVelocity(enemy_vel.first, enemy_vel.second),
       Health(enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)]),
-      MaxHealth(enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)]),
+      MaxHealth(
+          enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)]),
       Draw({0, 0, 0, 0},
            {(int)command.createEnemy.positionX,
             (int)command.createEnemy.positionY, 100, 100},
            enemyTexture),
       EnemyProperty(command.createEnemy.p_enemy),
       std::optional<std::size_t>(command.createEnemy.enemyId),
-      std::optional<LifeBar>(
-          LifeBar(enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)], {0, 0, 50, 5})));
+      std::optional<LifeBar>(LifeBar(
+          enemy_hp[static_cast<int>(command.createEnemy.p_enemy.enemyType)],
+          {0, 0, 50, 5})));
 }
 
 void CommandGame::newPlayer(Command command, Queue *queue,

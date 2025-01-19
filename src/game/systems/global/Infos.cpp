@@ -17,7 +17,10 @@ void display_infos(Registry *ecs) {
       lifebars[i]->bar.y = positions[i]->y - 10;
       lifebars[i]->hp = health[i]->hp;
 
-      float hp_ratio = (maxHealth[i]->hp > 0) ? static_cast<float>(health[i]->hp) / maxHealth[i]->hp : 0.0f;
+      float hp_ratio =
+          (maxHealth[i]->hp > 0)
+              ? static_cast<float>(health[i]->hp) / maxHealth[i]->hp
+              : 0.0f;
       lifebars[i]->bar.w = hp_ratio * 75;
 
       if (hp_ratio >= 0.6f) {

@@ -126,7 +126,8 @@ OneVsOne::loop(eventType event,
     if (nicknames[i].has_value() && _window->getAllowToInteract()) {
       _window->draw(nicknames[i]->texture, nicknames[i]->rect);
     }
-    if (lifebars[i].has_value() && control[i].has_value() && _window->getAllowToInteract()) {
+    if (lifebars[i].has_value() && control[i].has_value() &&
+        _window->getAllowToInteract()) {
       _window->drawRect(lifebars[i]->bar, lifebars[i]->color);
     }
   }
