@@ -12,7 +12,8 @@ History::History() {
   _name = "History";
   commandGame = CommandGame();
   _nextBullet = std::chrono::steady_clock::now() + std::chrono::seconds(1);
-  _clockCutScene = std::chrono::steady_clock::now() + std::chrono::milliseconds(125);
+  _clockCutScene =
+      std::chrono::steady_clock::now() + std::chrono::milliseconds(125);
 }
 
 History::~History() {}
