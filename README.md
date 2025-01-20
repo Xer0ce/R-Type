@@ -21,7 +21,7 @@ Before you start, ensure your system has the following installed:
 
 1. **Clone the repository**:
    ```bash
-   git clone git@github.com:M0ugou-club/R-Type.git
+   git clone git@github.com:Xer0ce/R-Type.git
    cd R-Type
    ```
 
