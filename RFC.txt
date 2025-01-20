@@ -1,0 +1,461 @@
+RFC: myTeams Collaborative Communication Application Protocol
+
+1. Introduction
+    This document outlines the development process and technical
+    specifications for the R-Type game project, part of the Advanced C++
+    knowledge unit. The project aims to provide students with hands-on
+    experience in networked video game development while exploring advanced
+    programming techniques and adhering to best practices in software
+    engineering.
+
+    The R-Type project consists of two main binaries: r-type_server and
+    r-type_client. Both are written in C++ and built using CMake. Third-
+    party dependencies are managed using Git submodules.
+
+    Inspired by the classic 90s game R-Type, this project challenges
+    developers to create a multi-threaded server and a graphical client
+    capable of hosting and rendering a networked gaming experience. Beyond
+    emulating the original gameplay, additional requirements ensure a modern
+    design approach and implementation of essential game engine features.
+
+2. Terminology
+    Here is the revised terminology with a maximum of 75 characters per line:
+
+    This section defines the key terminology used throughout 
+    the R-Type project.
+    The project consists of two main components: 
+    a graphical client (r-type_client) and a game server (r-type_server).
+
+    r-type_client:
+        The r-type_client binary is responsible for launching the graphical
+        interface of the game. It allows players to interact with the game
+        visually, connect to a server, and experience the gameplay. The client
+        also includes functionality to start the r-type_server directly from
+        its menu, enabling users to host the game server locally.
+
+    r-type_server:
+        The r-type_server binary is responsible for running the backend server
+        that hosts the game. It handles all game logic, networking, and
+        communication between multiple clients. The server operates in different
+        game modes, such as:
+
+    One vs. One: A competitive mode between two players.
+
+    Endless: A survival mode with continuous waves of enemies.
+    
+    History: A story-driven game mode.
+
+    When launched, the server sets up the networking infrastructure and
+    maintains authoritative control over game events to ensure consistency
+    across connected clients
+
+3. Protocol Overview
+    The R-Type project uses two communication protocols: 
+    TCP and UDP, each serving different purposes based on the nature and
+    importance of the messages being sent between the client and server.
+
+    TCP Protocol:
+        The TCP protocol is used for important commands where it is crucial 
+        to ensure the delivery of the message to its destination. 
+        These commands include critical game actions such as player 
+        connection, shooting, entity death, and disconnection. 
+        TCP guarantees reliable transmission,
+        which is necessary for these essential game events that must be 
+        synchronized across all clients.
+
+    UDP Protocol:
+        The UDP protocol is used for non-essential, 
+        real-time messages that can tolerate occasional packet loss 
+        without impacting gameplay.
+        This includes entity movement, position updates, and other less 
+        critical commands. UDP offers lower latency compared to TCP, 
+        making it suitable for fast-paced updates where occasional 
+        loss of data does not affect the overall game experience.
+
+3.1 Connection Establishment
+    Clients establish a TCP connection to the server using the server's
+    IP address and port number.
+    Upon successful connection, the client can send commands to the server,
+    which responds accordingly.
+
+3.2 Command Structure
+    Commands are sent between the client and the server using a binary format.
+    Each command is associated with a unique identifier (byte), 
+    followed by the required data. 
+    The client prepares the command by packing the necessary information
+    into a vector of bytes, which is then sent to the server.
+
+    Sending Commands: 
+
+        The client sends commands by pushing thecommand type
+        and associated data into a binary packet. 
+        The packet is then transmitted to the server using 
+        the appropriate protocol (TCP or UDP).
+
+    Receiving Commands: 
+
+        The server receives the binary packet,
+        extracts the command type, and processes the associated data.
+        The server then executes the corresponding action and 
+        may send a response back to the client.
+
+    The server and client use this structure to send and receive all commands,
+    ensuring efficient communication and proper synchronization.
+
+4. Commands and Responses
+    4.1 Client Handle Commands
+        - connect: Connects the client to the server with a username.
+        - disconnect: Disconnects the client from the server.
+        - move: Moves a player or entity.
+        - shoot: Fires a projectile.
+        - killentity: Removes an entity (e.g., enemy).
+        - createenemy: Creates a new enemy.
+        - newplayer: Adds a new player to the game.
+        - createplayer: Creates a player in the lobby.
+        - startgame: Starts the game with the selected mode.
+        - startgamehistory: Starts the game with history mode.
+        - connect1v1: Connects a player for a 1v1 match.
+        - freezespell: Casts a freeze spell.
+        - dialogues: Sends dialogues during the game.
+        - win: Declares a player as the winner.
+
+
+    4.2 Client Send Commands
+        - connect: Sends a connection request to the server with the username.
+        - disconnect: Sends a disconnection request to the server.
+        - move: Sends information about the movement of an entity.
+        - shoot: Sends information to fire a projectile.
+        - killentity: Sends a request to remove an entity.
+        - createenemy: Sends a request to create an enemy.
+        - newplayer: Sends information to add a new player.
+        - createplayer: Sends information to create a player in the lobby.
+        - startgame: Sends a request to start the game.
+        - startgamehistory: Sends information related to starting a game with history mode.
+        - connect1v1: Sends a request to connect to a 1v1 match.
+        - freezespell: Sends a request to cast a freeze spell.
+        - dialogues: Sends dialogue messages in the game.
+
+    4.3 Server Handle Commands
+        - connect: Handles the connection request from the client with a username.
+        - disconnect: Handles the disconnection request from the client.
+        - move: Handles movement information sent by the client.
+        - shoot: Handles information about projectile firing.
+        - killentity: Handles the removal of entities.
+        - createenemy: Creates an enemy based on the sent information.
+        - newplayer: Adds a new player to the game.
+        - createplayer: Adds a player to the lobby.
+        - startgame: Handles the start of the game with the selected mode.
+        - startgamehistory: Handles the start of the game with history mode.
+        - connect1v1: Handles the connection for a 1v1 match.
+        - freezespell: Handles the freeze spell casting.
+        - dialogues: Handles dialogue sending during the game.
+        - win: Handles the victory declaration of a player.
+
+    4.4 Server Send Commands
+        - connect: Sends a connection confirmation to the client.
+        - disconnect: Sends a disconnection confirmation to the client.
+        - move: Sends updates on entity positions.
+        - shoot: Sends information about fired projectiles.
+        - killentity: Sends information to remove an entity.
+        - createenemy: Sends information about enemy creation.
+        - newplayer: Sends information to add a new player.
+        - createplayer: Sends information to add a player to the lobby.
+        - startgame: Sends a game start confirmation.
+        - startgamehistory: Sends information about the history mode of the game.
+        - connect1v1: Sends a confirmation for 1v1 match connection.
+        - freezespell: Sends confirmation of a freeze spell cast.
+        - dialogues: Sends dialogues during the game.
+        - win: Sends confirmation of the player's victory.
+
+
+5. Security Considerations
+    While password authentication is not required, 
+    the protocol includes robust security measures to ensure that users can
+    only perform actions and access information they are authorized to.
+    
+    In this system, the client serves only as an interface for displaying 
+    information and interacting with AI,
+    while the server is the ultimate authority in all aspects of the game.
+
+    To prevent cheating, all critical game actions—such as movement, shooting,
+    and the type of shots—are recalibrated and validated by the server.
+    
+    The server recalculates:
+
+        Movement: The server ensures all player movements are valid,
+        preventing unauthorized movements or cheats.
+
+        Shooting: The server checks that all shooting actions are
+        legitimate and in accordance with game rules.
+    
+        Shot Types: The server validates the type of shots being made,
+        ensuring that no invalid or modified shots
+        are triggered from the client.
+    
+    The client does not have the power to directly affect game mechanics or
+    the state of the game. 
+    It can only display data and handle interactions with AI.
+    Any attempt to manipulate game behavior or circumvent rules is countered
+    by the server’s authoritative control over the game state.
+
+    This server-client separation ensures that the integrity of 
+    the game is maintained, preventing any form of cheating or
+    unauthorized manipulation from the client.
+
+6. Packet
+    6.1 Format
+        Each packet is composed of two parts: the header and the content.
+
+        The header is a structure that contains a unique identifier,
+        interpreted by both the server and the client. 
+        This identifier helps both parties understand the type and structure
+        of the packet they are handling. 
+        The header is always the first part of the packet and allows 
+        the client and server to identify the size and type of the packet
+        to interpret the data accordingly.
+
+        The content of the packet contains all the necessary data 
+        that needs to be transmitted. 
+        This can include various parameters and values required by the server
+        or client to process the packet correctly.
+
+        A typical packet layout is as follows:
+
+        +-------------------------+
+        |         header           |  
+        |      Packet Type (ID)    |  <-- Read first
+        +-------------------------+  
+        |         content          |  
+        |   Parameter(s)           |  <-- Size depends on the ID
+        |   Additional Data        |  
+        |   ...                    |  
+        +-------------------------+ 
+        |       End of Packet      |  
+        |          0xFF            |  <-- To signify the end of the message
+        +-------------------------+  
+
+    6.2 Client to server packet
+        6.2.1 Connect
+            This packet is sent when the client initiates a connection 
+            with the server by sending a "connect" command.
+            It includes the player's chosen nickname for the connection.
+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x00    | Nickname   |    Name    | the name of the player to log in|
+    +-----------+------------+------------+--------------------------------+
+
+        6.2.2 Move
+            This packet is sent when the player moves in the game. 
+            It includes the entityId and the new position coordinates.
+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x03    | entityId   |   Integer  | the ID of the entity to move   |
+    |           | positionX  |   Float    | the new X coordinate of the entity|
+    |           | positionY  |   Float    | the new Y coordinate of the entity|
+    +-----------+------------+------------+--------------------------------+
+
+
+        6.2.4 Shoot
+            This packet is sent when a player shoots a projectile. 
+            It includes the playerId, bulletId, 
+            and the position and direction of the shot.
+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x04    | playerId   |   Integer  | the ID of the player shooting  |
+    |           | bulletId   |   Integer  | the ID of the bullet fired     |
+    |           | positionX  |   Float    | the X coordinate of the bullet |
+    |           | positionY  |   Float    | the Y coordinate of the bullet |
+    |           | direction  |   Integer  | the direction of the shot      |
+    +-----------+------------+------------+--------------------------------+
+
+
+        6.2.8 Start Game
+            This packet is sent when the game is starting. 
+            It includes the game mode that the server should start.
+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x05    | gamemode   |   Integer  | the selected game mode         |
+    +-----------+------------+------------+--------------------------------+
+
+        6.2.9 Start Game History
+            This packet is sent when the game history is started, 
+            including level and dialog information.
+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x09    | level      |    Name    | the level to start the game    |
+    |           | dialog     |    Name    | the dialog to display          |
+    +-----------+------------+------------+--------------------------------+
+
+
+        6.2.10 Connect 1v1
+            This packet is sent when the player wants to connect 
+            to a 1v1 game mode. 
+            It includes the player's nickname.
+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0X07    | Nickname   |    Name    | the player's nickname to connect |
+    +-----------+------------+------------+--------------------------------+
+
+
+        6.2.11 Freeze Spell
+            This packet is sent when the player casts a freeze spell. 
+            It includes the player's ID.
+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field name | Field type |              Note              |
+    +-----------+------------+------------+--------------------------------+
+    |   0x08    | playerId   |   Integer  | the ID of the player use spell |
+    +-----------+------------+------------+--------------------------------+
+
+    6.3 server to client Packet
+        6.2.1 Connection
+            This packet is sent when the server responds to a connection 
+            request from a client.
+            It includes details such as the player's ID,
+            the number of players, and spaceship information.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x01    | id         | Integer    | Unique ID assigned to player  |
+    |           | playerNbr  | Integer    | Number of players in session  |
+    |           | spaceshipId| Integer    | ID of the assigned spaceship  |
+    |           | shootId    | Integer    | ID of the player's shoot type |
+    |           | positionX  | Float      | Player's initial X position   |
+    |           | positionY  | Float      | Player's initial Y position   |
+    |           | Nickname   | String     | Player's chosen nickname      |
+    +-----------+------------+------------+--------------------------------+
+
+        6.2.2 Disconnection
+            This packet is sent when a player disconnects from the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x02    | playerId   | Integer    | ID of the disconnected player  |
+    +-----------+------------+------------+--------------------------------+
+
+        6.2.3 Move Update
+            This packet is sent when the player’s position updates.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x03    | entityId   | Integer    | ID of the moving entity        |
+    |           | positionX  | Float      | Updated X coordinate           |
+    |           | positionY  | Float      | Updated Y coordinate           |
+    +-----------+------------+------------+--------------------------------+
+
+    6.2.4 Shooting
+        This packet is sent when a player fires a projectile.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x04    | playerId   | Integer    | ID of the shooting player     |
+    |           | bulletId   | Integer    | ID of the bullet fired        |
+    |           | positionX  | Float      | X coordinate of the shot      |
+    |           | positionY  | Float      | Y coordinate of the shot      |
+    |           | direction  | Integer    | Direction of the shot         |
+    +-----------+------------+------------+--------------------------------+
+
+    6.2.5 Enemy Creation
+        This packet is sent when a new enemy is spawned in the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x06    | enemyId    | Integer    | ID of the new enemy          |
+    |           | enemyType  | Integer    | Type of enemy spawned        |
+    |           | aiType     | Integer    | AI behavior type             |
+    |           | damageType | Integer    | Damage model                 |
+    |           | frequencyType | Integer | Frequency of attack          |
+    |           | bulletType | Integer    | Type of bullet used          |
+    |           | positionX  | Float      | X coordinate of enemy        |
+    |           | positionY  | Float      | Y coordinate of enemy        |
+    +-----------+------------+------------+--------------------------------+
+
+    6.2.6 Entity Destruction
+        This packet is sent when an entity (enemy or player) is destroyed.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x07    | entityId   | Integer    | ID of the destroyed entity    |
+    +-----------+------------+------------+--------------------------------+
+
+    6.2.7 Player Join Notification
+        This packet is sent when a new player joins the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x08    | id        | Integer     | ID of the new player          |
+    |           | playerNbr | Integer     | Updated number of players     |
+    |           | spaceshipId | Integer   | ID of the spaceship assigned  |
+    |           | shootId   | Integer     | ID of the shooting type       |
+    |           | positionX | Float       | Initial X position            |
+    |           | positionY | Float       | Initial Y position            |
+    |           | Nickname  | String      | Nickname of the player        |
+    +-----------+------------+------------+--------------------------------+
+
+    6.2.8 Game Lobby Players List
+        This packet contains the list of players in the game lobby.
+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x10    | id        | Integer     | ID of the player              |
+    |           | Nickname  | String      | Player's nickname             |
+    +-----------+------------+------------+--------------------------------+
+
+    6.2.9 New Player in Lobby
+        This packet is sent when a new player joins the game lobby.
+
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x11    | id        | Integer     | ID of the new player          |
+    |           | Nickname  | String      | Player's nickname             |
+    +-----------+------------+------------+--------------------------------+
+
+    6.2.10 Wave Information
+        This packet provides information about enemy waves in the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x13    | wave      | Integer     | Current wave number           |
+    |           | time      | Integer     | Time until next wave          |
+    +-----------+------------+------------+--------------------------------+
+
+     6.2.11 Meteorite Spawn
+        This packet is sent when a meteorite is spawned in the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x14    | meteoriteId | Integer   | ID of the meteorite           |
+    |           | positionX  | Float      | X coordinate                  |
+    |           | positionY  | Float      | Y coordinate                  |
+    +-----------+------------+------------+--------------------------------+
+
+    6.2.12 Hit Event
+        This packet is sent when an entity takes damage.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x15    | entityHit  | Integer    | ID of the entity hit          |
+    |           | damage     | Integer    | Amount of damage taken        |
+    +-----------+------------+------------+--------------------------------+
+
+    6.2.13 Game Win Notification
+        This packet is sent when a player wins the game.
+    +-----------+------------+------------+--------------------------------+
+    | Packet ID | Field Name | Field Type | Note                           |
+    +-----------+------------+------------+--------------------------------+
+    |   0x18    | -         | -          | Indicates the game is won     |
+    +-----------+------------+------------+--------------------------------+

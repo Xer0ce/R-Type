@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Tutoriel - Documentation R-Michou</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Documentation R-Michou</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="tutoriel"><a class="header" href="#tutoriel">Tutoriel</a></h1>
+<h2 id="requirement"><a class="header" href="#requirement">Requirement</a></h2>
+<ul>
+<li>Compiling the projet (please refear to the README.md)</li>
+</ul>
+<h2 id="lanch-the-game"><a class="header" href="#lanch-the-game">Lanch the game</a></h2>
+<ul>
+<li>
+<h3 id="start-the-binary"><a class="header" href="#start-the-binary"><strong>Start the binary</strong></a></h3>
+<p>To start the binary, navigate to the <code>build/</code> directory and run <code>./r-type_client</code>.</p>
+<p>You will be presented with two different options:</p>
+</li>
+<li>
+<h3 id="host-a-game"><a class="header" href="#host-a-game"><strong>Host a game</strong></a></h3>
+<p>The first option is to click the <code>Héberger</code> button to host a game locally on your computer.</p>
+<p>After clicking <code>Héberger</code>, you will be prompted to choose a <strong>nickname</strong> (in a text input field), select the game mode (<strong>Endless, 1v1, History</strong>), choose a <strong>spaceship</strong>, and pick the <strong>bullet type</strong>.</p>
+<p>Once you have selected your parameters, you can join the lobby by clicking Créer la partie.</p>
+<h4 id="you-must-fill-in-all-these-fields-in-order-to-start-the-game"><a class="header" href="#you-must-fill-in-all-these-fields-in-order-to-start-the-game"><em>You must fill in all these fields in order to start the game.</em></a></h4>
+<h4 id="if-youre-playing-solo-simply-play-as-the-host-you-will-be-automatically-connected-to-your-local-server"><a class="header" href="#if-youre-playing-solo-simply-play-as-the-host-you-will-be-automatically-connected-to-your-local-server"><em>If you're playing solo, simply play as the host. You will be automatically connected to your local server.</em></a></h4>
+  <img src="https://iili.io/2PQ4kc7.png" alt="Host a game" width="600">
+</li>
+<li>
+<h3 id="or-join-an-existing-game"><a class="header" href="#or-join-an-existing-game"><strong>Or join an existing game</strong></a></h3>
+<p>If your friend has already hosted a game, you can join them using the <code>Rejoindre</code> button.</p>
+<p>After clicking the button, you will need to enter the host's IP address. Make sure to enter the host's IPV4 address and ensure that both devices are connected to the same Wi-Fi network.</p>
+<p>Once you've entered the <strong>IP</strong>, you'll need to choose a <strong>nickname</strong>, a <strong>spaceship</strong>, and a <strong>bullet type</strong>.</p>
+<p>Finally, click the Rejoindre button to join the lobby.</p>
+<h4 id="you-must-fill-in-all-these-fields-in-order-to-start-the-game-1"><a class="header" href="#you-must-fill-in-all-these-fields-in-order-to-start-the-game-1"><em>You must fill in all these fields in order to start the game.</em></a></h4>
+<h4 id="to-find-the-hosts-ip-address-the-host-must-run-the-ifconfig-command-in-a-terminal"><a class="header" href="#to-find-the-hosts-ip-address-the-host-must-run-the-ifconfig-command-in-a-terminal"><em>To find the host's IP address, the host must run the <code>ifconfig</code> command in a terminal.</em></a></h4>
+  <img src="https://iili.io/2PQ6eWv.png" alt="Join a game" width="600">
+</li>
+<li>
+<h3 id="lobby-management"><a class="header" href="#lobby-management"><strong>Lobby Management</strong></a></h3>
+<p>The lobby scene is simply a waiting room.</p>
+<p>You must wait for your friend, and when all players are connected, click the <code>Start</code> button to begin the game.</p>
+<h4 id="for-the-1v1-game-mode-make-sure-to-start-the-game-with-a-maximum-of-2-players-to-avoid-potential-bugs"><a class="header" href="#for-the-1v1-game-mode-make-sure-to-start-the-game-with-a-maximum-of-2-players-to-avoid-potential-bugs"><em>For the 1v1 game mode, make sure to start the game with a maximum of 2 players to avoid potential bugs.</em></a></h4>
+</li>
+<li>
+<h3 id="settings"><a class="header" href="#settings"><strong>Settings</strong></a></h3>
+<p>You can view the key bindings in the settings.</p>
+  <img src="https://iili.io/2PQtdI1.png" alt="Join a game" width="600"></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="game.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="game.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

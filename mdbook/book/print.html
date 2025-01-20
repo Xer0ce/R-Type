@@ -1,0 +1,656 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Documentation R-Michou</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Documentation R-Michou</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="r-type-engine"><a class="header" href="#r-type-engine">R-type Engine</a></h1>
+<h4 id="this-is-the-user-documentation-about-our-engine"><a class="header" href="#this-is-the-user-documentation-about-our-engine">This is the user documentation about our engine.</a></h4>
+<h4 id="for-the-developer-documentation-with-all-the-precise-about-classes-click-here"><a class="header" href="#for-the-developer-documentation-with-all-the-precise-about-classes-click-here">For the developer documentation with all the precise about classes click <a href="https://m0ugou-club.github.io/R-Type/doxygen/html/dir_ddca5f149c4ce13074f28b270e950ba9.html">here</a></a></h4>
+<hr />
+<p>We've decided to go with the architecture of an ECS (Entity Component System) because it provides a modular, flexible, and highly efficient framework for managing game entities and their behaviors. This approach allows us to separate concerns effectively, enabling developers to manage entities, components, and systems independently while ensuring scalability for complex game logic.</p>
+<p>In this documentation, we will break down the implementation of each part of the ECS, including:</p>
+<ul>
+<li>Entities: The core identifiers for game objects.</li>
+<li>Components: The data associated with entities.</li>
+<li>Systems: The logic that operates on components to bring the game to life.</li>
+</ul>
+<p>We'll also include a detailed example of how to use our ECS in code, illustrating its practical application and how it simplifies game development workflows.</p>
+<h3 id="entities-"><a class="header" href="#entities-">Entities :</a></h3>
+<p>Entities is basicly represented by an id and that's all !
+So an entity will juste appear like this :</p>
+<pre><code>+-----------------+
+|     Entity      |
+|-----------------|
+|       ID        |
+|    (size_t)     |
++-----------------+
+</code></pre>
+<h3 id="components-"><a class="header" href="#components-">Components :</a></h3>
+<p>Before linking our Components with Entities, we need a way to manage them effectively.</p>
+<p>To do this, we use Sparse Arrays, which are an optimized structure for storing components associated with Entities.</p>
+<p>A Sparse Array functions like an enhanced version of a vector, specifically designed to store components for entities. Each type of component will have its own Sparse Array. The size of the array corresponds to the total number of entities, with each index in the array representing an entity ID.</p>
+<p>If a particular entity does not require the component, the value at its index will be set to nullopt. This approach ensures efficient memory usage and fast access to components, even when not all entities share the same components.</p>
+<p>There is a small schema illustrating how Sparse Arrays work :</p>
+<p>In the following schema, we have three columns: <strong>Entities</strong>, <strong>Component A</strong>, and <strong>Component B</strong>. The rows represent the entities (0 to 3) and the components assigned to them.</p>
+<pre><code>+-----------------+  +-----------------+  +-----------------+
+|     Entities    |  |   Component A   |  |   Component B   |
+|-----------------|  |-----------------|  |-----------------|
+|        0        |  |   Component A   |  |   Component B   |
+|        1        |  |     nullopt     |  |     nullopt     |
+|        2        |  |     nullopt     |  |   Component B   |
+|        3        |  |   Component A   |  |     nullopt     |
++-----------------+  +-----------------+  +-----------------+
+</code></pre>
+<p>Now that we have the Sparse Array to manage components and entities separately,
+we need a system that will manage the creation of components and link them with the respective entities.
+This part is handled by the Registry.</p>
+<p>The Registry acts as a central management system where components are created, stored, and linked to their respective entities.
+It ensures that each component type is associated with the correct entity and manages the lifecycle of these components efficiently.
+This system allows for quick access and modification of components tied to specific entities, and it serves as a bridge between the component creation process and the Sparse Array.</p>
+<p>The Registry is the core of the engine. It will store all the components, all the entities, and everything related to the game you're creating.
+Additionally, it can manage the lifecycle of all these elements.</p>
+<h3 id="systems"><a class="header" href="#systems">Systems</a></h3>
+<p>In an Entity-Component-System (ECS) architecture, <strong>Systems</strong> are the core logic that processes entities with specific components. Unlike components, which only store data, and entities, which are identifiers for objects in the game, systems contain the behavior and rules that act on the components.</p>
+<p>Systems iterate over the entities that have the required components, perform operations on them, and update the game state accordingly. Each system is responsible for a specific aspect of the game, such as movement, physics, or rendering.</p>
+<p>In fact, systems are not directly managed by the Registry; instead, they are defined and implemented by the developer. Systems are essentially functions or classes that allow the developer to create and control the game's behavior.</p>
+<p>Below is a schema that illustrates how systems interact with and update the components of entities.</p>
+<pre><code>+---------------------+           +-------------------+           +---------------------+
+|     Developer's     |           |     Systems       |           |     Components      |
+|     Functions       |           |  (Game Logic)     |           |    (Entity Data)    |
+|     (Movement,      |           |                   |           |  - Position         |
+|     Physics,        |   ----&gt;   |   - Movement      |   ----&gt;   |  - Velocity         |
+|     Rendering,      |           |   - Physics       |           |  - Health           |
+|     AI, etc.)       |           |   - AI            |           |  - AI State         |
+|                     |           +-------------------+           |  ...                |
++---------------------+                    |                      +---------------------+
+                                           v
+                                 +---------------------+
+                                 |    Entities         |
+                                 |  - Entity 0         |
+                                 |  - Entity 1         |
+                                 |  - Entity 2         |
+                                 |  ...                |
+                                 +---------------------+
+</code></pre>
+<h3 id="code-implementation"><a class="header" href="#code-implementation">Code implementation</a></h3>
+<h4 id="1--creation-of-an-entity"><a class="header" href="#1--creation-of-an-entity">1 : Creation of an Entity</a></h4>
+<p>This is how you can create an entity.</p>
+<pre><code class="language-c++">#include "Registry.hpp"
+
+int main() {
+    Registry registry;
+
+    size_t entity = registry.create_entity();
+
+    std::cout &lt;&lt; "Entity created with ID: " &lt;&lt; entity &lt;&lt; std::endl;
+
+    return 0;
+}
+
+</code></pre>
+<h4 id="2--add-components-to-an-entity"><a class="header" href="#2--add-components-to-an-entity">2 : Add Components to an Entity</a></h4>
+<p>To add components to an entity, you must first register the component type in the registry. This step ensures that the registry is aware of the component and can manage its instances correctly.</p>
+<p>Once the component is registered, you can add it to any entity. Components are linked to entities via their unique identifiers, and this process is both flexible and efficient.</p>
+<pre><code class="language-c++">#include "Registry.hpp"
+
+struct Velocity {
+  float x, y;
+  Velocity(float x = 0, float y = 0) : x(x), y(y) {}
+};
+
+struct Position {
+  float x, y;
+  float old_x, old_y;
+  Position(int x = 0, int y = 0) : x(x), y(y) {}
+};
+
+int main() {
+    Registry registry;
+
+    registry.register_component&lt;Position&gt;();
+    registry.register_component&lt;Velocity&gt;();
+    size_t entity = registry.create_entity();
+
+    registry.add_component&lt;Position&gt;(entity, {100, 200});
+
+    registry.add_component&lt;Velocity&gt;(entity, {2, 3});
+
+    std::cout &lt;&lt; "Entity " &lt;&lt; entity &lt;&lt; " has components: Position and Velocity." &lt;&lt; std::endl;
+
+    return 0;
+}
+
+</code></pre>
+<h4 id="3--components-access-and-modification"><a class="header" href="#3--components-access-and-modification">3 : Components Access and Modification</a></h4>
+<p>After a component is associated with an entity, you can access and modify it directly. This is useful for updating entity states, such as changing positions, modifying velocities, or updating health values during gameplay.</p>
+<p>Components can be accessed by their type and the entity ID, ensuring fast lookups and streamlined operations.</p>
+<pre><code class="language-c++">#include "Registry.hpp"
+
+struct Position {
+  float x, y;
+  float old_x, old_y;
+  Position(int x = 0, int y = 0) : x(x), y(y) {}
+};
+
+int main() {
+    Registry registry;
+
+    registry.register_component&lt;Position&gt;();
+
+    size_t entity = registry.create_entity();
+
+    registry.add_component&lt;Position&gt;(entity, {100, 200});
+
+    std::cout &lt;&lt; "Initial Pos: (" &lt;&lt; position.x &lt;&lt; ", " &lt;&lt; position.y &lt;&lt; ")" &lt;&lt; std::endl;
+
+    position.x += 10;
+    position.y += 20;
+
+    std::cout &lt;&lt; "Updated Pos : (" &lt;&lt; position.x &lt;&lt; ", " &lt;&lt; position.y &lt;&lt; ")" &lt;&lt; std::endl;
+
+    return 0;
+}
+
+</code></pre>
+<h4 id="4--systems-and-entity-updates"><a class="header" href="#4--systems-and-entity-updates">4 : Systems and Entity Updates</a></h4>
+<p>Systems are where the game logic resides. They iterate over entities with specific components and apply the necessary updates. For example, a movement system might update the position of all entities that have both Position and Velocity components.</p>
+<p>Systems operate independently of the registry, allowing you to define and execute game behavior in a modular way.</p>
+<pre><code class="language-c++">#include "Registry.hpp"
+
+struct Velocity {
+  float x, y;
+  Velocity(float x = 0, float y = 0) : x(x), y(y) {}
+};
+
+struct Position {
+  float x, y;
+  float old_x, old_y;
+  Position(int x = 0, int y = 0) : x(x), y(y) {}
+};
+
+void update_positions(Registry &amp;registry) {
+    auto &amp;positions = registry.get_components&lt;Position&gt;();
+    auto &amp;velocities = registry.get_components&lt;Velocity&gt;();
+
+    for (size_t i = 0; i &lt; positions.size(); ++i) {
+        if (positions[i].has_value() &amp;&amp; velocities[i].has_value()) {
+            positions[i]-&gt;x += velocities[i]-&gt;x;
+            positions[i]-&gt;y += velocities[i]-&gt;y;
+        }
+    }
+}
+
+int main() {
+    Registry registry;
+
+    registry.register_component&lt;Position&gt;();
+
+    size_t entity1 = registry.create_entity();
+    registry.add_component&lt;Position&gt;(entity1, {0, 0});
+    registry.add_component&lt;Velocity&gt;(entity1, {1, 1});
+
+    size_t entity2 = registry.create_entity();
+    registry.add_component&lt;Position&gt;(entity2, {10, 20});
+    registry.add_component&lt;Velocity&gt;(entity2, {2, 3});
+
+    update_positions(registry);
+
+    auto &amp;positions = registry.get_components&lt;Position&gt;();
+    for (size_t i = 0; i &lt; positions.size(); ++i) {
+        if (positions[i].has_value()) {
+            std::cout &lt;&lt; "Entity " &lt;&lt; i &lt;&lt; " Position: (" &lt;&lt; positions[i]-&gt;x &lt;&lt; ", " &lt;&lt; positions[i]-&gt;y &lt;&lt; ")" &lt;&lt; std::endl;
+        }
+    }
+
+    return 0;
+}
+
+</code></pre>
+<h4 id="5--entity-and-component-deletion"><a class="header" href="#5--entity-and-component-deletion">5 : Entity and Component Deletion</a></h4>
+<p>Entities and their components can be removed when they are no longer needed. Deleting an entity will automatically clean up all its associated components. You can also delete specific components from an entity if required.</p>
+<p>This ensures efficient memory usage and keeps the ECS clean and performant during runtime.</p>
+<pre><code class="language-c++">#include "Registry.hpp"
+
+struct Position {
+  float x, y;
+  float old_x, old_y;
+  Position(int x = 0, int y = 0) : x(x), y(y) {}
+};
+
+int main() {
+    Registry registry;
+
+    registry.register_component&lt;Position&gt;();
+
+    size_t entity = registry.create_entity();
+
+    registry.add_component&lt;Position&gt;(entity, {50, 100});
+
+    registry.kill_entity(entity);
+
+    registry.remove_component&lt;Position&gt;(entity);
+
+    std::cout &lt;&lt; "Entity and its components have been removed." &lt;&lt; std::endl;
+
+    return 0;
+}
+
+</code></pre>
+<h4 id="6--example-workflow"><a class="header" href="#6--example-workflow">6 : Example Workflow</a></h4>
+<p>Here’s an overview of a typical workflow:</p>
+<pre><code>Register the necessary component types.
+Create entities using the registry.
+Add components to the entities.
+Use systems to define and execute the game logic.
+Access or modify components as needed during gameplay.
+Delete unused entities or components to maintain performance.
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="r-type-architecture"><a class="header" href="#r-type-architecture">R-Type Architecture</a></h1>
+<p>The architecture of R-Type is built around several key components that manage threads, scenes, communication, and graphical rendering.</p>
+<hr />
+<h2 id="1-core-file-and-thread-management"><a class="header" href="#1-core-file-and-thread-management">1. <strong>Core File and Thread Management</strong></a></h2>
+<p>The architecture is centered around a core file, typically named <code>Server.cpp</code> or <code>Game.cpp</code>, which runs three threads:</p>
+<ul>
+<li><strong>TCP Thread</strong>: Manages network connections via TCP.</li>
+<li><strong>UDP Thread</strong>: Manages network connections via UDP.</li>
+<li><strong>Game Loop Thread</strong>: Handles the game logic continuously.</li>
+</ul>
+<hr />
+<h2 id="2-clientserver-interfaces"><a class="header" href="#2-clientserver-interfaces">2. <strong>Client/Server Interfaces</strong></a></h2>
+<p>For both the client and the server, we use the <code>IClient</code> and <code>IServer</code> interfaces. These interfaces are implemented in the following files:</p>
+<ul>
+<li><code>TCP.cpp</code></li>
+<li><code>UDP.cpp</code></li>
+</ul>
+<p>These implementations manage network communications via TCP and UDP.
+<img src="https://iili.io/2PiL4V4.png" alt="Client/Server Architecture Illustration" width="450"/></p>
+<hr />
+<h2 id="3-scene-system"><a class="header" href="#3-scene-system">3. <strong>Scene System</strong></a></h2>
+<p>The architecture also features a basic scene system. The scene structure is organized as follows:</p>
+<ol>
+<li><strong><code>IScene</code> Interface</strong></li>
+<li><strong>Abstract Class <code>AScene</code></strong></li>
+<li><strong>Concrete Implementations</strong>:
+<ul>
+<li>Endless</li>
+<li>History</li>
+<li>OneVsOne</li>
+<li>Menu</li>
+<li>Lobby</li>
+</ul>
+</li>
+</ol>
+<p>The core file contains an instance of each scene, and an enum specifies which scene should be played. Each scene is mapped to an enum value in a <code>std::map</code>. Each scene implements an overridden <code>loop</code> method that returns a <code>sceneType</code> enum to determine if the scene should change.</p>
+<img src="https://iili.io/2PipPIt.png" alt="Client/Server Architecture Illustration" width="600"/>
+<hr />
+<h2 id="4-graphical-core-sdl3"><a class="header" href="#4-graphical-core-sdl3">4. <strong>Graphical Core (SDL3)</strong></a></h2>
+<p>The graphical core of the project contains an instance of the <code>Window</code> class, which interacts with the SDL3 graphics library through various methods.</p>
+<hr />
+<h2 id="5-ecs-entity-component-system"><a class="header" href="#5-ecs-entity-component-system">5. <strong>ECS (Entity-Component-System)</strong></a></h2>
+<p>The architecture also includes an instance of the ECS system, specifically the <code>Registry</code>, which efficiently manages most of the game entities.</p>
+<hr />
+<h2 id="6-thread-communication-via-queue"><a class="header" href="#6-thread-communication-via-queue">6. <strong>Thread Communication via Queue</strong></a></h2>
+<p>The code includes an instance of <code>Queue</code> (in <code>Queue.hpp</code>), allowing communication between the three threads. This enables the game loop thread to send messages to the server through the TCP or UDP queues, facilitating bidirectional communication between all threads.</p>
+<img src="https://iili.io/2PsJYaj.png" alt="Client/Server Architecture Illustration" width="300"/>
+<hr />
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>The architecture of R-Type is based on a modular and optimized system for managing network connections, game scenes, graphical rendering, and entities. Each component is designed to work seamlessly and efficiently, providing an optimal gaming experience.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="r-type-game"><a class="header" href="#r-type-game">R-Type Game</a></h1>
+<h2 id="game-rules-and-mechanics"><a class="header" href="#game-rules-and-mechanics">Game Rules and Mechanics</a></h2>
+<h3 id="objective-of-the-game"><a class="header" href="#objective-of-the-game">Objective of the Game</a></h3>
+<p>The player pilots a spaceship and must survive waves of enemies while destroying them. Each destroyed enemy awards points, and the goal is to progress through increasingly difficult waves and achieve the highest score possible.
+Controls</p>
+<pre><code>Movement: Use the arrow keys or WASD keys to move your spaceship along the X (horizontal) and Y (vertical) axes.
+Shooting: Press Spacebar or Left Click to fire bullets at enemies.
+</code></pre>
+<h3 id="enemies"><a class="header" href="#enemies">Enemies</a></h3>
+<p>The game features various types of enemies, each with unique attributes and behaviors:</p>
+<pre><code>Pion: Standard enemy with balanced health and speed.
+Zinzolin: Fragile but fast.
+Balourd: High health but slow.
+Mini Boss: Tougher enemies with significantly more health and average speed.
+Boss: Extremely durable and very slow, presenting a major challenge.
+</code></pre>
+<h3 id="enemy-behavior"><a class="header" href="#enemy-behavior">Enemy Behavior</a></h3>
+<p>Enemies move from right to left across the screen. If they reach the left edge, they reappear at the right. Enemies are controlled by different AI types:</p>
+<pre><code>Aggressive: Moves horizontally but adjusts its vertical position to follow the player.
+Passive: Moves straight horizontally without reacting to the player.
+Balzy: Moves diagonally, alternating between up and down while advancing.
+Boss: Moves slowly up and down but does not advance horizontally.
+</code></pre>
+<h3 id="enemy-attacks"><a class="header" href="#enemy-attacks">Enemy Attacks</a></h3>
+<p>Enemies can attack with different attributes:</p>
+<pre><code>Damage Type:
+    Poke: Low damage.
+    Punch: Standard damage.
+    Marmite: High damage.
+
+Attack Frequency:
+    Slow: Fires every 2 seconds.
+    High: Fires every 1 second.
+    Turret: Fires every 0.5 seconds.
+
+Bullet Types:
+    Missile: Normal-sized bullets.
+    FelixBalls: Large bullets.
+    Obus: Extra-large bullets.
+</code></pre>
+<p>If no specific attack attributes are defined for an enemy, default values are assigned.
+Waves</p>
+<p>The game offers multiple modes to suit different playstyles and challenges.</p>
+<p>Endless Mode</p>
+<p>The game progresses in waves, with enemies becoming more numerous and challenging as you advance:</p>
+<pre><code>Classic Waves: These waves include 5 enemies of varying types and behaviors.
+Mini Boss Waves: Occur every 5th wave (e.g., wave 5, 15, 25, etc.) and include 5 regular enemies along with 1-2 Mini Bosses.
+Boss Waves: Occur every 10th wave (e.g., wave 10, 20, 30, etc.) and feature 5 regular enemies, 1-2 Mini Bosses, and a single Boss.
+</code></pre>
+<p>Each wave is loaded randomly from a set of predefined configurations, ensuring variety and unpredictability in gameplay.</p>
+<p>Additionally, players have the ability to create their own custom wave configurations by defining the types of enemies, their behaviors, and attack properties in JSON format. This allows for endless possibilities and personalization of the game experience.</p>
+<p>An example of a custom wave configuration in JSON format is provided below.</p>
+<pre><code class="language-json">{
+    "enemies":
+    [
+        {
+            "type": "Pion",
+            "number": 1,
+            "ia": "Passive",
+            "frequency": "Slow",
+            "damage": "Punch"
+        },
+        {
+            "type": "Balourd",
+            "number": 1,
+            "ia": "Passive",
+            "frequency": "Turret",
+            "damage": "Poke"
+        },
+        {
+            "type": "Zinzolin",
+            "number": 1,
+            "ia": "Passive",
+            "damage": "Marmite"
+        },
+        {
+            "type": "BigBoss",
+            "number": 1,
+            "ia": "Boss",
+            "damage": "Marmite"
+        }
+    ]
+}
+</code></pre>
+<p>All the files are located in the src/game/config/endless directory. You can modify the existing files to customize your game.</p>
+<h3 id="adventure-mode"><a class="header" href="#adventure-mode">Adventure Mode</a></h3>
+<p>The game also features an Adventure Mode, where players face a series of 10 progressively harder levels. Each level introduces more enemies, additional Mini Bosses, and eventually Boss fights. The maximum number of enemies per wave in this mode is 15.</p>
+<p>Player Strategy</p>
+<p>To succeed, players must:</p>
+<pre><code>Master ship movement to avoid enemy fire.
+Prioritize eliminating high-damage or fast enemies.
+Adapt to different enemy behaviors and attack patterns.
+Survive waves while collecting points and progressing through the game.
+</code></pre>
+<h4 id="example-json-configuration"><a class="header" href="#example-json-configuration">Example JSON Configuration</a></h4>
+<p>Below is an example JSON file for a single level in <strong>Adventure Mode</strong>:</p>
+<pre><code class="language-json">{
+  "enemies": [
+    {
+      "type": "Boss",
+      "number": 2,
+      "ia": "Boss",
+      "frequency": "High"
+    }
+  ],
+  "dialogues": "../src/game/config/history/sounds/audio3.mp3",
+  "character": "../src/game/config/history/caracter/Hero.png",
+  "talkingCharacter": "../src/game/config/history/caracter/HeroTalking.png"
+}
+</code></pre>
+<p>dialogues (Optional): Path to the audio file (e.g., .mp3, .wav) that will be played at the start of the level.</p>
+<p>character (Optional): Path to the image representing the speaker (static sprite).</p>
+<p>talkingCharacter (Optional): Path to the image representing the speaker talking (e.g., mouth open).</p>
+<h4 id="how-the-dialogue-and-animation-work"><a class="header" href="#how-the-dialogue-and-animation-work">How the Dialogue and Animation Work</a></h4>
+<p>Level Start: The game checks if dialogues is present in the level’s JSON. If it exists, the audio file is loaded and played.</p>
+<p>Sprite Animation:
+If both character and talkingCharacter are defined, the game alternates between them in a short, repeating cycle to simulate talking.
+This continues until the audio track specified by dialogues finishes playing.
+End of Dialogue: Once the audio has ended, both sprites are removed from the screen.
+Wave Gameplay: The normal wave gameplay then proceeds, spawning the enemies defined in the enemies array.</p>
+<h3 id="duel-mode"><a class="header" href="#duel-mode">Duel Mode</a></h3>
+<p>In Duel Mode, you can engage in a 1v1 battle with your friend. Each player has the ability to use a special ability or spell every 10 seconds. The goal is simple: defeat your opponent by strategically using your abilities and attacks. The player who successfully destroys the other first wins the match. This mode focuses on fast-paced, strategic gameplay where timing and skillful use of your special abilities are key to victory.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tutoriel"><a class="header" href="#tutoriel">Tutoriel</a></h1>
+<h2 id="requirement"><a class="header" href="#requirement">Requirement</a></h2>
+<ul>
+<li>Compiling the projet (please refear to the README.md)</li>
+</ul>
+<h2 id="lanch-the-game"><a class="header" href="#lanch-the-game">Lanch the game</a></h2>
+<ul>
+<li>
+<h3 id="start-the-binary"><a class="header" href="#start-the-binary"><strong>Start the binary</strong></a></h3>
+<p>To start the binary, navigate to the <code>build/</code> directory and run <code>./r-type_client</code>.</p>
+<p>You will be presented with two different options:</p>
+</li>
+<li>
+<h3 id="host-a-game"><a class="header" href="#host-a-game"><strong>Host a game</strong></a></h3>
+<p>The first option is to click the <code>Héberger</code> button to host a game locally on your computer.</p>
+<p>After clicking <code>Héberger</code>, you will be prompted to choose a <strong>nickname</strong> (in a text input field), select the game mode (<strong>Endless, 1v1, History</strong>), choose a <strong>spaceship</strong>, and pick the <strong>bullet type</strong>.</p>
+<p>Once you have selected your parameters, you can join the lobby by clicking Créer la partie.</p>
+<h4 id="you-must-fill-in-all-these-fields-in-order-to-start-the-game"><a class="header" href="#you-must-fill-in-all-these-fields-in-order-to-start-the-game"><em>You must fill in all these fields in order to start the game.</em></a></h4>
+<h4 id="if-youre-playing-solo-simply-play-as-the-host-you-will-be-automatically-connected-to-your-local-server"><a class="header" href="#if-youre-playing-solo-simply-play-as-the-host-you-will-be-automatically-connected-to-your-local-server"><em>If you're playing solo, simply play as the host. You will be automatically connected to your local server.</em></a></h4>
+  <img src="https://iili.io/2PQ4kc7.png" alt="Host a game" width="600">
+</li>
+<li>
+<h3 id="or-join-an-existing-game"><a class="header" href="#or-join-an-existing-game"><strong>Or join an existing game</strong></a></h3>
+<p>If your friend has already hosted a game, you can join them using the <code>Rejoindre</code> button.</p>
+<p>After clicking the button, you will need to enter the host's IP address. Make sure to enter the host's IPV4 address and ensure that both devices are connected to the same Wi-Fi network.</p>
+<p>Once you've entered the <strong>IP</strong>, you'll need to choose a <strong>nickname</strong>, a <strong>spaceship</strong>, and a <strong>bullet type</strong>.</p>
+<p>Finally, click the Rejoindre button to join the lobby.</p>
+<h4 id="you-must-fill-in-all-these-fields-in-order-to-start-the-game-1"><a class="header" href="#you-must-fill-in-all-these-fields-in-order-to-start-the-game-1"><em>You must fill in all these fields in order to start the game.</em></a></h4>
+<h4 id="to-find-the-hosts-ip-address-the-host-must-run-the-ifconfig-command-in-a-terminal"><a class="header" href="#to-find-the-hosts-ip-address-the-host-must-run-the-ifconfig-command-in-a-terminal"><em>To find the host's IP address, the host must run the <code>ifconfig</code> command in a terminal.</em></a></h4>
+  <img src="https://iili.io/2PQ6eWv.png" alt="Join a game" width="600">
+</li>
+<li>
+<h3 id="lobby-management"><a class="header" href="#lobby-management"><strong>Lobby Management</strong></a></h3>
+<p>The lobby scene is simply a waiting room.</p>
+<p>You must wait for your friend, and when all players are connected, click the <code>Start</code> button to begin the game.</p>
+<h4 id="for-the-1v1-game-mode-make-sure-to-start-the-game-with-a-maximum-of-2-players-to-avoid-potential-bugs"><a class="header" href="#for-the-1v1-game-mode-make-sure-to-start-the-game-with-a-maximum-of-2-players-to-avoid-potential-bugs"><em>For the 1v1 game mode, make sure to start the game with a maximum of 2 players to avoid potential bugs.</em></a></h4>
+</li>
+<li>
+<h3 id="settings"><a class="header" href="#settings"><strong>Settings</strong></a></h3>
+<p>You can view the key bindings in the settings.</p>
+  <img src="https://iili.io/2PQtdI1.png" alt="Join a game" width="600"></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
