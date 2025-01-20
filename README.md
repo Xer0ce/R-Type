@@ -49,6 +49,8 @@ Before you start, ensure your system has the following installed:
    make
    ```
 
+#### *You can also execute the `./build_project.sh` script, which automatically executes all these commands.*
+
 ## Documentation
 
 - ### [User documentation (Click)](https://m0ugou-club.github.io/R-Type/mdbook/book/index.html)
